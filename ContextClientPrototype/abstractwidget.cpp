@@ -149,14 +149,12 @@ bool AbstractWidget::loadFile(QString fileName) {
 void AbstractWidget::loadGuiInteraction() {
     qDebug() << "AbstractWidget::loadGuiInteraction()";
 
-    QHBoxLayout *buttonLayout = new QHBoxLayout;
+//    QHBoxLayout *buttonLayout = new QHBoxLayout;
 
-    QPushButton *reloadBtn = new QPushButton(tr("Reload"), this);
-    buttonLayout->addWidget(reloadBtn);
+//    QPushButton *reloadBtn = new QPushButton(tr("Reload"), this);
+//    buttonLayout->addWidget(reloadBtn);
 
-    guiLayout->addLayout(buttonLayout);
-
-
+//    guiLayout->addLayout(buttonLayout);
 
 }
 

@@ -114,7 +114,6 @@ void CodingWidget::loadGuiInteraction() {
 
     // Interaction - Button
     saveBtn = new QPushButton(tr("Save"), this);
-    sendBtn = new QPushButton(tr("Send"), this);
 
     actionLayout = new QGridLayout;
     actionLayout->addWidget(nameLbl, 0, 0);
@@ -127,7 +126,6 @@ void CodingWidget::loadGuiInteraction() {
     actionLayout->addWidget(dataTxtEd, 1, 2, 2, 1);
 
     actionLayout->addWidget(saveBtn, 3, 0, 1, 3);
-    actionLayout->addWidget(sendBtn, 4, 0, 1, 3);
 
 
     // Interaction
@@ -141,80 +139,9 @@ void CodingWidget::loadGuiInteraction() {
 
     connect(dataTypeCBx, SIGNAL(currentTextChanged(QString)), dataLbl, SLOT(setText(QString)));
     connect(saveBtn, SIGNAL(clicked(bool)), this, SLOT(saveContext()));
-    connect(sendBtn, SIGNAL(clicked(bool)), this, SLOT(sendContext()));
     connect(this, SIGNAL(requestContextData()), reader, SIGNAL(requestContextData()));
 
     connect(reader, SIGNAL(answerContextData(QList<QVariant>)), this, SLOT(receiveSelectedDictData(QList<QVariant>)));
-}
-
-
-void CodingWidget::sendContext() {
-    qDebug() << "CodingWidget::sendContext()";
-
-    // Check name is not empty
-    if(nameLnEd->text().isEmpty()) {
-        QMessageBox::warning(this, tr("Send"), tr("Name is empty!"));
-        return;
-    }
-
-    emit requestContextData();
-
-    // UUID - Generate
-    uuid_t uuid;
-    uuid_generate(uuid);
-    uuid_copy(this->sourceUuid, uuid);
-
-    // UUID - QString
-    QString uuidString;
-    size_t s;
-    for (s = 0; s < sizeof(sourceUuid) - 1; s++) {
-        uuidString += QString("%1").arg(sourceUuid[s], 0, 16);
-    }
-
-    // QUuid - Create
-//    QUuid myuuid = QUuid::createUuid();
-
-
-    // Internal
-    qDebug() << "nameLnEd->text(): " << nameLnEd->text();
-    qDebug() << "actionCBx->currentData().toInt(): " << actionCBx->currentData().toInt();
-    qDebug() << "dataTypeCBx->currentData().toInt(): " << dataTypeCBx->currentData().toInt();
-    qDebug() << "dataTxtEd->toPlainText(): " << dataTxtEd->toPlainText();
-
-    // Context Header
-    qDebug() << "Context Header: service (1): " << actionCBx->currentData().toInt();
-    qDebug() << "Context Header: version (1): " << 0;
-    qDebug() << "Context Header: channel (1): " << 0;
-    qDebug() << "Context Header: opt. size (1): " << 0;
-    qDebug() << "Context Header: UUID (16): " << uuidString;
-    qDebug() << "Context Header: IP address (4): " << "";
-
-
-//    qDebug() << "Context Header: UUID (16): " << myuuid.toString();
-
-//    qDebug() << "Context Header: UUID (16): " << res.c_str();
-//    qDebug() << "Context Header: UUID (16): " << myuuid.toByteArray();
-//    qDebug() << "Context Header: UUID (16): " << myuuid.toByteArray().data();
-//    qDebug() << "Context Header: UUID (16): " << (unsigned char*)(myuuid.toByteArray().data());
-//    qDebug() << "Context Header: UUID (16): " << sizeof(sourceUuid);
-//    qDebug() << "Context Header: UUID (16): " << sizeof(myuuid);
-
-    // Context Bricks
-    qDebug() << "Context Datagram: list size (1): " << getCodingElementSize()*2;
-    qDebug() << "Context Datagram: type (1): " << codingIdLnEd->text().toInt();
-
-    for(int i = 0; i<contextBrickList.size(); i++) {
-
-        qDebug() << "Context Datagram " << i << ": content (1): " << contextBrickList[i].first;
-        qDebug() << "Context Datagram " << i << ": mask (1): " << contextBrickList[i].second;
-    }
-
-    // Context Data
-    QString truncData = dataTxtEd->toPlainText();
-    truncData.truncate(140);
-    qDebug() << "Context Data: type (1): " << dataTypeCBx->currentData().toInt();
-    qDebug() << "Context Data: data (140): " << truncData;
-    qDebug() << "Context Data: opt. size (1): " << 0;
 }
 
 void CodingWidget::receiveSelectedDictData(QList<QVariant> data) {
@@ -226,21 +153,6 @@ void CodingWidget::receiveSelectedDictData(QList<QVariant> data) {
     }
 
     contextDatagramList.push_back(data);
-
-//    for(int i=0; i<data.size(); i++) {
-//        qDebug() << "data.at(" << i << ").toString(): " << data.at(i).toString();
-//    }
-
-//    for(int i=2; i<data.size(); i+=2) {
-//        qDebug() << "data.at(" << i << ").toString(): " << data.at(i).toString();
-//        qDebug() << "data.at(" << i+1 << ").toString(): " << data.at(i+1).toString();
-
-//        quint8 content(data.at(i).toInt());
-//        quint8 mask(data.at(i+1).toInt());
-//        QPair<quint8, quint8> brick(content, mask);
-
-//        contextBrickList.push_back(brick);
-//    }
 }
 
 void CodingWidget::saveContext() {

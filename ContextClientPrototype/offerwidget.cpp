@@ -156,81 +156,15 @@ bool OfferWidget::loadFile(QString fileName) {
     return true;
 }
 
-//void OfferWidget::loadGuiInteraction() {
-//    qDebug() << "OfferWidget::loadGuiInteraction()";
 
-//    // Interaction - Choose
-//    nameLbl = new QLabel(tr("Name"));
-//    nameLnEd = new QLineEdit;
-//    nameLnEd->setMaxLength(30);
-//    nameLnEd->setMinimumWidth(260);
-//    nameLnEd->setMaximumWidth(260);
-//    nameLbl->setBuddy(nameLnEd);
+void OfferWidget::loadGuiInteraction() {
+    qDebug() << "OfferWidget::loadGuiInteraction()";
 
-//    actionLbl = new QLabel(tr("Action"));
-//    actionCBx = new QComboBox(this);
-//    actionCBx->addItem("Offer", 1);
-//    actionCBx->addItem("Request", 2);
-//    actionCBx->setMinimumWidth(260);
-//    actionLbl->setBuddy(actionCBx);
-
-//    dataTypeLbl = new QLabel(tr("Datatype"));
-//    dataTypeCBx = new QComboBox(this);
-//    dataTypeCBx->addItem("Text", 1);
-//    dataTypeCBx->addItem("URL", 2);
-//    dataTypeCBx->setMinimumWidth(260);
-//    dataTypeLbl->setBuddy(dataTypeCBx);
-
-//    dataLbl = new QLabel(dataTypeCBx->currentText());
-//    dataTxtEd = new QTextEdit(this);
-
-//    // Interaction - Button
-//    saveBtn = new QPushButton(tr("Save"), this);
-//    sendBtn = new QPushButton(tr("Send"), this);
-
-//    actionLayout = new QGridLayout;
-//    actionLayout->addWidget(nameLbl, 0, 0);
-//    actionLayout->addWidget(nameLnEd, 0, 1);
-//    actionLayout->addWidget(actionLbl, 1, 0);
-//    actionLayout->addWidget(actionCBx, 1, 1);
-//    actionLayout->addWidget(dataTypeLbl, 2, 0);
-//    actionLayout->addWidget(dataTypeCBx, 2, 1);
-//    actionLayout->addWidget(dataLbl, 0, 2);
-//    actionLayout->addWidget(dataTxtEd, 1, 2, 2, 1);
-
-//    actionLayout->addWidget(saveBtn, 3, 0, 1, 3);
-//    actionLayout->addWidget(sendBtn, 4, 0, 1, 3);
+}
 
 
-//    // Interaction
-//    interactionGBox = new QGroupBox(tr("Interaction"));
-//    interactionGBox->setLayout(actionLayout);
-
-//    interactionLayout = new QVBoxLayout;
-//    interactionLayout->addWidget(interactionGBox);
-
-//    addNextLayout(interactionLayout);
-
-//    connect(dataTypeCBx, SIGNAL(currentTextChanged(QString)), dataLbl, SLOT(setText(QString)));
-//    connect(saveBtn, SIGNAL(clicked(bool)), this, SLOT(saveContext()));
-//    connect(sendBtn, SIGNAL(clicked(bool)), this, SLOT(sendContext()));
-//    connect(this, SIGNAL(requestContextData()), reader, SIGNAL(requestContextData()));
-
-//    connect(reader, SIGNAL(answerContextData(QList<QVariant>)), this, SLOT(receiveSelectedDictData(QList<QVariant>)));
-
-////        QScrollArea *scroll=new QScrollArea;
-//////        scroll->setParent(this->widget(0));
-//////        scroll->setGeometry(guiWidget->parentWidget()->geometry());
-////        scroll->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-////        scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-////        scroll->setWidget(guiWidget);
-////        scroll->show();
-
-//}
-
-
-//void OfferWidget::sendContext() {
-//    qDebug() << "OfferWidget::sendContext()";
+void OfferWidget::sendContext() {
+    qDebug() << "OfferWidget::sendContext()";
 
 //    // Check name is not empty
 //    if(nameLnEd->text().isEmpty()) {
@@ -296,106 +230,4 @@ bool OfferWidget::loadFile(QString fileName) {
 //    qDebug() << "Context Data: type (1): " << dataTypeCBx->currentData().toInt();
 //    qDebug() << "Context Data: data (140): " << truncData;
 //    qDebug() << "Context Data: opt. size (1): " << 0;
-//}
-
-//void OfferWidget::receiveSelectedDictData(QList<QVariant> data) {
-//    qDebug() << "OfferWidget::receiveSelectedDictData(QList<QVariant> data)";
-
-
-//    for(int j=0; j<data.size(); j++) {
-//        qDebug() << "OfferWidget::receiveSelectedDictData(QList<QVariant> data): data.at(" << j << ").toString(): " << data.at(j).toString();
-//    }
-
-//    contextDatagramList.push_back(data);
-
-////    for(int i=0; i<data.size(); i++) {
-////        qDebug() << "data.at(" << i << ").toString(): " << data.at(i).toString();
-////    }
-
-////    for(int i=2; i<data.size(); i+=2) {
-////        qDebug() << "data.at(" << i << ").toString(): " << data.at(i).toString();
-////        qDebug() << "data.at(" << i+1 << ").toString(): " << data.at(i+1).toString();
-
-////        quint8 content(data.at(i).toInt());
-////        quint8 mask(data.at(i+1).toInt());
-////        QPair<quint8, quint8> brick(content, mask);
-
-////        contextBrickList.push_back(brick);
-////    }
-//}
-
-//void OfferWidget::saveContext() {
-//    qDebug() << "OfferWidget::saveContext()";
-
-//    // Check name is not empty
-//    if(nameLnEd->text().isEmpty()) {
-//        QMessageBox::warning(this, tr("Save Context"), tr("Name is empty!"));
-//        return;
-//    }
-
-//    // Load data in contextDatagramList via slot "answerContextData(QList<QVariant>)"
-//    contextDatagramList.clear();
-//    emit requestContextData();
-
-//    if(actionCBx->currentText() == "Offer") {
-
-//        QString fileName = QString("%1/Offers/%2.%3").arg(PROTO_DIR).arg(nameLnEd->text()).arg("cof");
-//        fileName.replace(QString(" "), QString(""));
-
-//        QFile file(fileName);
-//        if (!file.open(QFile::WriteOnly | QFile::Text)) {
-//            QMessageBox::warning(this, tr("Save Context"),
-//                                 tr("Cannot write file %1:\n%2.")
-//                                 .arg(fileName)
-//                                 .arg(file.errorString()));
-//            return;
-//        }
-
-//        writer = new OfferWriter();
-//        ((OfferWriter*) writer)->write(&file, this);
-
-//        return;
-//    }
-//}
-
-
-//// Coding - Id
-//QString OfferWidget::getCodingId() const {
-//    return codingIdLnEd->text();
-//}
-//void OfferWidget::setCodingId(QString codingId) {
-//    codingIdLnEd->setText(codingId);
-//}
-
-//// Coding - Name
-//QString OfferWidget::getCodingName() const {
-//    return codingNameLnEd->text();
-//}
-//void OfferWidget::setCodingName(QString codingName) {
-//    codingNameLnEd->setText(codingName);
-//}
-
-//// Coding - Language
-//QString OfferWidget::getCodingLanguage() const {
-//    return codingLanguageLnEd->text();
-//}
-//void OfferWidget::setCodingLanguage(QString codingLanguage) {
-//    codingLanguageLnEd->setText(codingLanguage);
-//}
-
-//// Coding - ElementCount
-//int OfferWidget::getCodingElementCount() const {
-//    return codingElementCount;
-//}
-//void OfferWidget::setCodingElementCount(int count) {
-//    codingElementCount = count;
-//}
-
-//// Coding - ElementSize
-//int OfferWidget::getCodingElementSize() const {
-//    return codingElementSize;
-//}
-
-//void OfferWidget::setCodingElementSize(int size) {
-//    codingElementSize = size;
-//}
+}

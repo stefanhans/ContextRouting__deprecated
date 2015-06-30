@@ -103,7 +103,6 @@ public:
 
 public slots:
     void saveContext();
-    void sendContext();
 
     void receiveSelectedDictData(QList<QVariant> data);
 
@@ -149,8 +148,6 @@ private:
     QLabel *dataLbl;
     QTextEdit *dataTxtEd;
     QPushButton *saveBtn;
-    QPushButton *sendBtn;
-
 
     uuid_t sourceUuid;
 

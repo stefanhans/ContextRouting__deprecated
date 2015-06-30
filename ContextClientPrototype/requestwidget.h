@@ -19,6 +19,8 @@ public:
 
     bool loadFile(QString fileName);
 
+    void loadGuiInteraction();
+
     // Request
     QString getRequestName() const {
         return requestNameLnEd->text();
@@ -107,6 +109,9 @@ public:
     void setDatagramType(QString type) {
         datagramTypeLnEd->setText(type);
     }
+
+public slots:
+    void sendContext();
 
 private:
 

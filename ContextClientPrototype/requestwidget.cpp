@@ -155,3 +155,14 @@ bool RequestWidget::loadFile(QString fileName) {
 
     return true;
 }
+
+
+void RequestWidget::loadGuiInteraction() {
+    qDebug() << "RequestWidget::loadGuiInteraction()";
+
+}
+
+
+void RequestWidget::sendContext() {
+    qDebug() << "RequestWidget::sendContext()";
+}
