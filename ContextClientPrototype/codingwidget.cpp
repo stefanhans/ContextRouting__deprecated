@@ -23,7 +23,7 @@ CodingWidget::CodingWidget(QWidget *parent)
 {
     qDebug() << "CodingWidget::CodingWidget(QWidget *parent)";
 
-    // GUI - Coding - Coding
+    // GUI - "Coding Header"
     codingIdLbl = new QLabel(tr("Identifier"));
     codingIdLnEd = new QLineEdit;
     codingIdLbl->setBuddy(codingIdLnEd);
@@ -44,7 +44,6 @@ CodingWidget::CodingWidget(QWidget *parent)
     codingLayout->addWidget(codingLanguageLbl, 0, 4);
     codingLayout->addWidget(codingLanguageLnEd, 0, 5);
 
-    // GUI - Coding
     codLayout = new QVBoxLayout;
     codGBox = new QGroupBox("Coding Header");
 

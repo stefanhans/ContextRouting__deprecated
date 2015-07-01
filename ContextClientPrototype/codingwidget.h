@@ -113,17 +113,7 @@ signals:
 
 private:
 
-    AbstractWriter *writer;
-
-    CodingReader *reader;
-    int codingElementCount;
-    int codingElementSize;
-
-    QPair<quint8, quint8> contextBrick;
-    QList<QPair<quint8, quint8> > contextBrickList;
-
-    QList<QList<QVariant> > contextDatagramList;
-
+    // Coding Header (constructor with addNextLayout(layout))
     QVBoxLayout *codLayout;
     QGroupBox *codGBox;
 
@@ -135,6 +125,7 @@ private:
     QLabel *codingLanguageLbl;
     QLineEdit *codingLanguageLnEd;
 
+    // Interaction (loadGuiInteraction())
     QVBoxLayout *interactionLayout;
     QGroupBox *interactionGBox;
 
@@ -149,9 +140,20 @@ private:
     QTextEdit *dataTxtEd;
     QPushButton *saveBtn;
 
-    uuid_t sourceUuid;
+    // Internal (hidden)
+    uuid_t sourceUuid;    
 
 
+    AbstractWriter *writer;
+
+    CodingReader *reader;
+    int codingElementCount;
+    int codingElementSize;
+
+    QPair<quint8, quint8> contextBrick;
+    QList<QPair<quint8, quint8> > contextBrickList;
+
+    QList<QList<QVariant> > contextDatagramList;
 };
 #endif // CODINGWIDGET_H
 

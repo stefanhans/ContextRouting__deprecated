@@ -250,24 +250,11 @@ bool OfferReader::read(QIODevice *device, AbstractWidget *widget) {
 
             if(xml.name() == "ContextData") {
 
-
-
-                // Data
-                QLabel *dataTypeLbl = new QLabel(tr("Type"));
-                QComboBox *dataTypeCBx = new QComboBox();
-                dataTypeCBx->addItem("Text");
-                dataTypeCBx->addItem("URL");
-                dataTypeLbl->setBuddy(dataTypeCBx);
-
-                dataLayout = new QGridLayout;
-                dataLayout->addWidget(dataTypeLbl, 0, 0);
-                dataLayout->addWidget(dataTypeCBx, 0, 1);
-
                 for(int i=0; i<xml.attributes().size();i++) {
                     qDebug() << "Attribute:\t" << xml.attributes().at(i).name() << "=" << xml.attributes().at(i).value();
 
                     if(xml.attributes().at(i).name() == "type") {
-                        dataTypeCBx->setCurrentText(xml.attributes().at(i).value().toString());
+                        offerWidget->setDataType(xml.attributes().at(i).value().toString());
                         continue;
                     }
                 }
@@ -297,24 +284,7 @@ bool OfferReader::read(QIODevice *device, AbstractWidget *widget) {
             if(lastName == "ContextData") {
                 qDebug() << "isCDATA from ContextData: " << xml.text().toString();
 
-
-                QLabel *dataLbl = new QLabel(tr("Type"));
-                QTextEdit *dataTxtEd = new QTextEdit();
-                dataTxtEd->setText(xml.text().toString());
-                dataLbl->setBuddy(dataTxtEd);
-
-                dataLayout->addWidget(dataLbl, 0, 2);
-                dataLayout->addWidget(dataTxtEd, 0, 3);
-
-
-                QGroupBox *dataGBox = new QGroupBox("Data");
-                dataGBox->setLayout(dataLayout);
-
-                newLayout = new QVBoxLayout;
-                newLayout->addWidget(dataGBox);
-
-                offerWidget->addNextLayout(newLayout);
-
+                offerWidget->setDataText(xml.text().toString());
             }
 
 

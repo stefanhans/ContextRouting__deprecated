@@ -9,6 +9,7 @@
 #include <uuid/uuid.h>
 
 #include <QPushButton>
+#include <QComboBox>
 
 class OfferWidget : public AbstractWidget
 {
@@ -110,14 +111,46 @@ public:
         datagramTypeLnEd->setText(type);
     }
 
+    // ContextDatagramm
+    QList<QList<QVariant> > getContextDatagramList() {
+        return contextDatagramList;
+    }
+
+
+    // Context Data
+    QString getDataType() {
+        return dataTypeCBx->currentText();
+    }
+    void setDataType(QString dataType) {
+        return dataTypeCBx->setCurrentText(dataType);
+    }
+
+    QString getDataText() {
+        QString truncData = dataTxtEd->toPlainText();
+        truncData.truncate(140);
+        return truncData;
+    }
+    void setDataText(QString text) {
+        return dataTxtEd->setPlainText(text);
+    }
+
 public slots:
     void sendContext();
+    void receiveSelectedDictData(QList<QVariant> data);
+
+
+signals:
+    void requestContextData();
+    void answerContextData(QList<QVariant>);
 
 private:
 
     AbstractWriter *writer;
 
     OfferReader *reader;
+
+    QList<QList<QVariant> > contextDatagramList;
+
 
     QVBoxLayout *mainLayout;
 
@@ -171,6 +204,25 @@ private:
 
     QLabel *datagramTypeLbl;
     QLineEdit *datagramTypeLnEd;
+
+    // Data
+    QGridLayout *dataLayout;
+    QGroupBox *dataGBox;
+    QLabel *dataTypeLbl;
+    QComboBox *dataTypeCBx;
+    QLabel *dataLbl;
+    QTextEdit *dataTxtEd;
+
+
+    // GuiInteraction
+    QVBoxLayout *interactionLayout;
+    QGroupBox *interactionGBox;
+
+    QGridLayout *actionLayout;
+
+    QPushButton *sendBtn;
+
+    uuid_t sourceUuid;
 };
 #endif // OFFERWIDGET_H
 

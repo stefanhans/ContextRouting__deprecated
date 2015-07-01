@@ -21,7 +21,7 @@
 OfferWidget::OfferWidget(QWidget *parent)
     : AbstractWidget(parent)
 {
-    // Offer - Offer
+    // Offer
     offerNameLbl = new QLabel(tr("Name"));
     offerNameLnEd = new QLineEdit;
     offerNameLbl->setBuddy(offerNameLnEd);
@@ -44,7 +44,7 @@ OfferWidget::OfferWidget(QWidget *parent)
 
     //  service="1" serviceName="Offer" version="0" channel="0" optionalSize="0" uuid="287477b1e629498bb224746524d841" ip_address="Not yet"
 
-    // Offer - Header
+    // Header
     headerServiceNameLbl = new QLabel(tr("Service"));
     headerServiceNameLnEd = new QLineEdit;
     headerServiceNameLbl->setBuddy(headerServiceNameLnEd);
@@ -107,6 +107,27 @@ OfferWidget::OfferWidget(QWidget *parent)
     datagramLayout->addWidget(datagramTypeLbl, 0, 2);
     datagramLayout->addWidget(datagramTypeLnEd, 0, 3);
 
+
+    // Data
+    dataTypeLbl = new QLabel(tr("Type"));
+    dataTypeCBx = new QComboBox();
+    dataTypeCBx->addItem("Text");
+    dataTypeCBx->addItem("URL");
+    dataTypeLbl->setBuddy(dataTypeCBx);
+
+
+    dataLbl = new QLabel;
+    dataTxtEd = new QTextEdit;
+    dataLbl->setBuddy(dataTxtEd);
+
+    dataLayout = new QGridLayout;
+    dataLayout->addWidget(dataTypeLbl, 0, 0);
+    dataLayout->addWidget(dataTypeCBx, 0, 1);
+    dataLayout->addWidget(dataLbl, 0, 2);
+    dataLayout->addWidget(dataTxtEd, 0, 3);
+
+
+
     // Offer
     mainLayout = new QVBoxLayout;
     offerGBox = new QGroupBox("Offer");
@@ -121,9 +142,9 @@ OfferWidget::OfferWidget(QWidget *parent)
     datagramGBox->setLayout(datagramLayout);
     mainLayout->addWidget(datagramGBox);
 
-//    dataGBox = new QGroupBox("Data");
-//    dataGBox->setLayout(dataLayout);
-//    mainLayout->addWidget(dataGBox);
+    dataGBox = new QGroupBox("Data");
+    dataGBox->setLayout(dataLayout);
+    mainLayout->addWidget(dataGBox);
 
     addNextLayout(mainLayout);
 }
@@ -160,40 +181,57 @@ bool OfferWidget::loadFile(QString fileName) {
 void OfferWidget::loadGuiInteraction() {
     qDebug() << "OfferWidget::loadGuiInteraction()";
 
+    // Interaction - Button
+    sendBtn = new QPushButton(tr("Send"), this);
+
+    actionLayout = new QGridLayout;
+    actionLayout->addWidget(sendBtn, 0, 0);
+
+
+    // Interaction
+    interactionGBox = new QGroupBox(tr("Interaction"));
+    interactionGBox->setLayout(actionLayout);
+
+    interactionLayout = new QVBoxLayout;
+    interactionLayout->addWidget(interactionGBox);
+
+    addNextLayout(interactionLayout);
+
+    connect(sendBtn, SIGNAL(clicked(bool)), this, SLOT(sendContext()));
+    connect(this, SIGNAL(requestContextData()), reader, SIGNAL(requestContextData()));
+
+    connect(reader, SIGNAL(answerContextData(QList<QVariant>)), this, SLOT(receiveSelectedDictData(QList<QVariant>)));
+
+}
+
+void OfferWidget::receiveSelectedDictData(QList<QVariant> data) {
+    qDebug() << "OfferWidget::receiveSelectedDictData(QList<QVariant> data)";
+
+
+    for(int j=0; j<data.size(); j++) {
+        qDebug() << "OfferWidget::receiveSelectedDictData(QList<QVariant> data): data.at(" << j << ").toString(): " << data.at(j).toString();
+    }
+
+    contextDatagramList.push_back(data);
 }
 
 
 void OfferWidget::sendContext() {
     qDebug() << "OfferWidget::sendContext()";
 
-//    // Check name is not empty
-//    if(nameLnEd->text().isEmpty()) {
-//        QMessageBox::warning(this, tr("Send"), tr("Name is empty!"));
-//        return;
-//    }
+    // Check name is not empty
+    if(getOfferName().isEmpty()) {
+        QMessageBox::warning(this, tr("Send"), tr("Name is empty!"));
+        return;
+    }
 
-//    emit requestContextData();
-
-//    // UUID - Generate
-//    uuid_t uuid;
-//    uuid_generate(uuid);
-//    uuid_copy(this->sourceUuid, uuid);
-
-//    // UUID - QString
-//    QString uuidString;
-//    size_t s;
-//    for (s = 0; s < sizeof(sourceUuid) - 1; s++) {
-//        uuidString += QString("%1").arg(sourceUuid[s], 0, 16);
-//    }
-
-//    // QUuid - Create
-////    QUuid myuuid = QUuid::createUuid();
+    emit requestContextData();
 
 
-//    // Internal
-//    qDebug() << "nameLnEd->text(): " << nameLnEd->text();
-//    qDebug() << "actionCBx->currentData().toInt(): " << actionCBx->currentData().toInt();
-//    qDebug() << "dataTypeCBx->currentData().toInt(): " << dataTypeCBx->currentData().toInt();
+    // Internal
+    qDebug() << "nameLnEd->text(): " << getOfferName();
+
+//    qDebug() << "getDatagramType: " << getDatagramType();
 //    qDebug() << "dataTxtEd->toPlainText(): " << dataTxtEd->toPlainText();
 
 //    // Context Header
