@@ -136,6 +136,7 @@ bool CodingReader::read(QIODevice *device, AbstractWidget *widget) {
 
                     DictionaryTree *dictTree = new DictionaryTree();
                     dictTree->setNumberInQueue(codingElement->getNumberElement());
+
                     dictTree->setBrickCount(QString("%1").arg(codingElement->getNumberElement()));
                     dictTree->setName(codingElement->getElementName());
                     dictTree->setSourceType(codingElement->getSourceType());
@@ -145,23 +146,10 @@ bool CodingReader::read(QIODevice *device, AbstractWidget *widget) {
                     dictTree->loadDictionaryXml(&file);
                     dictTree->setMinimumHeight(40+dictTree->getMinimumSize());
 
-                    dictLayout = new QVBoxLayout;
-                    dictLayout->addWidget(dictTree);
-
-                    dictGBox = new QGroupBox(tr("Dictionary"));
-                    dictGBox->setLayout(dictLayout);
-
-
-                    codingElement->addWidget(dictGBox);
+                    codingElement->addWidget(dictTree->prepareDisplay());
 
                     connect(this, SIGNAL(requestContextData()), dictTree, SIGNAL(requestContextData()));
                     connect(dictTree, SIGNAL(answerContextData(QList<QVariant>)), this, SIGNAL(answerContextData(QList<QVariant>)));
-
-//                    qDebug() << "dictionaryBrick.context: " << dictTree->currentIndex().sibling(dictTree->currentIndex().row(), 1).data(Qt::DisplayRole).toInt();
-
-//                    for(int i =0; i<dictTree->getSelectedData().size(); i++) {
-//                        qDebug() << i << ": " << dictTree->getSelectedData().at(i).toString();
-//                    }
                 }
 
                 widget->addNextLayout(codingElement->getLayout());

@@ -105,6 +105,7 @@ public slots:
     void saveContext();
 
     void receiveSelectedDictData(QList<QVariant> data);
+    void adaptTextEdit(int action);
 
 
 signals:

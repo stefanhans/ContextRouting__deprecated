@@ -65,10 +65,6 @@ RequestWidget::RequestWidget(QWidget *parent)
     headerOptionalSizeLnEd = new QLineEdit;
     headerOptionalSizeLbl->setBuddy(headerOptionalSizeLnEd);
 
-    headerUuidLbl = new QLabel(tr("UUID"));
-    headerUuidLnEd = new QLineEdit;
-    headerUuidLbl->setBuddy(headerUuidLnEd);
-
     headerIpAddressLbl = new QLabel(tr("IP Address"));
     headerIpAddressLnEd = new QLineEdit;
     headerIpAddressLbl->setBuddy(headerIpAddressLnEd);
@@ -85,11 +81,8 @@ RequestWidget::RequestWidget(QWidget *parent)
     headerLayout->addWidget(headerChannelLnEd,1, 1);
     headerLayout->addWidget(headerOptionalSizeLbl, 1, 2);
     headerLayout->addWidget(headerOptionalSizeLnEd, 1, 3);
-    headerLayout->addWidget(headerUuidLbl, 1, 4);
-    headerLayout->addWidget(headerUuidLnEd, 1, 5);
-
-    headerLayout->addWidget(headerIpAddressLbl, 2, 0);
-    headerLayout->addWidget(headerIpAddressLnEd, 2, 1);
+    headerLayout->addWidget(headerIpAddressLbl, 1, 4);
+    headerLayout->addWidget(headerIpAddressLnEd, 1, 5);
 
 
     // Datagram
@@ -120,10 +113,6 @@ RequestWidget::RequestWidget(QWidget *parent)
     datagramGBox = new QGroupBox("Datagram");
     datagramGBox->setLayout(datagramLayout);
     mainLayout->addWidget(datagramGBox);
-
-//    dataGBox = new QGroupBox("Data");
-//    dataGBox->setLayout(dataLayout);
-//    mainLayout->addWidget(dataGBox);
 
     addNextLayout(mainLayout);
 }

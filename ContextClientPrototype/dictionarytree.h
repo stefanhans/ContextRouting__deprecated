@@ -30,6 +30,8 @@ public:
 
     void loadDictionaryXml(QFile *file);
 
+    QWidget* prepareDisplay(QString selectionText = "");
+
     QList<QVariant> getSelectedData();
 
     QStandardItemModel model;

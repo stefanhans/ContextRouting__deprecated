@@ -222,22 +222,7 @@ bool OfferReader::read(QIODevice *device, AbstractWidget *widget) {
                     dictTree->loadDictionaryXml(&file);
                     dictTree->setMinimumHeight(40+dictTree->getMinimumSize());
 
-
-                    QList<QStandardItem *>  found = dictTree->model.findItems(((DictionaryCodingElement*) codingElement)->getSelection(), Qt::MatchRecursive);
-                    qDebug() << "dictTree->model.findItems: found: " << found.count();
-                    if(!found.isEmpty()) {
-                        dictTree->setCurrentIndex(dictTree->model.indexFromItem(found.at(0)));
-                    }
-
-                    dictLayout = new QVBoxLayout;
-                    dictLayout->addWidget(dictTree);
-
-                    dictGBox = new QGroupBox(tr("Dictionary"));
-                    dictGBox->setLayout(dictLayout);
-
-
-                    codingElement->addWidget(dictGBox);
-
+                    codingElement->addWidget(dictTree->prepareDisplay(((DictionaryCodingElement*) codingElement)->getSelection()));
 
                     connect(this, SIGNAL(requestContextData()), dictTree, SIGNAL(requestContextData()));
                     connect(dictTree, SIGNAL(answerContextData(QList<QVariant>)), this, SIGNAL(answerContextData(QList<QVariant>)));

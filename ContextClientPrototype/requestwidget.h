@@ -80,13 +80,6 @@ public:
         headerOptionalSizeLnEd->setText(optionalSize);
     }
 
-    QString getHeaderUuid() const {
-        return headerUuidLnEd->text();
-    }
-    void setHeaderUuid(QString uuid) {
-        headerUuidLnEd->setText(uuid);
-    }
-
     QString getHeaderIpAddress() const {
         return headerIpAddressLnEd->text();
     }

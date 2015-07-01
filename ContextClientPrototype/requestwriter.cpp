@@ -31,25 +31,12 @@ bool RequestWriter::write(QIODevice *device, AbstractWidget *widget) {
 
 
     // ContextHeader
-
-    // UUID - Generate
-    uuid_t uuid;
-    uuid_generate(uuid);
-
-    // UUID - QString
-    QString uuidString;
-    size_t s;
-    for (s = 0; s < sizeof(uuid) - 1; s++) {
-        uuidString += QString("%1").arg(uuid[s], 0, 16);
-    }
-
     xml.writeEmptyElement("ContextHeader");
     xml.writeAttribute("serviceName", codingWidget->getCurrentServiceName());
     xml.writeAttribute("service", QString("%1").arg(codingWidget->getCurrentServiceNumber()));
     xml.writeAttribute("version", "0");
     xml.writeAttribute("channel", "0");
     xml.writeAttribute("optionalSize", "0");
-    xml.writeAttribute("uuid", uuidString);
     xml.writeAttribute("ip_address", "Not yet");
 
 
@@ -89,13 +76,6 @@ bool RequestWriter::write(QIODevice *device, AbstractWidget *widget) {
         xml.writeEndElement();
     }
     xml.writeEndElement();
-
-
-    // Context Data
-    xml.writeStartElement("ContextData");
-    xml.writeAttribute("type", codingWidget->getDataType());
-    xml.writeCDATA(codingWidget->getDataText());
-
 
     // Close all open tags
     xml.writeEndDocument();

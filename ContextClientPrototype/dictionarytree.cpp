@@ -220,6 +220,28 @@ void DictionaryTree::loadDictionaryXml(QFile *file) {
     minimumSize = rowHeight(model.index(0, 0))*rowCount;
 }
 
+
+
+QWidget* DictionaryTree::prepareDisplay(QString selectionText) {
+    qDebug() << "QWidget* prepareDisplay(" << selectionText << ")";
+
+    if(!selectionText.isEmpty()) {
+
+        QList<QStandardItem *>  found = model.findItems(selectionText, Qt::MatchRecursive);
+        if(!found.isEmpty()) {
+            setCurrentIndex(model.indexFromItem(found.at(0)));
+        }
+    }
+
+    QVBoxLayout *dictLayout = new QVBoxLayout;
+    dictLayout->addWidget(this);
+
+    QGroupBox *dictGBox = new QGroupBox(tr("Dictionary"));
+    dictGBox->setLayout(dictLayout);
+
+    return dictGBox;
+}
+
 QList<QVariant> DictionaryTree::getSelectedData() {
     qDebug() << "QList<QVariant> DictionaryTree::getSelectedData()";
 

@@ -137,6 +137,8 @@ void CodingWidget::loadGuiInteraction() {
     addNextLayout(interactionLayout);
 
     connect(dataTypeCBx, SIGNAL(currentTextChanged(QString)), dataLbl, SLOT(setText(QString)));
+    connect(actionCBx, SIGNAL(currentIndexChanged(int)), this, SLOT(adaptTextEdit(int)));
+
     connect(saveBtn, SIGNAL(clicked(bool)), this, SLOT(saveContext()));
     connect(this, SIGNAL(requestContextData()), reader, SIGNAL(requestContextData()));
 
@@ -152,6 +154,24 @@ void CodingWidget::receiveSelectedDictData(QList<QVariant> data) {
     }
 
     contextDatagramList.push_back(data);
+}
+
+
+void CodingWidget::adaptTextEdit(int action) {
+    qDebug() << "CodingWidget::adaptTextEdit(" << action << ")";
+
+    switch (action) {
+        case 0:  dataTxtEd->setEnabled(true);
+                dataLbl->setText(dataTypeCBx->currentText());
+                dataTypeCBx->setEnabled(true);
+
+        break;
+        case 1:  dataTxtEd->setEnabled(false);
+                dataLbl->setText(tr("Action \"%1\" has no data").arg(actionCBx->currentText()));
+                dataTypeCBx->setEnabled(false);
+        break;
+        default: dataTxtEd->setEnabled(true); break;
+    }
 }
 
 void CodingWidget::saveContext() {

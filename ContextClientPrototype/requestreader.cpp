@@ -103,11 +103,6 @@ bool RequestReader::read(QIODevice *device, AbstractWidget *widget) {
                         continue;
                     }
 
-                    if(xml.attributes().at(i).name() == "uuid") {
-                        requestWidget->setHeaderUuid(xml.attributes().at(i).value().toString());
-                        continue;
-                    }
-
                     if(xml.attributes().at(i).name() == "ip_address") {
                         requestWidget->setHeaderIpAddress(xml.attributes().at(i).value().toString());
                         continue;
@@ -222,55 +217,13 @@ bool RequestReader::read(QIODevice *device, AbstractWidget *widget) {
                     dictTree->loadDictionaryXml(&file);
                     dictTree->setMinimumHeight(40+dictTree->getMinimumSize());
 
-
-                    QList<QStandardItem *>  found = dictTree->model.findItems(((DictionaryCodingElement*) codingElement)->getSelection(), Qt::MatchRecursive);
-                    qDebug() << "dictTree->model.findItems: found: " << found.count();
-                    if(!found.isEmpty()) {
-                        dictTree->setCurrentIndex(dictTree->model.indexFromItem(found.at(0)));
-                    }
-
-                    dictLayout = new QVBoxLayout;
-                    dictLayout->addWidget(dictTree);
-
-                    dictGBox = new QGroupBox(tr("Dictionary"));
-                    dictGBox->setLayout(dictLayout);
-
-
-                    codingElement->addWidget(dictGBox);
+                    codingElement->addWidget(dictTree->prepareDisplay(((DictionaryCodingElement*) codingElement)->getSelection()));
 
 
                     connect(this, SIGNAL(requestContextData()), dictTree, SIGNAL(requestContextData()));
                     connect(dictTree, SIGNAL(answerContextData(QList<QVariant>)), this, SIGNAL(answerContextData(QList<QVariant>)));
                 }
                 requestWidget->addNextLayout(codingElement->getLayout());
-            }
-
-
-            //    <ContextData type="Text"><![CDATA[aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa]]></ContextData>
-
-            if(xml.name() == "ContextData") {
-
-
-
-                // Data
-                QLabel *dataTypeLbl = new QLabel(tr("Type"));
-                QComboBox *dataTypeCBx = new QComboBox();
-                dataTypeCBx->addItem("Text");
-                dataTypeCBx->addItem("URL");
-                dataTypeLbl->setBuddy(dataTypeCBx);
-
-                dataLayout = new QGridLayout;
-                dataLayout->addWidget(dataTypeLbl, 0, 0);
-                dataLayout->addWidget(dataTypeCBx, 0, 1);
-
-                for(int i=0; i<xml.attributes().size();i++) {
-                    qDebug() << "Attribute:\t" << xml.attributes().at(i).name() << "=" << xml.attributes().at(i).value();
-
-                    if(xml.attributes().at(i).name() == "type") {
-                        dataTypeCBx->setCurrentText(xml.attributes().at(i).value().toString());
-                        continue;
-                    }
-                }
             }
         }
 
@@ -291,29 +244,6 @@ bool RequestReader::read(QIODevice *device, AbstractWidget *widget) {
 
 
 //                QList<QStandardItem *>  found = dictTree->model.findItems(xml.text().toString());
-
-            }
-
-            if(lastName == "ContextData") {
-                qDebug() << "isCDATA from ContextData: " << xml.text().toString();
-
-
-                QLabel *dataLbl = new QLabel(tr("Type"));
-                QTextEdit *dataTxtEd = new QTextEdit();
-                dataTxtEd->setText(xml.text().toString());
-                dataLbl->setBuddy(dataTxtEd);
-
-                dataLayout->addWidget(dataLbl, 0, 2);
-                dataLayout->addWidget(dataTxtEd, 0, 3);
-
-
-                QGroupBox *dataGBox = new QGroupBox("Data");
-                dataGBox->setLayout(dataLayout);
-
-                newLayout = new QVBoxLayout;
-                newLayout->addWidget(dataGBox);
-
-                requestWidget->addNextLayout(newLayout);
 
             }
 
