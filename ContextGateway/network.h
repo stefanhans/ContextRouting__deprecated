@@ -23,6 +23,8 @@
 #include <pthread.h>
 
 #include "corepacket.h"
+#include "corestorage.h"
+#include "abstractservice.h"
 
 #define TCP_PORT 22365
 #define UDP_PORT 22366
@@ -63,7 +65,8 @@ public:
 		listenAddress(),
 		localAddress(),
 		bytes(0),
-		p_thread() {
+		p_thread(),
+		packetStorage() {
 
 	}
 
@@ -96,16 +99,17 @@ private:
 
 	pthread_t p_thread;
 
-
+	PacketStorage *packetStorage;
 
 	char buffer[MAXMSG];
 	char message[MAXMSG];
 
 	pair<IpAddress*, char*> sizeAndContextStruct;
-	IpAddress* offerAdressArray[FD_SETSIZE];
+	IpAddress* senderAddressArray[FD_SETSIZE];
 
 	int make_TCP_socket(uint16_t port);
 	int make_UDP_socket(uint16_t port);
 
 };
+
 #endif /* SRC_NETWORK_H_ */

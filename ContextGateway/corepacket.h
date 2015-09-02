@@ -26,6 +26,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#include "abstractservice.h"
+
 #define HEADER_ADDITIONAL_SIZE 255
 #define BRICKS_ADDITIONAL_SIZE 255
 #define DATA_SIZE 140
@@ -116,8 +118,6 @@ private:
  *
  */
 class ContextPacket {
-
-	friend class ContextBrick;
 
 public:
 
@@ -388,6 +388,8 @@ public:
 	 */
 	int deserialize(char *buffer);
 
+	int initializeService();
+
 	/**
 	 * Check for matching context (refactor to derived "Request")
 	 */
@@ -479,6 +481,9 @@ private:
 	 * Array of 255 bytes for additional data
 	 */
 	char additionalData[DATA_ADDITIONAL_SIZE];
+
+
+//	ContextService contextService;
 };
 
 void printBits(size_t const size, void const * const ptr);

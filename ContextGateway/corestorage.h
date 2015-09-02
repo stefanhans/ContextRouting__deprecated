@@ -50,16 +50,4 @@ private:
 
 };
 
-/**
- * @brief AddressStorage
- *
- */
-class AddressStorage {
-
-private:
-
-	vector<IpAddress*> IpAddresses[UCHAR_MAX];
-
-};
-
 #endif /* SRC_CORESTORAGE_H_ */

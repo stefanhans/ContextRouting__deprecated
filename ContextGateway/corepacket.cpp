@@ -294,6 +294,14 @@ int ContextPacket::deserialize(char *buffer) {
 	return b;
 }
 
+int ContextPacket::initializeService() {
+
+	if(service == 1) {
+
+	}
+	return 0;
+}
+
 bool ContextPacket::isMatchingContext(ContextPacket *request) {
 
 	if (this->getContextType() != request->getContextType()) {

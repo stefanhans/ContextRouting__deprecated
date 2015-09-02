@@ -161,7 +161,7 @@ int ContextNetwork::run() {
 //
 ////							printf("client from %s:%u arrived\n", inet_ntoa(TCP_addr.sin_addr), ntohs(TCP_addr.sin_port));
 
-						offerAdressArray[read_fd] = new IpAddress(acceptUuid, TCP_addr);
+						senderAddressArray[read_fd] = new IpAddress(acceptUuid, TCP_addr);
 
 						/* create a new thread that will execute 'receiveTcpThread()' */
 						if (pthread_create(&p_thread, NULL, receiveTcpThread, (void*) &sizeAndContextStruct) != 0) {
@@ -189,7 +189,7 @@ int ContextNetwork::run() {
 							if (FD_ISSET(write_fd, &write_fd_set)) {
 								printf("FD_ISSET: %i\n", write_fd);
 
-								ContextPacket *receipt = new ContextPacket(offerAdressArray[write_fd]);
+								ContextPacket *receipt = new ContextPacket(senderAddressArray[write_fd]);
 
 								char answerBuffer[receipt->getSize()];
 								receipt->serialize(answerBuffer);
@@ -284,6 +284,8 @@ void* receiveTcpThread(void* data) {
 	receivedContextPacket->deserialize(incoming.second);
 	receivedContextPacket->setIpAddress(incoming.first->getSockAddress().sin_addr.s_addr);
 	receivedContextPacket->setPortNumber(incoming.first->getSockAddress().sin_port);
+
+	receivedContextPacket->initializeService();
 
 	/* terminate the thread */
 	pthread_exit(NULL);
