@@ -7,20 +7,10 @@
 
 #include "corestorage.h"
 
-#include <stddef.h>  // defines NULL
 
-CoreStorage* CoreStorage::m_pInstance = NULL;
 
-CoreStorage* CoreStorage::getInstance() {
+PacketStorage::PacketStorage() {
 
-	if (!m_pInstance) { // Only allow one instance of class to be generated.
-
-		m_pInstance = new CoreStorage;
-	}
-
-   return m_pInstance;
 }
-
-
 
 

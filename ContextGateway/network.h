@@ -20,6 +20,8 @@
 #include <unistd.h>
 #include <signal.h>
 
+#include <pthread.h>
+
 #include "corepacket.h"
 
 #define TCP_PORT 22365
@@ -43,12 +45,64 @@ class ContextNetwork {
 
 public:
 
+	ContextNetwork() :
+		keep_going(1),
+		UDP_sock(0),
+		TCP_sock(0),
+		acceptSocket(-1),
+		acceptLength(0),
+		read_fd(0),
+		write_fd(0),
+		TCP_addr(),
+		UDP_addr(),
+		active_fd_set(),
+		read_fd_set(),
+		write_fd_set(),
+		size(0),
+		nbytes(0),
+		listenAddress(),
+		localAddress(),
+		bytes(0),
+		p_thread() {
+
+	}
+
 	int run();
 
 private:
 
 	/* This flag controls termination of the main loop. */
 	volatile sig_atomic_t keep_going;
+
+	int UDP_sock, TCP_sock;
+	int acceptSocket;
+
+	socklen_t acceptLength;
+
+	int read_fd, write_fd;
+
+	struct sockaddr_in TCP_addr;
+	struct sockaddr_un UDP_addr;
+
+	fd_set active_fd_set, read_fd_set, write_fd_set;
+
+	socklen_t size;
+	int nbytes;
+
+	struct sockaddr_in listenAddress;
+	struct in_addr localAddress;
+
+	int bytes;
+
+	pthread_t p_thread;
+
+
+
+	char buffer[MAXMSG];
+	char message[MAXMSG];
+
+	pair<IpAddress*, char*> sizeAndContextStruct;
+	IpAddress* offerAdressArray[FD_SETSIZE];
 
 	int make_TCP_socket(uint16_t port);
 	int make_UDP_socket(uint16_t port);

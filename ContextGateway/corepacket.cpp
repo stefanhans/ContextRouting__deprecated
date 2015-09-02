@@ -391,10 +391,6 @@ void ContextPacket::printPacket() {
 
 }
 
-PacketStorage::PacketStorage() {
-
-}
-
 void printBits(size_t const size, void const * const ptr) {
 	unsigned char *b = (unsigned char*) ptr;
 	unsigned char byte;

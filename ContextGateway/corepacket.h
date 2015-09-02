@@ -58,7 +58,7 @@ class ContextBrick {
 public:
 
 	ContextBrick();
-	virtual ~ContextBrick() {}
+	~ContextBrick() {}
 
 	ContextBrick(byte_t context, byte_t mask);
 
@@ -80,7 +80,7 @@ public:
 
 	IpAddress(uuid_t addressId, struct sockaddr_in sockAddress);
 	~IpAddress() {
-		delete [] addressId;
+//		delete [] addressId;
 	}
 
 	/**
@@ -116,6 +116,8 @@ private:
  *
  */
 class ContextPacket {
+
+	friend class ContextBrick;
 
 public:
 
@@ -387,7 +389,7 @@ public:
 	int deserialize(char *buffer);
 
 	/**
-	 * Check for matching context
+	 * Check for matching context (refactor to derived "Request")
 	 */
 	bool isMatchingContext(ContextPacket *request);
 
@@ -477,55 +479,6 @@ private:
 	 * Array of 255 bytes for additional data
 	 */
 	char additionalData[DATA_ADDITIONAL_SIZE];
-};
-
-
-/**
- * @brief PacketStorage
- *
- */
-class PacketStorage {
-
-public:
-
-	PacketStorage();
-	virtual ~PacketStorage() {}
-
-	vector<ContextPacket*> contextPackets[UCHAR_MAX];
-	vector<IpAddress*> ipAddresses;
-//
-//	// Check storage for matching offer
-//	int requestContextStruct(ContextPacket *contextPacket);
-//	int storeContextStruct(ContextPacket *contextPacket);
-//
-//	int insertContextStruct(ContextPacket *contextPacket);
-//
-//	void* receiveOfferThread(void* data);
-
-private:
-
-
-	/* global mutex for our program. assignment initializes it */
-	pthread_mutex_t a_mutex = PTHREAD_MUTEX_INITIALIZER;
-
-	bool atomic_match(ContextPacket *offer, ContextPacket *request);
-//
-//	int handleOffer(ContextPacket *contextPacket);
-//	int handleRequest(ContextPacket *contextPacket);
-
-
-};
-
-/**
- * @brief AddressStorage
- *
- */
-class AddressStorage {
-
-private:
-
-	vector<IpAddress*> IpAddresses[UCHAR_MAX];
-
 };
 
 void printBits(size_t const size, void const * const ptr);

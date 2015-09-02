@@ -1,32 +1,9 @@
 #include "network.h"
 
-#include "corepacket.h"
-
-#include <pthread.h>
-
 using namespace std;
 
 
 int ContextNetwork::run() {
-
-	keep_going = 1;
-
-	int UDP_sock, TCP_sock;
-	struct sockaddr_in TCP_addr;
-	struct sockaddr_un UDP_addr;
-
-	fd_set active_fd_set, read_fd_set, write_fd_set;
-	int acceptSocket = -1;
-
-	int read_fd, write_fd;
-
-	socklen_t size;
-	int nbytes;
-	char message[MAXMSG];
-
-	struct sockaddr_in listenAddress;
-	struct in_addr localAddress;
-	socklen_t acceptLength = 0;
 
 	localAddress.s_addr = inet_addr("127.0.0.1");
 
@@ -49,14 +26,6 @@ int ContextNetwork::run() {
 	cout << endl;
 	cout << "Server TCP run():" << endl;
 	cout << "----------------------------------------------------------------------" << endl;
-
-	char buffer[MAXMSG];
-	int bytes;
-
-	pthread_t p_thread;
-
-	pair<IpAddress*, char*> sizeAndContextStruct;
-	IpAddress* offerAdressArray[FD_SETSIZE];
 
 	/* Initialize the set of active sockets. */
 	FD_ZERO(&active_fd_set);
@@ -191,9 +160,9 @@ int ContextNetwork::run() {
 //							storage->ipAddresses.push_back(new IpAddress(acceptUuid, TCP_addr));
 //
 ////							printf("client from %s:%u arrived\n", inet_ntoa(TCP_addr.sin_addr), ntohs(TCP_addr.sin_port));
-//
-//							offerAdressArray[read_fd] = new IpAddress(acceptUuid, TCP_addr);
-//
+
+						offerAdressArray[read_fd] = new IpAddress(acceptUuid, TCP_addr);
+
 						/* create a new thread that will execute 'receiveTcpThread()' */
 						if (pthread_create(&p_thread, NULL, receiveTcpThread, (void*) &sizeAndContextStruct) != 0) {
 							perror("pthread_create(receiveTcpThread) failed");
@@ -215,8 +184,10 @@ int ContextNetwork::run() {
 
 						/* Service all the sockets with output pending. */
 						for (write_fd = 0; write_fd < FD_SETSIZE; ++write_fd) {
+							printf("write_fd: %i\n", write_fd);
 
 							if (FD_ISSET(write_fd, &write_fd_set)) {
+								printf("FD_ISSET: %i\n", write_fd);
 
 								ContextPacket *receipt = new ContextPacket(offerAdressArray[write_fd]);
 
