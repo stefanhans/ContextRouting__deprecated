@@ -9,14 +9,10 @@
 #define SRC_ABSTRACTSERVICE_H_
 
 #include "corepacket.h"
-//#include "corestorage.h"
+
+#include "globals.h"
 
 using namespace std;
-
-/**
- * type definitions
- */
-typedef unsigned char byte_t;
 
 /**
  * @brief ContextService

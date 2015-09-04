@@ -22,18 +22,8 @@
 
 #include <pthread.h>
 
+#include "globals.h"
 #include "corepacket.h"
-#include "corestorage.h"
-#include "abstractservice.h"
-
-#define TCP_PORT 22365
-#define UDP_PORT 22366
-#define MAXMSG 1024
-
-/**
- * type definitions
- */
-typedef unsigned char byte_t;
 
 /**
  * thread functions
@@ -65,8 +55,7 @@ public:
 		listenAddress(),
 		localAddress(),
 		bytes(0),
-		p_thread(),
-		packetStorage() {
+		p_thread() {
 
 	}
 
@@ -98,8 +87,6 @@ private:
 	int bytes;
 
 	pthread_t p_thread;
-
-	PacketStorage *packetStorage;
 
 	char buffer[MAXMSG];
 	char message[MAXMSG];

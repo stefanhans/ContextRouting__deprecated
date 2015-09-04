@@ -9,14 +9,14 @@ int ContextNetwork::run() {
 
 	listenAddress.sin_addr = localAddress;
 	listenAddress.sin_family = AF_INET;
-	listenAddress.sin_port = htons(TCP_PORT);
+	listenAddress.sin_port = htons(PORT_TCP_CONTEXT);
 
 	printf("Server TCP: \tgoing to listen on %s:%u\n",
 			inet_ntoa(listenAddress.sin_addr), htons(listenAddress.sin_port));
 
 	/* Make the socket, then loop endlessly. */
-	UDP_sock = make_UDP_socket(UDP_PORT);
-	TCP_sock = make_TCP_socket(TCP_PORT);
+	UDP_sock = make_UDP_socket(PORT_UDP_CONTEXT);
+	TCP_sock = make_TCP_socket(PORT_TCP_CONTEXT);
 
 	if (listen(TCP_sock, 3) == -1) {
 		perror("listen(TCP_sock) failed");
@@ -277,7 +277,7 @@ int ContextNetwork::make_UDP_socket(uint16_t port) {
 
 	/* Bind a name to the socket. */
 	name.sin_family = AF_INET;
-	name.sin_port = htons(UDP_PORT);
+	name.sin_port = htons(PORT_UDP_CONTEXT);
 	name.sin_addr.s_addr = inet_addr("127.0.0.1");
 
 	if (bind(sock, (struct sockaddr *) &name, sizeof(name)) < 0) {

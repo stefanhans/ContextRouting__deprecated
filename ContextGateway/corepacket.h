@@ -28,10 +28,8 @@
 
 #include "abstractservice.h"
 
-#define HEADER_ADDITIONAL_SIZE 255
-#define BRICKS_ADDITIONAL_SIZE 255
-#define DATA_SIZE 140
-#define DATA_ADDITIONAL_SIZE 255
+#include "protocol.h"
+#include "corestorage.h"
 
 using namespace std;
 
@@ -40,17 +38,6 @@ using namespace std;
  */
 typedef unsigned char byte_t;
 typedef unsigned short int port_t;
-
-/**
- * enumeration definitions
- */
-enum service_e { SERVICE_DEFAULT=0, SERVICE_CONTEXT=1, SERVICE_RECEIPT=8, SERVICE_ANSWER=64, SERVICE_INFO=128, SERVICE_TEST=UCHAR_MAX-1 };
-enum channel_e { CHANNEL_DEFAULT=0, CHANNEL_OFFER=1, CHANNEL_REQUEST=8, CHANNEL_META=64, CHANNEL_TEST=UCHAR_MAX-1 };
-
-enum port_e { PORT_DEFAULT=22365, PORT_TCP_CONTEXT=22365, PORT_UDP_CONTEXT=22366, PORT_TCP_META=22367, PORT_UDP_META=22368 };
-
-enum context_type_e { CONTEXT_TYPE_DEFAULT=0, CONTEXT_TYPE_TEST=UCHAR_MAX-1 };
-enum data_type_e { DATA_TYPE_DEFAULT=0, DATA_TYPE_TEXT=0, DATA_TYPE_URL=8, DATA_TYPE_TEST=UCHAR_MAX-1 };
 
 /**
  * ContextBrick
@@ -396,6 +383,8 @@ public:
 	 * ############################################################################################
 	 */
 
+//	PacketStorage *storage;
+
 	/**
 	 * Process received UDP packet by service object according to packet's service
 	 */
@@ -499,8 +488,6 @@ private:
 };
 
 void printBits(size_t const size, void const * const ptr);
-
-
 
 
 #endif /* SRC_COREPACKET_H_ */

@@ -59,7 +59,7 @@ IpAddress::IpAddress(unsigned char* addressId, struct sockaddr_in sockAddress) {
 ContextPacket::ContextPacket() :
 
 		service(SERVICE_DEFAULT),
-		version(0),
+		version(VERSION),
 		channel(CHANNEL_DEFAULT),
 		additionalHeaderSize(0),
 		sockAddress(),
@@ -91,8 +91,8 @@ ContextPacket::ContextPacket() :
 
 ContextPacket::ContextPacket(IpAddress *ipAddress) :
 
-		service(SERVICE_RECEIPT),
-		version(0),
+		service(SERVICE_DEFAULT),
+		version(VERSION),
 		channel(CHANNEL_META),
 		additionalHeaderSize(5),
 		contextType(CONTEXT_TYPE_DEFAULT),

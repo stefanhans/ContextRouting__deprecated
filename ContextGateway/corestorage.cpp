@@ -9,8 +9,7 @@
 
 
 
-PacketStorage::PacketStorage() {
-
-}
-
-
+//bool PacketStorage::atomic_match(ContextPacket *offer, ContextPacket *request) {
+//
+//	return true;
+//}
