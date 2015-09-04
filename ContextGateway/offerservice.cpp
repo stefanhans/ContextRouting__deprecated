@@ -6,32 +6,18 @@
  */
 
 #include "offerservice.h"
+//
+//
+//int OfferService::processTCP(void* receivedPacket) {
+//		printf("OfferService::processTCP\n");
+//
+//		printf("OfferService::processTCP: channel %i\n", ((ContextPacket*) receivedPacket)->getChannel());
+//
+//		return 0;
+//	}
 
-
-int OfferService::processUDP(ContextPacket *receivedPacket) {
-
-	printf("OfferService::processUDP\n");
-
-	return 0;
-}
-
-int OfferService::processTCP(ContextPacket *receivedPacket) {
-
-	printf("OfferService::processTCP\n");
-
-	return 0;
-}
-
-int OfferService::answerUDP(ContextPacket *receivedPacket) {
-
-	printf("OfferService::answerUDP\n");
-
-	return 0;
-}
-
-int OfferService::answerTCP(ContextPacket *receivedPacket) {
-
-	printf("OfferService::answerTCP\n");
+int OfferService::storePacket() {
+	printf("OfferService::storePacket\n");
 
 	return 0;
 }

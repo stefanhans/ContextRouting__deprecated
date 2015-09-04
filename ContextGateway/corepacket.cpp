@@ -6,6 +6,9 @@
  */
 
 #include "corepacket.h"
+#include "abstractservice.h"
+
+ContextService *contextService = NULL;
 
 /**
  * ContextBrick
@@ -79,6 +82,10 @@ ContextPacket::ContextPacket() :
 
 	memset(&data, 0, 140);
 	memset(&additionalData, 0, DATA_ADDITIONAL_SIZE);
+
+
+
+	//	ContextService *contextService = NULL;
 }
 
 
@@ -294,13 +301,44 @@ int ContextPacket::deserialize(char *buffer) {
 	return b;
 }
 
-int ContextPacket::initializeService() {
+int ContextPacket::processUDP() {
 
-	if(service == 1) {
-
+	if(contextService == NULL) {
+		contextService = ContextService::create(service);
 	}
-	return 0;
+
+	return contextService->processUDP(this);
 }
+
+
+int ContextPacket::processTCP() {
+
+	if(contextService == NULL) {
+		contextService = ContextService::create(service);
+	}
+
+	return contextService->processTCP(this);
+}
+
+
+int ContextPacket::answerUDP() {
+
+	if(contextService == NULL) {
+		contextService = ContextService::create(service);
+	}
+
+	return contextService->answerUDP(this);
+}
+
+int ContextPacket::answerTCP() {
+
+	if(contextService == NULL) {
+		contextService = ContextService::create(service);
+	}
+
+	return contextService->answerTCP(this);
+}
+
 
 bool ContextPacket::isMatchingContext(ContextPacket *request) {
 

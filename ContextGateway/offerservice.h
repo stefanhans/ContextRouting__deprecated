@@ -16,28 +16,45 @@ using namespace std;
  * @brief OfferService
  *
  */
-//class OfferService: public ContextService {
-//
-//public:
-//
-//	int processUDP(ContextPacket *receivedPacket);
-//	int processTCP(ContextPacket *receivedPacket);
-//
-//	int answerUDP(ContextPacket *receivedPacket);
-//	int answerTCP(ContextPacket *receivedPacket);
-//
-//};
-
-
-class OfferService: public ContextService {
+class OfferService : public ContextService {
 
 public:
 
-	int processUDP(ContextPacket *receivedPacket);
-	int processTCP(ContextPacket *receivedPacket);
+	int processUDP(void* receivedPacket) {
+		printf("OfferService::processUDP\n");
 
-	int answerUDP(ContextPacket *receivedPacket);
-	int answerTCP(ContextPacket *receivedPacket);
+		printf("OfferService::processUDP: channel %i\n", ((ContextPacket*) receivedPacket)->getChannel());
+
+		return 0;
+	}
+
+	int processTCP(void* receivedPacket) {
+		printf("OfferService::processTCP\n");
+
+		printf("OfferService::processTCP: channel %i\n", ((ContextPacket*) receivedPacket)->getChannel());
+
+		storePacket();
+
+		return 0;
+	}
+
+	int answerUDP(void* packet) {
+		printf("OfferService::answerUDP\n");
+
+		return 0;
+	}
+
+	int answerTCP(void* packet) {
+		printf("OfferService::answerTCP\n");
+
+		printf("OfferService::answerTCP: channel %i\n", ((ContextPacket*) packet)->getChannel());
+
+		return 0;
+	}
+
+private:
+
+	int storePacket();
 
 };
 

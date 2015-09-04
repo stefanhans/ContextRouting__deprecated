@@ -73,7 +73,17 @@ int ContextNetwork::run() {
 					ContextPacket *receivedContextPacket = new ContextPacket();
 					receivedContextPacket->deserialize(buffer);
 
+					receivedContextPacket->processUDP();
+
+					receivedContextPacket->answerUDP();
+
+					delete receivedContextPacket;
+
 					printf("Server UDP: channel %u\n", receivedContextPacket->getChannel());
+
+
+//					ContextService *testService = serviceFactory->GetService(receivedContextPacket->getChannel());
+//					testService->processUDP(receivedContextPacket);
 //
 //					if (channel == CHANNEL_REQUEST) {
 //						printf("Server channel: CHANNEL_REQUEST\n");
@@ -191,6 +201,8 @@ int ContextNetwork::run() {
 
 								ContextPacket *receipt = new ContextPacket(senderAddressArray[write_fd]);
 
+								receipt->answerTCP();
+
 								char answerBuffer[receipt->getSize()];
 								receipt->serialize(answerBuffer);
 
@@ -285,7 +297,7 @@ void* receiveTcpThread(void* data) {
 	receivedContextPacket->setIpAddress(incoming.first->getSockAddress().sin_addr.s_addr);
 	receivedContextPacket->setPortNumber(incoming.first->getSockAddress().sin_port);
 
-	receivedContextPacket->initializeService();
+	receivedContextPacket->processTCP();
 
 	/* terminate the thread */
 	pthread_exit(NULL);

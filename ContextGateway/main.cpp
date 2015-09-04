@@ -12,9 +12,7 @@ using namespace std;
 
 int main(void) {
 
-	ContextNetwork *contextNetwork;
-	contextNetwork = new ContextNetwork();
-
+	ContextNetwork *contextNetwork = new ContextNetwork();
 	contextNetwork->run();
 
 	return EXIT_SUCCESS;

@@ -13,6 +13,10 @@
 
 using namespace std;
 
+/**
+ * type definitions
+ */
+typedef unsigned char byte_t;
 
 /**
  * @brief ContextService
@@ -21,9 +25,6 @@ using namespace std;
 class ContextService {
 
 public:
-
-	ContextService() {}
-
 	virtual ~ContextService(){}
 
 	virtual int processUDP(void* receivedPacket) = 0;
@@ -31,6 +32,8 @@ public:
 
 	virtual int answerUDP(void* receivedPacket) = 0;
 	virtual int answerTCP(void* receivedPacket) = 0;
+
+	static ContextService* create(byte_t service);
 
 };
 

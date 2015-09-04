@@ -388,7 +388,22 @@ public:
 	 */
 	int deserialize(char *buffer);
 
-	int initializeService();
+	/**
+	 * ############################################################################################
+	 *
+	 * SERVICE
+	 *
+	 * ############################################################################################
+	 */
+
+	/**
+	 * Process received UDP packet by service object according to packet's service
+	 */
+	int processUDP();
+	int processTCP();
+
+	int answerUDP();
+	int answerTCP();
 
 	/**
 	 * Check for matching context (refactor to derived "Request")
@@ -481,9 +496,6 @@ private:
 	 * Array of 255 bytes for additional data
 	 */
 	char additionalData[DATA_ADDITIONAL_SIZE];
-
-
-//	ContextService contextService;
 };
 
 void printBits(size_t const size, void const * const ptr);
