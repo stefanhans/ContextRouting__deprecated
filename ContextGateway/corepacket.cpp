@@ -7,6 +7,7 @@
 
 #include "corepacket.h"
 #include "abstractservice.h"
+#include "corestorage.h"
 
 ContextService *contextService = NULL;
 
@@ -83,9 +84,9 @@ ContextPacket::ContextPacket() :
 	memset(&data, 0, 140);
 	memset(&additionalData, 0, DATA_ADDITIONAL_SIZE);
 
+//	PacketStorage::GetInstance()->sayHello();
 
-
-	//	ContextService *contextService = NULL;
+//	Logger::Instance()->openLogFile("logFile.txt");
 }
 
 

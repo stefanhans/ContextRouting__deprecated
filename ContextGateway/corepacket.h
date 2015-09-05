@@ -383,8 +383,6 @@ public:
 	 * ############################################################################################
 	 */
 
-//	PacketStorage *storage;
-
 	/**
 	 * Process received UDP packet by service object according to packet's service
 	 */
