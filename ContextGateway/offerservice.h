@@ -33,7 +33,9 @@ public:
 
 		printf("OfferService::processTCP: channel %i\n", ((ContextPacket*) receivedPacket)->getChannel());
 
-		storePacket();
+		printf("OfferService::processTCP: number of packets %i\n", getNumberOfPackets());
+		storePacket(receivedPacket);
+		printf("OfferService::processTCP: number of packets %i\n", getNumberOfPackets());
 
 		return 0;
 	}
@@ -51,10 +53,6 @@ public:
 
 		return 0;
 	}
-
-private:
-
-	int storePacket();
 
 };
 

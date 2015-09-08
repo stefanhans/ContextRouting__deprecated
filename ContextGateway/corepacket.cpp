@@ -1,13 +1,10 @@
-/*
- * corepacket.cpp
- *
- *  Created on: Aug 22, 2015
- *      Author: stefan
- */
-
 #include "corepacket.h"
+
 #include "abstractservice.h"
-#include "corestorage.h"
+
+/**
+ * ContextService
+ */
 
 ContextService *contextService = NULL;
 
@@ -47,6 +44,10 @@ bool ContextBrick::hasMatch(ContextBrick *otherBrick) {
 	return true;
 }
 
+/**
+ * IpAddress
+ */
+
 IpAddress::IpAddress(unsigned char* addressId, struct sockaddr_in sockAddress) {
 
 	memcpy(this->addressId, addressId, 16);
@@ -83,10 +84,6 @@ ContextPacket::ContextPacket() :
 
 	memset(&data, 0, 140);
 	memset(&additionalData, 0, DATA_ADDITIONAL_SIZE);
-
-//	PacketStorage::GetInstance()->sayHello();
-
-//	Logger::Instance()->openLogFile("logFile.txt");
 }
 
 
@@ -370,7 +367,6 @@ bool ContextPacket::isMatchingContext(ContextPacket *request) {
  * Print data for debugging
  */
 void ContextPacket::printPacket() {
-
 
 	// HEADER
 

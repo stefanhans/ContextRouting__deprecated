@@ -60,16 +60,12 @@
 #ifndef SRC_PROTOCOL_H_
 #define SRC_PROTOCOL_H_
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include <limits.h>
-
 #define VERSION 0
 
 #define HEADER_ADDITIONAL_SIZE 255
+
 #define BRICKS_ADDITIONAL_SIZE 255
+
 #define DATA_SIZE 140
 #define DATA_ADDITIONAL_SIZE 255
 

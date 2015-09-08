@@ -7,8 +7,11 @@
 
 #include "offerservice.h"
 
-int OfferService::storePacket() {
-	printf("OfferService::storePacket\n");
 
-	return 0;
-}
+//int OfferService::storePacket() {
+//	printf("OfferService::storePacket\n");
+//
+//	printf("ContextPacket::processTCP() -> getPacketNumber(): %i\n", getPacketNumber());
+//
+//	return 0;
+//}

@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include <uuid/uuid.h>
 #include <limits.h>
 #include <vector>
 #include <fstream>
@@ -18,7 +17,6 @@
 #include <sys/un.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-#include <signal.h>
 
 #include <pthread.h>
 
@@ -91,7 +89,7 @@ private:
 	char buffer[MAXMSG];
 	char message[MAXMSG];
 
-	pair<IpAddress*, char*> sizeAndContextStruct;
+	std::pair<IpAddress*, char*> sizeAndContextStruct;
 	IpAddress* senderAddressArray[FD_SETSIZE];
 
 	int make_TCP_socket(uint16_t port);

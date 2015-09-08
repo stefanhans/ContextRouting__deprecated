@@ -12,8 +12,6 @@
 
 #include "globals.h"
 
-using namespace std;
-
 /**
  * @brief ContextService
  *
@@ -21,6 +19,8 @@ using namespace std;
 class ContextService {
 
 public:
+	ContextService();
+
 	virtual ~ContextService(){}
 
 	virtual int processUDP(void* receivedPacket) = 0;
@@ -31,6 +31,24 @@ public:
 
 	static ContextService* create(byte_t service);
 
+	/*
+	 * Do two ContextBricks match?
+	 */
+	bool matchContextBricks(void* contextBrick_1, void* contextBrick_2);
+
+	/**
+	 * Do two ContextPackets match?
+	 */
+	bool matchContextPackets(void* contextPacket_1, void* contextPacket_2);
+
+
+
+	/**
+	 * Store ContextPacket in "contextPackets[]"
+	 */
+	int storePacket(void* packet);
+
+	int getNumberOfPackets();
 };
 
 #endif /* SRC_ABSTRACTSERVICE_H_ */

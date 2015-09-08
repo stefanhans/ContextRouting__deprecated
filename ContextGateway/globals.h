@@ -14,6 +14,6 @@
  * type definitions
  */
 typedef unsigned char byte_t;
-
+typedef unsigned short int port_t;
 
 #endif /* SRC_GLOBALS_H_ */

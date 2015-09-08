@@ -1,10 +1,3 @@
-/*
- * requestservice.h
- *
- *  Created on: Sep 4, 2015
- *      Author: stefan
- */
-
 #ifndef SRC_REQUESTSERVICE_H_
 #define SRC_REQUESTSERVICE_H_
 

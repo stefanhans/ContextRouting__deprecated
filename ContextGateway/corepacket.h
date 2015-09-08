@@ -29,15 +29,7 @@
 #include "abstractservice.h"
 
 #include "protocol.h"
-#include "corestorage.h"
-
-using namespace std;
-
-/**
- * type definitions
- */
-typedef unsigned char byte_t;
-typedef unsigned short int port_t;
+#include "globals.h"
 
 /**
  * ContextBrick
@@ -402,6 +394,12 @@ public:
 	 */
 	void printPacket();
 
+	/**
+	 * Array of 255 context bricks
+	 */
+	ContextBrick additionalBricks[BRICKS_ADDITIONAL_SIZE];
+
+
 private:
 
 	/**
@@ -462,7 +460,7 @@ private:
 	/**
 	 * Array of 255 context bricks
 	 */
-	ContextBrick additionalBricks[BRICKS_ADDITIONAL_SIZE];
+//	ContextBrick additionalBricks[BRICKS_ADDITIONAL_SIZE]; shift to public
 
 	/**
 	 * What type of data is described
@@ -486,6 +484,5 @@ private:
 };
 
 void printBits(size_t const size, void const * const ptr);
-
 
 #endif /* SRC_COREPACKET_H_ */

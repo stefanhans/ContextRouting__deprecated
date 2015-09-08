@@ -1,18 +1,8 @@
-/*
- * main.cpp
- *
- *  Created on: Aug 22, 2015
- *      Author: stefan
- */
-
-
 #include "network.h"
-#include "corestorage.h"
 
 using namespace std;
 
 int main(void) {
-
 
 	ContextNetwork *contextNetwork = new ContextNetwork();
 	contextNetwork->run();
