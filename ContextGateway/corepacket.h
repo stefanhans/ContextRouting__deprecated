@@ -26,10 +26,9 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#include "abstractservice.h"
-
 #include "protocol.h"
 #include "globals.h"
+#include "abstractservice.h"
 
 /**
  * ContextBrick

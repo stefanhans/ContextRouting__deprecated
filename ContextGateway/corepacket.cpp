@@ -1,7 +1,5 @@
 #include "corepacket.h"
 
-#include "abstractservice.h"
-
 /**
  * ContextService
  */
@@ -97,6 +95,8 @@ ContextPacket::ContextPacket(IpAddress *ipAddress) :
 		additionalBricksSize(4),
 		dataType(DATA_TYPE_DEFAULT),
 		additionalDataSize(8) {
+
+	if (DEBUG) std::cout << "DEBUG: ContextPacket::ContextPacket(IpAddress *ipAddress)" << std::endl;
 
 	setUuid(ipAddress->getAddressId());
 

@@ -70,11 +70,6 @@
 #define DATA_ADDITIONAL_SIZE 255
 
 /**
- * type definitions
- */
-typedef unsigned char byte_t;
-
-/**
  * enumeration definitions
  */
 enum service_e { SERVICE_DEFAULT=0, SERVICE_OFFER=1, SERVICE_REQUEST=8, SERVICE_ANSWER=64, SERVICE_INFO=128, SERVICE_TEST=UCHAR_MAX-1 };

@@ -6,6 +6,8 @@
  *
  * - edit this file i.e. add #include directive and new line with service constructor call
  *
+ * - edit this file i.e. add static storage, if needed
+ *
  */
 
 #include "abstractservice.h"
@@ -13,11 +15,21 @@
 #include "offerservice.h"
 #include "requestservice.h"
 
+/**
+ * Static storage for ContextPackets indexed by first "contentBrick->content"
+ */
+static std::vector<ContextPacket*> contextPackets[UCHAR_MAX];
 
+/*
+ * Static storage for IP addresses of packet sender combined with UUID
+ */
+static std::vector<IpAddress*> ipAddresses;
 
-static vector<ContextPacket*> contextPackets[UCHAR_MAX];
+/*
+ * <new> static storage
+ */
+// Add line with <new> static storage here
 
-static vector<IpAddress*> ipAddresses;
 
 /* mutex for static collections */
 static pthread_mutex_t a_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -119,12 +131,3 @@ ContextService::ContextService() {
 
 //	vector<ContextPacket*> contextPackets[UCHAR_MAX];
 }
-
-
-
-//	static bool atomic_match(ContextPacket *offer, ContextPacket *request);
-
-
-//	static vector<ContextPacket*> contextPackets[UCHAR_MAX];
-	////	static vector<IpAddress*> ipAddresses;
-

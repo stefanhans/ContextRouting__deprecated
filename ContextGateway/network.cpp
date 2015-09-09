@@ -1,15 +1,13 @@
 #include "network.h"
 
-using namespace std;
-
 
 int ContextNetwork::run() {
 
 	localAddress.s_addr = inet_addr("127.0.0.1");
 
-	listenAddress.sin_addr = localAddress;
+	listenAddress.sin_addr   = localAddress;
 	listenAddress.sin_family = AF_INET;
-	listenAddress.sin_port = htons(PORT_TCP_CONTEXT);
+	listenAddress.sin_port   = htons(PORT_TCP_CONTEXT);
 
 	printf("Server TCP: \tgoing to listen on %s:%u\n",
 			inet_ntoa(listenAddress.sin_addr), htons(listenAddress.sin_port));
@@ -23,9 +21,9 @@ int ContextNetwork::run() {
 		return 4;
 	}
 
-	cout << endl;
-	cout << "Server TCP run():" << endl;
-	cout << "----------------------------------------------------------------------" << endl;
+	std::cout << std::endl;
+	std::cout << "Server TCP run():" << std::endl;
+	std::cout << "----------------------------------------------------------------------" << std::endl;
 
 	/* Initialize the set of active sockets. */
 	FD_ZERO(&active_fd_set);
@@ -289,7 +287,7 @@ int ContextNetwork::make_UDP_socket(uint16_t port) {
 
 void* receiveTcpThread(void* data) {
 
-	pair<IpAddress*, char*> incoming = *((pair<IpAddress*, char*>*) data);
+	std::pair<IpAddress*, char*> incoming = *((std::pair<IpAddress*, char*>*) data);
 
 	ContextPacket *receivedContextPacket = new ContextPacket();
 

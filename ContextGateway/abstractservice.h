@@ -10,8 +10,6 @@
 
 #include "corepacket.h"
 
-#include "globals.h"
-
 /**
  * @brief ContextService
  *
@@ -31,6 +29,7 @@ public:
 
 	static ContextService* create(byte_t service);
 
+protected:
 	/*
 	 * Do two ContextBricks match?
 	 */

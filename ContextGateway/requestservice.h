@@ -3,8 +3,6 @@
 
 #include "abstractservice.h"
 
-using namespace std;
-
 /**
  * @brief RequestService
  *

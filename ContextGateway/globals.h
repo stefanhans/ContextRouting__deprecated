@@ -1,12 +1,7 @@
-/*
- * globals.h
- *
- *  Created on: Sep 4, 2015
- *      Author: stefan
- */
-
 #ifndef SRC_GLOBALS_H_
 #define SRC_GLOBALS_H_
+
+#define DEBUG 1
 
 #define MAXMSG 1024
 

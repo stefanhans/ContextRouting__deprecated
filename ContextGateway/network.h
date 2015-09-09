@@ -20,7 +20,6 @@
 
 #include <pthread.h>
 
-#include "globals.h"
 #include "corepacket.h"
 
 /**
