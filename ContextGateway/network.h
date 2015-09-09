@@ -58,6 +58,8 @@ public:
 
 	int run();
 
+	void stop();
+
 private:
 
 	/* This flag controls termination of the main loop. */

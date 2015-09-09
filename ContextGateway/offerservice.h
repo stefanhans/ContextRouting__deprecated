@@ -1,10 +1,3 @@
-/*
- * offerservice.h
- *
- *  Created on: Sep 2, 2015
- *      Author: stefan
- */
-
 #ifndef SRC_OFFERSERVICE_H_
 #define SRC_OFFERSERVICE_H_
 
@@ -21,7 +14,11 @@ public:
 	int processUDP(void* receivedPacket) {
 		printf("OfferService::processUDP\n");
 
-		printf("OfferService::processUDP: channel %i\n", ((ContextPacket*) receivedPacket)->getChannel());
+		return 0;
+	}
+
+	int answerUDP(void* packet) {
+		printf("OfferService::answerUDP\n");
 
 		return 0;
 	}
@@ -38,16 +35,11 @@ public:
 		return 0;
 	}
 
-	int answerUDP(void* packet) {
-		printf("OfferService::answerUDP\n");
-
-		return 0;
-	}
-
 	int answerTCP(void* packet) {
 		printf("OfferService::answerTCP\n");
 
-		printf("OfferService::answerTCP: channel %i\n", ((ContextPacket*) packet)->getChannel());
+		printf("OfferService::answerTCP: ipAddress %s\n", inet_ntoa(inet_makeaddr(((ContextPacket*) packet)->getIpAddress(), 0)));
+		printf("OfferService::answerTCP: port %i\n", (((ContextPacket*) packet)->getPortNumber()));
 
 		return 0;
 	}

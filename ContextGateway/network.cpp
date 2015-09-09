@@ -41,9 +41,13 @@ int ContextNetwork::run() {
 		/* Block until input arrives on one or more active sockets. */
 		read_fd_set = active_fd_set;
 
-		if (select(FD_SETSIZE, &read_fd_set, NULL, NULL, NULL) < 0) {
+		if (select(FD_SETSIZE, &read_fd_set, NULL, NULL, NULL) < 0 && keep_going) {
 			perror("select failed");
-			exit(EXIT_FAILURE);
+		}
+		else {
+			if (!keep_going) {
+				continue;
+			}
 		}
 
 		/* Service all the sockets with input pending. */
@@ -231,9 +235,17 @@ int ContextNetwork::run() {
 	}
 	close(TCP_sock);
 
+	if(! keep_going) {
+		std::cout << "Main loop cancelled normally." << std::endl;
+	}
+
 //	delete storage;
 
 	return EXIT_SUCCESS;
+}
+
+void ContextNetwork::stop() {
+	keep_going = 0;
 }
 
 int ContextNetwork::make_TCP_socket(uint16_t port) {
