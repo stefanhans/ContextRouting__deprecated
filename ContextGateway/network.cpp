@@ -3,22 +3,21 @@
 
 int ContextNetwork::run() {
 
-	localAddress.s_addr = inet_addr("127.0.0.1");
+//	localAddress.s_addr = inet_addr("127.0.0.1");
 
-	listenAddress.sin_addr   = localAddress;
-	listenAddress.sin_family = AF_INET;
-	listenAddress.sin_port   = htons(PORT_TCP_CONTEXT);
-
-	printf("Server TCP: \tgoing to listen on %s:%u\n",
-			inet_ntoa(listenAddress.sin_addr), htons(listenAddress.sin_port));
-
-	/* Make the socket, then loop endlessly. */
+	/*
+	 * Create one socket each for TCP and for UDP
+	 */
 	UDP_sock = make_UDP_socket(PORT_UDP_CONTEXT);
 	TCP_sock = make_TCP_socket(PORT_TCP_CONTEXT);
 
-	if (listen(TCP_sock, 3) == -1) {
-		perror("listen(TCP_sock) failed");
-		return 4;
+	/*
+	 * Listen on TCP socket
+	 */
+	if (listen(TCP_sock, LISTEN_BACKLOG) == -1) {
+		std::cerr << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << " ";
+		perror("ERROR");
+		exit(EXIT_FAILURE);
 	}
 
 	std::cout << std::endl;
@@ -33,8 +32,6 @@ int ContextNetwork::run() {
 	FD_ZERO(&read_fd_set);
 	FD_ZERO(&write_fd_set);
 
-	printf("FD_SETSIZE: %u\n", FD_SETSIZE);
-
 	while (keep_going) {
 		printf("keep_going: %u\n", keep_going);
 
@@ -42,7 +39,9 @@ int ContextNetwork::run() {
 		read_fd_set = active_fd_set;
 
 		if (select(FD_SETSIZE, &read_fd_set, NULL, NULL, NULL) < 0 && keep_going) {
-			perror("select failed");
+			std::cerr << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << " ";
+			perror("ERROR");
+			exit(EXIT_FAILURE);
 		}
 		else {
 			if (!keep_going) {
@@ -60,12 +59,12 @@ int ContextNetwork::run() {
 					printf("Server UDP: UDP_sock %u\n", read_fd);
 
 					/* Wait for a datagram. */
-					size = sizeof(UDP_addr);
-					nbytes = recvfrom(UDP_sock, message, MAXMSG, 0,
-							(struct sockaddr*) &UDP_addr, &size);
+					UDP_address_size = sizeof(UDP_addr);
+					UDP_bytes_received = recvfrom(UDP_sock, message, MAXMSG, 0, (struct sockaddr*) &UDP_addr, &UDP_address_size);
 
-					if (nbytes < 0) {
-						perror("recfrom (UDP_sock)");
+					if (UDP_bytes_received < 0) {
+						std::cerr << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << " ";
+						perror("ERROR");
 						exit(EXIT_FAILURE);
 					}
 
@@ -124,7 +123,7 @@ int ContextNetwork::run() {
 				}
 
 				if (read_fd == TCP_sock) {
-					printf("Server TCP: TCP_sock %u\n", read_fd);
+					printf("Server TCP (acceptSocket): TCP_sock %u\n", read_fd);
 
 					/* Connection request on original socket. */
 					int acceptSocket;
@@ -132,18 +131,19 @@ int ContextNetwork::run() {
 					acceptSocket = accept(TCP_sock, (struct sockaddr*) &TCP_addr, &acceptLength);
 
 					if (acceptSocket < 0) {
-						perror("accept");
+						std::cerr << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << " ";
+						perror("ERROR");
 						exit(EXIT_FAILURE);
 					}
-					printf("Server TCP: connect from host %s, port %u\n", inet_ntoa(TCP_addr.sin_addr), ntohs(TCP_addr.sin_port));
-					printf("Server TCP: acceptSocket %u\n", acceptSocket);
+					printf("Server TCP (acceptSocket): connect from host %s, port %u\n", inet_ntoa(TCP_addr.sin_addr), ntohs(TCP_addr.sin_port));
+					printf("Server TCP (acceptSocket): acceptSocket %u\n", acceptSocket);
 
 					FD_SET(acceptSocket, &active_fd_set);
 				} else {
-					printf("Server TCP: read_from_TCP_client(%u)\n", read_fd);
+					printf("Server TCP packet receive: read_from_TCP_client(%u)\n", read_fd);
 
 					bytes = recv(read_fd, buffer, sizeof(buffer) - 1, 0);
-					printf("bytes: %u\n", bytes);
+					printf("Server TCP: received bytes: %u\n", bytes);
 
 					if (bytes < 0) {
 						perror("read");
@@ -152,20 +152,19 @@ int ContextNetwork::run() {
 						/* End-of-file. */
 						return -1;
 					else {
-						/* Data read. */
-						printf("Server TCP: got message: ‘%s’\n", buffer);
 
 						byte_t channel;
 						channel = buffer[2];
 						printf("Server TCP: channel %u\n", channel);
 
 						uuid_t acceptUuid;
-						memcpy(acceptUuid, buffer, 16);
+						memcpy(acceptUuid, (buffer+4), 16);
+
+						printUuid(acceptUuid, "Server TCP packet uuid: ");
 
 						sizeAndContextStruct.first = new IpAddress(acceptUuid, TCP_addr);
 						sizeAndContextStruct.second = buffer;
 
-						printf("close(acceptSocket)\n");
 						close(acceptSocket);
 						printf("close(acceptSocket)\n");
 //
@@ -223,7 +222,7 @@ int ContextNetwork::run() {
 
 						printf("close(read_fd)\n");
 						close(read_fd);
-						printf("close(read_fd)\n");
+
 						FD_CLR(write_fd, &active_fd_set);
 
 						/* ######################### */
@@ -256,7 +255,8 @@ int ContextNetwork::make_TCP_socket(uint16_t port) {
 	/* Create the socket. */
 	sock = socket(PF_INET, SOCK_STREAM, 0);
 	if (sock < 0) {
-		perror("socket");
+		std::cerr << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << " ";
+		perror("ERROR");
 		exit(EXIT_FAILURE);
 	}
 
@@ -266,7 +266,8 @@ int ContextNetwork::make_TCP_socket(uint16_t port) {
 	name.sin_addr.s_addr = htonl(INADDR_ANY);
 
 	if (bind(sock, (struct sockaddr *) &name, sizeof(name)) < 0) {
-		perror("make_TCP_socket bind");
+		std::cerr << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << " ";
+		perror("ERROR");
 		exit(EXIT_FAILURE);
 	}
 	return sock;
@@ -291,7 +292,8 @@ int ContextNetwork::make_UDP_socket(uint16_t port) {
 	name.sin_addr.s_addr = inet_addr("127.0.0.1");
 
 	if (bind(sock, (struct sockaddr *) &name, sizeof(name)) < 0) {
-		perror("make_UDP_socket bind");
+		std::cerr << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << " ";
+		perror("ERROR");
 		exit(EXIT_FAILURE);
 	}
 	return sock;

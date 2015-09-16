@@ -47,27 +47,38 @@ public:
 		active_fd_set(),
 		read_fd_set(),
 		write_fd_set(),
-		size(0),
-		nbytes(0),
-		listenAddress(),
-		localAddress(),
+		UDP_address_size(0),
+		UDP_bytes_received(0),
+//		localAddress(),
 		bytes(0),
 		p_thread() {
 
 	}
 
+	/*
+	 * Start the main loop
+	 */
 	int run();
 
+	/*
+	 * Stop the main loop
+	 */
 	void stop();
 
 private:
 
-	/* This flag controls termination of the main loop. */
+	/*
+	 * This flag controls termination of the main loop
+	 */
 	volatile sig_atomic_t keep_going;
 
+	/*
+	 * Sockets for listening
+	 */
 	int UDP_sock, TCP_sock;
-	int acceptSocket;
 
+
+	int acceptSocket;
 	socklen_t acceptLength;
 
 	int read_fd, write_fd;
@@ -75,13 +86,15 @@ private:
 	struct sockaddr_in TCP_addr;
 	struct sockaddr_un UDP_addr;
 
+	/*
+	 * Descriptor sets for select()
+	 */
 	fd_set active_fd_set, read_fd_set, write_fd_set;
 
-	socklen_t size;
-	int nbytes;
+	socklen_t UDP_address_size;
+	int UDP_bytes_received;
 
-	struct sockaddr_in listenAddress;
-	struct in_addr localAddress;
+//	struct in_addr localAddress;
 
 	int bytes;
 
