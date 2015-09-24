@@ -12,17 +12,17 @@ class RequestService : public ContextService {
 public:
 
 	int processUDP(void* receivedPacket) {
-		printf("RequestService::processUDP\n");
+		std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
-		printf("RequestService::processUDP: channel %i\n", ((ContextPacket*) receivedPacket)->getChannel());
+//		printf("RequestService::processUDP: channel %i\n", ((ContextPacket*) receivedPacket)->getChannel());
 
 		return 0;
 	}
 
 	int processTCP(void* receivedPacket) {
-		printf("RequestService::processTCP\n");
+		std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
-		printf("RequestService::processTCP: channel %i\n", ((ContextPacket*) receivedPacket)->getChannel());
+//		printf("RequestService::processTCP: channel %i\n", ((ContextPacket*) receivedPacket)->getChannel());
 
 		storePacket();
 
@@ -30,15 +30,15 @@ public:
 	}
 
 	int answerUDP(void* packet) {
-		printf("RequestService::answerUDP\n");
+		std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 		return 0;
 	}
 
 	int answerTCP(void* packet) {
-		printf("RequestService::answerTCP\n");
+		std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
-		printf("RequestService::answerTCP: channel %i\n", ((ContextPacket*) packet)->getChannel());
+//		printf("RequestService::answerTCP: channel %i\n", ((ContextPacket*) packet)->getChannel());
 
 		return 0;
 	}

@@ -12,34 +12,37 @@ class OfferService : public ContextService {
 public:
 
 	int processUDP(void* receivedPacket) {
-		printf("OfferService::processUDP\n");
+		std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 		return 0;
 	}
 
 	int answerUDP(void* packet) {
-		printf("OfferService::answerUDP\n");
+		std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 		return 0;
 	}
 
 	int processTCP(void* receivedPacket) {
-		printf("OfferService::processTCP\n");
+		std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] " << (uint) ((ContextPacket*) receivedPacket)->getService()<< std::endl;
 
-		printf("OfferService::processTCP: channel %i\n", ((ContextPacket*) receivedPacket)->getChannel());
-
-		printf("OfferService::processTCP: number of packets %i\n", getNumberOfPackets());
+//		printf("OfferService::processTCP: channel %i\n", ((ContextPacket*) receivedPacket)->getChannel());
+//
+//		printf("OfferService::processTCP: number of packets %i\n", getNumberOfPackets());
 		storePacket(receivedPacket);
-		printf("OfferService::processTCP: number of packets %i\n", getNumberOfPackets());
+		printPackets();
+//		printf("OfferService::processTCP: number of packets %i\n", getNumberOfPackets());
 
 		return 0;
 	}
 
 	int answerTCP(void* packet) {
-		printf("OfferService::answerTCP\n");
+		std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
-		printf("OfferService::answerTCP: ipAddress %s\n", inet_ntoa(inet_makeaddr(((ContextPacket*) packet)->getIpAddress(), 0)));
-		printf("OfferService::answerTCP: port %i\n", (((ContextPacket*) packet)->getPortNumber()));
+		struct  sockaddr_in ipAddr = ((ContextPacket*) packet)->getIp();
+
+//		printf("OfferService::answerTCP: ipAddress %s\n", inet_ntoa(ipAddr.sin_addr));
+//		printf("OfferService::answerTCP: port %i\n", ntohs(ipAddr.sin_port));
 
 		return 0;
 	}

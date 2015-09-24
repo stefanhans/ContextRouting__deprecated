@@ -15,7 +15,9 @@ typedef unsigned short int port_t;
 
 
 
+
 inline void printUuid(uuid_t uuid, std::string header="") {
+	std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	std::cout << header << std::flush;
 
@@ -29,6 +31,7 @@ inline void printUuid(uuid_t uuid, std::string header="") {
 }
 
 inline std::string getUuidString(uuid_t uuid) {
+	std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	std::string out;
 
@@ -45,6 +48,7 @@ inline std::string getUuidString(uuid_t uuid) {
 }
 
 inline void printBits(size_t const size, void const * const ptr) {
+	std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	unsigned char *b = (unsigned char*) ptr;
 	unsigned char byte;

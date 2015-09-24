@@ -1,9 +1,7 @@
 #include "requestservice.h"
 
 int RequestService::storePacket() {
-	printf("OfferService::storePacket\n");
+	std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	return 0;
 }
-
-
