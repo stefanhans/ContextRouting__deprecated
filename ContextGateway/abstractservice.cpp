@@ -37,7 +37,7 @@ static std::vector<IpAddress*> ipAddresses;
 static pthread_mutex_t a_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 int ContextService::storePacket(void* packet) {
-	std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
     int rc;	/* contain mutex lock/unlock results */
 
@@ -49,6 +49,9 @@ int ContextService::storePacket(void* packet) {
         perror("pthread_mutex_lock");
         pthread_exit(NULL);
     }
+
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] :"
+			" push_back at index " << (uint) ((ContextPacket*) packet)->getFirstBrick()->context << std::endl;
 
 	contextPackets[((ContextPacket*) packet)->getFirstBrick()->context].push_back((ContextPacket*) packet);
 
@@ -64,7 +67,7 @@ int ContextService::storePacket(void* packet) {
 };
 
 bool ContextService::matchContextBricks(void* contextBrick_1, void* contextBrick_2) {
-	std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	byte_t notEqual = ((ContextBrick*) contextBrick_1)->context ^ ((ContextBrick*) contextBrick_2)->context;
 	if (notEqual == 0) {
@@ -87,7 +90,7 @@ bool ContextService::matchContextBricks(void* contextBrick_1, void* contextBrick
 }
 
 bool ContextService::matchContextPackets(void* contextPacket_1, void* contextPacket_2) {
-	std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	if (!matchContextBricks(((ContextPacket*) contextPacket_1)->getFirstBrick(), ((ContextPacket*) contextPacket_2)->getFirstBrick())) {
 		return false;
@@ -106,42 +109,85 @@ bool ContextService::matchContextPackets(void* contextPacket_1, void* contextPac
 	return true;
 }
 
+void ContextService::findMatchingContextPackets(void* contextPacket) {
+	if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+
+	if(contextPackets[((ContextPacket*) contextPacket)->getFirstBrick()->context].size() == 0) {
+		if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+		return;
+	}
+
+	for (std::vector<ContextPacket*>::iterator iter = contextPackets[((ContextPacket*) contextPacket)->getFirstBrick()->context].begin();
+									iter != contextPackets[((ContextPacket*) contextPacket)->getFirstBrick()->context].end(); ++iter) {
+		if(matchContextPackets((*iter), (ContextPacket*) contextPacket)) {
+			(*iter)->printPacket("FOUND: ");
+		}
+	}
+}
+
 int ContextService::getNumberOfPackets() {
-	std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	return sizeof(contextPackets) / sizeof(contextPackets[0]);
 };
 
 
 void printPacketStorage() {
-	std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
-//	std::cout << "printPacketStorage()" << std::endl;
-//	std::cout << "getNumberOfPackets(): " << (sizeof(contextPackets) / sizeof(contextPackets[0])) << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+
+	int vector_number;
+	int non_empty_indices = 0;
+	int sum_packets = 0;
+
+	char str_buffer [50];
+	std::string line_start;
 
 	for (int index=0; index < UCHAR_MAX; index++) {
 
 		if (contextPackets[index].size() == 0) {
-//			printf("contextPackets[%i] (%02x) is empty()\n", index, index);
 			continue;
 		}
 
-//		printf("contextPackets[%i] (%02x) has %lu entries()\n", index, index, contextPackets[index].size());
+		std::cout << std::endl;
+		std::cout << "INDEX " << index << " (" << contextPackets[index].size() << " entries):" << std::endl;
+		std::cout << LINE_SEPARATOR << std::endl;
 
+		non_empty_indices++;
+
+		vector_number = 0;
 		for (std::vector<ContextPacket*>::iterator iter = contextPackets[index].begin();
 				iter != contextPackets[index].end(); ++iter) {
 
+			vector_number++;
 
-			printUuid( * (*iter)->getUuid() );
+			/*
+			 * Packet print header
+			 */
+			std::cout << std::endl;
+			std::cout << index << "_" << vector_number << ": " << getUuidString( * (*iter)->getUuid() ) << std::endl;
+			std::cout << LINE_SEPARATOR << std::endl;
 
-//			std::cout << getUuidString( * (*iter)->getUuid() ) << std::endl;
+			/*
+			 * Packet print details
+			 */
+			sprintf(str_buffer, "%i_%i:\t", index, vector_number);
+			line_start = str_buffer;
 
-//			printBits(sizeof(byte_t), &((*iter)->getFirstBrick()->context));
-//			printBits(sizeof(byte_t), &((*iter)->getFirstBrick()->mask));
+			(*iter)->printPacket(line_start);
+
+			std::cout << LINE_SEPARATOR << std::endl;
 
 
 		}
-
+		sum_packets += vector_number;
 	}
+
+	std::cout << std::endl;
+	std::cout << "SUMMARY:" << std::endl;
+	std::cout << LINE_SEPARATOR << std::endl;
+	std::cout << "Number of non empty indices:" << non_empty_indices << std::endl;
+	std::cout << "Number of packets:" << sum_packets << std::endl;
+	std::cout << LINE_SEPARATOR << std::endl;
 
 
 
@@ -176,7 +222,7 @@ void printPacketStorage() {
 }
 
 void ContextService::printPackets() {
-	std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	printPacketStorage();
 }
@@ -185,30 +231,34 @@ void ContextService::printPackets() {
 
 
 ContextService* ContextService::create(byte_t service) {
-	std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] " << (uint) service << std::endl;
+	if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] " << (uint) service << std::endl;
 
 	/*
 	 * Offer service constructor call
 	 */
-	if(service == SERVICE_OFFER) return new OfferService();
-	std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+	if(service == SERVICE_OFFER) {
+		if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] " << (uint) service << std::endl;
+		return new OfferService();
+	}
 
 	/*
 	 * Request service constructor call
 	 */
-	if(service == SERVICE_REQUEST) return new RequestService();
-	std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+	if(service == SERVICE_REQUEST) {
+		if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] " << (uint) service << std::endl;
+		return new RequestService();
+	}
 
 	/*
 	 * <new> service constructor call
 	 */
 	// Add line with <new> service constructor call here
 
-	return new OfferService();
+	return 0;
 }
 
 ContextService::ContextService() {
-	std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 //	vector<ContextPacket*> contextPackets[UCHAR_MAX];
 }

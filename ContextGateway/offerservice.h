@@ -12,32 +12,31 @@ class OfferService : public ContextService {
 public:
 
 	int processUDP(void* receivedPacket) {
-		std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+		if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 		return 0;
 	}
 
 	int answerUDP(void* packet) {
-		std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+		if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 		return 0;
 	}
 
 	int processTCP(void* receivedPacket) {
-		std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] " << (uint) ((ContextPacket*) receivedPacket)->getService()<< std::endl;
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] " << (uint) ((ContextPacket*) receivedPacket)->getService()<< std::endl;
 
-//		printf("OfferService::processTCP: channel %i\n", ((ContextPacket*) receivedPacket)->getChannel());
-//
-//		printf("OfferService::processTCP: number of packets %i\n", getNumberOfPackets());
 		storePacket(receivedPacket);
-		printPackets();
-//		printf("OfferService::processTCP: number of packets %i\n", getNumberOfPackets());
+
+		if (DEBUG) printPackets();
+
+		if (DEBUG) ((ContextPacket*) receivedPacket)->printPacket();
 
 		return 0;
 	}
 
 	int answerTCP(void* packet) {
-		std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 		struct  sockaddr_in ipAddr = ((ContextPacket*) packet)->getIp();
 

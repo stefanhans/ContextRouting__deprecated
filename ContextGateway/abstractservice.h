@@ -40,6 +40,11 @@ protected:
 	 */
 	bool matchContextPackets(void* contextPacket_1, void* contextPacket_2);
 
+	/*
+	 * Find all matching packets from storage
+	 */
+	void findMatchingContextPackets(void* contextPacket);
+
 
 
 	/**
@@ -48,6 +53,8 @@ protected:
 	int storePacket(void* packet);
 
 	int getNumberOfPackets();
+
+	void printPackets();
 };
 
 #endif /* SRC_ABSTRACTSERVICE_H_ */

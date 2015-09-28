@@ -49,8 +49,8 @@ public:
 		write_fd_set(),
 		UDP_address_size(0),
 		UDP_bytes_received(0),
-//		localAddress(),
-		bytes(0),
+		TCP_bytes_received(0),
+		TCP_bytes_to_send(0),
 		p_thread() {
 
 	}
@@ -84,7 +84,7 @@ private:
 	int read_fd, write_fd;
 
 	struct sockaddr_in TCP_addr;
-	struct sockaddr_un UDP_addr;
+	struct sockaddr_in UDP_addr;
 
 	/*
 	 * Descriptor sets for select()
@@ -96,11 +96,13 @@ private:
 
 //	struct in_addr localAddress;
 
-	int bytes;
+	int TCP_bytes_received;
+	int TCP_bytes_to_send;
 
 	pthread_t p_thread;
 
-	char buffer[MAXMSG];
+	char UDP_buffer[MAXMSG];
+	char TCP_buffer[MAXMSG];
 	char message[MAXMSG];
 
 	std::pair<IpAddress*, char*> sizeAndContextStruct;

@@ -3,7 +3,7 @@
 #include <unistd.h>
 
 int ContextNetwork::run() {
-	std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 //	localAddress.s_addr = inet_addr("127.0.0.1");
 
@@ -22,10 +22,6 @@ int ContextNetwork::run() {
 		exit(EXIT_FAILURE);
 	}
 
-	std::cout << std::endl;
-	std::cout << "Server TCP run():" << std::endl;
-	std::cout << "----------------------------------------------------------------------" << std::endl;
-
 	/* Initialize the set of active sockets. */
 	FD_ZERO(&active_fd_set);
 	FD_SET(UDP_sock, &active_fd_set);
@@ -34,11 +30,22 @@ int ContextNetwork::run() {
 	FD_ZERO(&read_fd_set);
 	FD_ZERO(&write_fd_set);
 
-	while (keep_going) {
-		std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] keep_going: " << keep_going << std::endl;
+	std::cout << std::endl;
+	std::cout << "Gateway's Main Loop Start:" << std::endl;
+	std::cout << LINE_SEPARATOR << std::endl;
 
-		/* Block until input arrives on one or more active sockets. */
+	while (keep_going) {
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] keep_going: " << keep_going << std::endl;
+
+		/*
+		 * Acknowledge active listener sockets
+		 */
 		read_fd_set = active_fd_set;
+
+		/*
+		 * Waiting for the next packet or continue processing received one
+		 */
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : " << "Waiting for the next packet or continue processing received one" << std::endl;
 
 		if (select(FD_SETSIZE, &read_fd_set, NULL, NULL, NULL) < 0 && keep_going) {
 			std::cerr << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << " ";
@@ -51,18 +58,27 @@ int ContextNetwork::run() {
 			}
 		}
 
-		/* Service all the sockets with input pending. */
+		/*
+		 * Searching set of file descriptors for socket with data
+		 */
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : " << "Searching set of file descriptors for socket with data" << std::endl;
+
 		for (read_fd = 0; read_fd < FD_SETSIZE; ++read_fd) {
 
 			if (FD_ISSET(read_fd, &read_fd_set)) {
 
-				// UDP Socket
+				/*
+				 * Data from UDP socket found
+				 */
 				if (read_fd == UDP_sock) {
-					std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] UDP_sock: " << read_fd << std::endl;
+					if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : Data from UDP socket (fd: " <<  read_fd << ") found" << std::endl;
 
-					/* Wait for a datagram. */
+					/*
+					 * Read data from UDP socket in buffer
+					 */
 					UDP_address_size = sizeof(UDP_addr);
-					UDP_bytes_received = recvfrom(UDP_sock, message, MAXMSG, 0, (struct sockaddr*) &UDP_addr, &UDP_address_size);
+					UDP_bytes_received = recvfrom(UDP_sock, UDP_buffer, sizeof(UDP_buffer), 0, (struct sockaddr*) &UDP_addr, &UDP_address_size);
+					if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] UDP_bytes_received: " << UDP_bytes_received << std::endl;
 
 					if (UDP_bytes_received < 0) {
 						std::cerr << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << " ";
@@ -70,10 +86,22 @@ int ContextNetwork::run() {
 						exit(EXIT_FAILURE);
 					}
 
-					std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] UDP_bytes_received: " << UDP_bytes_received << std::endl;
+					/*
+					 * Process data from buffer
+					 */
+					uuid_t UDP_uuid;
+					memcpy(UDP_uuid, (UDP_buffer+4), 16);
+
+					std::cout << getUuidString(UDP_uuid) << " : " <<
+							UDP_bytes_received << " bytes" <<
+							" from " << inet_ntoa(UDP_addr.sin_addr) << ":" << ntohs(UDP_addr.sin_port) <<
+							" received" << std::endl;
 
 					ContextPacket *receivedContextPacket = new ContextPacket();
-					receivedContextPacket->deserialize(buffer);
+					receivedContextPacket->deserialize(UDP_buffer);
+
+					receivedContextPacket->setIpAddress(inet_addr(inet_ntoa(UDP_addr.sin_addr)));
+					receivedContextPacket->setPortNumber(UDP_addr.sin_port);
 
 					receivedContextPacket->processUDP();
 
@@ -120,11 +148,19 @@ int ContextNetwork::run() {
 					continue;
 				}
 
+				/*
+				 * Data from TCP socket found
+				 */
 				if (read_fd == TCP_sock) {
-					std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] TCP_sock: " << read_fd << std::endl;
+					if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : Data from TCP socket (fd: " <<  read_fd << ") found" << std::endl;
 
-					/* Connection request on original socket. */
 					int acceptSocket;
+
+					/*
+					 * Accept TCP socket
+					 */
+					if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : Accept TCP socket (fd: " <<  read_fd << ")" << std::endl;
+
 					acceptLength = sizeof(TCP_addr);
 					acceptSocket = accept(TCP_sock, (struct sockaddr*) &TCP_addr, &acceptLength);
 
@@ -134,13 +170,22 @@ int ContextNetwork::run() {
 						exit(EXIT_FAILURE);
 					}
 
-					std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] sin_addr: " << inet_ntoa(TCP_addr.sin_addr) << std::endl;
-					std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] sin_port: " << ntohs(TCP_addr.sin_port) << std::endl;
+					/*
+					 * Put accepted TCP in active socket set
+					 */
+					if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : Put accepted TCP in active socket set" << std::endl;
 
 					FD_SET(acceptSocket, &active_fd_set);
-				} else {
-					TCP_bytes_received = recv(read_fd, buffer, sizeof(buffer) - 1, 0);
-					std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] TCP_bytes_received: " << TCP_bytes_received << std::endl;
+				}
+
+				/*
+				 * Read data from accepted TCP socket in buffer
+				 */
+				else {
+					if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : Read data from accepted TCP socket (fd: " <<  read_fd << ") in buffer" << std::endl;
+
+					TCP_bytes_received = recv(read_fd, TCP_buffer, sizeof(TCP_buffer) - 1, 0);
+					if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : " << TCP_bytes_received << " bytes received" << std::endl;
 
 					if (TCP_bytes_received < 0) {
 						perror("read");
@@ -150,20 +195,26 @@ int ContextNetwork::run() {
 						return -1;
 					else {
 
+						/*
+						 * Process data from buffer
+						 */
 						uuid_t acceptUuid;
-						memcpy(acceptUuid, (buffer+4), 16);
+						memcpy(acceptUuid, (TCP_buffer+4), 16);
 
-						std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] acceptUuid: " << getUuidString(acceptUuid) << std::endl;
+						std::cout << getUuidString(acceptUuid) << " : " <<
+								TCP_bytes_received << " bytes" <<
+								" from " << inet_ntoa(TCP_addr.sin_addr) << ":" << ntohs(TCP_addr.sin_port) <<
+								" received" << std::endl;
 
 						sizeAndContextStruct.first = new IpAddress(acceptUuid, TCP_addr);
-						sizeAndContextStruct.second = buffer;
+						sizeAndContextStruct.second = TCP_buffer;
 
+						if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : " << "close(acceptSocket " << acceptSocket << ")" << std::endl;
 						close(acceptSocket);
-//
-//							storage->ipAddresses.push_back(new IpAddress(acceptUuid, TCP_addr));
-//
-////							printf("client from %s:%u arrived\n", inet_ntoa(TCP_addr.sin_addr), ntohs(TCP_addr.sin_port));
 
+						/*
+						 * Store IP Address
+						 */
 						senderAddressArray[read_fd] = new IpAddress(acceptUuid, TCP_addr);
 
 						/* create a new thread that will execute 'receiveTcpThread()' */
@@ -189,7 +240,7 @@ int ContextNetwork::run() {
 							if (FD_ISSET(write_fd, &write_fd_set)) {
 
 								ContextPacket *receipt = new ContextPacket(senderAddressArray[write_fd]);
-								receipt->deserialize(buffer);
+								receipt->deserialize(TCP_buffer);
 
 								receipt->answerTCP();
 
@@ -207,7 +258,7 @@ int ContextNetwork::run() {
 							}
 						}
 
-						printf("close(read_fd)\n");
+						if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : " << "close(read_fd " << read_fd << ")" << std::endl;
 						close(read_fd);
 
 						FD_CLR(write_fd, &active_fd_set);
@@ -219,6 +270,7 @@ int ContextNetwork::run() {
 			}
 		}
 	}
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : " << "close(TCP_sock " << TCP_sock << ")" << std::endl;
 	close(TCP_sock);
 
 	if(! keep_going) {
@@ -231,13 +283,13 @@ int ContextNetwork::run() {
 }
 
 void ContextNetwork::stop() {
-	std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	keep_going = 0;
 }
 
 int ContextNetwork::make_TCP_socket(uint16_t port) {
-	std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	int sock;
 	struct sockaddr_in name;
@@ -264,7 +316,7 @@ int ContextNetwork::make_TCP_socket(uint16_t port) {
 }
 
 int ContextNetwork::make_UDP_socket(uint16_t port) {
-	std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	struct sockaddr_in name;
 	int sock;
@@ -291,16 +343,16 @@ int ContextNetwork::make_UDP_socket(uint16_t port) {
 }
 
 void* receiveTcpThread(void* data) {
-	std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+	if (THREAD_DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	std::pair<IpAddress*, char*> incoming = *((std::pair<IpAddress*, char*>*) data);
 
 	ContextPacket *receivedContextPacket = new ContextPacket();
 
-	std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 	receivedContextPacket->deserialize(incoming.second);
-	std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+
 	receivedContextPacket->setIpAddress(incoming.first->getSockAddress().sin_addr.s_addr);
+
 	receivedContextPacket->setPortNumber(incoming.first->getSockAddress().sin_port);
 
 	receivedContextPacket->processTCP();

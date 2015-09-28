@@ -102,6 +102,7 @@ public:
 	ContextPacket();
 	~ContextPacket() {
 		delete firstBrick;
+		deleteService();
 	}
 
 	ContextPacket(IpAddress *ipAddress);
@@ -162,6 +163,10 @@ public:
 	}
 	void setUuid(uuid_t* uuid) {
 		memcpy(this->uuid, uuid, 16);
+	}
+
+	struct sockaddr_in getIp() {
+		return sockAddress;
 	}
 
 	/**
@@ -383,6 +388,8 @@ public:
 	int answerUDP();
 	int answerTCP();
 
+	int deleteService();
+
 	/**
 	 * Check for matching context (refactor to derived "Request")
 	 */
@@ -391,7 +398,7 @@ public:
 	/**
 	 * Print data for debugging
 	 */
-	void printPacket();
+	void printPacket(std::string line_start="");
 
 	/**
 	 * Array of 255 context bricks
@@ -481,7 +488,5 @@ private:
 	 */
 	char additionalData[DATA_ADDITIONAL_SIZE];
 };
-
-void printBits(size_t const size, void const * const ptr);
 
 #endif /* SRC_COREPACKET_H_ */
