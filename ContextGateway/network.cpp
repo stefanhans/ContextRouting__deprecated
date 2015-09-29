@@ -107,6 +107,18 @@ int ContextNetwork::run() {
 
 					receivedContextPacket->answerUDP();
 
+
+					char sendBuffer[receivedContextPacket->getSize()];
+
+					receivedContextPacket->serialize(sendBuffer);
+
+					int nbytes;
+					nbytes = sendto(UDP_sock, sendBuffer, receivedContextPacket->getSize(), 0, (struct sockaddr *) &UDP_addr, sizeof(struct sockaddr));
+					if (nbytes < 0) {
+						perror("sendto (UDP_sock)");
+						exit(EXIT_FAILURE);
+					}
+
 					delete receivedContextPacket;
 
 //					ContextService *testService = serviceFactory->GetService(receivedContextPacket->getChannel());

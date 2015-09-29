@@ -121,6 +121,44 @@ void ContextService::findMatchingContextPackets(void* contextPacket) {
 									iter != contextPackets[((ContextPacket*) contextPacket)->getFirstBrick()->context].end(); ++iter) {
 		if(matchContextPackets((*iter), (ContextPacket*) contextPacket)) {
 			(*iter)->printPacket("FOUND: ");
+
+
+			char sendBuffer[(*iter)->getSize()];
+
+			(*iter)->serialize(sendBuffer);
+
+
+
+
+//			struct sockaddr_in name;
+//			int sock;
+//
+//			/* Create the socket. */
+//			sock = socket(AF_INET, SOCK_DGRAM, 0);
+//
+//			if (sock < 0) {
+//				perror("socket");
+//				exit(EXIT_FAILURE);
+//			}
+//
+//			/* Bind a name to the socket. */
+//			name.sin_family = AF_INET;
+//			name.sin_port = htons(PORT_UDP_META);
+//			name.sin_addr.s_addr = inet_addr("127.0.0.1");
+//
+//			if (bind(sock, (struct sockaddr *) &name, sizeof(name)) < 0) {
+//				std::cerr << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << " ";
+//				perror("ERROR");
+//				exit(EXIT_FAILURE);
+//			}
+//
+//
+////			(struct sockaddr *) &UDP_addr
+//			int nbytes = send(UDP_sock, sendBuffer, (*iter)->getSize(), 0);
+//			if (nbytes < 0) {
+//				perror("sendto (UDP_sock)");
+//				exit(EXIT_FAILURE);
+//			}
 		}
 	}
 }
