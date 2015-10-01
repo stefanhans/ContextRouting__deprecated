@@ -21,11 +21,17 @@ public:
 
 	virtual ~ContextService(){}
 
+	/*
+	 * UDP methods
+	 */
 	virtual int processUDP(void* receivedPacket) = 0;
+	virtual int processUDP(void* packet, int socket, void *buffer, size_t size, struct sockaddr *addr) = 0;
+
+	/*
+	 * TCP methods
+	 */
 	virtual int processTCP(void* receivedPacket) = 0;
 
-	virtual int answerUDP(void* receivedPacket) = 0;
-	virtual int answerTCP(void* receivedPacket) = 0;
 
 	static ContextService* create(byte_t service);
 
@@ -41,9 +47,9 @@ protected:
 	bool matchContextPackets(void* contextPacket_1, void* contextPacket_2);
 
 	/*
-	 * Find all matching packets from storage
+	 * Send all matching packets from storage to sender of request
 	 */
-	void findMatchingContextPackets(void* contextPacket);
+	void sendMatchingContextPackets(void* requestPacket, int socket, struct sockaddr *addr);
 
 
 

@@ -13,11 +13,11 @@ ContextService *TcpContextService = NULL;
 
 ContextBrick::ContextBrick() :
 		context(0), mask(0) {
-	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+//	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 }
 
 ContextBrick::ContextBrick(byte_t context, byte_t mask) {
-	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+//	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	this->context = context;
 	this->mask    = mask;
@@ -73,7 +73,7 @@ ContextPacket::ContextPacket() :
 		dataType(DATA_TYPE_DEFAULT),
 		additionalDataSize(0) {
 
-	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]  Constructor()" << std::endl;
 
 	memset(&uuid, 0, sizeof(uuid));
 
@@ -103,7 +103,8 @@ ContextPacket::ContextPacket(IpAddress *ipAddress) :
 		dataType(DATA_TYPE_DEFAULT),
 		additionalDataSize(8) {
 
-	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]  Constructor(IpAddress: "
+			<< inet_ntoa(ipAddress->getSockAddress().sin_addr) << ":" << ntohs(ipAddress->getSockAddress().sin_port) << ")" << std::endl;
 
 	setUuid(ipAddress->getAddressId());
 
@@ -218,7 +219,7 @@ int ContextPacket::serialize(char *buffer) {
  * Deserialize incoming data
  */
 int ContextPacket::deserialize(char *buffer) {
-	if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	unsigned int b = 0;
 
@@ -267,13 +268,26 @@ int ContextPacket::deserialize(char *buffer) {
 }
 
 int ContextPacket::processUDP() {
-	if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	if(UdpContextService == NULL) {
 		UdpContextService = ContextService::create(service);
 	}
 
 	return UdpContextService->processUDP(this);
+}
+
+int ContextPacket::processUDP(int sock, struct sockaddr *addr) {
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+
+	if(UdpContextService == NULL) {
+		UdpContextService = ContextService::create(service);
+	}
+
+	char sendBuffer[getSize()];
+	serialize(sendBuffer);
+
+	return UdpContextService->processUDP(this, sock, sendBuffer, getSize(), addr);
 }
 
 
@@ -287,38 +301,17 @@ int ContextPacket::processTCP() {
 	return TcpContextService->processTCP(this);
 }
 
-
-int ContextPacket::answerUDP() {
-	if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
-
-	if(UdpContextService == NULL) {
-		UdpContextService = ContextService::create(service);
-	}
-
-	return UdpContextService->answerUDP(this);
-}
-
-int ContextPacket::answerTCP() {
+int ContextPacket::deleteService() {
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
-	if(TcpContextService == NULL) {
-		TcpContextService = ContextService::create(service);
-	}
-
-	return TcpContextService->answerTCP(this);
-}
-
-int ContextPacket::deleteService() {
-	if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
-
-	delete UdpContextService;
-	delete TcpContextService;
+//	delete UdpContextService;
+//	delete TcpContextService;
 	return 0;
 }
 
 
 bool ContextPacket::isMatchingContext(ContextPacket *request) {
-	if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]"<< std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]"<< std::endl;
 
 	if (this->getContextType() != request->getContextType()) {
 		return false;

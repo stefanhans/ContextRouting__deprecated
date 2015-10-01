@@ -36,6 +36,11 @@ static std::vector<IpAddress*> ipAddresses;
 /* mutex for static collections */
 static pthread_mutex_t a_mutex = PTHREAD_MUTEX_INITIALIZER;
 
+
+ContextService::ContextService() {
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] Constructor()" << std::endl;
+}
+
 int ContextService::storePacket(void* packet) {
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
@@ -109,58 +114,38 @@ bool ContextService::matchContextPackets(void* contextPacket_1, void* contextPac
 	return true;
 }
 
-void ContextService::findMatchingContextPackets(void* contextPacket) {
-	if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+void ContextService::sendMatchingContextPackets(void* contextPacket, int socket, struct sockaddr *addr) {
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	if(contextPackets[((ContextPacket*) contextPacket)->getFirstBrick()->context].size() == 0) {
-		if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 		return;
 	}
+
+	int nbytes;
 
 	for (std::vector<ContextPacket*>::iterator iter = contextPackets[((ContextPacket*) contextPacket)->getFirstBrick()->context].begin();
 									iter != contextPackets[((ContextPacket*) contextPacket)->getFirstBrick()->context].end(); ++iter) {
 		if(matchContextPackets((*iter), (ContextPacket*) contextPacket)) {
-			(*iter)->printPacket("FOUND: ");
+
+//			(*iter)->printPacket("FOUND: ");
+
+			if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : FOUND " << getUuidString(*(*iter)->getUuid()) << std::endl;
 
 
 			char sendBuffer[(*iter)->getSize()];
 
 			(*iter)->serialize(sendBuffer);
 
+			nbytes = sendto(socket, sendBuffer, sizeof(sendBuffer), 0, addr, sizeof(struct sockaddr));
+			if (nbytes < 0) {
+				perror("sendto (socket)");
+				exit(EXIT_FAILURE);
+			}
 
-
-
-//			struct sockaddr_in name;
-//			int sock;
-//
-//			/* Create the socket. */
-//			sock = socket(AF_INET, SOCK_DGRAM, 0);
-//
-//			if (sock < 0) {
-//				perror("socket");
-//				exit(EXIT_FAILURE);
-//			}
-//
-//			/* Bind a name to the socket. */
-//			name.sin_family = AF_INET;
-//			name.sin_port = htons(PORT_UDP_META);
-//			name.sin_addr.s_addr = inet_addr("127.0.0.1");
-//
-//			if (bind(sock, (struct sockaddr *) &name, sizeof(name)) < 0) {
-//				std::cerr << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << " ";
-//				perror("ERROR");
-//				exit(EXIT_FAILURE);
-//			}
-//
-//
-////			(struct sockaddr *) &UDP_addr
-//			int nbytes = send(UDP_sock, sendBuffer, (*iter)->getSize(), 0);
-//			if (nbytes < 0) {
-//				perror("sendto (UDP_sock)");
-//				exit(EXIT_FAILURE);
-//			}
 		}
 	}
+//	close(socket);
 }
 
 int ContextService::getNumberOfPackets() {
@@ -226,37 +211,6 @@ void printPacketStorage() {
 	std::cout << "Number of non empty indices:" << non_empty_indices << std::endl;
 	std::cout << "Number of packets:" << sum_packets << std::endl;
 	std::cout << LINE_SEPARATOR << std::endl;
-
-
-
-
-
-	//						if (storage->contextPackets[receivedContextPacket->getContextType()].size() == 0) {
-	//							printf("contextPackets[contextType] is empty()\n");
-	//							continue;
-	//						}
-	//
-	//						for (std::vector<ContextPacket*>::iterator iter = storage->contextPackets[receivedContextPacket->getContextType()].begin();
-	//								iter != storage->contextPackets[receivedContextPacket->getContextType()].end(); ++iter) {
-	//
-	//							printf("for\n");
-	//
-	//							if ((*iter)->isMatchingContext(receivedContextPacket)) {
-	//
-	//								printf("if\n");
-	//								printf("(*iter)->getSize(): %u\n", (*iter)->getSize());
-	//
-	//								char sendBuffer[(*iter)->getSize()];
-	//
-	//								(*iter)->serialize(sendBuffer);
-	//
-	//								nbytes = sendto(UDP_sock, sendBuffer, (*iter)->getSize(), 0, (struct sockaddr *) &UDP_addr, size);
-	//								if (nbytes < 0) {
-	//									perror("sendto (UDP_sock)");
-	//									exit(EXIT_FAILURE);
-	//								}
-	//							}
-	//						}
 }
 
 void ContextService::printPackets() {
@@ -269,13 +223,13 @@ void ContextService::printPackets() {
 
 
 ContextService* ContextService::create(byte_t service) {
-	if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] " << (uint) service << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] " << (uint) service << std::endl;
 
 	/*
 	 * Offer service constructor call
 	 */
 	if(service == SERVICE_OFFER) {
-		if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] " << (uint) service << std::endl;
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] new OfferService()" << std::endl;
 		return new OfferService();
 	}
 
@@ -283,7 +237,7 @@ ContextService* ContextService::create(byte_t service) {
 	 * Request service constructor call
 	 */
 	if(service == SERVICE_REQUEST) {
-		if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] " << (uint) service << std::endl;
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] new RequestService()" << std::endl;
 		return new RequestService();
 	}
 
@@ -293,10 +247,4 @@ ContextService* ContextService::create(byte_t service) {
 	// Add line with <new> service constructor call here
 
 	return 0;
-}
-
-ContextService::ContextService() {
-	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
-
-//	vector<ContextPacket*> contextPackets[UCHAR_MAX];
 }

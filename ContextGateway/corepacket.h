@@ -383,10 +383,9 @@ public:
 	 * Process received UDP packet by service object according to packet's service
 	 */
 	int processUDP();
-	int processTCP();
+	int processUDP(int socket, struct sockaddr *addr);
 
-	int answerUDP();
-	int answerTCP();
+	int processTCP();
 
 	int deleteService();
 
@@ -404,7 +403,6 @@ public:
 	 * Array of 255 context bricks
 	 */
 	ContextBrick additionalBricks[BRICKS_ADDITIONAL_SIZE];
-
 
 private:
 

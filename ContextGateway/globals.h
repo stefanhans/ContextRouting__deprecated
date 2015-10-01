@@ -1,7 +1,10 @@
 #ifndef SRC_GLOBALS_H_
 #define SRC_GLOBALS_H_
 
-#define DEBUG 1
+#define DEBUG 0
+#define THREAD_DEBUG 0
+
+#define LINE_SEPARATOR "----------------------------------------------------------------------"
 
 #define MAXMSG 1024
 
@@ -17,7 +20,7 @@ typedef unsigned short int port_t;
 
 
 inline void printUuid(uuid_t uuid, std::string header="") {
-	std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+//	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] " << std::ends;
 
 	std::cout << header << std::flush;
 
@@ -31,7 +34,7 @@ inline void printUuid(uuid_t uuid, std::string header="") {
 }
 
 inline std::string getUuidString(uuid_t uuid) {
-	std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+//	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	std::string out;
 
@@ -48,7 +51,7 @@ inline std::string getUuidString(uuid_t uuid) {
 }
 
 inline void printBits(size_t const size, void const * const ptr) {
-	std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+//	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	unsigned char *b = (unsigned char*) ptr;
 	unsigned char byte;
@@ -63,6 +66,27 @@ inline void printBits(size_t const size, void const * const ptr) {
 		}
 	}
 	std::cout << std::endl;
+}
+
+inline std::string getBitsString(size_t const size, void const * const ptr) {
+//	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+
+	unsigned char *b = (unsigned char*) ptr;
+	unsigned char byte;
+	int i, j;
+
+	std::string out_str;
+	char str_buffer[1];
+
+	for (i = size - 1; i >= 0; i--) {
+		for (j = 7; j >= 0; j--) {
+			byte = b[i] & (1 << j);
+			byte >>= j;
+			sprintf(str_buffer, "%u", byte);
+			out_str.append(str_buffer);
+		}
+	}
+	return out_str;
 }
 
 
