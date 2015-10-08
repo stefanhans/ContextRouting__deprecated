@@ -68,7 +68,7 @@ public:
 private:
 
 	/*
-	 * This flag controls termination of the main loop
+	 * This flag controls termination of the main loop, i.e. 0 stops the main loop
 	 */
 	volatile sig_atomic_t keep_going;
 
@@ -103,14 +103,12 @@ private:
 
 	char UDP_buffer[MAXMSG];
 	char TCP_buffer[MAXMSG];
-	char message[MAXMSG];
 
 	std::pair<IpAddress*, char*> sizeAndContextStruct;
 	IpAddress* senderAddressArray[FD_SETSIZE];
 
 	int make_TCP_socket(uint16_t port);
 	int make_UDP_socket(uint16_t port);
-
 };
 
 #endif /* SRC_NETWORK_H_ */

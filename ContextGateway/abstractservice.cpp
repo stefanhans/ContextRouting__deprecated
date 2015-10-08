@@ -36,125 +36,9 @@ static std::vector<IpAddress*> ipAddresses;
 /* mutex for static collections */
 static pthread_mutex_t a_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-
-ContextService::ContextService() {
-	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] Constructor()" << std::endl;
-}
-
-int ContextService::storePacket(void* packet) {
-	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
-
-    int rc;	/* contain mutex lock/unlock results */
-
-    /* lock the mutex, to assure exclusive access to 'a' and 'b'. */
-    rc = pthread_mutex_lock(&a_mutex);
-
-    /* an error has occurred */
-    if (rc) {
-        perror("pthread_mutex_lock");
-        pthread_exit(NULL);
-    }
-
-	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] :"
-			" push_back at index " << (uint) ((ContextPacket*) packet)->getFirstBrick()->context << std::endl;
-
-	contextPackets[((ContextPacket*) packet)->getFirstBrick()->context].push_back((ContextPacket*) packet);
-
-    /* unlock mutex */
-    rc = pthread_mutex_unlock(&a_mutex);
-
-    if (rc) {
-        perror("pthread_mutex_unlock");
-        pthread_exit(NULL);
-	}
-
-	return 0;
-};
-
-bool ContextService::matchContextBricks(void* contextBrick_1, void* contextBrick_2) {
-	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
-
-	byte_t notEqual = ((ContextBrick*) contextBrick_1)->context ^ ((ContextBrick*) contextBrick_2)->context;
-	if (notEqual == 0) {
-		return true;
-	}
-
-	byte_t offer_relevant = ~notEqual | ((ContextBrick*) contextBrick_1)->mask;
-	byte_t not_offer_relevant = ~offer_relevant;
-	if (not_offer_relevant != 0) {
-		return false;
-	}
-
-	byte_t request_relevant = ~notEqual | ((ContextBrick*) contextBrick_2)->mask;
-	byte_t not_request_relevant = ~request_relevant;
-	if (not_request_relevant != 0) {
-		return false;
-	}
-
-	return true;
-}
-
-bool ContextService::matchContextPackets(void* contextPacket_1, void* contextPacket_2) {
-	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
-
-	if (!matchContextBricks(((ContextPacket*) contextPacket_1)->getFirstBrick(), ((ContextPacket*) contextPacket_2)->getFirstBrick())) {
-		return false;
-	}
-	if (((ContextPacket*) contextPacket_1)->getOptionalBrickListSize() != ((ContextPacket*) contextPacket_2)->getOptionalBrickListSize()) {
-		return false;
-	}
-
-	unsigned int i;
-	for (i = 0; i < ((ContextPacket*) contextPacket_1)->getOptionalBrickListSize(); i++) {
-		if ( ! matchContextBricks(&(((ContextPacket*) contextPacket_1)->additionalBricks[i]), &(((ContextPacket*) contextPacket_2)->additionalBricks[i])) ) {
-			return false;
-		}
-	}
-
-	return true;
-}
-
-void ContextService::sendMatchingContextPackets(void* contextPacket, int socket, struct sockaddr *addr) {
-	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
-
-	if(contextPackets[((ContextPacket*) contextPacket)->getFirstBrick()->context].size() == 0) {
-		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
-		return;
-	}
-
-	int nbytes;
-
-	for (std::vector<ContextPacket*>::iterator iter = contextPackets[((ContextPacket*) contextPacket)->getFirstBrick()->context].begin();
-									iter != contextPackets[((ContextPacket*) contextPacket)->getFirstBrick()->context].end(); ++iter) {
-		if(matchContextPackets((*iter), (ContextPacket*) contextPacket)) {
-
-//			(*iter)->printPacket("FOUND: ");
-
-			if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : FOUND " << getUuidString(*(*iter)->getUuid()) << std::endl;
-
-
-			char sendBuffer[(*iter)->getSize()];
-
-			(*iter)->serialize(sendBuffer);
-
-			nbytes = sendto(socket, sendBuffer, sizeof(sendBuffer), 0, addr, sizeof(struct sockaddr));
-			if (nbytes < 0) {
-				perror("sendto (socket)");
-				exit(EXIT_FAILURE);
-			}
-
-		}
-	}
-//	close(socket);
-}
-
-int ContextService::getNumberOfPackets() {
-	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
-
-	return sizeof(contextPackets) / sizeof(contextPackets[0]);
-};
-
-
+/**
+ * Debugging method to print whole static packet storage
+ */
 void printPacketStorage() {
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
@@ -213,15 +97,70 @@ void printPacketStorage() {
 	std::cout << LINE_SEPARATOR << std::endl;
 }
 
-void ContextService::printPackets() {
-	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
-	printPacketStorage();
+ContextService::ContextService() {
+	if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] Constructor()" << std::endl;
+
 }
 
+std::vector<ContextPacket*>* ContextService::getContextPackets(byte_t index) {
+	if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
+	return &contextPackets[index];
+}
 
+pthread_mutex_t ContextService::getContextPacketsMutex() {
+	if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
+	return a_mutex;
+}
+
+bool ContextService::matchContextBricks(void* contextBrick_1, void* contextBrick_2) {
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+
+	byte_t notEqual = ((ContextBrick*) contextBrick_1)->context ^ ((ContextBrick*) contextBrick_2)->context;
+	if (notEqual == 0) {
+		return true;
+	}
+
+	byte_t offer_relevant = ~notEqual | ((ContextBrick*) contextBrick_1)->mask;
+	byte_t not_offer_relevant = ~offer_relevant;
+	if (not_offer_relevant != 0) {
+		return false;
+	}
+
+	byte_t request_relevant = ~notEqual | ((ContextBrick*) contextBrick_2)->mask;
+	byte_t not_request_relevant = ~request_relevant;
+	if (not_request_relevant != 0) {
+		return false;
+	}
+
+	return true;
+}
+
+bool ContextService::matchContextPackets(void* contextPacket_1, void* contextPacket_2) {
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+
+	if (!matchContextBricks(((ContextPacket*) contextPacket_1)->getFirstBrick(), ((ContextPacket*) contextPacket_2)->getFirstBrick())) {
+		return false;
+	}
+	if (((ContextPacket*) contextPacket_1)->getOptionalBrickListSize() != ((ContextPacket*) contextPacket_2)->getOptionalBrickListSize()) {
+		return false;
+	}
+
+	unsigned int i;
+	for (i = 0; i < ((ContextPacket*) contextPacket_1)->getOptionalBrickListSize(); i++) {
+		if ( ! matchContextBricks(&(((ContextPacket*) contextPacket_1)->additionalBricks[i]), &(((ContextPacket*) contextPacket_2)->additionalBricks[i])) ) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+/*
+ * Factory like static creator
+ */
 ContextService* ContextService::create(byte_t service) {
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] " << (uint) service << std::endl;
 
@@ -248,3 +187,13 @@ ContextService* ContextService::create(byte_t service) {
 
 	return 0;
 }
+
+/*
+ * Wrapper for printPacketStorage() to be called by derived services
+ */
+void ContextService::printPackets() {
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+
+	printPacketStorage();
+}
+

@@ -10,6 +10,9 @@
 
 #include "corepacket.h"
 
+class ContextPacket;
+
+
 /**
  * @brief ContextService
  *
@@ -22,18 +25,21 @@ public:
 	virtual ~ContextService(){}
 
 	/*
-	 * UDP methods
+	 * UDP method
 	 */
-	virtual int processUDP(void* receivedPacket) = 0;
 	virtual int processUDP(void* packet, int socket, void *buffer, size_t size, struct sockaddr *addr) = 0;
 
 	/*
-	 * TCP methods
+	 * TCP method
 	 */
 	virtual int processTCP(void* receivedPacket) = 0;
 
 
 	static ContextService* create(byte_t service);
+
+	std::vector<ContextPacket*>* getContextPackets(byte_t index);
+
+	pthread_mutex_t getContextPacketsMutex();
 
 protected:
 	/*
@@ -45,20 +51,6 @@ protected:
 	 * Do two ContextPackets match?
 	 */
 	bool matchContextPackets(void* contextPacket_1, void* contextPacket_2);
-
-	/*
-	 * Send all matching packets from storage to sender of request
-	 */
-	void sendMatchingContextPackets(void* requestPacket, int socket, struct sockaddr *addr);
-
-
-
-	/**
-	 * Store ContextPacket in "contextPackets[]"
-	 */
-	int storePacket(void* packet);
-
-	int getNumberOfPackets();
 
 	void printPackets();
 };

@@ -382,7 +382,7 @@ public:
 	/**
 	 * Process received UDP packet by service object according to packet's service
 	 */
-	int processUDP();
+//	int processUDP();
 	int processUDP(int socket, struct sockaddr *addr);
 
 	int processTCP();

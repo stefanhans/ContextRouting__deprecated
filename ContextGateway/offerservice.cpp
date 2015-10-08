@@ -1,17 +1,40 @@
-/*
- * offerservice.cpp
- *
- *  Created on: Sep 2, 2015
- *      Author: stefan
- */
-
 #include "offerservice.h"
 
+int OfferService::processTCP(void* receivedPacket) {
+	if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] " << (uint) ((ContextPacket*) receivedPacket)->getService()<< std::endl;
 
-//int OfferService::storePacket() {
-//	printf("OfferService::storePacket\n");
-//
-//	printf("ContextPacket::processTCP() -> getPacketNumber(): %i\n", getPacketNumber());
-//
-//	return 0;
-//}
+	pthread_mutex_t storageMutex = getContextPacketsMutex();
+
+	int rc;	/* contain mutex lock/unlock results */
+
+	/* lock the mutex, to assure exclusive access to 'a' and 'b'. */
+	rc = pthread_mutex_lock(&storageMutex);
+
+	/* an error has occurred */
+	if (rc) {
+		perror("pthread_mutex_lock");
+		pthread_exit(NULL);
+	}
+
+	std::vector<ContextPacket*>* store_vector;
+	store_vector = getContextPackets(((ContextPacket*) receivedPacket)->getFirstBrick()->context);
+
+	store_vector->push_back((ContextPacket*) receivedPacket);
+
+	if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] :"
+			" push_back at index " << (uint) ((ContextPacket*) receivedPacket)->getFirstBrick()->context << std::endl;
+
+	/* unlock mutex */
+	rc = pthread_mutex_unlock(&storageMutex);
+
+	if (rc) {
+		perror("pthread_mutex_unlock");
+		pthread_exit(NULL);
+	}
+
+	if (! DEBUG) printPackets();
+
+	if (DEBUG) ((ContextPacket*) receivedPacket)->printPacket();
+
+	return 0;
+}

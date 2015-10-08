@@ -267,16 +267,6 @@ int ContextPacket::deserialize(char *buffer) {
 	return b;
 }
 
-int ContextPacket::processUDP() {
-	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
-
-	if(UdpContextService == NULL) {
-		UdpContextService = ContextService::create(service);
-	}
-
-	return UdpContextService->processUDP(this);
-}
-
 int ContextPacket::processUDP(int sock, struct sockaddr *addr) {
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
