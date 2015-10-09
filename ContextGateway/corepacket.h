@@ -192,15 +192,15 @@ public:
 	/**
 	 * Getter/Setter for a simple time stamp
 	 */
-//	const time_t* getTime() {
-//		return &timestamp;
-//	}
-//	void setTime(time_t timestamp) {
-//		this->timestamp = timestamp;
-//	}
-//	void setTime() {
-//		this->timestamp = time(NULL);
-//	}
+	const time_t* getTime() {
+		return &timestamp;
+	}
+	void setTime(time_t timestamp) {
+		this->timestamp = timestamp;
+	}
+	void setTime() {
+		this->timestamp = time(NULL);
+	}
 
 	/**
 	 * Getter/Setter for additionalHeaderData array
@@ -382,17 +382,14 @@ public:
 	/**
 	 * Process received UDP packet by service object according to packet's service
 	 */
-//	int processUDP();
 	int processUDP(int socket, struct sockaddr *addr);
 
+	/**
+	 * Process received TCP packet by service object according to packet's service
+	 */
 	int processTCP();
 
 	int deleteService();
-
-	/**
-	 * Check for matching context (refactor to derived "Request")
-	 */
-	bool isMatchingContext(ContextPacket *request);
 
 	/**
 	 * Print data for debugging
@@ -439,7 +436,7 @@ private:
 	/**
 	 * Time stamp
 	 */
-//	time_t timestamp;
+	time_t timestamp;
 
 	/**
 	 * Array of 255 bytes for additional data

@@ -78,13 +78,16 @@ Table of Contents
      2.2.  Context . . . . . . . . . . . . . . . . . . . . . . . . .   5
        2.2.1.  type  . . . . . . . . . . . . . . . . . . . . . . . .   5
        2.2.2.  content . . . . . . . . . . . . . . . . . . . . . . .   5
-       2.2.3.  mask  . . . . . . . . . . . . . . . . . . . . . . . .   5
-     2.3.  Data  . . . . . . . . . . . . . . . . . . . . . . . . . .   5
-       2.3.1.  text_type . . . . . . . . . . . . . . . . . . . . . .   6
-       2.3.2.  text  . . . . . . . . . . . . . . . . . . . . . . . .   6
-       2.3.3.  add_size  . . . . . . . . . . . . . . . . . . . . . .   6
-       2.3.4.  additional data . . . . . . . . . . . . . . . . . . .   6
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   6
+       2.2.3.  mask  . . . . . . . . . . . . . . . . . . . . . . . .   6
+     2.3.  Data  . . . . . . . . . . . . . . . . . . . . . . . . . .   6
+       2.3.1.  add_size  . . . . . . . . . . . . . . . . . . . . . .   6
+       2.3.2.  text_type . . . . . . . . . . . . . . . . . . . . . .   6
+       2.3.3.  text  . . . . . . . . . . . . . . . . . . . . . . . .   6
+       2.3.4.  additional data . . . . . . . . . . . . . . . . . . .   7
+     2.4.  Context Bricks  . . . . . . . . . . . . . . . . . . . . .   7
+       2.4.1.  content . . . . . . . . . . . . . . . . . . . . . . .   7
+     2.5.  mask  . . . . . . . . . . . . . . . . . . . . . . . . . .   7
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   7
 
 1.  Introduction
 
@@ -95,9 +98,6 @@ Table of Contents
    Datastructure of the context datagram. (max.  MTU 1200 Byte)
 
 2.1.  Header
-
-
-
 
 
 
@@ -210,12 +210,12 @@ Internet-Draft               Context Routing                   June 2015
 
    'Service Groups' describes the role(s) in the Context Network.
 
-   Figure 2.1.2 shows the service groups and its defined first two bits
 
-   0         1         2  ---------------------------------------   8
-   +---------+---------+--------------------------------------------+
-   | client  | gateway |           not yet defined                  |
-   +--------------------------------------------------------------- +
+
+
+
+
+
 
 
 
@@ -225,6 +225,16 @@ Stefan Hans             Expires December 3, 2015                [Page 4]
 
 Internet-Draft               Context Routing                   June 2015
 
+
+   Figure 2.1.2 shows the service groups and its defined first two bits.
+
+   0         1         2  ---------------------------------------   8
+   +---------+---------+--------------------------------------------+
+   | client  | gateway |           not yet defined                  |
+   +--------------------------------------------------------------- +
+
+     Thus the integer 1 means 'client', 2 means 'gateway' and 3 means
+                                   both.
 
 2.2.  Context
 
@@ -256,19 +266,9 @@ Internet-Draft               Context Routing                   June 2015
 
 2.2.2.  content
 
-   The content is the first part of a Context Brick (see figure 2.1.2).
+   The content is the first part of a Context Brick (see section 2.4).
    It is used in the core functionality to specify the kind of context
    coding.
-
-2.2.3.  mask
-
-   The mask is the second part of a Context Brick (see figure 2.1.2).
-   It is not used in the core functionality so far.
-
-2.3.  Data
-
-
-
 
 
 
@@ -282,18 +282,29 @@ Stefan Hans             Expires December 3, 2015                [Page 5]
 Internet-Draft               Context Routing                   June 2015
 
 
+2.2.3.  mask
+
+   The mask is the second part of a Context Brick (see section 2.4).  It
+   is not used in the core functionality so far.
+
+2.3.  Data
+
    The following figure shows the data section of the context datagram.
      This section has no meaning for the Context Routing itself.  The
-         meaning of this section is only relevant to the clients.
+    meaning of this section is only relevant to the clients.  Therefore
+      the following structure has to be seen as a default and can be
+     changed, if another specification is agreed between the concerned
+   clients.  The 'add_size' has to be as if the default structure would
+         be actual, i.e. available is then 'add_size + 141' bytes.
 
    0                   1                   2                   3
    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   | text_type (1) |                                               | |
+   |  add_size (1) | text_type (1) |                               | |
    |                                                               | |
    |                          text (140)                           | fix
    |                                                               | |
-   |  add_size (1) | ............................................  |---
+   +---------------------------------------------------------------+---
    | ............................................................  | |
    | ........ additional data up to 255 bytes (add_size) ........  | opt
    | ............................................................  | |
@@ -302,32 +313,21 @@ Internet-Draft               Context Routing                   June 2015
    Format of datagrams containing context information.  Field sizes are
     given in octets.  Unless otherwise specified, fields contain binary
     integers, in normal Internet order with the most-significant octet
-                first.  Each tick mark represents one bit.
+   first.  Each tick mark represents one bit.  The area for 'text (140)'
+                     does not correspond to 140 bytes.
 
-2.3.1.  text_type
+2.3.1.  add_size
 
-   The text_type specifies different types of text data.
+   The size of additional data in bytes.
 
-2.3.2.  text
+2.3.2.  text_type
 
-   The text is a fixed sized text.
+   The meaning or format of the following text, e.g. plain text, URL.
 
-2.3.3.  add_size
+2.3.3.  text
 
-   The conten
-
-2.3.4.  additional data
-
-   The content is the first part of a Context Brick (see figure 2.1.2).
-   It is used in the core functionality to specify the kind of context
-   coding.
-
-Author's Address
-
-
-
-
-
+   A fixed sized text, that means it has possibly to be padded by blanks
+   up to 140 characters.
 
 
 
@@ -338,6 +338,30 @@ Stefan Hans             Expires December 3, 2015                [Page 6]
 Internet-Draft               Context Routing                   June 2015
 
 
+2.3.4.  additional data
+
+   Any data in a size as specified by 'add_size', i.e. limited by 255.
+
+2.4.  Context Bricks
+
+   A Context Brick is a pair of bytes in particular content and mask.
+   It describes a piece of information and the relevance of its
+   exactness.  The meaning of the Context Bricks is not known by the
+   Context Network.
+
+2.4.1.  content
+
+   The content represents an exact information encoded in a byte.
+
+2.5.  mask
+
+   The mask represents the relevance of the exactness of the content in
+   a byte.  For that a 1 makes the corresponding bit of the content
+   irrelevant.  Two bits are corresponding, if they are at the same
+   place in the byte.
+
+Author's Address
+
    Stefan Hans
    FernUniversitaet in Hagen
    Rotwandstr.
@@ -345,30 +369,6 @@ Internet-Draft               Context Routing                   June 2015
    Germany
 
    Email: uni@stefan-hans.de
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

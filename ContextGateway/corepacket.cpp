@@ -81,7 +81,7 @@ ContextPacket::ContextPacket() :
 	sockAddress.sin_family = AF_INET;
 	sockAddress.sin_addr.s_addr = INADDR_LOOPBACK;
 
-//	timestamp = time(NULL);
+	timestamp = time(NULL);
 
 	memset(&additionalData, 0, HEADER_ADDITIONAL_SIZE);
 
@@ -297,32 +297,6 @@ int ContextPacket::deleteService() {
 //	delete UdpContextService;
 //	delete TcpContextService;
 	return 0;
-}
-
-
-bool ContextPacket::isMatchingContext(ContextPacket *request) {
-	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]"<< std::endl;
-
-	if (this->getContextType() != request->getContextType()) {
-		return false;
-	}
-
-	if ( ! this->getFirstBrick()->hasMatch(request->getFirstBrick())) {
-		return false;
-	}
-
-	if (this->getOptionalBrickListSize() != request->getOptionalBrickListSize()) {
-		return false;
-	}
-
-	unsigned int i;
-	for (i = 0; i < this->getOptionalBrickListSize(); i++) {
-		if ( ! this->additionalBricks[i].hasMatch(&request->additionalBricks[i])) {
-			return false;
-		}
-	}
-
-	return true;
 }
 
 
