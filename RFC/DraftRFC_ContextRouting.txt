@@ -86,7 +86,7 @@ Table of Contents
        2.3.4.  additional data . . . . . . . . . . . . . . . . . . .   7
      2.4.  Context Bricks  . . . . . . . . . . . . . . . . . . . . .   7
        2.4.1.  content . . . . . . . . . . . . . . . . . . . . . . .   7
-     2.5.  mask  . . . . . . . . . . . . . . . . . . . . . . . . . .   7
+       2.4.2.  mask  . . . . . . . . . . . . . . . . . . . . . . . .   7
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   7
 
 1.  Introduction
@@ -353,7 +353,7 @@ Internet-Draft               Context Routing                   June 2015
 
    The content represents an exact information encoded in a byte.
 
-2.5.  mask
+2.4.2.  mask
 
    The mask represents the relevance of the exactness of the content in
    a byte.  For that a 1 makes the corresponding bit of the content
