@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     headerSgRequestHBoxLayout = new QHBoxLayout;
     headerSgRequestClientCheckBox = new QCheckBox(tr("Client"));
     headerSgRequestGatewayCheckBox = new QCheckBox(tr("Gateway"));
+    headerSgRequestGatewayCheckBox->setChecked(true);
     headerSgRequestFree1CheckBox = new QCheckBox(tr("Free 1"));
     headerSgRequestFree2CheckBox = new QCheckBox(tr("Free 2"));
     headerSgRequestFree3CheckBox = new QCheckBox(tr("Free 3"));
@@ -40,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent)
     headerSgProfileGroupBox = new QGroupBox(tr("Service Group Profile"));
     headerSgProfileHBoxLayout  = new QHBoxLayout;
     headerSgProfileClientCheckBox = new QCheckBox(tr("Client"));
+    headerSgProfileClientCheckBox->setChecked(true);
     headerSgProfileGatewayCheckBox = new QCheckBox(tr("Gateway"));
     headerSgProfileFree1CheckBox = new QCheckBox(tr("Free 1"));
     headerSgProfileFree2CheckBox = new QCheckBox(tr("Free 2"));
@@ -62,12 +64,14 @@ MainWindow::MainWindow(QWidget *parent)
     headerVersionMajorSpBx = new QSpinBox;
     headerVersionMajorSpBx->setMinimum(0);
     headerVersionMajorSpBx->setMaximum(15);
+    headerVersionMajorSpBx->setValue(1);
     headerVersionMajorLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     headerVersionMajorLbl->setBuddy(headerVersionMajorSpBx);
     headerVersionMinorLbl = new QLabel(tr("Minor Version"));
     headerVersionMinorSpBx = new QSpinBox;
     headerVersionMinorSpBx->setMinimum(0);
     headerVersionMinorSpBx->setMaximum(15);
+    headerVersionMinorSpBx->setValue(1);
     headerVersionMinorLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     headerVersionMinorLbl->setBuddy(headerVersionMinorSpBx);
 
@@ -13745,8 +13749,6 @@ void MainWindow::refreshTime() {
 void MainWindow::refreshAdditionalHeader() {
     qDebug() << "MainWindow::refreshAdditionalHeader()";
 
-    QRegExp contextBrickPattern("dynamicHeader");
-
     // Default resp. valid type
     if(headerAdditionalTypeSpBx->value() == 1) {
 
@@ -13758,7 +13760,7 @@ void MainWindow::refreshAdditionalHeader() {
 
 
 
-        QList<QLabel *> childrenLbl = this->findChildren<QLabel *>(contextBrickPattern);
+        QList<QLabel *> childrenLbl = this->findChildren<QLabel *>(QRegExp("dynamicHeader"));
         qDebug() << "childrenLbl.size(): " << childrenLbl.size();
 
         int start = 2;
@@ -13780,7 +13782,7 @@ void MainWindow::refreshAdditionalHeader() {
 
         start = 2;
 
-        QList<QSpinBox *> childrenSpBx = this->findChildren<QSpinBox *>(contextBrickPattern);
+        QList<QSpinBox *> childrenSpBx = this->findChildren<QSpinBox *>(QRegExp("dynamicHeader"));
         qDebug() << "childrenLbl.size(): " << childrenSpBx.size();
 
         for (QList<QSpinBox *> ::iterator iter = childrenSpBx.begin(); iter != childrenSpBx.end(); ++iter) {
@@ -13803,7 +13805,7 @@ void MainWindow::refreshAdditionalHeader() {
         headerServiceLbl->setVisible(false);
         headerServiceCBx->setVisible(false);
 
-        QList<QLabel *> childrenLbl = this->findChildren<QLabel *>(contextBrickPattern);
+        QList<QLabel *> childrenLbl = this->findChildren<QLabel *>(QRegExp("dynamicHeader"));
         qDebug() << "childrenLbl.size(): " << childrenLbl.size();
 
         int start = 1;
@@ -13825,7 +13827,7 @@ void MainWindow::refreshAdditionalHeader() {
 
         start = 1;
 
-        QList<QSpinBox *> childrenSpBx = this->findChildren<QSpinBox *>(contextBrickPattern);
+        QList<QSpinBox *> childrenSpBx = this->findChildren<QSpinBox *>(QRegExp("dynamicHeader"));
         qDebug() << "childrenLbl.size(): " << childrenSpBx.size();
 
         for (QList<QSpinBox *> ::iterator iter = childrenSpBx.begin(); iter != childrenSpBx.end(); ++iter) {
@@ -13853,9 +13855,7 @@ void MainWindow::refreshAdditionalHeader() {
 void MainWindow::refreshAdditionalContextBricks() {
     qDebug() << "MainWindow::refreshContextBricks()";
 
-    QRegExp contextBrickPattern("dynamicBrick");
-
-    QList<QLabel *> childrenLbl = this->findChildren<QLabel *>(contextBrickPattern);
+    QList<QLabel *> childrenLbl = this->findChildren<QLabel *>(QRegExp("dynamicBrick"));
 //    qDebug() << "childrenLbl.size(): " << childrenLbl.size();
 
     int start = 0;
@@ -13879,7 +13879,7 @@ void MainWindow::refreshAdditionalContextBricks() {
         }
     }
 
-    QList<QSpinBox *> childrenSpBx = this->findChildren<QSpinBox *>(contextBrickPattern);
+    QList<QSpinBox *> childrenSpBx = this->findChildren<QSpinBox *>(QRegExp("dynamicBrick"));
     qDebug() << "childrenSpBx.size(): " << childrenSpBx.size();
 
     start = 0;
@@ -13924,9 +13924,7 @@ void MainWindow::limitTextLength() {
 void MainWindow::refreshAdditionalData() {
     qDebug() << "MainWindow::refreshAdditionalData()";
 
-    QRegExp contextBrickPattern("dynamicData");
-
-    QList<QLabel *> childrenLbl = this->findChildren<QLabel *>(contextBrickPattern);
+    QList<QLabel *> childrenLbl = this->findChildren<QLabel *>(QRegExp("dynamicData"));
     qDebug() << "childrenLbl.size(): " << childrenLbl.size();
 
     int start = 1;
@@ -13946,7 +13944,7 @@ void MainWindow::refreshAdditionalData() {
         }
     }
 
-    QList<QSpinBox *> childrenSpBx = this->findChildren<QSpinBox *>(contextBrickPattern);
+    QList<QSpinBox *> childrenSpBx = this->findChildren<QSpinBox *>(QRegExp("dynamicData"));
     qDebug() << "childrenSpBx.size(): " << childrenSpBx.size();
 
     start = 1;
@@ -13972,123 +13970,273 @@ void MainWindow::sendContext() {
     qDebug() << "MainWindow::sendContext()";
 
     QByteArray byteArray = QByteArray();
-
     int i = 0;
 
-    // service (1)
-    byteArray[i++] = headerServiceCBx->currentData().toInt();
-    qDebug() << "Service: " << headerServiceCBx->currentData().toString();
+    /*
+     *
+     * SERIALIZE HEADER
+     *
+     */
+    qDebug() << "";
+    qDebug() << "SERIALIZE HEADER: ";
+    qDebug() << "-------------------------------------";
+
+
+    // sg_request
+    uint8_t sg_request;
+
+    sg_request = (int) headerSgRequestClientCheckBox->isChecked();
+    sg_request += (int) headerSgRequestGatewayCheckBox->isChecked() * 2;
+    sg_request += (int) headerSgRequestFree1CheckBox->isChecked()   * 4;
+    sg_request += (int) headerSgRequestFree2CheckBox->isChecked()   * 8;
+    sg_request += (int) headerSgRequestFree3CheckBox->isChecked()  * 16;
+    sg_request += (int) headerSgRequestFree4CheckBox->isChecked()  * 32;
+    sg_request += (int) headerSgRequestFree5CheckBox->isChecked()  * 64;
+    sg_request += (int) headerSgRequestFree6CheckBox->isChecked() * 128;
+
+//    qDebug() << "sg_request int: " << sg_request;
+
+    // sg_request (1)
+    byteArray[i++] = sg_request;
+    qDebug().noquote() << "sg_request: " << QString("%1").arg(sg_request, 8, 2, QLatin1Char('0'));
+
+//    // Decode Service Group Example
+//    headerSgProfileClientCheckBox->setChecked((sg_request%2));
+//    sg_request = sg_request >> 1;
+//    headerSgProfileGatewayCheckBox->setChecked(sg_request%2);
+//    sg_request = sg_request >> 1;
+//    headerSgProfileFree1CheckBox->setChecked(sg_request%2);
+//    sg_request = sg_request >> 1;
+//    headerSgProfileFree2CheckBox->setChecked(sg_request%2);
+//    sg_request = sg_request >> 1;
+//    headerSgProfileFree3CheckBox->setChecked(sg_request%2);
+//    sg_request = sg_request >> 1;
+//    headerSgProfileFree4CheckBox->setChecked(sg_request%2);
+//    sg_request = sg_request >> 1;
+//    headerSgProfileFree5CheckBox->setChecked(sg_request%2);
+//    sg_request = sg_request >> 1;
+//    headerSgProfileFree6CheckBox->setChecked(sg_request%2);
+
+    // sg_profile
+    uint8_t sg_profile;
+
+    sg_profile = (int) headerSgProfileClientCheckBox->isChecked();
+    sg_profile += (int) headerSgProfileGatewayCheckBox->isChecked() * 2;
+    sg_profile += (int) headerSgProfileFree1CheckBox->isChecked()   * 4;
+    sg_profile += (int) headerSgProfileFree2CheckBox->isChecked()   * 8;
+    sg_profile += (int) headerSgProfileFree3CheckBox->isChecked()  * 16;
+    sg_profile += (int) headerSgProfileFree4CheckBox->isChecked()  * 32;
+    sg_profile += (int) headerSgProfileFree5CheckBox->isChecked()  * 64;
+    sg_profile += (int) headerSgProfileFree6CheckBox->isChecked() * 128;
+
+//    qDebug() << "sg_profile int: " << sg_profile;
+
+    // sg_profile (1)
+    byteArray[i++] = sg_profile;
+    qDebug().noquote() << "sg_profile: " << QString("%1").arg(sg_profile, 8, 2, QLatin1Char('0'));
+
+    // version
+    qDebug() << "Major Version: " << headerVersionMajorSpBx->value();
+    qDebug() << "Minor Version: " << headerVersionMinorSpBx->value();
+    qDebug() << "Version: " << (headerVersionMajorSpBx->value() << 4) + headerVersionMinorSpBx->value();
+    qDebug().noquote() << "Major Version: " << QString("%1").arg(headerVersionMajorSpBx->value(), 4, 2, QLatin1Char('0'));
+    qDebug().noquote() << "Minor Version: " << QString("%1").arg(headerVersionMinorSpBx->value(), 4, 2, QLatin1Char('0'));
+
 
     // version (1)
-    byteArray[i++] = (headerVersionMajorSpBx->text().toInt()*16) + headerVersionMinorSpBx->text().toInt();
-    qDebug() << "Major Version: " << headerVersionMajorSpBx->text().toInt();
-    qDebug() << "Minor Version: " << headerVersionMinorSpBx->text().toInt();
-    qDebug() << "Version: " << (headerVersionMajorSpBx->text().toInt()*16) + headerVersionMinorSpBx->text().toInt();
+    byteArray[i++] = (headerVersionMajorSpBx->value() << 4 ) + headerVersionMinorSpBx->value();
+    qDebug().noquote() << "Version: " << QString("%1").arg((headerVersionMajorSpBx->value() << 4) + headerVersionMinorSpBx->value(), 8, 2, QLatin1Char('0'));
+
 
     // channel (1)
-    byteArray[i++] = headerChannelSpBx->text().toInt();
-    qDebug() << "Channel: " << headerChannelSpBx->text();
+    byteArray[i++] = headerChannelSpBx->value();
+    qDebug() << "Channel: " << headerChannelSpBx->value();
 
-    // opt. size (1)
-    int additionalHeaderSize = headerAdditionalSizeSpBx->text().toInt();
-    byteArray[i++] = additionalHeaderSize;
-    qDebug() << "Opt. size: " << additionalHeaderSize;
 
-    // UUID (16)
+    // uuid (16)
+    QByteArray uuid_arr = uuid.toRfc4122();
+
     for(int j=0; j<16;j++) {
-        byteArray[i++] = uuid.toRfc4122().at(j);
+        byteArray[i++] = uuid_arr.at(j);
     }
+    qDebug().noquote() << "UUID: " << uuid.toString();
+
 
     // Empty IP address (4) and port number (2)
     for(int j=0; j<6;j++) {
         byteArray[i++] = 0;
     }
 
-    // optional (1)
-    for(int j=0; j<additionalHeaderSize;j++) {
-        byteArray[i++] = '#';
-        printf("%c", '#');
+    // time
+    uint unixTime = headerCreationTimeEdit->dateTime().toTime_t();
 
+//    QDateTime local(QDateTime::currentDateTime());
+//    QDateTime UTC(local.toUTC());
+//    uint unixTime = UTC.toTime_t();
+//    qDebug() << "Local time is:" << local.toString(Qt::ISODate);
+//    qDebug() << "Local time is:" << local.toString(Qt::SystemLocaleLongDate);
+//    qDebug() << "Local time is:" << local.toString(Qt::DefaultLocaleLongDate);
+//    qDebug() << "Local time is:" << local.toString(Qt::RFC2822Date);
+//    qDebug() << "UTC time is:" << UTC;
+//    qDebug() << "Unix time is:" << unixTime;
+
+
+    qDebug() << "unixTime: " << unixTime;
+    qDebug().noquote() << "unixTime: " << QString("%1").arg(unixTime, 64, 2, QLatin1Char('0'));
+//    qDebug() << "unixTime: " << QString("%1").arg(unixTime, 32, 2, QLatin1Char('0'));
+
+    for(int j = 0; j < 8; j++) {
+
+        byteArray[i++] = unixTime%256;
+        qDebug().noquote().nospace() << "time[" << j << "]: " << QString("%1").arg(unixTime%256, 8, 2, QLatin1Char('0'));
+
+        unixTime = unixTime >> 8;
     }
 
+    // add_type (1)
+    byteArray[i++] = headerAdditionalTypeSpBx->value();
+    qDebug() << "add_type: " << headerAdditionalTypeSpBx->value();
+
+
+    // add_size (1)
+    byteArray[i++] = headerAdditionalSizeSpBx->value();
+    qDebug() << "add_size: " << headerAdditionalSizeSpBx->value();
+
+
+    // additional header data - Service
+    if(headerServiceCBx->isVisible()) {
+        byteArray[i++] = headerServiceCBx->currentData().toInt();
+        qDebug() << "Service: " << headerServiceCBx->currentData().toInt();
+    }
+
+    // additional header data - Dynamic
+    QList<QSpinBox *> childrenSpBx = this->findChildren<QSpinBox *>(QRegExp("dynamicHeader"));
+    qDebug() << "childrenSpBx.size(): " << childrenSpBx.size();
+
+    for (QList<QSpinBox *> ::iterator iter = childrenSpBx.begin(); iter != childrenSpBx.end(); ++iter) {
+
+        if((*iter)->isVisible()) {
+            qDebug() << (*iter)->objectName() << ": " << (*iter)->value();
+            byteArray[i++] = (*iter)->value();
+        }
+    }
+
+    /*
+     *
+     * SERIALIZE CONTEXT
+     *
+     */
+    qDebug() << "";
+    qDebug() << "SERIALIZE CONTEXT: ";
+    qDebug() << "-------------------------------------";
 
     // type (1)
     byteArray[i++] = contextTypeSpBx->value();
+    qDebug() << "type: " << contextTypeSpBx->value();
 
     // content (1)
     byteArray[i++] = contextContentSpBx->value();
+    qDebug() << "content: " << contextContentSpBx->value();
 
     // mask (1)
     byteArray[i++] = contextMaskSpBx->value();
+    qDebug() << "mask: " << contextMaskSpBx->value();
 
-    // list size (1)
-    int additionalBricksSize = contextAdditionalSizeSpBx->text().toInt();
-    byteArray[i++] = additionalBricksSize;
+    // add_size (1)
+    byteArray[i++] = contextAdditionalSizeSpBx->value();
+    qDebug() << "add_size: " << contextAdditionalSizeSpBx->value();
 
-    // optional (1)
-    byteArray[i++] = 3;
-    byteArray[i++] = 4;
+    // additional context bricks - Dynamic
+    childrenSpBx = this->findChildren<QSpinBox *>(QRegExp("dynamicBrick"));
+    qDebug() << "childrenSpBx.size(): " << childrenSpBx.size();
 
-    // additionalBricksSize = 5;
-//    byteArray[i++] = datagramBrickContentLnEd_1->text().toInt();
-//    byteArray[i++] = datagramBrickMaskLnEd_1->text().toInt();
+    for (QList<QSpinBox *> ::iterator iter = childrenSpBx.begin(); iter != childrenSpBx.end(); ++iter) {
 
-//    byteArray[i++] = datagramBrickContentLnEd_2->text().toInt();
-//    byteArray[i++] = datagramBrickMaskLnEd_2->text().toInt();
-
-//    byteArray[i++] = datagramBrickContentLnEd_3->text().toInt();
-//    byteArray[i++] = datagramBrickMaskLnEd_3->text().toInt();
-
-//    byteArray[i++] = datagramBrickContentLnEd_4->text().toInt();
-//    byteArray[i++] = datagramBrickMaskLnEd_4->text().toInt();
-
-//    byteArray[i++] = datagramBrickContentLnEd_5->text().toInt();
-//    byteArray[i++] = datagramBrickMaskLnEd_5->text().toInt();
-
-//    for(int j=0; j<additionalBricksSize;j++) {
-//        byteArray[i++] = j;//datagramBrickContentLnEd_2->text().toInt();
-//        byteArray[i++] = j+1; //datagramBrickMaskLnEd_2->text().toInt();
-//    }
+        if((*iter)->isVisible()) {
+            qDebug() << (*iter)->objectName() << ": " << (*iter)->value();
+            byteArray[i++] = (*iter)->value();
+        }
+    }
 
 
-    // dataType (1)
+    /*
+     *
+     * SERIALIZE DATA
+     *
+     */
+    qDebug() << "";
+    qDebug() << "SERIALIZE DATA: ";
+    qDebug() << "-------------------------------------";
+
+
+    // add_size (1)
+    byteArray[i++] = dataAdditionalSizeSpBx->value();
+    qDebug() << "add_size: " << dataAdditionalSizeSpBx->value();
+
+
+    // text_type (1)
     byteArray[i++] = dataTypeCBx->currentData().toInt();
+    qDebug() << "text_type: " << dataTypeCBx->currentData().toInt();
+    qDebug() << "text_type: " << dataTypeCBx->currentText();
 
-    // data (140)
+    // text (140)
     QString data = dataTxtEd->toPlainText();
 
-    qDebug() << data.length();
-    qDebug() << data;
+    qDebug() << "data.length(): " << data.length();
+    qDebug() << "data: " << data;
 
+    int non_empty = 0;
     for(int j=0; j<data.length(); j++) {
         byteArray[i++] = data.at(j).cell();
+        non_empty++;
     }
 
+    int empty = 0;
     for(int j=0; j<140-data.length(); j++) {
         byteArray[i++] = 0;
+        empty++;
     }
 
-    // opt. size (1)
-    int additionalDataSize = 10;
-    byteArray[i++] = additionalDataSize;
+    qDebug() << "non_empty: " << non_empty;
+    qDebug() << "empty: " << empty;
 
-    // optional (1)
-    for(int j=0; j<additionalDataSize;j++) {
-        byteArray[i++] = '+';
+
+    // additional data - Dynamic
+    childrenSpBx = this->findChildren<QSpinBox *>(QRegExp("dynamicData"));
+    qDebug() << "childrenSpBx.size(): " << childrenSpBx.size();
+
+    for (QList<QSpinBox *> ::iterator iter = childrenSpBx.begin(); iter != childrenSpBx.end(); ++iter) {
+
+        if((*iter)->isVisible()) {
+            qDebug() << (*iter)->objectName() << ": " << (*iter)->value();
+            byteArray[i++] = (*iter)->value();
+        }
     }
 
-    // Print UUID
-    QByteArray q = uuid.toRfc4122();
-    quint8 byte;
+    return;
 
-    printf("Sent UUID: ");
-    putchar('\n');
-    for(QByteArray::iterator it = q.begin(); it != q.end(); it++){
-        byte = (*it);
-        printf("%02x", byte);
-    }
-    putchar('\n');
-    fflush(stdout);
+
+//    // opt. size (1)
+//    int additionalDataSize = 10;
+//    byteArray[i++] = additionalDataSize;
+
+//    // optional (1)
+//    for(int j=0; j<additionalDataSize;j++) {
+//        byteArray[i++] = '+';
+//    }
+
+//    // Print UUID
+//    QByteArray q = uuid.toRfc4122();
+////    quint8 byte;
+
+//    printf("Sent UUID: ");
+//    putchar('\n');
+//    for(QByteArray::iterator it = q.begin(); it != q.end(); it++){
+//        byte = (*it);
+//        printf("%02x", byte);
+//    }
+//    putchar('\n');
+//    fflush(stdout);
 
     qDebug() << "byteArray.length(): " << byteArray.length();
 
