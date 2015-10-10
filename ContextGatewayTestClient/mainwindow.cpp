@@ -13935,6 +13935,7 @@ void MainWindow::sendContext() {
     for(int j=0; j<6;j++) {
         byteArray[i++] = 0;
     }
+    qDebug() << "Empty IP address (4) and port number (2)";
 
     // time
     uint unixTime = headerCreationTimeEdit->dateTime().toTime_t();

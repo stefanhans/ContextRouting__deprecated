@@ -89,8 +89,6 @@ private:
 	struct sockaddr_in sockAddress;
 };
 
-
-
 /**
  * @brief ContextPacket
  *
@@ -205,7 +203,7 @@ public:
 	/**
 	 * Getter/Setter for additionalHeaderData array
 	 */
-	char* getAdditionalHeaderData() {
+	byte_t* getAdditionalHeaderData() {
 		return additionalHeaderData;
 	}
 	int setAdditionalHeaderData(char* additionalHeaderData) {
@@ -220,29 +218,29 @@ public:
 	/**
 	 * Append additional data
 	 */
-	int appendAdditonalHeaderData(byte_t headerData) {
-		if(HEADER_ADDITIONAL_SIZE <= strlen(this->additionalHeaderData))  {
-			perror("appendAdditonalHeaderData(byte_t) failed: additionalHeaderData is full");
-			return -1;
-		}
-		this->additionalHeaderData[strlen(this->additionalHeaderData)] = headerData;
-		return 0;
-	}
-	int appendAdditonalHeaderData(char* additionalHeaderData) {
-		if(HEADER_ADDITIONAL_SIZE < (strlen(this->additionalHeaderData) + strlen(additionalHeaderData)))  {
-			perror("appendAdditonalHeaderData(char*) failed: additionalHeaderData is to full");
-			return -1;
-		}
-		memcpy(&(this->additionalHeaderData)[strlen(this->additionalHeaderData)], additionalHeaderData, strlen(additionalHeaderData));
-		return 0;
-	}
-
-	/**
-	 * Get size of addiitionalHeaderData
-	 */
-	int getAdditonalHeaderDataSize() {
-		return strlen(this->additionalHeaderData);
-	}
+//	int appendAdditonalHeaderData(byte_t headerData) {
+//		if(HEADER_ADDITIONAL_SIZE <= strlen(additionalHeaderData))  {
+//			perror("appendAdditonalHeaderData(byte_t) failed: additionalHeaderData is full");
+//			return -1;
+//		}
+//		this->additionalHeaderData[strlen(this->additionalHeaderData)] = headerData;
+//		return 0;
+//	}
+//	int appendAdditonalHeaderData(char* additionalHeaderData) {
+//		if(HEADER_ADDITIONAL_SIZE < (strlen(this->additionalHeaderData) + strlen(additionalHeaderData)))  {
+//			perror("appendAdditonalHeaderData(char*) failed: additionalHeaderData is to full");
+//			return -1;
+//		}
+//		memcpy(&(this->additionalHeaderData)[strlen(this->additionalHeaderData)], additionalHeaderData, strlen(additionalHeaderData));
+//		return 0;
+//	}
+//
+//	/**
+//	 * Get size of addiitionalHeaderData
+//	 */
+//	int getAdditonalHeaderDataSize() {
+//		return strlen(this->additionalHeaderData);
+//	}
 
 	/**
 	 * Clear addiitionalHeaderData
@@ -336,7 +334,7 @@ public:
 	/**
 	 * Getter/Setter for additionalData
 	 */
-	char* getAdditionalData() {
+	byte_t* getAdditionalData() {
 		return additionalData;
 	}
 	int setAdditionalData(char* additionalData) {
@@ -404,6 +402,16 @@ public:
 private:
 
 	/**
+	 * Service Group Request
+	 */
+	byte_t sg_request;
+
+	/**
+	 * Service Group Profile
+	 */
+	byte_t sg_profile;
+
+	/**
 	 * What has to be done respectively to be transfered?
 	 */
 	byte_t service;
@@ -417,11 +425,6 @@ private:
 	 * What kind of content to be handled?
 	 */
 	byte_t channel;
-
-	/**
-	 * Number of additional header data in bytes
-	 */
-	byte_t additionalHeaderSize;
 
 	/**
 	 * UUID to distinctly identify each context packet
@@ -439,9 +442,19 @@ private:
 	time_t timestamp;
 
 	/**
+	 * Type of additional header data
+	 */
+	byte_t additionalHeaderType;
+
+	/**
+	 * Number of additional header data in bytes
+	 */
+	byte_t additionalHeaderSize;
+
+	/**
 	 * Array of 255 bytes for additional data
 	 */
-	char additionalHeaderData[HEADER_ADDITIONAL_SIZE];
+	byte_t additionalHeaderData[HEADER_ADDITIONAL_SIZE];
 
 	/**
 	 * What type of context is described
@@ -481,7 +494,7 @@ private:
 	/**
 	 * Array of 255 bytes for additional data
 	 */
-	char additionalData[DATA_ADDITIONAL_SIZE];
+	byte_t additionalData[DATA_ADDITIONAL_SIZE];
 };
 
 #endif /* SRC_COREPACKET_H_ */

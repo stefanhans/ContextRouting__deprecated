@@ -1,7 +1,7 @@
 #ifndef SRC_GLOBALS_H_
 #define SRC_GLOBALS_H_
 
-#define DEBUG 0
+#define DEBUG 1
 #define THREAD_DEBUG 0
 
 #define LINE_SEPARATOR "----------------------------------------------------------------------"
@@ -16,7 +16,49 @@
 typedef unsigned char byte_t;
 typedef unsigned short int port_t;
 
+/**
+ * Client Service Methods
+ */
+inline bool hasClientService(byte_t sg_byte) {
+	return sg_byte % 2;
+}
+inline byte_t setClientService(byte_t sg_byte, bool checked) {
 
+
+	return sg_byte;
+}
+
+/*
+ * Gateway Service Methods
+ */
+inline bool hasGatewayService(byte_t sg_byte) {
+	return sg_byte>>1 % 2;
+}
+inline byte_t setGatewayService(byte_t sg_byte, bool checked) {
+
+	return sg_byte;
+}
+
+/*
+ * <new service group's service> Service Methods
+ */
+// Add declaration lines with <new> service group's service methods here
+
+
+/**
+ * Extract major version from byte_t version
+ */
+inline int getMajorVersion(byte_t version) {
+
+	return version >> 4;
+}
+/**
+ * Extract minor version from byte_t version
+ */
+inline int getMinorVersion(byte_t version) {
+
+	return version % 16;
+}
 
 
 inline void printUuid(uuid_t uuid, std::string header="") {

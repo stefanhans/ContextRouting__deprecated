@@ -185,6 +185,13 @@ ContextService* ContextService::create(byte_t service) {
 	 */
 	// Add line with <new> service constructor call here
 
+	/*
+	 * Error message
+	 */
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] No known service with id " << (int) service << std::endl;
+	perror("No service found");
+	exit(EXIT_FAILURE);
+
 	return 0;
 }
 

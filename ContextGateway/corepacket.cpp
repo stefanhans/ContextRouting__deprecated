@@ -63,11 +63,14 @@ IpAddress::IpAddress(unsigned char* addressId, struct sockaddr_in sockAddress) {
 
 ContextPacket::ContextPacket() :
 
+		sg_request(0),
+		sg_profile(0),
 		service(SERVICE_DEFAULT),
 		version(VERSION),
 		channel(CHANNEL_DEFAULT),
-		additionalHeaderSize(0),
 		sockAddress(),
+		additionalHeaderType(0),
+		additionalHeaderSize(0),
 		contextType(CONTEXT_TYPE_DEFAULT),
 		additionalBricksSize(0),
 		dataType(DATA_TYPE_DEFAULT),
@@ -94,10 +97,13 @@ ContextPacket::ContextPacket() :
 
 ContextPacket::ContextPacket(IpAddress *ipAddress) :
 
+		sg_request(0),
+		sg_profile(0),
 		service(SERVICE_DEFAULT),
 		version(VERSION),
 		channel(CHANNEL_META),
-		additionalHeaderSize(5),
+		additionalHeaderType(0),
+		additionalHeaderSize(0),
 		contextType(CONTEXT_TYPE_DEFAULT),
 		additionalBricksSize(4),
 		dataType(DATA_TYPE_DEFAULT),
@@ -219,18 +225,61 @@ int ContextPacket::serialize(char *buffer) {
  * Deserialize incoming data
  */
 int ContextPacket::deserialize(char *buffer) {
-	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+	if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	unsigned int b = 0;
 
-	// HEADER
-	service = buffer[b++];
+	/*
+	 * HEADER
+	 */
+	sg_request = buffer[b++];
+	sg_profile = buffer[b++];
+
+	if(hasClientService(sg_request)) {
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : sg_request ClientService" << std::endl;
+	}
+	else {
+
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : sg_request No ClientService" << std::endl;
+	}
+
+
+	if(hasClientService(sg_profile)) {
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : sg_profile ClientService" << std::endl;
+	}
+	else {
+
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : sg_profile No ClientService" << std::endl;
+	}
+
+	if(hasGatewayService(sg_request)) {
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : sg_request GatewayService" << std::endl;
+	}
+	else {
+
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : sg_request No GatewayService" << std::endl;
+	}
+
+
+	if(hasGatewayService(sg_profile)) {
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : sg_profile GatewayService" << std::endl;
+	}
+	else {
+
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : sg_profile No GatewayService" << std::endl;
+	}
+
 	version = buffer[b++];
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] version: " << (int) version << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] major version: " << (int) getMajorVersion(version) << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] minor version: " << (int) getMinorVersion(version) << std::endl;
+
 	channel = buffer[b++];
-	additionalHeaderSize = buffer[b++];
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] channel: " << (int) channel << std::endl;
 
 	memcpy(uuid, &buffer[b], sizeof(uuid));
 	b += sizeof(uuid);
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] uuid: " << getUuidString(uuid) << std::endl;
 
 	memcpy(&sockAddress.sin_addr.s_addr, &buffer[b], sizeof(sockAddress.sin_addr.s_addr));
 	b += sizeof(sockAddress.sin_addr.s_addr);
@@ -238,33 +287,83 @@ int ContextPacket::deserialize(char *buffer) {
 	memcpy(&sockAddress.sin_port, &buffer[b], sizeof(sockAddress.sin_port));
 	b += sizeof(sockAddress.sin_port);
 
+	time_t unixTime;
+	memcpy(&unixTime, &buffer[b], 8);
+	b += 8;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] unixTime: " << (long int) unixTime << std::endl;
+
+	additionalHeaderType = buffer[b++];
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] additionalHeaderType: " << (int) additionalHeaderType << std::endl;
+
+	if(additionalHeaderType != 1) {
+		perror("Unknown header type");
+		exit(EXIT_FAILURE);
+	}
+
+	additionalHeaderSize = buffer[b++];
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] additionalHeaderSize: " << (int) additionalHeaderSize << std::endl;
+
+	if(additionalHeaderSize == 0) {
+		perror("No service defined");
+		exit(EXIT_FAILURE);
+	}
+
 	memcpy(&additionalHeaderData, &buffer[b], additionalHeaderSize);
 	b += additionalHeaderSize;
 
-
-	// BRICKS
-	contextType = buffer[b++];
-	firstBrick->context = buffer[b++];
-	firstBrick->mask = buffer[b++];
-	additionalBricksSize = buffer[b++];
-
-	for(int i = 0; i<additionalBricksSize;i++) {
-		additionalBricks[i].context = buffer[b++];
-		additionalBricks[i].mask = buffer[b++];
+	for(size_t j = 0; j < additionalHeaderSize; j++) {
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] additionalHeaderData[" << j << "]: " << (int) additionalHeaderData[j] << std::endl;
 	}
 
-	// DATA
+	service = additionalHeaderData[0];
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] service: " << (int) service << std::endl;
+
+
+	/*
+	 * BRICKS
+	 */
+	contextType = buffer[b++];
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] contextType: " << (int) contextType << std::endl;
+
+	firstBrick->context = buffer[b++];
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] firstBrick->context: " << (int) firstBrick->context << std::endl;
+
+	firstBrick->mask = buffer[b++];
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] firstBrick->mask: " << (int) firstBrick->mask << std::endl;
+
+	additionalBricksSize = buffer[b++];
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] additionalBricksSize: " << (int) additionalBricksSize << std::endl;
+
+	for(int i = 0; i < additionalBricksSize; i++) {
+		additionalBricks[i].context = buffer[b++];
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] additionalBricks[" << i << "].context: " << (int) additionalBricks[i].context << std::endl;
+
+		additionalBricks[i].mask = buffer[b++];
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] additionalBricks[" << i << "].mask: " << (int) additionalBricks[i].mask << std::endl;
+	}
+
+	/*
+	 * DATA
+	 */
+	additionalDataSize = buffer[b++];
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] additionalDataSize: " << (int) additionalDataSize << std::endl;
+
 	dataType = buffer[b++];
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] dataType: " << (int) dataType << std::endl;
 
 	memcpy(&data, &buffer[b], DATA_SIZE);
-	b += DATA_SIZE;
-
-	additionalDataSize = buffer[b++];
+	b += DATA_SIZE-1;
+	buffer[b++] = '\0';
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] data: " << data << std::endl;
 
 	memcpy(&additionalData, &buffer[b], additionalDataSize);
 	b += additionalDataSize;
 
-	return b;
+	for(int i = 0; i < additionalDataSize; i++) {
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] additionalData[" << i << "]: " << (int) additionalData[i] << std::endl;
+	}
+
+	return 0;
 }
 
 int ContextPacket::processUDP(int sock, struct sockaddr *addr) {
