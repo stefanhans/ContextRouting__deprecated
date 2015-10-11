@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="Dictionary">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="DictionaryElement" type="DictionaryElement" minOccurs="0" maxOccurs="unbounded" />
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:positiveInteger"/>
+            <xs:attribute name="byteSize" type="xs:positiveInteger"/>
+            <xs:attribute name="name" type="xs:string"/>
+            <xs:attribute name="language" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="DictionaryElement">   
+            <xs:sequence>
+                <xs:element name="DictionaryElement" type="DictionaryElement" minOccurs="0" maxOccurs="unbounded" />
+            </xs:sequence>
+            <xs:attribute name="content" type="xs:byte"/>
+            <xs:attribute name="mask"    type="xs:byte"/>
+            <xs:attribute name="name"    type="xs:string"/>
+    </xs:complexType>
+    <xs:simpleType name="byte">
+        <xs:restriction base="xs:integer">
+        <xs:minInclusive value="0"/>
+        <xs:maxInclusive value="255"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>
+
+
