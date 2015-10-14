@@ -1,8 +1,4 @@
-
 #include "codingreader.h"
-#include "codingwidget.h"
-#include "abstractcodingelement.h"
-#include "dictionarytree.h"
 
 #include <QtWidgets>
 
@@ -63,7 +59,10 @@ bool CodingReader::read(QIODevice *device, AbstractWidget *widget) {
                     }
                 }
 
+                widget->setNamespaceUri(XSD_CODING);
+
             }
+
 
             if(xml.name() == "CodingElement") {
 

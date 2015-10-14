@@ -1,10 +1,4 @@
 #include "requestwidget.h"
-#include "abstractwidget.h"
-
-#include "mainwindow.h"
-#include "requestreader.h"
-#include "requestwriter.h"
-#include "abstractcodingelement.h"
 
 #include <QFile>
 #include <QDebug>

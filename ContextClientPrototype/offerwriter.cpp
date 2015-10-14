@@ -1,7 +1,5 @@
 #include "offerwriter.h"
 
-#include "codingwidget.h"
-
 #include <QDebug>
 #include <QDateTime>
 

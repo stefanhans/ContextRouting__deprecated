@@ -11,6 +11,9 @@
 #include <QPushButton>
 #include <QComboBox>
 
+
+class OfferReader;
+
 class OfferWidget : public AbstractWidget
 {
     Q_OBJECT

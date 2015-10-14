@@ -4,7 +4,7 @@
 #include "abstractwriter.h"
 
 #include "abstractwidget.h"
-#include "abstractcodingelement.h"
+#include "codingwidget.h"
 
 #include <QXmlStreamWriter>
 

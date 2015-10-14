@@ -1,6 +1,12 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "globals.h"
+#include "offerwidget.h"
+#include "requestwidget.h"
+#include "codingwidget.h"
+#include "dictionarywidget.h"
+
 #include <QMainWindow>
 #include <QSplitter>
 #include <QTreeView>
@@ -9,7 +15,6 @@
 #include <QLayout>
 #include <QMdiArea>
 
-#define PROTO_DIR "/home/stefan/Development/ContextRouting/data"
 #define FILTER "*.cod" << "*.dict" << "*.xml" << "*.cof" << "*.crq" << ".can" << "*.ctxt"
 #define SPLITTER_SIZES << 250 << 750
 

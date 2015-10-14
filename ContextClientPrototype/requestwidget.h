@@ -10,6 +10,8 @@
 
 #include <QPushButton>
 
+class RequestReader;
+
 class RequestWidget : public AbstractWidget
 {
     Q_OBJECT

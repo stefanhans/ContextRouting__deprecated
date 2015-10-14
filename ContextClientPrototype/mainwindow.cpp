@@ -1,15 +1,7 @@
 #include "mainwindow.h"
 
-#include "abstractwidget.h"
-#include "codingwidget.h"
-#include "offerwidget.h"
-#include "requestwidget.h"
-#include "dictionarywidget.h"
-
 #include <QDebug>
 #include <QMdiSubWindow>
-
-class CodingWidget;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -18,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
     // Filessystem
     filesystemTree = new QTreeView();
 
-    model.setRootPath(PROTO_DIR);
+    model.setRootPath(XML_DIR);
     model.setReadOnly(true);
 
     QStringList filters;
@@ -29,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
     model.setFilter(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
 
     filesystemTree->setModel(&model);
-    filesystemTree->setRootIndex(model.index(PROTO_DIR));
+    filesystemTree->setRootIndex(model.index(XML_DIR));
     filesystemTree->setAnimated(false);
 
     filesystemTree->setIndentation(20);

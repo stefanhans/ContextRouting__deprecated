@@ -5,7 +5,14 @@
 #include "abstractwidget.h"
 #include "abstractcodingelement.h"
 
+#include "requestwidget.h"
+#include "abstractcodingelement.h"
+#include "dictionarycodingelement.h"
+#include "dictionarytree.h"
+
 #include <QXmlStreamReader>
+
+class RequestReader;
 
 class RequestReader : public AbstractReader
 {

@@ -1,10 +1,4 @@
 #include "offerwidget.h"
-#include "abstractwidget.h"
-
-#include "mainwindow.h"
-#include "offerreader.h"
-#include "offerwriter.h"
-#include "abstractcodingelement.h"
 
 #include <QFile>
 #include <QDebug>

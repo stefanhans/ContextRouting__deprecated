@@ -1,7 +1,5 @@
 #include "abstractwidget.h"
 
-#include "abstractreader.h"
-
 #include <QFile>
 #include <QDebug>
 #include <QMessageBox>
@@ -175,6 +173,7 @@ AbstractWidget::AbstractWidget(QWidget *parent)
 
     // XML - XSD file
     xsdFileTxtEd = new QTextEdit;
+    xsdFileTxtEd->setReadOnly( ! XSD_ENABLED);
 
     xsdFileLayout = new QHBoxLayout;
     xsdFileLayout->addWidget(xsdFileTxtEd);
@@ -199,6 +198,7 @@ AbstractWidget::AbstractWidget(QWidget *parent)
     xsdValidatorLayout->addWidget(xsdSaveBtn, 0, 4);
 
     xsdValidatorGBox = new QGroupBox("XSD Validator");
+    xsdValidatorGBox->setEnabled(XSD_ENABLED);
     xsdValidatorGBox->setLayout(xsdValidatorLayout);
 
     // XML - Layout
@@ -241,7 +241,7 @@ void AbstractWidget::setNamespaceUri(QString namespaceUri) {
     }
     else {
         xsdValidatorLnEd->setText(namespaceUri);
-        xsdSaveBtn->setEnabled(false);
+        xsdSaveBtn->setEnabled(true);
     }
 }
 

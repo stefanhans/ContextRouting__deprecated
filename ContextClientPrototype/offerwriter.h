@@ -6,6 +6,8 @@
 #include "abstractwidget.h"
 #include "abstractcodingelement.h"
 
+#include "codingwidget.h"
+
 #include <QXmlStreamWriter>
 
 class AbstractWidget;

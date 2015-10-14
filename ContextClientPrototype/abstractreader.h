@@ -2,6 +2,7 @@
 #define ABSTRACTREADER_H
 
 #include "abstractwidget.h"
+#include "globals.h"
 
 #include <QXmlStreamReader>
 

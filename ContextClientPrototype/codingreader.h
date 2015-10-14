@@ -5,6 +5,9 @@
 #include "abstractwidget.h"
 #include "abstractcodingelement.h"
 
+#include "codingwidget.h"
+#include "dictionarytree.h"
+
 #include <QXmlStreamReader>
 
 class CodingReader : public AbstractReader

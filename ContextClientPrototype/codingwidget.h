@@ -1,14 +1,16 @@
 #ifndef CODINGWIDGET_H
 #define CODINGWIDGET_H
 
-#include "abstractwidget.h"
-#include "abstractwriter.h"
 #include "codingreader.h"
+#include "offerwriter.h"
+#include "requestwriter.h"
 
 #include <uuid/uuid.h>
 
 #include <QComboBox>
 #include <QPushButton>
+
+class CodingReader;
 
 class CodingWidget : public AbstractWidget
 {
@@ -17,7 +19,7 @@ class CodingWidget : public AbstractWidget
 public:
     CodingWidget(QWidget *parent = 0);
 
-    bool loadFile(QString fileName);
+    bool loadFile(QString xmlFilename);
 
     void loadGuiInteraction();
 
@@ -118,7 +120,8 @@ private:
     QVBoxLayout *codLayout;
     QGroupBox *codGBox;
 
-    QGridLayout *codingLayout;
+    QGridLayout *codingLayout;    
+
     QLabel *codingIdLbl;
     QLineEdit *codingIdLnEd;
     QLabel *codingNameLbl;

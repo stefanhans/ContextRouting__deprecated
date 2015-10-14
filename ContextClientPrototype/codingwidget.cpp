@@ -1,11 +1,5 @@
 #include "codingwidget.h"
 
-#include "mainwindow.h"
-#include "codingreader.h"
-#include "offerwriter.h"
-#include "requestwriter.h"
-#include "abstractcodingelement.h"
-
 #include <QFile>
 #include <QDebug>
 #include <QMessageBox>
@@ -53,18 +47,18 @@ CodingWidget::CodingWidget(QWidget *parent)
     addNextLayout(codLayout);
 }
 
-bool CodingWidget::loadFile(QString fileName) {
-    qDebug() << "CodingWidget::loadFile(QString fileName)";
+bool CodingWidget::loadFile(QString xmlFilename) {
+    qDebug() << "CodingWidget::loadFile(QString xmlFilename)";
 
-    QFile file(fileName);
-    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+    QFile xmlFile(xmlFilename);
+    if (!xmlFile.open(QFile::ReadOnly | QFile::Text)) {
         QMessageBox::warning(this, tr("MDI"),
                              tr("Cannot read file %1:\n%2.")
-                             .arg(fileName)
-                             .arg(file.errorString()));
+                             .arg(xmlFilename)
+                             .arg(xmlFile.errorString()));
         return false;
     }
-    file.setObjectName(fileName);
+    xmlFile.setObjectName(xmlFilename);
 
     codingElementCount = 0;
     codingElementSize = 0;
@@ -72,11 +66,26 @@ bool CodingWidget::loadFile(QString fileName) {
     QApplication::setOverrideCursor(Qt::WaitCursor);
 
     reader = new CodingReader();
-    reader->read(&file, this);
-    file.reset();
+    reader->read(&xmlFile, this);
+    xmlFile.reset();
 
-    QTextStream in(&file);
-    setXml(in.readAll());
+    // XML
+    QTextStream inXml(&xmlFile);
+    setXml(inXml.readAll());
+
+    // XSD
+    QFile xsdFile(getXsdFilename());
+    qDebug() << "getXsdFilename()): " << getXsdFilename();
+    if (!xsdFile.open(QFile::ReadOnly | QFile::Text)) {
+        QMessageBox::warning(this, tr("MDI"),
+                             tr("Cannot read file %1:\n%2.")
+                             .arg(getXsdFilename())
+                             .arg(xsdFile.errorString()));
+        return false;
+    }
+    QTextStream inXsd(&xsdFile);
+    setXsd(inXsd.readAll());
+
 
     QApplication::restoreOverrideCursor();
 
@@ -189,7 +198,7 @@ void CodingWidget::saveContext() {
 
     if(actionCBx->currentText() == "Offer") {
 
-        QString fileName = QString("%1/Offers/%2.%3").arg(PROTO_DIR).arg(nameLnEd->text()).arg("cof");
+        QString fileName = QString("%1/Offers/%2.%3").arg(XML_DIR).arg(nameLnEd->text()).arg("cof");
         fileName.replace(QString(" "), QString(""));
 
         QFile file(fileName);
@@ -209,7 +218,7 @@ void CodingWidget::saveContext() {
 
     if(actionCBx->currentText() == "Request") {
 
-        QString fileName = QString("%1/Requests/%2.%3").arg(PROTO_DIR).arg(nameLnEd->text()).arg("crq");
+        QString fileName = QString("%1/Requests/%2.%3").arg(XML_DIR).arg(nameLnEd->text()).arg("crq");
         fileName.replace(QString(" "), QString(""));
 
         QFile file(fileName);

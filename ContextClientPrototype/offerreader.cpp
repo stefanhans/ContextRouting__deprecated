@@ -1,12 +1,5 @@
 #include "offerreader.h"
 
-#include "offerwidget.h"
-#include "abstractcodingelement.h"
-#include "dictionarycodingelement.h"
-#include "dictionarytree.h"
-
-#include <QtWidgets>
-
 OfferReader::OfferReader()
 {
 

@@ -1,10 +1,5 @@
 #include "requestreader.h"
 
-#include "requestwidget.h"
-#include "abstractcodingelement.h"
-#include "dictionarycodingelement.h"
-#include "dictionarytree.h"
-
 #include <QtWidgets>
 
 RequestReader::RequestReader()

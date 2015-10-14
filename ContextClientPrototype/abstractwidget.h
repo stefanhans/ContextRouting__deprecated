@@ -1,6 +1,9 @@
 #ifndef ABSTRACTWIDGET_H
 #define ABSTRACTWIDGET_H
 
+#include "globals.h"
+#include "abstractreader.h"
+
 #include <QWidget>
 #include <QTabWidget>
 #include <QLayout>
@@ -9,6 +12,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QTextEdit>
+#include <QPushButton>
 
 class AbstractWidget : public QTabWidget
 {
@@ -31,6 +35,7 @@ public:
     }
     void setXmlFile(QString xmlFile) {
         xmlFileLnEd->setText(xmlFile);
+        xmlValidatorLnEd->setText(xmlFile);
     }
 
     // XML - Version
@@ -73,13 +78,40 @@ public:
         dtdFileLnEd->setText(dtdFile);
     }
 
+    // Namespace URI
+    QString getNamespaceUri() const {
+        return guiNamespaceUriLnEd->text();
+    }
+    void setNamespaceUri(QString namespaceUri);
+
     // XML
     QString getXml() const {
-        return xmlEdit->toPlainText();
+        return xmlFileTxtEd->toPlainText();
     }
     void setXml(QString xml) {
-        xmlEdit->setPlainText(xml);
+        xmlFileTxtEd->setPlainText(xml);
     }
+
+    // XSD
+    QString getXsdFilename() const {
+        return xsdValidatorLnEd->text();
+    }
+    void setXsdFilename(QString filename) {
+        xsdValidatorLnEd->setText(filename);
+    }
+    QString getXsd() const {
+        return xsdFileTxtEd->toPlainText();
+    }
+    void setXsd(QString xsd) {
+        xsdFileTxtEd->setPlainText(xsd);
+    }
+
+public slots:
+    void saveXmlFile(bool b);
+    void validateXml(bool b);
+
+    void saveXsdFile(bool b);
+    void validateXsd(bool b);
 
 private:
 
@@ -110,10 +142,39 @@ private:
     QLabel *fileLbl;
     QLineEdit *dtdFileLnEd;
 
+
+    QHBoxLayout *guiNamespaceUriLayout;
+    QGroupBox *guiNamespaceUriGBox;
+    QLineEdit *guiNamespaceUriLnEd;
+
     // XML
     QWidget *xmlWidget;
     QVBoxLayout *xmlLayout;
-    QTextEdit *xmlEdit;
+
+    QHBoxLayout *xmlFileLayout;
+    QGroupBox *xmlFileGBox;
+    QTextEdit *xmlFileTxtEd;
+
+    QGridLayout *xmlValidatorLayout;
+    QGroupBox *xmlValidatorGBox;
+    QLabel *xmlValidatorLbl;
+    QLineEdit *xmlValidatorLnEd;
+    QPushButton *xmlValidateBtn;
+    QLineEdit *xmlValidatorResultLnEd;
+    QPushButton *xmlSaveBtn;
+
+    // XSD
+    QHBoxLayout *xsdFileLayout;
+    QGroupBox *xsdFileGBox;
+    QTextEdit *xsdFileTxtEd;
+
+    QGridLayout *xsdValidatorLayout;
+    QGroupBox *xsdValidatorGBox;
+    QLabel *xsdValidatorLbl;
+    QLineEdit *xsdValidatorLnEd;
+    QPushButton *xsdValidateBtn;
+    QLineEdit *xsdValidatorResultLnEd;
+    QPushButton *xsdSaveBtn;
 
 };
 #endif // ABSTRACTWIDGET_H

@@ -7,7 +7,7 @@ AbstractReader::AbstractReader()
 }
 
 bool AbstractReader::read(QIODevice *device, AbstractWidget *widget) {
-    qDebug() << "AbstractReader::read(QIODevice *device, AbstractWidget *widget)";
+    qDebug() << Q_FUNC_INFO;
 
     xml.setDevice(device);
 
@@ -18,15 +18,15 @@ bool AbstractReader::read(QIODevice *device, AbstractWidget *widget) {
             widget->setXmlFile(xml.device()->objectName());
             widget->setVersion(xml.documentVersion().toString());
             widget->setEncoding(xml.documentEncoding().toString());
-            continue;
+            break;
         }
 
-        if (xml.isDTD()) {
-            widget->setName(xml.dtdName().toString());
-            widget->setType(xml.dtdPublicId().toString().isEmpty() ? "SYSTEM" : "PUBLIC");
-            widget->setDtdFile(xml.dtdSystemId().toString());
-            continue;
-        }
+//        if (xml.isDTD()) {
+//            widget->setName(xml.dtdName().toString());
+//            widget->setType(xml.dtdPublicId().toString().isEmpty() ? "SYSTEM" : "PUBLIC");
+//            widget->setDtdFile(xml.dtdSystemId().toString());
+//            continue;
+//        }
     }
 
     return !xml.error();

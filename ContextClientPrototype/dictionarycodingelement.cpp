@@ -1,7 +1,5 @@
 #include "dictionarycodingelement.h"
 
-#include "abstractcodingelement.h"
-
 #include <QFile>
 #include <QDebug>
 #include <QMessageBox>

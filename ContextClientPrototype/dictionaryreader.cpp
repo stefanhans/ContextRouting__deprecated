@@ -2,11 +2,14 @@
 
 DictionaryReader::DictionaryReader()
 {
+
 }
 
 bool DictionaryReader::read(QIODevice *device, AbstractWidget *widget)
 {
     AbstractReader::read(device, widget);
+
+    widget->setNamespaceUri(XSD_DICTIONARY);
 
     return true;
 }

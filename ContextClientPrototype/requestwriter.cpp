@@ -1,7 +1,5 @@
 #include "requestwriter.h"
 
-#include "codingwidget.h"
-
 #include <QDebug>
 #include <QDateTime>
 

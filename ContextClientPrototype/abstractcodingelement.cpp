@@ -1,7 +1,5 @@
 #include "abstractcodingelement.h"
 
-#include "dictionarytree.h"
-
 #include <QTreeView>
 #include <QDebug>
 

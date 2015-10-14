@@ -1,7 +1,5 @@
 #include "dictionarywidget.h"
 
-#include "dictionaryreader.h"
-
 #include <QFile>
 #include <QDebug>
 #include <QMessageBox>
@@ -35,26 +33,42 @@ DictionaryWidget::DictionaryWidget(QWidget *parent)
 bool DictionaryWidget::loadFile(QString fileName) {
     qDebug() << "DictionaryWidget::loadFile(QString fileName)";
 
-    QFile file(fileName);
-    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+    QFile xmlFile(fileName);
+    if (!xmlFile.open(QFile::ReadOnly | QFile::Text)) {
         QMessageBox::warning(this, tr("MDI"),
                              tr("Cannot read file %1:\n%2.")
                              .arg(fileName)
-                             .arg(file.errorString()));
+                             .arg(xmlFile.errorString()));
         return false;
     }
-    file.setObjectName(fileName);
+    xmlFile.setObjectName(fileName);
+
+    QApplication::setOverrideCursor(Qt::WaitCursor);
 
     reader = new DictionaryReader();
-    reader->read(&file, this);
-    file.reset();
+    reader->read(&xmlFile, this);
+    xmlFile.reset();
 
-    dictTree->loadDictionaryXml(&file);
-    file.reset();
+    dictTree->loadDictionaryXml(&xmlFile);
+    xmlFile.reset();
 
-    QTextStream in(&file);
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    setXml(in.readAll());
+    // XML
+    QTextStream inXml(&xmlFile);
+    setXml(inXml.readAll());
+
+    // XSD
+    QFile xsdFile(getXsdFilename());
+    qDebug() << "getXsdFilename()): " << getXsdFilename();
+    if (!xsdFile.open(QFile::ReadOnly | QFile::Text)) {
+        QMessageBox::warning(this, tr("MDI"),
+                             tr("Cannot read file %1:\n%2.")
+                             .arg(getXsdFilename())
+                             .arg(xsdFile.errorString()));
+        return false;
+    }
+    QTextStream inXsd(&xsdFile);
+    setXsd(inXsd.readAll());
+
     QApplication::restoreOverrideCursor();
 
     return true;

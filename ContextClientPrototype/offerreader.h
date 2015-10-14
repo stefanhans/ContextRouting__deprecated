@@ -5,6 +5,14 @@
 #include "abstractwidget.h"
 #include "abstractcodingelement.h"
 
+#include "offerwidget.h"
+#include "abstractcodingelement.h"
+#include "dictionarycodingelement.h"
+#include "dictionarytree.h"
+
+#include <QtWidgets>
+#include <QDebug>
+
 #include <QXmlStreamReader>
 
 class OfferReader : public AbstractReader
