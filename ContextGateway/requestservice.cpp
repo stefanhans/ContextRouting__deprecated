@@ -7,7 +7,7 @@ int RequestService::processUDP(void* receivedPacket, int socket, void *buffer, s
 	store_vector = getContextPackets(((ContextPacket*) receivedPacket)->getFirstBrick()->context);
 
 	if(store_vector->size() == 0) {
-		if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] no context found" << std::endl;
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] no context found" << std::endl;
 
 		// Answer UDP
 
@@ -22,7 +22,7 @@ int RequestService::processUDP(void* receivedPacket, int socket, void *buffer, s
 
 			//(*iter)->printPacket("FOUND: ");
 
-			if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : FOUND " << getUuidString(*(*iter)->getUuid()) << std::endl;
+			if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : FOUND " << getUuidString(*(*iter)->getUuid()) << std::endl;
 
 
 			char sendBuffer[(*iter)->getSize()];

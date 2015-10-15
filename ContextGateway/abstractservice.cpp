@@ -99,18 +99,18 @@ void printPacketStorage() {
 
 
 ContextService::ContextService() {
-	if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] Constructor()" << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] Constructor()" << std::endl;
 
 }
 
 std::vector<ContextPacket*>* ContextService::getContextPackets(byte_t index) {
-	if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	return &contextPackets[index];
 }
 
 pthread_mutex_t ContextService::getContextPacketsMutex() {
-	if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	return a_mutex;
 }

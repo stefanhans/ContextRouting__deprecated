@@ -1,7 +1,7 @@
 #ifndef SRC_GLOBALS_H_
 #define SRC_GLOBALS_H_
 
-#define DEBUG 1
+#define DEBUG 0
 #define THREAD_DEBUG 0
 
 #define LINE_SEPARATOR "----------------------------------------------------------------------"

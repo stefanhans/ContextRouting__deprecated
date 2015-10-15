@@ -14105,6 +14105,10 @@ void MainWindow::sendContext() {
 
 
 void MainWindow::readUdpAnswer() {
+
+    qDebug() << "";
+    qDebug() << "READ UPD ANSWER: ";
+    qDebug() << "-------------------------------------";
     qDebug() << "MainWindow::readUdpAnswer()";
 
 
@@ -14285,6 +14289,10 @@ void MainWindow::readUdpAnswer() {
 }
 
 void MainWindow::readTcpAnswer() {
+
+    qDebug() << "";
+    qDebug() << "READ TCP ANSWER: ";
+    qDebug() << "-------------------------------------";
     qDebug() << "MainWindow::readTcpAnswer()";
 
     // Initialize
@@ -14294,30 +14302,34 @@ void MainWindow::readTcpAnswer() {
 
     QByteArray header;
 
-    // Service
-    quint8 service;
+    // sg_request
+    quint8 sg_request;
     header = byteblock.mid(b++, 1);
-    memcpy(&service, header, 1);
-    qDebug() << "service: " << service;
+    memcpy(&sg_request, header, 1);
+    qDebug().noquote() << QString("sg_request: %1").arg(sg_request, 8, 2, QLatin1Char('0'));
+
+    // sg_profile
+    quint8 sg_profile;
+    header = byteblock.mid(b++, 1);
+    memcpy(&sg_profile, header, 1);
+    qDebug().noquote() << QString("sg_profile: %1").arg(sg_profile, 8, 2, QLatin1Char('0'));
 
     // Version
     quint8 version;
     header = byteblock.mid(b++, 1);
     memcpy(&version, header, 1);
     qDebug() << "version: " << version;
+    qDebug().noquote() << QString("version: %1").arg(version, 8, 2, QLatin1Char('0'));
+    qDebug().noquote() << QString("MajorVersion: %1").arg(version>>4, 4, 2, QLatin1Char('0'));
+    qDebug().noquote() << QString("MajorVersion: %1").arg(version>>4);
+    qDebug().noquote() << QString("MinorVersion: %1").arg(version%16, 4, 2, QLatin1Char('0'));
+    qDebug().noquote() << QString("MinorVersion: %1").arg(version%16);
 
     // Channel
     quint8 channel;
     header = byteblock.mid(b++, 1);
     memcpy(&channel, header, 1);
     qDebug() << "channel: " << channel;
-
-    // Optional Size
-    quint8 optionalSize;
-    header = byteblock.mid(b++, 1);
-    memcpy(&optionalSize, header, 1);
-    qDebug() << "optionalSize: " << optionalSize;
-
 
     // UUID
     QByteArray uuid = byteblock.mid(b, 16);
@@ -14348,6 +14360,37 @@ void MainWindow::readTcpAnswer() {
     quint16 portNum;
     memcpy(&portNum, ipPort, 2);
     qDebug() << "ntohs(portNum): " << ntohs(portNum);
+
+    // time
+    QByteArray timeArray = byteblock.mid(b, 8);
+    b += 8;
+    time_t unixTime;
+    memcpy(&unixTime, timeArray, 8);
+
+    QDateTime *dateTime = new QDateTime;
+    dateTime->setTime_t((uint) unixTime);
+
+    qDebug() << "unixTime: " << unixTime;
+    qDebug() << "dateTime: " << dateTime->toString();
+
+    /*
+     * ##########################################################################
+     */
+
+    // Optional Size
+    quint8 optionalSize;
+    header = byteblock.mid(b++, 1);
+    memcpy(&optionalSize, header, 1);
+    qDebug() << "optionalSize: " << optionalSize;
+
+
+    // Service
+    quint8 service;
+    header = byteblock.mid(b++, 1);
+    memcpy(&service, header, 1);
+    qDebug() << "service: " << service;
+
+
 
     // optional (1)
     QByteArray optionalHeader = byteblock.mid(b, optionalSize);

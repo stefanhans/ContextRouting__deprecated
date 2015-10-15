@@ -14,7 +14,7 @@ public:
 	int processUDP(void* receivedPacket, int socket, void *buffer, size_t size, struct sockaddr *addr);
 
 	int processTCP(void* receivedPacket) {
-		if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 		return 0;
 	}

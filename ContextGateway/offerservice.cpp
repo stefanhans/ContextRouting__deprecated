@@ -1,7 +1,7 @@
 #include "offerservice.h"
 
 int OfferService::processTCP(void* receivedPacket) {
-	if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] " << (uint) ((ContextPacket*) receivedPacket)->getService()<< std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] " << (uint) ((ContextPacket*) receivedPacket)->getService()<< std::endl;
 
 	pthread_mutex_t storageMutex = getContextPacketsMutex();
 
@@ -21,7 +21,7 @@ int OfferService::processTCP(void* receivedPacket) {
 
 	store_vector->push_back((ContextPacket*) receivedPacket);
 
-	if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] :"
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] :"
 			" push_back at index " << (uint) ((ContextPacket*) receivedPacket)->getFirstBrick()->context << std::endl;
 
 	/* unlock mutex */
