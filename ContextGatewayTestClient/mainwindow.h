@@ -134,8 +134,6 @@ public:
     QVBoxLayout *interactionLayout;
     QGroupBox *interactionGBox;
 
-    QGridLayout *actionLayout;
-
     QPushButton *sendBtn;
 
     uuid_t sourceUuid;

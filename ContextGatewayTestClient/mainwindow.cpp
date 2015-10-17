@@ -13869,7 +13869,7 @@ void MainWindow::sendContext() {
 
 
     // sg_request
-    uint8_t sg_request;
+    quint8 sg_request;
 
     sg_request = (int) headerSgRequestClientCheckBox->isChecked();
     sg_request += (int) headerSgRequestGatewayCheckBox->isChecked() * 2;
