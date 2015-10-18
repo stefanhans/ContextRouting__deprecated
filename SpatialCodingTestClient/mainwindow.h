@@ -31,6 +31,7 @@ public:
 
     // Colors & Palettes
     QColor noColor;
+    QColor redColor;
 
     QColor offerContentColor;
     QPalette offerContentPalette;
@@ -52,6 +53,9 @@ public:
 
     QColor doubleMatchColor;
     QPalette doubleMatchPalette;
+
+    QColor directMatchColor;
+    QColor indirectMatchColor;
 
 
     // Offer
@@ -115,6 +119,7 @@ public:
     QGroupBox *spatialGBox;
     QVBoxLayout *spatialLayout;
 
+    QPushButton *clearSpatialBtn;
     QPushButton *refreshSpatialBtn;
 
     QTableWidget *tableWidget;
@@ -132,6 +137,7 @@ public slots:
     void showRequestContentByte();
     void showRequestMaskByte();
     void refreshSpatial();
+    void clearSpatial();
 
 private:
 
@@ -139,6 +145,12 @@ private:
     int offerMaskToByte();
     int requestContentToByte();
     int requestMaskToByte();
+
+
+    void clearOfferContent();
+    void clearOfferMask();
+    void clearRequestContent();
+    void clearRequestMask();
 };
 
 #endif // MAINWINDOW_H

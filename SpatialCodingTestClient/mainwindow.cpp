@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 
 #include <QDebug>
+#include <QtMath>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -8,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Palettes
     noColor = Qt::white;
+    redColor = Qt::red;
 
     // QColor(red, green, blue, transparency)
     offerContentColor = QColor(0, 255, 255, 120);
@@ -18,7 +20,8 @@ MainWindow::MainWindow(QWidget *parent)
     requestMaskColor = QColor(255, 255, 0, 50);
     requestMatchColor = QColor(255, 255, 0, 255);
 
-    doubleMatchColor = QColor(0, 255, 0, 200);
+    indirectMatchColor = QColor(0, 255, 0, 80);
+    directMatchColor = QColor(0, 255, 0, 255);
 
 
     offerContentPalette.setColor(QPalette::Window, offerContentColor);
@@ -172,6 +175,11 @@ MainWindow::MainWindow(QWidget *parent)
     spatialLayout->addWidget(refreshSpatialBtn, 0);
 
     connect(refreshSpatialBtn, SIGNAL(clicked(bool)), this, SLOT(refreshSpatial()));
+
+    clearSpatialBtn = new QPushButton(tr("Clear"), this);
+    spatialLayout->addWidget(clearSpatialBtn, 0);
+
+    connect(clearSpatialBtn, SIGNAL(clicked(bool)), this, SLOT(clearSpatial()));
 
     tableSideCount = 16;
     tableWidget = new QTableWidget(tableSideCount, tableSideCount, this);
@@ -332,206 +340,189 @@ int MainWindow::requestMaskToByte() {
     return requestMask;
 }
 
-void MainWindow::refreshSpatial() {
+void MainWindow::clearSpatial() {
     qDebug() << Q_FUNC_INFO;
 
-    // offerContent
-    int offerContent = offerContentToByte();
-
-    // offerMask
-    int offerMask = offerMaskToByte();
-
-    // requestContent
-    int requestContent = requestContentToByte();
-
-    // requestMask
-    int requestMask = requestMaskToByte();
-
-
-    int n=0;
     for(int i=0; i<tableSideCount; i++) {
         for(int j=0; j<tableSideCount; j++) {
-
-            qDebug().noquote() << "n: " << n << "i: " << i << "j: " << j;
-
-            // Reset cell color
             ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(noColor);
-
-            // Offer Mask
-            if (n == offerMask) {
-                if(requestMask == 0) {
-                    ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(noColor);
-                }
-                else {
-                    ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(offerMaskColor);
-                }
-            }
-
-            // Request Mask
-            if (n == requestMask) {
-                if(requestMask == 0) {
-                    ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(noColor);
-                }
-                else {
-                    ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(requestMaskColor);
-                }
-            }
-
-            // Offer Content
-            if (n == offerContent) {
-                ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(offerContentColor);
-                qDebug().noquote() << "n: " << n << "offerContent: " << offerContent;
-            }
-
-            // Request Content
-            if (n == requestContent) {
-                ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(requestContentColor);
-                qDebug().noquote() << "n: " << n << "requestContent: " << requestContent;
-            }
-            n++;
         }
     }
-
-//    ((QTextEdit*) tableWidget->cellWidget(0, 0))->setPalette(offerMaskColor);
-//    ((QTextEdit*) tableWidget->cellWidget(1, 1))->setPalette(offerContentColor);
-//    ((QTextEdit*) tableWidget->cellWidget(2, 2))->setPalette(offerMatchColor);
-//    ((QTextEdit*) tableWidget->cellWidget(3, 3))->setPalette(requestMaskColor);
-//    ((QTextEdit*) tableWidget->cellWidget(4, 4))->setPalette(requestContentColor);
-//    ((QTextEdit*) tableWidget->cellWidget(5, 5))->setPalette(requestMatchColor);
-
-//    ((QTextEdit*) tableWidget->cellWidget(6, 6))->setPalette(doubleMatchColor);
-
 }
+
+void MainWindow::clearOfferContent() {
+    qDebug() << Q_FUNC_INFO;
+
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
+            if (((QTextEdit*) tableWidget->cellWidget(i, j))->palette().color(QPalette::Window) == offerContentColor) {
+                ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(noColor);
+            }
+        }
+    }
+}
+
+void MainWindow::clearOfferMask() {
+    qDebug() << Q_FUNC_INFO;
+
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
+            if (((QTextEdit*) tableWidget->cellWidget(i, j))->palette().color(QPalette::Window) == offerMaskColor) {
+                ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(noColor);
+            }
+        }
+    }
+}
+
+void MainWindow::clearRequestContent() {
+    qDebug() << Q_FUNC_INFO;
+
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
+            if (((QTextEdit*) tableWidget->cellWidget(i, j))->palette().color(QPalette::Window) == requestContentColor) {
+                ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(noColor);
+            }
+        }
+    }
+}
+
+void MainWindow::clearRequestMask() {
+    qDebug() << Q_FUNC_INFO;
+
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
+            if (((QTextEdit*) tableWidget->cellWidget(i, j))->palette().color(QPalette::Window) == requestMaskColor) {
+                ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(noColor);
+            }
+        }
+    }
+}
+
+
 
 
 void MainWindow::showOfferContentByte() {
     qDebug() << Q_FUNC_INFO;
 
-    // offerContent
     int offerContent = offerContentToByte();
+
+    clearOfferContent();
+
+    if (((QTextEdit*) tableWidget->cellWidget(qFloor(offerContent/16), offerContent%16))->palette().color(QPalette::Window) != indirectMatchColor) {
+        ((QTextEdit*) tableWidget->cellWidget(qFloor(offerContent/16), offerContent%16))->setPalette(offerContentColor);
+    }
+}
+
+void MainWindow::showOfferMaskByte() {
+    qDebug() << Q_FUNC_INFO;
+
+    int offerContent = offerContentToByte();
+    int offerMask = offerMaskToByte();
+    bool isMatch;
+
+    clearOfferMask();
 
     int n=0;
     for(int i=0; i<tableSideCount; i++) {
         for(int j=0; j<tableSideCount; j++) {
 
-            qDebug().noquote() << "n: " << n << "i: " << i << "j: " << j;
+            // offerContent is equal n
+            if ((offerContent ^ n) == 0) {
+                isMatch = true;
+            }
+            else {
 
-            // Reset cell color of offerContent
-            if (((QTextEdit*) tableWidget->cellWidget(i, j))->palette().color(QPalette::Window) == offerContentColor) {
-                ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(noColor);
+                // offerContent neither equal n nor set true by the mask
+                if (~(~(offerContent ^ n) | offerMask) != 0) {
+                    isMatch = false;
+                }
+                else {
+                    isMatch = true;
+                }
             }
 
 
-
-            // offer Content
-            if (n == offerContent) {
-                ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(offerContentColor);
-                qDebug().noquote() << "n: " << n << "offerContent: " << offerContent;
+            // Repaint cell color according to former color
+            if (isMatch) {
+                if (((QTextEdit*) tableWidget->cellWidget(i, j))->palette().color(QPalette::Window) == requestMaskColor
+                        || ((QTextEdit*) tableWidget->cellWidget(i, j))->palette().color(QPalette::Window) == requestContentColor) {
+                    ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(indirectMatchColor);
+                }
+                else {
+                    ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(offerMaskColor);
+                }
             }
-
             n++;
         }
     }
-
-
-}
-
-void MainWindow::showOfferMaskByte() {
-        qDebug() << Q_FUNC_INFO;
-
-        // offerMask
-        int offerMask = offerMaskToByte();
-
-
-        int n=0;
-        for(int i=0; i<tableSideCount; i++) {
-            for(int j=0; j<tableSideCount; j++) {
-
-                qDebug().noquote() << "n: " << n << "i: " << i << "j: " << j;
-
-                // Reset cell color of offerMask
-                if (((QTextEdit*) tableWidget->cellWidget(i, j))->palette().color(QPalette::Window) == offerMaskColor) {
-                    ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(noColor);
-                }
-
-                // Offer Mask
-                if (n == offerMask) {
-                    if(offerMask == 0) {
-                        ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(noColor);
-                    }
-                    else {
-                        ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(offerMaskColor);
-                    }
-                }
-
-                n++;
-            }
-        }
-
+    showOfferContentByte();
 }
 
 void MainWindow::showRequestContentByte() {
     qDebug() << Q_FUNC_INFO;
 
-    // requestContent
     int requestContent = requestContentToByte();
 
+    clearRequestContent();
 
-    int n=0;
-    for(int i=0; i<tableSideCount; i++) {
-        for(int j=0; j<tableSideCount; j++) {
-
-            qDebug().noquote() << "n: " << n << "i: " << i << "j: " << j;
-
-            // Reset cell color of requestContent
-            if (((QTextEdit*) tableWidget->cellWidget(i, j))->palette().color(QPalette::Window) == requestContentColor) {
-                ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(noColor);
-            }
-
-            // Request Content
-            if (n == requestContent) {
-                ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(requestContentColor);
-                qDebug().noquote() << "n: " << n << "requestContent: " << requestContent;
-            }
-
-            n++;
-        }
+    if (((QTextEdit*) tableWidget->cellWidget(qFloor(requestContent/16), requestContent%16))->palette().color(QPalette::Window) != indirectMatchColor) {
+        ((QTextEdit*) tableWidget->cellWidget(qFloor(requestContent/16), requestContent%16))->setPalette(requestContentColor);
     }
-
-
 }
 
 void MainWindow::showRequestMaskByte() {
     qDebug() << Q_FUNC_INFO;
 
-    // requestMask
+    int requestContent = requestContentToByte();
     int requestMask = requestMaskToByte();
+    bool isMatch;
 
+    clearRequestMask();
 
     int n=0;
     for(int i=0; i<tableSideCount; i++) {
         for(int j=0; j<tableSideCount; j++) {
 
-            qDebug().noquote() << "n: " << n << "i: " << i << "j: " << j;
+            // requestContent is equal n
+            if ((requestContent ^ n) == 0) {
+                isMatch = true;
+            }
+            else {
 
-            // Reset cell color of requestMask
-            if (((QTextEdit*) tableWidget->cellWidget(i, j))->palette().color(QPalette::Window) == requestMaskColor) {
-                ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(noColor);
+                // requestContent neither equal n nor set true by the mask
+                if (~(~(requestContent ^ n) | requestMask) != 0) {
+                    isMatch = false;
+                }
+                else {
+                    isMatch = true;
+                }
             }
 
-            // Request Mask
-            if (n == requestMask) {
-                if(requestMask == 0) {
-                    ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(noColor);
+            // Repaint cell color according to former color
+            if (isMatch) {
+                if (((QTextEdit*) tableWidget->cellWidget(i, j))->palette().color(QPalette::Window) == offerMaskColor) {
+                    ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(indirectMatchColor);
                 }
                 else {
                     ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(requestMaskColor);
                 }
             }
-
             n++;
         }
     }
+    showRequestContentByte();
+}
 
+void MainWindow::refreshSpatial() {
+    qDebug() << Q_FUNC_INFO;
 
+    clearSpatial();
+
+    showRequestMaskByte();
+    showOfferMaskByte();
+
+    int offerContent = offerContentToByte();
+    if(offerContent == requestContentToByte()) {
+         ((QTextEdit*) tableWidget->cellWidget(qFloor(offerContent/16), offerContent%16))->setPalette(directMatchColor);
+    }
 }
