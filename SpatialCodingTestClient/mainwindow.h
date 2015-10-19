@@ -62,67 +62,131 @@ public:
     QGroupBox *offerGBox;
     QGridLayout *offerLayout;
 
-    QGroupBox *offerContentByteGroupBox;
-    QHBoxLayout *offerContentByteHBoxLayout;
-    QCheckBox *offerContentByte_7_CheckBox;
-    QCheckBox *offerContentByte_6_CheckBox;
-    QCheckBox *offerContentByte_5_CheckBox;
-    QCheckBox *offerContentByte_4_CheckBox;
-    QCheckBox *offerContentByte_3_CheckBox;
-    QCheckBox *offerContentByte_2_CheckBox;
-    QCheckBox *offerContentByte_1_CheckBox;
-    QCheckBox *offerContentByte_0_CheckBox;
-    QPushButton *offerContentByteBtn;
-
-    QGroupBox *offerMaskByteGroupBox;
-    QHBoxLayout *offerMaskByteHBoxLayout;
-    QCheckBox *offerMaskByte_7_CheckBox;
-    QCheckBox *offerMaskByte_6_CheckBox;
-    QCheckBox *offerMaskByte_5_CheckBox;
-    QCheckBox *offerMaskByte_4_CheckBox;
-    QCheckBox *offerMaskByte_3_CheckBox;
-    QCheckBox *offerMaskByte_2_CheckBox;
-    QCheckBox *offerMaskByte_1_CheckBox;
-    QCheckBox *offerMaskByte_0_CheckBox;
-    QPushButton *offerMaskByteBtn;
-
     // Request
     QGroupBox *requestGBox;
     QGridLayout *requestLayout;
 
-    QGroupBox *requestContentByteGroupBox;
-    QHBoxLayout *requestContentByteHBoxLayout;
-    QCheckBox *requestContentByte_7_CheckBox;
-    QCheckBox *requestContentByte_6_CheckBox;
-    QCheckBox *requestContentByte_5_CheckBox;
-    QCheckBox *requestContentByte_4_CheckBox;
-    QCheckBox *requestContentByte_3_CheckBox;
-    QCheckBox *requestContentByte_2_CheckBox;
-    QCheckBox *requestContentByte_1_CheckBox;
-    QCheckBox *requestContentByte_0_CheckBox;
-    QPushButton *requestContentByteBtn;
+    // offerContent_1
+    QGroupBox *offerContent_1_ByteGroupBox;
+    QHBoxLayout *offerContent_1_ByteHBoxLayout;
+    QCheckBox *offerContent_1_Byte_7_CheckBox;
+    QCheckBox *offerContent_1_Byte_6_CheckBox;
+    QCheckBox *offerContent_1_Byte_5_CheckBox;
+    QCheckBox *offerContent_1_Byte_4_CheckBox;
+    QCheckBox *offerContent_1_Byte_3_CheckBox;
+    QCheckBox *offerContent_1_Byte_2_CheckBox;
+    QCheckBox *offerContent_1_Byte_1_CheckBox;
+    QCheckBox *offerContent_1_Byte_0_CheckBox;
+    QPushButton *offerContent_1_ByteBtn;
 
-    QGroupBox *requestMaskByteGroupBox;
-    QHBoxLayout *requestMaskByteHBoxLayout;
-    QCheckBox *requestMaskByte_7_CheckBox;
-    QCheckBox *requestMaskByte_6_CheckBox;
-    QCheckBox *requestMaskByte_5_CheckBox;
-    QCheckBox *requestMaskByte_4_CheckBox;
-    QCheckBox *requestMaskByte_3_CheckBox;
-    QCheckBox *requestMaskByte_2_CheckBox;
-    QCheckBox *requestMaskByte_1_CheckBox;
-    QCheckBox *requestMaskByte_0_CheckBox;
-    QPushButton *requestMaskByteBtn;
+    // offerMask_1
+    QGroupBox *offerMask_1_ByteGroupBox;
+    QHBoxLayout *offerMask_1_ByteHBoxLayout;
+    QCheckBox *offerMask_1_Byte_7_CheckBox;
+    QCheckBox *offerMask_1_Byte_6_CheckBox;
+    QCheckBox *offerMask_1_Byte_5_CheckBox;
+    QCheckBox *offerMask_1_Byte_4_CheckBox;
+    QCheckBox *offerMask_1_Byte_3_CheckBox;
+    QCheckBox *offerMask_1_Byte_2_CheckBox;
+    QCheckBox *offerMask_1_Byte_1_CheckBox;
+    QCheckBox *offerMask_1_Byte_0_CheckBox;
+    QPushButton *offerMask_1_ByteBtn;
 
+    // requestContent_1
+    QGroupBox *requestContent_1_ByteGroupBox;
+    QHBoxLayout *requestContent_1_ByteHBoxLayout;
+    QCheckBox *requestContent_1_Byte_7_CheckBox;
+    QCheckBox *requestContent_1_Byte_6_CheckBox;
+    QCheckBox *requestContent_1_Byte_5_CheckBox;
+    QCheckBox *requestContent_1_Byte_4_CheckBox;
+    QCheckBox *requestContent_1_Byte_3_CheckBox;
+    QCheckBox *requestContent_1_Byte_2_CheckBox;
+    QCheckBox *requestContent_1_Byte_1_CheckBox;
+    QCheckBox *requestContent_1_Byte_0_CheckBox;
+    QPushButton *requestContent_1_ByteBtn;
+
+    // requestMask_1
+    QGroupBox *requestMask_1_ByteGroupBox;
+    QHBoxLayout *requestMask_1_ByteHBoxLayout;
+    QCheckBox *requestMask_1_Byte_7_CheckBox;
+    QCheckBox *requestMask_1_Byte_6_CheckBox;
+    QCheckBox *requestMask_1_Byte_5_CheckBox;
+    QCheckBox *requestMask_1_Byte_4_CheckBox;
+    QCheckBox *requestMask_1_Byte_3_CheckBox;
+    QCheckBox *requestMask_1_Byte_2_CheckBox;
+    QCheckBox *requestMask_1_Byte_1_CheckBox;
+    QCheckBox *requestMask_1_Byte_0_CheckBox;
+    QPushButton *requestMask_1_ByteBtn;
+
+    // offerContent_2
+    QGroupBox *offerContent_2_ByteGroupBox;
+    QHBoxLayout *offerContent_2_ByteHBoxLayout;
+    QCheckBox *offerContent_2_Byte_7_CheckBox;
+    QCheckBox *offerContent_2_Byte_6_CheckBox;
+    QCheckBox *offerContent_2_Byte_5_CheckBox;
+    QCheckBox *offerContent_2_Byte_4_CheckBox;
+    QCheckBox *offerContent_2_Byte_3_CheckBox;
+    QCheckBox *offerContent_2_Byte_2_CheckBox;
+    QCheckBox *offerContent_2_Byte_1_CheckBox;
+    QCheckBox *offerContent_2_Byte_0_CheckBox;
+    QPushButton *offerContent_2_ByteBtn;
+
+    // offerMask_2
+    QGroupBox *offerMask_2_ByteGroupBox;
+    QHBoxLayout *offerMask_2_ByteHBoxLayout;
+    QCheckBox *offerMask_2_Byte_7_CheckBox;
+    QCheckBox *offerMask_2_Byte_6_CheckBox;
+    QCheckBox *offerMask_2_Byte_5_CheckBox;
+    QCheckBox *offerMask_2_Byte_4_CheckBox;
+    QCheckBox *offerMask_2_Byte_3_CheckBox;
+    QCheckBox *offerMask_2_Byte_2_CheckBox;
+    QCheckBox *offerMask_2_Byte_1_CheckBox;
+    QCheckBox *offerMask_2_Byte_0_CheckBox;
+    QPushButton *offerMask_2_ByteBtn;
+
+    // requestContent_2
+    QGroupBox *requestContent_2_ByteGroupBox;
+    QHBoxLayout *requestContent_2_ByteHBoxLayout;
+    QCheckBox *requestContent_2_Byte_7_CheckBox;
+    QCheckBox *requestContent_2_Byte_6_CheckBox;
+    QCheckBox *requestContent_2_Byte_5_CheckBox;
+    QCheckBox *requestContent_2_Byte_4_CheckBox;
+    QCheckBox *requestContent_2_Byte_3_CheckBox;
+    QCheckBox *requestContent_2_Byte_2_CheckBox;
+    QCheckBox *requestContent_2_Byte_1_CheckBox;
+    QCheckBox *requestContent_2_Byte_0_CheckBox;
+    QPushButton *requestContent_2_ByteBtn;
+
+    // requestMask_2
+    QGroupBox *requestMask_2_ByteGroupBox;
+    QHBoxLayout *requestMask_2_ByteHBoxLayout;
+    QCheckBox *requestMask_2_Byte_7_CheckBox;
+    QCheckBox *requestMask_2_Byte_6_CheckBox;
+    QCheckBox *requestMask_2_Byte_5_CheckBox;
+    QCheckBox *requestMask_2_Byte_4_CheckBox;
+    QCheckBox *requestMask_2_Byte_3_CheckBox;
+    QCheckBox *requestMask_2_Byte_2_CheckBox;
+    QCheckBox *requestMask_2_Byte_1_CheckBox;
+    QCheckBox *requestMask_2_Byte_0_CheckBox;
+    QPushButton *requestMask_2_ByteBtn;
 
     // Spatial
     QGroupBox *spatialGBox;
-    QVBoxLayout *spatialLayout;
+    QGridLayout *spatialLayout;
 
-    QPushButton *clearSpatialBtn;
-    QPushButton *refreshSpatialBtn;
+    QPushButton *clearSpatial_1_Btn;
+    QPushButton *refreshSpatial_1_Btn;
 
-    QTableWidget *tableWidget;
+    QPushButton *clearSpatial_2_Btn;
+    QPushButton *refreshSpatial_2_Btn;
+
+    QPushButton *clearSpatialAll_Btn;
+    QPushButton *refreshSpatialAll_Btn;
+
+    QHBoxLayout *spatialTableLayout;
+    QTableWidget *tableWidget_1;
+    QTableWidget *tableWidget_2;
+    QTableWidget *tableWidgetAll;
 
     int tableSideCount;
 
@@ -132,25 +196,48 @@ public:
 
 public slots:
 
-    void showOfferContentByte();
-    void showOfferMaskByte();
-    void showRequestContentByte();
-    void showRequestMaskByte();
-    void refreshSpatial();
-    void clearSpatial();
+    void showOfferContent_1_Byte();
+    void showOfferMask_1_Byte();
+    void showRequestContent_1_Byte();
+    void showRequestMask_1_Byte();
+
+    void refreshSpatial_1();
+    void clearSpatial_1();
+
+    void showOfferContent_2_Byte();
+    void showOfferMask_2_Byte();
+    void showRequestContent_2_Byte();
+    void showRequestMask_2_Byte();
+
+    void refreshSpatial_2();
+    void clearSpatial_2();
+
+    void refreshSpatialAll();
+    void clearSpatialAll();
 
 private:
 
-    int offerContentToByte();
-    int offerMaskToByte();
-    int requestContentToByte();
-    int requestMaskToByte();
+    int offerContent_1_ToByte();
+    int offerMask_1_ToByte();
+    int requestContent_1_ToByte();
+    int requestMask_1_ToByte();
 
+    void clearOfferContent_1();
+    void clearOfferMask_1();
+    void clearRequestContent_1();
+    void clearRequestMask_1();
 
-    void clearOfferContent();
-    void clearOfferMask();
-    void clearRequestContent();
-    void clearRequestMask();
+    int offerContent_2_ToByte();
+    int offerMask_2_ToByte();
+    int requestContent_2_ToByte();
+    int requestMask_2_ToByte();
+
+    void clearOfferContent_2();
+    void clearOfferMask_2();
+    void clearRequestContent_2();
+    void clearRequestMask_2();
+
+    void copyColor(QTableWidget* targetTable);
 };
 
 #endif // MAINWINDOW_H

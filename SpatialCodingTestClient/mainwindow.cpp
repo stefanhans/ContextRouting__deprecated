@@ -31,182 +31,391 @@ MainWindow::MainWindow(QWidget *parent)
     requestContentPalette.setColor(QPalette::Window, requestContentColor);
     requestMaskPalette.setColor(QPalette::Window, requestMaskColor);
 
+    // Offer Content 1
+    offerContent_1_ByteGroupBox = new QGroupBox(tr("Content 1 Byte"));
+    offerContent_1_ByteGroupBox->setAutoFillBackground(true);
+    offerContent_1_ByteGroupBox->setPalette(offerContentPalette);
+
+    offerContent_1_ByteHBoxLayout = new QHBoxLayout;
+
+    offerContent_1_Byte_7_CheckBox = new QCheckBox(tr("Byte 7"));
+    offerContent_1_Byte_6_CheckBox = new QCheckBox(tr("Byte 6"));
+    offerContent_1_Byte_5_CheckBox = new QCheckBox(tr("Byte 5"));
+    offerContent_1_Byte_4_CheckBox = new QCheckBox(tr("Byte 4"));
+    offerContent_1_Byte_3_CheckBox = new QCheckBox(tr("Byte 3"));
+    offerContent_1_Byte_2_CheckBox = new QCheckBox(tr("Byte 2"));
+    offerContent_1_Byte_1_CheckBox = new QCheckBox(tr("Byte 1"));
+    offerContent_1_Byte_0_CheckBox = new QCheckBox(tr("Byte 0"));
+    offerContent_1_ByteBtn = new QPushButton(tr("Show"), this);
+
+    offerContent_1_ByteHBoxLayout->addWidget(offerContent_1_Byte_7_CheckBox);
+    offerContent_1_ByteHBoxLayout->addWidget(offerContent_1_Byte_6_CheckBox);
+    offerContent_1_ByteHBoxLayout->addWidget(offerContent_1_Byte_5_CheckBox);
+    offerContent_1_ByteHBoxLayout->addWidget(offerContent_1_Byte_4_CheckBox);
+    offerContent_1_ByteHBoxLayout->addWidget(offerContent_1_Byte_3_CheckBox);
+    offerContent_1_ByteHBoxLayout->addWidget(offerContent_1_Byte_2_CheckBox);
+    offerContent_1_ByteHBoxLayout->addWidget(offerContent_1_Byte_1_CheckBox);
+    offerContent_1_ByteHBoxLayout->addWidget(offerContent_1_Byte_0_CheckBox);
+    offerContent_1_ByteHBoxLayout->addWidget(offerContent_1_ByteBtn);
+
+    offerContent_1_ByteGroupBox->setLayout(offerContent_1_ByteHBoxLayout);
+
+    connect(offerContent_1_ByteBtn, SIGNAL(clicked(bool)), this, SLOT(showOfferContent_1_Byte()));
+
+    // Offer Mask 1
+    offerMask_1_ByteGroupBox = new QGroupBox(tr("Mask 1 Byte"));
+    offerMask_1_ByteGroupBox->setAutoFillBackground(true);
+    offerMask_1_ByteGroupBox->setPalette(offerMaskPalette);
+
+    offerMask_1_ByteHBoxLayout = new QHBoxLayout;
+    offerMask_1_Byte_7_CheckBox = new QCheckBox(tr("Byte 7"));
+    offerMask_1_Byte_6_CheckBox = new QCheckBox(tr("Byte 6"));
+    offerMask_1_Byte_5_CheckBox = new QCheckBox(tr("Byte 5"));
+    offerMask_1_Byte_4_CheckBox = new QCheckBox(tr("Byte 4"));
+    offerMask_1_Byte_3_CheckBox = new QCheckBox(tr("Byte 3"));
+    offerMask_1_Byte_2_CheckBox = new QCheckBox(tr("Byte 2"));
+    offerMask_1_Byte_1_CheckBox = new QCheckBox(tr("Byte 1"));
+    offerMask_1_Byte_0_CheckBox = new QCheckBox(tr("Byte 0"));
+    offerMask_1_ByteBtn = new QPushButton(tr("Show"), this);
+
+    offerMask_1_ByteHBoxLayout->addWidget(offerMask_1_Byte_7_CheckBox);
+    offerMask_1_ByteHBoxLayout->addWidget(offerMask_1_Byte_6_CheckBox);
+    offerMask_1_ByteHBoxLayout->addWidget(offerMask_1_Byte_5_CheckBox);
+    offerMask_1_ByteHBoxLayout->addWidget(offerMask_1_Byte_4_CheckBox);
+    offerMask_1_ByteHBoxLayout->addWidget(offerMask_1_Byte_3_CheckBox);
+    offerMask_1_ByteHBoxLayout->addWidget(offerMask_1_Byte_2_CheckBox);
+    offerMask_1_ByteHBoxLayout->addWidget(offerMask_1_Byte_1_CheckBox);
+    offerMask_1_ByteHBoxLayout->addWidget(offerMask_1_Byte_0_CheckBox);
+    offerMask_1_ByteHBoxLayout->addWidget(offerMask_1_ByteBtn);
+
+    offerMask_1_ByteGroupBox->setLayout(offerMask_1_ByteHBoxLayout);
+
+    connect(offerMask_1_ByteBtn, SIGNAL(clicked(bool)), this, SLOT(showOfferMask_1_Byte()));
+
+    // Offer Content 2
+    offerContent_2_ByteGroupBox = new QGroupBox(tr("Content 2 Byte"));
+    offerContent_2_ByteGroupBox->setAutoFillBackground(true);
+    offerContent_2_ByteGroupBox->setPalette(offerContentPalette);
+
+    offerContent_2_ByteHBoxLayout = new QHBoxLayout;
+
+    offerContent_2_Byte_7_CheckBox = new QCheckBox(tr("Byte 7"));
+    offerContent_2_Byte_6_CheckBox = new QCheckBox(tr("Byte 6"));
+    offerContent_2_Byte_5_CheckBox = new QCheckBox(tr("Byte 5"));
+    offerContent_2_Byte_4_CheckBox = new QCheckBox(tr("Byte 4"));
+    offerContent_2_Byte_3_CheckBox = new QCheckBox(tr("Byte 3"));
+    offerContent_2_Byte_2_CheckBox = new QCheckBox(tr("Byte 2"));
+    offerContent_2_Byte_1_CheckBox = new QCheckBox(tr("Byte 1"));
+    offerContent_2_Byte_0_CheckBox = new QCheckBox(tr("Byte 0"));
+    offerContent_2_ByteBtn = new QPushButton(tr("Show"), this);
+
+    offerContent_2_ByteHBoxLayout->addWidget(offerContent_2_Byte_7_CheckBox);
+    offerContent_2_ByteHBoxLayout->addWidget(offerContent_2_Byte_6_CheckBox);
+    offerContent_2_ByteHBoxLayout->addWidget(offerContent_2_Byte_5_CheckBox);
+    offerContent_2_ByteHBoxLayout->addWidget(offerContent_2_Byte_4_CheckBox);
+    offerContent_2_ByteHBoxLayout->addWidget(offerContent_2_Byte_3_CheckBox);
+    offerContent_2_ByteHBoxLayout->addWidget(offerContent_2_Byte_2_CheckBox);
+    offerContent_2_ByteHBoxLayout->addWidget(offerContent_2_Byte_1_CheckBox);
+    offerContent_2_ByteHBoxLayout->addWidget(offerContent_2_Byte_0_CheckBox);
+    offerContent_2_ByteHBoxLayout->addWidget(offerContent_2_ByteBtn);
+    offerContent_2_ByteGroupBox->setLayout(offerContent_2_ByteHBoxLayout);
+
+    connect(offerContent_2_ByteBtn, SIGNAL(clicked(bool)), this, SLOT(showOfferContent_2_Byte()));
+
+    // Offer Mask 2
+    offerMask_2_ByteGroupBox = new QGroupBox(tr("Mask 2 Byte"));
+    offerMask_2_ByteGroupBox->setAutoFillBackground(true);
+    offerMask_2_ByteGroupBox->setPalette(offerMaskPalette);
+
+    offerMask_2_ByteHBoxLayout = new QHBoxLayout;
+    offerMask_2_Byte_7_CheckBox = new QCheckBox(tr("Byte 7"));
+    offerMask_2_Byte_6_CheckBox = new QCheckBox(tr("Byte 6"));
+    offerMask_2_Byte_5_CheckBox = new QCheckBox(tr("Byte 5"));
+    offerMask_2_Byte_4_CheckBox = new QCheckBox(tr("Byte 4"));
+    offerMask_2_Byte_3_CheckBox = new QCheckBox(tr("Byte 3"));
+    offerMask_2_Byte_2_CheckBox = new QCheckBox(tr("Byte 2"));
+    offerMask_2_Byte_1_CheckBox = new QCheckBox(tr("Byte 1"));
+    offerMask_2_Byte_0_CheckBox = new QCheckBox(tr("Byte 0"));
+    offerMask_2_ByteBtn = new QPushButton(tr("Show"), this);
+
+    offerMask_2_ByteHBoxLayout->addWidget(offerMask_2_Byte_7_CheckBox);
+    offerMask_2_ByteHBoxLayout->addWidget(offerMask_2_Byte_6_CheckBox);
+    offerMask_2_ByteHBoxLayout->addWidget(offerMask_2_Byte_5_CheckBox);
+    offerMask_2_ByteHBoxLayout->addWidget(offerMask_2_Byte_4_CheckBox);
+    offerMask_2_ByteHBoxLayout->addWidget(offerMask_2_Byte_3_CheckBox);
+    offerMask_2_ByteHBoxLayout->addWidget(offerMask_2_Byte_2_CheckBox);
+    offerMask_2_ByteHBoxLayout->addWidget(offerMask_2_Byte_1_CheckBox);
+    offerMask_2_ByteHBoxLayout->addWidget(offerMask_2_Byte_0_CheckBox);
+    offerMask_2_ByteHBoxLayout->addWidget(offerMask_2_ByteBtn);
+
+    offerMask_2_ByteGroupBox->setLayout(offerMask_2_ByteHBoxLayout);
+
+    connect(offerMask_2_ByteBtn, SIGNAL(clicked(bool)), this, SLOT(showOfferMask_2_Byte()));
+
+    // Request Content 1
+    requestContent_1_ByteGroupBox = new QGroupBox(tr("Content 1 Byte"));
+    requestContent_1_ByteGroupBox->setAutoFillBackground(true);
+    requestContent_1_ByteGroupBox->setPalette(requestContentPalette);
+
+    requestContent_1_ByteHBoxLayout = new QHBoxLayout;
+    requestContent_1_Byte_7_CheckBox = new QCheckBox(tr("Byte 7"));
+    requestContent_1_Byte_6_CheckBox = new QCheckBox(tr("Byte 6"));
+    requestContent_1_Byte_5_CheckBox = new QCheckBox(tr("Byte 5"));
+    requestContent_1_Byte_4_CheckBox = new QCheckBox(tr("Byte 4"));
+    requestContent_1_Byte_3_CheckBox = new QCheckBox(tr("Byte 3"));
+    requestContent_1_Byte_2_CheckBox = new QCheckBox(tr("Byte 2"));
+    requestContent_1_Byte_1_CheckBox = new QCheckBox(tr("Byte 1"));
+    requestContent_1_Byte_0_CheckBox = new QCheckBox(tr("Byte 0"));
+    requestContent_1_ByteBtn = new QPushButton(tr("Show"), this);
+
+    requestContent_1_ByteHBoxLayout->addWidget(requestContent_1_Byte_7_CheckBox);
+    requestContent_1_ByteHBoxLayout->addWidget(requestContent_1_Byte_6_CheckBox);
+    requestContent_1_ByteHBoxLayout->addWidget(requestContent_1_Byte_5_CheckBox);
+    requestContent_1_ByteHBoxLayout->addWidget(requestContent_1_Byte_4_CheckBox);
+    requestContent_1_ByteHBoxLayout->addWidget(requestContent_1_Byte_3_CheckBox);
+    requestContent_1_ByteHBoxLayout->addWidget(requestContent_1_Byte_2_CheckBox);
+    requestContent_1_ByteHBoxLayout->addWidget(requestContent_1_Byte_1_CheckBox);
+    requestContent_1_ByteHBoxLayout->addWidget(requestContent_1_Byte_0_CheckBox);
+    requestContent_1_ByteHBoxLayout->addWidget(requestContent_1_ByteBtn);
+
+    requestContent_1_ByteGroupBox->setLayout(requestContent_1_ByteHBoxLayout);
+
+    connect(requestContent_1_ByteBtn, SIGNAL(clicked(bool)), this, SLOT(showRequestContent_1_Byte()));
 
 
-    // Offer Content
-    offerContentByteGroupBox = new QGroupBox(tr("Content Byte"));
-    offerContentByteGroupBox->setAutoFillBackground(true);
-    offerContentByteGroupBox->setPalette(offerContentPalette);
+    // Request Mask 1
+    requestMask_1_ByteGroupBox = new QGroupBox(tr("Mask 1 Byte"));
+    requestMask_1_ByteGroupBox->setAutoFillBackground(true);
+    requestMask_1_ByteGroupBox->setPalette(requestMaskPalette);
 
-    offerContentByteHBoxLayout = new QHBoxLayout;
+    requestMask_1_ByteHBoxLayout = new QHBoxLayout;
+    requestMask_1_Byte_7_CheckBox = new QCheckBox(tr("Byte 7"));
+    requestMask_1_Byte_6_CheckBox = new QCheckBox(tr("Byte 6"));
+    requestMask_1_Byte_5_CheckBox = new QCheckBox(tr("Byte 5"));
+    requestMask_1_Byte_4_CheckBox = new QCheckBox(tr("Byte 4"));
+    requestMask_1_Byte_3_CheckBox = new QCheckBox(tr("Byte 3"));
+    requestMask_1_Byte_2_CheckBox = new QCheckBox(tr("Byte 2"));
+    requestMask_1_Byte_1_CheckBox = new QCheckBox(tr("Byte 1"));
+    requestMask_1_Byte_0_CheckBox = new QCheckBox(tr("Byte 0"));
+    requestMask_1_ByteBtn = new QPushButton(tr("Show"), this);
 
-    offerContentByte_7_CheckBox = new QCheckBox(tr("Byte 7"));
-    offerContentByte_6_CheckBox = new QCheckBox(tr("Byte 6"));
-    offerContentByte_5_CheckBox = new QCheckBox(tr("Byte 5"));
-    offerContentByte_4_CheckBox = new QCheckBox(tr("Byte 4"));
-    offerContentByte_3_CheckBox = new QCheckBox(tr("Byte 3"));
-    offerContentByte_2_CheckBox = new QCheckBox(tr("Byte 2"));
-    offerContentByte_1_CheckBox = new QCheckBox(tr("Byte 1"));
-    offerContentByte_0_CheckBox = new QCheckBox(tr("Byte 0"));
-    offerContentByteBtn = new QPushButton(tr("Show"), this);
+    requestMask_1_ByteHBoxLayout->addWidget(requestMask_1_Byte_7_CheckBox);
+    requestMask_1_ByteHBoxLayout->addWidget(requestMask_1_Byte_6_CheckBox);
+    requestMask_1_ByteHBoxLayout->addWidget(requestMask_1_Byte_5_CheckBox);
+    requestMask_1_ByteHBoxLayout->addWidget(requestMask_1_Byte_4_CheckBox);
+    requestMask_1_ByteHBoxLayout->addWidget(requestMask_1_Byte_3_CheckBox);
+    requestMask_1_ByteHBoxLayout->addWidget(requestMask_1_Byte_2_CheckBox);
+    requestMask_1_ByteHBoxLayout->addWidget(requestMask_1_Byte_1_CheckBox);
+    requestMask_1_ByteHBoxLayout->addWidget(requestMask_1_Byte_0_CheckBox);
+    requestMask_1_ByteHBoxLayout->addWidget(requestMask_1_ByteBtn);
 
-    offerContentByteHBoxLayout->addWidget(offerContentByte_7_CheckBox);
-    offerContentByteHBoxLayout->addWidget(offerContentByte_6_CheckBox);
-    offerContentByteHBoxLayout->addWidget(offerContentByte_5_CheckBox);
-    offerContentByteHBoxLayout->addWidget(offerContentByte_4_CheckBox);
-    offerContentByteHBoxLayout->addWidget(offerContentByte_3_CheckBox);
-    offerContentByteHBoxLayout->addWidget(offerContentByte_2_CheckBox);
-    offerContentByteHBoxLayout->addWidget(offerContentByte_1_CheckBox);
-    offerContentByteHBoxLayout->addWidget(offerContentByte_0_CheckBox);
-    offerContentByteHBoxLayout->addWidget(offerContentByteBtn);
+    requestMask_1_ByteGroupBox->setLayout(requestMask_1_ByteHBoxLayout);
 
-    offerContentByteGroupBox->setLayout(offerContentByteHBoxLayout);
+    connect(requestMask_1_ByteBtn, SIGNAL(clicked(bool)), this, SLOT(showRequestMask_1_Byte()));
 
-    connect(offerContentByteBtn, SIGNAL(clicked(bool)), this, SLOT(showOfferContentByte()));
 
-    // Offer Mask
-    offerMaskByteGroupBox = new QGroupBox(tr("Mask Byte"));
-    offerMaskByteGroupBox->setAutoFillBackground(true);
-    offerMaskByteGroupBox->setPalette(offerMaskPalette);
+    // Request Content 2
+    requestContent_2_ByteGroupBox = new QGroupBox(tr("Content 2 Byte"));
+    requestContent_2_ByteGroupBox->setAutoFillBackground(true);
+    requestContent_2_ByteGroupBox->setPalette(requestContentPalette);
 
-    offerMaskByteHBoxLayout = new QHBoxLayout;
-    offerMaskByte_7_CheckBox = new QCheckBox(tr("Byte 7"));
-    offerMaskByte_6_CheckBox = new QCheckBox(tr("Byte 6"));
-    offerMaskByte_5_CheckBox = new QCheckBox(tr("Byte 5"));
-    offerMaskByte_4_CheckBox = new QCheckBox(tr("Byte 4"));
-    offerMaskByte_3_CheckBox = new QCheckBox(tr("Byte 3"));
-    offerMaskByte_2_CheckBox = new QCheckBox(tr("Byte 2"));
-    offerMaskByte_1_CheckBox = new QCheckBox(tr("Byte 1"));
-    offerMaskByte_0_CheckBox = new QCheckBox(tr("Byte 0"));
-    offerMaskByteBtn = new QPushButton(tr("Show"), this);
+    requestContent_2_ByteHBoxLayout = new QHBoxLayout;
+    requestContent_2_Byte_7_CheckBox = new QCheckBox(tr("Byte 7"));
+    requestContent_2_Byte_6_CheckBox = new QCheckBox(tr("Byte 6"));
+    requestContent_2_Byte_5_CheckBox = new QCheckBox(tr("Byte 5"));
+    requestContent_2_Byte_4_CheckBox = new QCheckBox(tr("Byte 4"));
+    requestContent_2_Byte_3_CheckBox = new QCheckBox(tr("Byte 3"));
+    requestContent_2_Byte_2_CheckBox = new QCheckBox(tr("Byte 2"));
+    requestContent_2_Byte_1_CheckBox = new QCheckBox(tr("Byte 1"));
+    requestContent_2_Byte_0_CheckBox = new QCheckBox(tr("Byte 0"));
+    requestContent_2_ByteBtn = new QPushButton(tr("Show"), this);
 
-    offerMaskByteHBoxLayout->addWidget(offerMaskByte_7_CheckBox);
-    offerMaskByteHBoxLayout->addWidget(offerMaskByte_6_CheckBox);
-    offerMaskByteHBoxLayout->addWidget(offerMaskByte_5_CheckBox);
-    offerMaskByteHBoxLayout->addWidget(offerMaskByte_4_CheckBox);
-    offerMaskByteHBoxLayout->addWidget(offerMaskByte_3_CheckBox);
-    offerMaskByteHBoxLayout->addWidget(offerMaskByte_2_CheckBox);
-    offerMaskByteHBoxLayout->addWidget(offerMaskByte_1_CheckBox);
-    offerMaskByteHBoxLayout->addWidget(offerMaskByte_0_CheckBox);
-    offerMaskByteHBoxLayout->addWidget(offerMaskByteBtn);
+    requestContent_2_ByteHBoxLayout->addWidget(requestContent_2_Byte_7_CheckBox);
+    requestContent_2_ByteHBoxLayout->addWidget(requestContent_2_Byte_6_CheckBox);
+    requestContent_2_ByteHBoxLayout->addWidget(requestContent_2_Byte_5_CheckBox);
+    requestContent_2_ByteHBoxLayout->addWidget(requestContent_2_Byte_4_CheckBox);
+    requestContent_2_ByteHBoxLayout->addWidget(requestContent_2_Byte_3_CheckBox);
+    requestContent_2_ByteHBoxLayout->addWidget(requestContent_2_Byte_2_CheckBox);
+    requestContent_2_ByteHBoxLayout->addWidget(requestContent_2_Byte_1_CheckBox);
+    requestContent_2_ByteHBoxLayout->addWidget(requestContent_2_Byte_0_CheckBox);
+    requestContent_2_ByteHBoxLayout->addWidget(requestContent_2_ByteBtn);
 
-    offerMaskByteGroupBox->setLayout(offerMaskByteHBoxLayout);
+    requestContent_2_ByteGroupBox->setLayout(requestContent_2_ByteHBoxLayout);
 
-    connect(offerMaskByteBtn, SIGNAL(clicked(bool)), this, SLOT(showOfferMaskByte()));
+    connect(requestContent_2_ByteBtn, SIGNAL(clicked(bool)), this, SLOT(showRequestContent_2_Byte()));
+
+
+    // Request Mask 2
+    requestMask_2_ByteGroupBox = new QGroupBox(tr("Mask 2 Byte"));
+    requestMask_2_ByteGroupBox->setAutoFillBackground(true);
+    requestMask_2_ByteGroupBox->setPalette(requestMaskPalette);
+
+    requestMask_2_ByteHBoxLayout = new QHBoxLayout;
+    requestMask_2_Byte_7_CheckBox = new QCheckBox(tr("Byte 7"));
+    requestMask_2_Byte_6_CheckBox = new QCheckBox(tr("Byte 6"));
+    requestMask_2_Byte_5_CheckBox = new QCheckBox(tr("Byte 5"));
+    requestMask_2_Byte_4_CheckBox = new QCheckBox(tr("Byte 4"));
+    requestMask_2_Byte_3_CheckBox = new QCheckBox(tr("Byte 3"));
+    requestMask_2_Byte_2_CheckBox = new QCheckBox(tr("Byte 2"));
+    requestMask_2_Byte_1_CheckBox = new QCheckBox(tr("Byte 1"));
+    requestMask_2_Byte_0_CheckBox = new QCheckBox(tr("Byte 0"));
+    requestMask_2_ByteBtn = new QPushButton(tr("Show"), this);
+
+    requestMask_2_ByteHBoxLayout->addWidget(requestMask_2_Byte_7_CheckBox);
+    requestMask_2_ByteHBoxLayout->addWidget(requestMask_2_Byte_6_CheckBox);
+    requestMask_2_ByteHBoxLayout->addWidget(requestMask_2_Byte_5_CheckBox);
+    requestMask_2_ByteHBoxLayout->addWidget(requestMask_2_Byte_4_CheckBox);
+    requestMask_2_ByteHBoxLayout->addWidget(requestMask_2_Byte_3_CheckBox);
+    requestMask_2_ByteHBoxLayout->addWidget(requestMask_2_Byte_2_CheckBox);
+    requestMask_2_ByteHBoxLayout->addWidget(requestMask_2_Byte_1_CheckBox);
+    requestMask_2_ByteHBoxLayout->addWidget(requestMask_2_Byte_0_CheckBox);
+    requestMask_2_ByteHBoxLayout->addWidget(requestMask_2_ByteBtn);
+
+    requestMask_2_ByteGroupBox->setLayout(requestMask_2_ByteHBoxLayout);
+
+    connect(requestMask_2_ByteBtn, SIGNAL(clicked(bool)), this, SLOT(showRequestMask_2_Byte()));
+
 
 
     // Offer Layout
     offerLayout = new QGridLayout;
-    offerLayout->addWidget(offerContentByteGroupBox, 0, 0);
-    offerLayout->addWidget(offerMaskByteGroupBox, 0, 1);
-
-    // Request Content
-    requestContentByteGroupBox = new QGroupBox(tr("Content Byte"));
-    requestContentByteGroupBox->setAutoFillBackground(true);
-    requestContentByteGroupBox->setPalette(requestContentPalette);
-
-    requestContentByteHBoxLayout = new QHBoxLayout;
-    requestContentByte_7_CheckBox = new QCheckBox(tr("Byte 7"));
-    requestContentByte_6_CheckBox = new QCheckBox(tr("Byte 6"));
-    requestContentByte_5_CheckBox = new QCheckBox(tr("Byte 5"));
-    requestContentByte_4_CheckBox = new QCheckBox(tr("Byte 4"));
-    requestContentByte_3_CheckBox = new QCheckBox(tr("Byte 3"));
-    requestContentByte_2_CheckBox = new QCheckBox(tr("Byte 2"));
-    requestContentByte_1_CheckBox = new QCheckBox(tr("Byte 1"));
-    requestContentByte_0_CheckBox = new QCheckBox(tr("Byte 0"));
-    requestContentByteBtn = new QPushButton(tr("Show"), this);
-
-    requestContentByteHBoxLayout->addWidget(requestContentByte_7_CheckBox);
-    requestContentByteHBoxLayout->addWidget(requestContentByte_6_CheckBox);
-    requestContentByteHBoxLayout->addWidget(requestContentByte_5_CheckBox);
-    requestContentByteHBoxLayout->addWidget(requestContentByte_4_CheckBox);
-    requestContentByteHBoxLayout->addWidget(requestContentByte_3_CheckBox);
-    requestContentByteHBoxLayout->addWidget(requestContentByte_2_CheckBox);
-    requestContentByteHBoxLayout->addWidget(requestContentByte_1_CheckBox);
-    requestContentByteHBoxLayout->addWidget(requestContentByte_0_CheckBox);
-    requestContentByteHBoxLayout->addWidget(requestContentByteBtn);
-
-    requestContentByteGroupBox->setLayout(requestContentByteHBoxLayout);
-
-    connect(requestContentByteBtn, SIGNAL(clicked(bool)), this, SLOT(showRequestContentByte()));
-
-
-    // Request Mask
-    requestMaskByteGroupBox = new QGroupBox(tr("Mask Byte"));
-    requestMaskByteGroupBox->setAutoFillBackground(true);
-    requestMaskByteGroupBox->setPalette(requestMaskPalette);
-
-    requestMaskByteHBoxLayout = new QHBoxLayout;
-    requestMaskByte_7_CheckBox = new QCheckBox(tr("Byte 7"));
-    requestMaskByte_6_CheckBox = new QCheckBox(tr("Byte 6"));
-    requestMaskByte_5_CheckBox = new QCheckBox(tr("Byte 5"));
-    requestMaskByte_4_CheckBox = new QCheckBox(tr("Byte 4"));
-    requestMaskByte_3_CheckBox = new QCheckBox(tr("Byte 3"));
-    requestMaskByte_2_CheckBox = new QCheckBox(tr("Byte 2"));
-    requestMaskByte_1_CheckBox = new QCheckBox(tr("Byte 1"));
-    requestMaskByte_0_CheckBox = new QCheckBox(tr("Byte 0"));
-    requestMaskByteBtn = new QPushButton(tr("Show"), this);
-
-    requestMaskByteHBoxLayout->addWidget(requestMaskByte_7_CheckBox);
-    requestMaskByteHBoxLayout->addWidget(requestMaskByte_6_CheckBox);
-    requestMaskByteHBoxLayout->addWidget(requestMaskByte_5_CheckBox);
-    requestMaskByteHBoxLayout->addWidget(requestMaskByte_4_CheckBox);
-    requestMaskByteHBoxLayout->addWidget(requestMaskByte_3_CheckBox);
-    requestMaskByteHBoxLayout->addWidget(requestMaskByte_2_CheckBox);
-    requestMaskByteHBoxLayout->addWidget(requestMaskByte_1_CheckBox);
-    requestMaskByteHBoxLayout->addWidget(requestMaskByte_0_CheckBox);
-    requestMaskByteHBoxLayout->addWidget(requestMaskByteBtn);
-
-    requestMaskByteGroupBox->setLayout(requestMaskByteHBoxLayout);
-
-    connect(requestMaskByteBtn, SIGNAL(clicked(bool)), this, SLOT(showRequestMaskByte()));
-
+    offerLayout->addWidget(offerContent_1_ByteGroupBox, 0, 0);
+    offerLayout->addWidget(offerMask_1_ByteGroupBox, 1, 0);
+    offerLayout->addWidget(offerContent_2_ByteGroupBox, 0, 1);
+    offerLayout->addWidget(offerMask_2_ByteGroupBox, 1, 1);
 
     // Request Layout
     requestLayout = new QGridLayout;
-    requestLayout->addWidget(requestContentByteGroupBox, 0, 0);
-    requestLayout->addWidget(requestMaskByteGroupBox, 0, 1);
-
+    requestLayout->addWidget(requestContent_1_ByteGroupBox, 0, 0);
+    requestLayout->addWidget(requestMask_1_ByteGroupBox, 1, 0);
+    requestLayout->addWidget(requestContent_2_ByteGroupBox, 0, 1);
+    requestLayout->addWidget(requestMask_2_ByteGroupBox, 1, 1);
 
     // Spatial Layout
-    spatialLayout = new QVBoxLayout;
+    spatialLayout = new QGridLayout;
 
-    refreshSpatialBtn = new QPushButton(tr("Refresh"), this);
-    spatialLayout->addWidget(refreshSpatialBtn, 0);
 
-    connect(refreshSpatialBtn, SIGNAL(clicked(bool)), this, SLOT(refreshSpatial()));
+    // Spatial 1
+    refreshSpatial_1_Btn = new QPushButton(tr("Refresh 1"), this);
+    spatialLayout->addWidget(refreshSpatial_1_Btn, 0, 0);
 
-    clearSpatialBtn = new QPushButton(tr("Clear"), this);
-    spatialLayout->addWidget(clearSpatialBtn, 0);
+    connect(refreshSpatial_1_Btn, SIGNAL(clicked(bool)), this, SLOT(refreshSpatial_1()));
 
-    connect(clearSpatialBtn, SIGNAL(clicked(bool)), this, SLOT(clearSpatial()));
+    clearSpatial_1_Btn = new QPushButton(tr("Clear 1"), this);
+    spatialLayout->addWidget(clearSpatial_1_Btn, 1, 0);
+
+    connect(clearSpatial_1_Btn, SIGNAL(clicked(bool)), this, SLOT(clearSpatial_1()));
+
+
+    refreshSpatial_2_Btn = new QPushButton(tr("Refresh 2"), this);
+    spatialLayout->addWidget(refreshSpatial_2_Btn, 0, 1);
+
+    connect(refreshSpatial_2_Btn, SIGNAL(clicked(bool)), this, SLOT(refreshSpatial_2()));
+
+    // Spatial 2
+    clearSpatial_2_Btn = new QPushButton(tr("Clear 2"), this);
+    spatialLayout->addWidget(clearSpatial_2_Btn, 1, 1);
+
+    connect(clearSpatial_2_Btn, SIGNAL(clicked(bool)), this, SLOT(clearSpatial_2()));
+
+
+
+    // Spatial All
+    refreshSpatialAll_Btn = new QPushButton(tr("Refresh All"), this);
+    spatialLayout->addWidget(refreshSpatialAll_Btn, 0, 2);
+
+    connect(refreshSpatialAll_Btn, SIGNAL(clicked(bool)), this, SLOT(refreshSpatialAll()));
+
+    clearSpatialAll_Btn = new QPushButton(tr("Clear All"), this);
+    spatialLayout->addWidget(clearSpatialAll_Btn, 1, 2);
+
+    connect(clearSpatialAll_Btn, SIGNAL(clicked(bool)), this, SLOT(clearSpatialAll()));
+
+
+    spatialTableLayout =  new QHBoxLayout;
 
     tableSideCount = 16;
-    tableWidget = new QTableWidget(tableSideCount, tableSideCount, this);
+    tableWidget_1 = new QTableWidget(tableSideCount, tableSideCount, this);
 
-    int cellSide = 40;
-    tableWidget->setFixedHeight(17*cellSide);
-    tableWidget->setFixedWidth(17*cellSide);
+    int cellSide = 30;
+    tableWidget_1->setFixedHeight(17*cellSide);
+    tableWidget_1->setFixedWidth(17*cellSide);
 
     int n=0;
     for(int i=0; i<tableSideCount; i++) {
-        tableWidget->setColumnWidth(i, cellSide);
-        tableWidget->setRowHeight(i, cellSide);
+        tableWidget_1->setColumnWidth(i, cellSide);
+        tableWidget_1->setRowHeight(i, cellSide);
 
         for(int j=0; j<tableSideCount; j++) {
 
-            tableWidget->setCellWidget(i, j, new QTextEdit);
+            tableWidget_1->setCellWidget(i, j, new QTextEdit);
 
-            ((QTextEdit*) tableWidget->cellWidget(i, j))->setText(QString("%1").arg(n));
-            ((QTextEdit*) tableWidget->cellWidget(i, j))->setEnabled(false);
-            ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(QPalette(Qt::white));
+            ((QTextEdit*) tableWidget_1->cellWidget(i, j))->setText(QString("%1").arg(n));
+            ((QTextEdit*) tableWidget_1->cellWidget(i, j))->setFont(QFont("Times", 8, QFont::Bold));
+            ((QTextEdit*) tableWidget_1->cellWidget(i, j))->setEnabled(false);
+            ((QTextEdit*) tableWidget_1->cellWidget(i, j))->setPalette(QPalette(Qt::white));
 
             n++;
         }
     }
 
-    spatialLayout->addWidget(tableWidget, 0, Qt::AlignHCenter);
+    spatialTableLayout->addWidget(tableWidget_1, 0, Qt::AlignHCenter);
 
+
+    tableWidget_2 = new QTableWidget(tableSideCount, tableSideCount, this);
+
+//    int cellSide = 40;
+    tableWidget_2->setFixedHeight(17*cellSide);
+    tableWidget_2->setFixedWidth(17*cellSide);
+
+    n=0;
+    for(int i=0; i<tableSideCount; i++) {
+        tableWidget_2->setColumnWidth(i, cellSide);
+        tableWidget_2->setRowHeight(i, cellSide);
+
+        for(int j=0; j<tableSideCount; j++) {
+
+            tableWidget_2->setCellWidget(j, i, new QTextEdit);
+
+            ((QTextEdit*) tableWidget_2->cellWidget(j, i))->setText(QString("%1").arg(n));
+            ((QTextEdit*) tableWidget_2->cellWidget(j, i))->setFont(QFont("Times", 8, QFont::Bold));
+            ((QTextEdit*) tableWidget_2->cellWidget(j, i))->setEnabled(false);
+            ((QTextEdit*) tableWidget_2->cellWidget(j, i))->setPalette(QPalette(Qt::white));
+
+            n++;
+        }
+    }
+
+    spatialTableLayout->addWidget(tableWidget_2, 0, Qt::AlignHCenter);
+
+
+    tableWidgetAll = new QTableWidget(tableSideCount, tableSideCount, this);
+    tableWidgetAll->setFixedHeight(17*cellSide);
+    tableWidgetAll->setFixedWidth(17*cellSide);
+
+    n=0;
+    for(int i=0; i<tableSideCount; i++) {
+        tableWidgetAll->setColumnWidth(i, cellSide);
+        tableWidgetAll->setRowHeight(i, cellSide);
+
+        for(int j=0; j<tableSideCount; j++) {
+
+            tableWidgetAll->setCellWidget(j, i, new QTextEdit);
+
+//            ((QTextEdit*) tableWidgetAll->cellWidget(j, i))->setText(QString("%1").arg(n));
+//            ((QTextEdit*) tableWidgetAll->cellWidget(j, i))->setFont(QFont("Times", 8, QFont::Bold));
+//            ((QTextEdit*) tableWidgetAll->cellWidget(j, i))->setEnabled(false);
+            ((QTextEdit*) tableWidgetAll->cellWidget(j, i))->setPalette(QPalette(Qt::white));
+
+            n++;
+        }
+    }
+
+    spatialTableLayout->addWidget(tableWidgetAll, 0, Qt::AlignHCenter);
+
+
+
+    spatialLayout->addLayout(spatialTableLayout, 2, 0, 2, 0);
 
 
 
@@ -259,20 +468,25 @@ MainWindow::~MainWindow()
 
 }
 
+/*
+ *
+ *  _1_
+ *
+ */
 
-int MainWindow::offerContentToByte() {
+int MainWindow::offerContent_1_ToByte() {
     qDebug() << Q_FUNC_INFO;
 
     quint8 offerContent;
 
-    offerContent = (int) offerContentByte_0_CheckBox->isChecked();
-    offerContent += (int) offerContentByte_1_CheckBox->isChecked() * 2;
-    offerContent += (int) offerContentByte_2_CheckBox->isChecked()   * 4;
-    offerContent += (int) offerContentByte_3_CheckBox->isChecked()   * 8;
-    offerContent += (int) offerContentByte_4_CheckBox->isChecked()  * 16;
-    offerContent += (int) offerContentByte_5_CheckBox->isChecked()  * 32;
-    offerContent += (int) offerContentByte_6_CheckBox->isChecked()  * 64;
-    offerContent += (int) offerContentByte_7_CheckBox->isChecked() * 128;
+    offerContent = (int) offerContent_1_Byte_0_CheckBox->isChecked();
+    offerContent += (int) offerContent_1_Byte_1_CheckBox->isChecked() * 2;
+    offerContent += (int) offerContent_1_Byte_2_CheckBox->isChecked()   * 4;
+    offerContent += (int) offerContent_1_Byte_3_CheckBox->isChecked()   * 8;
+    offerContent += (int) offerContent_1_Byte_4_CheckBox->isChecked()  * 16;
+    offerContent += (int) offerContent_1_Byte_5_CheckBox->isChecked()  * 32;
+    offerContent += (int) offerContent_1_Byte_6_CheckBox->isChecked()  * 64;
+    offerContent += (int) offerContent_1_Byte_7_CheckBox->isChecked() * 128;
 
     qDebug().noquote() << "offerContent: " << offerContent;
     qDebug().noquote() << "offerContent: " << QString("%1").arg(offerContent, 8, 2, QLatin1Char('0'));
@@ -280,19 +494,19 @@ int MainWindow::offerContentToByte() {
     return offerContent;
 }
 
-int MainWindow::offerMaskToByte() {
+int MainWindow::offerMask_1_ToByte() {
     qDebug() << Q_FUNC_INFO;
 
     quint8 offerMask;
 
-    offerMask = (int) offerMaskByte_0_CheckBox->isChecked();
-    offerMask += (int) offerMaskByte_1_CheckBox->isChecked() * 2;
-    offerMask += (int) offerMaskByte_2_CheckBox->isChecked()   * 4;
-    offerMask += (int) offerMaskByte_3_CheckBox->isChecked()   * 8;
-    offerMask += (int) offerMaskByte_4_CheckBox->isChecked()  * 16;
-    offerMask += (int) offerMaskByte_5_CheckBox->isChecked()  * 32;
-    offerMask += (int) offerMaskByte_6_CheckBox->isChecked()  * 64;
-    offerMask += (int) offerMaskByte_7_CheckBox->isChecked() * 128;
+    offerMask = (int) offerMask_1_Byte_0_CheckBox->isChecked();
+    offerMask += (int) offerMask_1_Byte_1_CheckBox->isChecked() * 2;
+    offerMask += (int) offerMask_1_Byte_2_CheckBox->isChecked()   * 4;
+    offerMask += (int) offerMask_1_Byte_3_CheckBox->isChecked()   * 8;
+    offerMask += (int) offerMask_1_Byte_4_CheckBox->isChecked()  * 16;
+    offerMask += (int) offerMask_1_Byte_5_CheckBox->isChecked()  * 32;
+    offerMask += (int) offerMask_1_Byte_6_CheckBox->isChecked()  * 64;
+    offerMask += (int) offerMask_1_Byte_7_CheckBox->isChecked() * 128;
 
     qDebug().noquote() << "offerMask: " << offerMask;
     qDebug().noquote() << "offerMask: " << QString("%1").arg(offerMask, 8, 2, QLatin1Char('0'));
@@ -300,19 +514,19 @@ int MainWindow::offerMaskToByte() {
     return offerMask;
 }
 
-int MainWindow::requestContentToByte() {
+int MainWindow::requestContent_1_ToByte() {
     qDebug() << Q_FUNC_INFO;
 
     quint8 requestContent;
 
-    requestContent = (int) requestContentByte_0_CheckBox->isChecked();
-    requestContent += (int) requestContentByte_1_CheckBox->isChecked() * 2;
-    requestContent += (int) requestContentByte_2_CheckBox->isChecked()   * 4;
-    requestContent += (int) requestContentByte_3_CheckBox->isChecked()   * 8;
-    requestContent += (int) requestContentByte_4_CheckBox->isChecked()  * 16;
-    requestContent += (int) requestContentByte_5_CheckBox->isChecked()  * 32;
-    requestContent += (int) requestContentByte_6_CheckBox->isChecked()  * 64;
-    requestContent += (int) requestContentByte_7_CheckBox->isChecked() * 128;
+    requestContent = (int) requestContent_1_Byte_0_CheckBox->isChecked();
+    requestContent += (int) requestContent_1_Byte_1_CheckBox->isChecked() * 2;
+    requestContent += (int) requestContent_1_Byte_2_CheckBox->isChecked()   * 4;
+    requestContent += (int) requestContent_1_Byte_3_CheckBox->isChecked()   * 8;
+    requestContent += (int) requestContent_1_Byte_4_CheckBox->isChecked()  * 16;
+    requestContent += (int) requestContent_1_Byte_5_CheckBox->isChecked()  * 32;
+    requestContent += (int) requestContent_1_Byte_6_CheckBox->isChecked()  * 64;
+    requestContent += (int) requestContent_1_Byte_7_CheckBox->isChecked() * 128;
 
     qDebug().noquote() << "requestContent: " << requestContent;
     qDebug().noquote() << "requestContent: " << QString("%1").arg(requestContent, 8, 2, QLatin1Char('0'));
@@ -320,19 +534,19 @@ int MainWindow::requestContentToByte() {
     return requestContent;
 }
 
-int MainWindow::requestMaskToByte() {
+int MainWindow::requestMask_1_ToByte() {
     qDebug() << Q_FUNC_INFO;
 
     quint8 requestMask;
 
-    requestMask = (int) requestMaskByte_0_CheckBox->isChecked();
-    requestMask += (int) requestMaskByte_1_CheckBox->isChecked() * 2;
-    requestMask += (int) requestMaskByte_2_CheckBox->isChecked()   * 4;
-    requestMask += (int) requestMaskByte_3_CheckBox->isChecked()   * 8;
-    requestMask += (int) requestMaskByte_4_CheckBox->isChecked()  * 16;
-    requestMask += (int) requestMaskByte_5_CheckBox->isChecked()  * 32;
-    requestMask += (int) requestMaskByte_6_CheckBox->isChecked()  * 64;
-    requestMask += (int) requestMaskByte_7_CheckBox->isChecked() * 128;
+    requestMask = (int) requestMask_1_Byte_0_CheckBox->isChecked();
+    requestMask += (int) requestMask_1_Byte_1_CheckBox->isChecked() * 2;
+    requestMask += (int) requestMask_1_Byte_2_CheckBox->isChecked()   * 4;
+    requestMask += (int) requestMask_1_Byte_3_CheckBox->isChecked()   * 8;
+    requestMask += (int) requestMask_1_Byte_4_CheckBox->isChecked()  * 16;
+    requestMask += (int) requestMask_1_Byte_5_CheckBox->isChecked()  * 32;
+    requestMask += (int) requestMask_1_Byte_6_CheckBox->isChecked()  * 64;
+    requestMask += (int) requestMask_1_Byte_7_CheckBox->isChecked() * 128;
 
     qDebug().noquote() << "requestMask: " << requestMask;
     qDebug().noquote() << "requestMask: " << QString("%1").arg(requestMask, 8, 2, QLatin1Char('0'));
@@ -340,59 +554,59 @@ int MainWindow::requestMaskToByte() {
     return requestMask;
 }
 
-void MainWindow::clearSpatial() {
+void MainWindow::clearSpatial_1() {
     qDebug() << Q_FUNC_INFO;
 
     for(int i=0; i<tableSideCount; i++) {
         for(int j=0; j<tableSideCount; j++) {
-            ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(noColor);
+            ((QTextEdit*) tableWidget_1->cellWidget(i, j))->setPalette(noColor);
         }
     }
 }
 
-void MainWindow::clearOfferContent() {
+void MainWindow::clearOfferContent_1() {
     qDebug() << Q_FUNC_INFO;
 
     for(int i=0; i<tableSideCount; i++) {
         for(int j=0; j<tableSideCount; j++) {
-            if (((QTextEdit*) tableWidget->cellWidget(i, j))->palette().color(QPalette::Window) == offerContentColor) {
-                ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(noColor);
+            if (((QTextEdit*) tableWidget_1->cellWidget(i, j))->palette().color(QPalette::Window) == offerContentColor) {
+                ((QTextEdit*) tableWidget_1->cellWidget(i, j))->setPalette(noColor);
             }
         }
     }
 }
 
-void MainWindow::clearOfferMask() {
+void MainWindow::clearOfferMask_1() {
     qDebug() << Q_FUNC_INFO;
 
     for(int i=0; i<tableSideCount; i++) {
         for(int j=0; j<tableSideCount; j++) {
-            if (((QTextEdit*) tableWidget->cellWidget(i, j))->palette().color(QPalette::Window) == offerMaskColor) {
-                ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(noColor);
+            if (((QTextEdit*) tableWidget_1->cellWidget(i, j))->palette().color(QPalette::Window) == offerMaskColor) {
+                ((QTextEdit*) tableWidget_1->cellWidget(i, j))->setPalette(noColor);
             }
         }
     }
 }
 
-void MainWindow::clearRequestContent() {
+void MainWindow::clearRequestContent_1() {
     qDebug() << Q_FUNC_INFO;
 
     for(int i=0; i<tableSideCount; i++) {
         for(int j=0; j<tableSideCount; j++) {
-            if (((QTextEdit*) tableWidget->cellWidget(i, j))->palette().color(QPalette::Window) == requestContentColor) {
-                ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(noColor);
+            if (((QTextEdit*) tableWidget_1->cellWidget(i, j))->palette().color(QPalette::Window) == requestContentColor) {
+                ((QTextEdit*) tableWidget_1->cellWidget(i, j))->setPalette(noColor);
             }
         }
     }
 }
 
-void MainWindow::clearRequestMask() {
+void MainWindow::clearRequestMask_1() {
     qDebug() << Q_FUNC_INFO;
 
     for(int i=0; i<tableSideCount; i++) {
         for(int j=0; j<tableSideCount; j++) {
-            if (((QTextEdit*) tableWidget->cellWidget(i, j))->palette().color(QPalette::Window) == requestMaskColor) {
-                ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(noColor);
+            if (((QTextEdit*) tableWidget_1->cellWidget(i, j))->palette().color(QPalette::Window) == requestMaskColor) {
+                ((QTextEdit*) tableWidget_1->cellWidget(i, j))->setPalette(noColor);
             }
         }
     }
@@ -401,26 +615,26 @@ void MainWindow::clearRequestMask() {
 
 
 
-void MainWindow::showOfferContentByte() {
+void MainWindow::showOfferContent_1_Byte() {
     qDebug() << Q_FUNC_INFO;
 
-    int offerContent = offerContentToByte();
+    int offerContent = offerContent_1_ToByte();
 
-    clearOfferContent();
+    clearOfferContent_1();
 
-    if (((QTextEdit*) tableWidget->cellWidget(qFloor(offerContent/16), offerContent%16))->palette().color(QPalette::Window) != indirectMatchColor) {
-        ((QTextEdit*) tableWidget->cellWidget(qFloor(offerContent/16), offerContent%16))->setPalette(offerContentColor);
+    if (((QTextEdit*) tableWidget_1->cellWidget(qFloor(offerContent/16), offerContent%16))->palette().color(QPalette::Window) != indirectMatchColor) {
+        ((QTextEdit*) tableWidget_1->cellWidget(qFloor(offerContent/16), offerContent%16))->setPalette(offerContentColor);
     }
 }
 
-void MainWindow::showOfferMaskByte() {
+void MainWindow::showOfferMask_1_Byte() {
     qDebug() << Q_FUNC_INFO;
 
-    int offerContent = offerContentToByte();
-    int offerMask = offerMaskToByte();
+    int offerContent = offerContent_1_ToByte();
+    int offerMask = offerMask_1_ToByte();
     bool isMatch;
 
-    clearOfferMask();
+    clearOfferMask_1();
 
     int n=0;
     for(int i=0; i<tableSideCount; i++) {
@@ -444,40 +658,40 @@ void MainWindow::showOfferMaskByte() {
 
             // Repaint cell color according to former color
             if (isMatch) {
-                if (((QTextEdit*) tableWidget->cellWidget(i, j))->palette().color(QPalette::Window) == requestMaskColor
-                        || ((QTextEdit*) tableWidget->cellWidget(i, j))->palette().color(QPalette::Window) == requestContentColor) {
-                    ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(indirectMatchColor);
+                if (((QTextEdit*) tableWidget_1->cellWidget(i, j))->palette().color(QPalette::Window) == requestMaskColor
+                        || ((QTextEdit*) tableWidget_1->cellWidget(i, j))->palette().color(QPalette::Window) == requestContentColor) {
+                    ((QTextEdit*) tableWidget_1->cellWidget(i, j))->setPalette(indirectMatchColor);
                 }
                 else {
-                    ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(offerMaskColor);
+                    ((QTextEdit*) tableWidget_1->cellWidget(i, j))->setPalette(offerMaskColor);
                 }
             }
             n++;
         }
     }
-    showOfferContentByte();
+    showOfferContent_1_Byte();
 }
 
-void MainWindow::showRequestContentByte() {
+void MainWindow::showRequestContent_1_Byte() {
     qDebug() << Q_FUNC_INFO;
 
-    int requestContent = requestContentToByte();
+    int requestContent = requestContent_1_ToByte();
 
-    clearRequestContent();
+    clearRequestContent_1();
 
-    if (((QTextEdit*) tableWidget->cellWidget(qFloor(requestContent/16), requestContent%16))->palette().color(QPalette::Window) != indirectMatchColor) {
-        ((QTextEdit*) tableWidget->cellWidget(qFloor(requestContent/16), requestContent%16))->setPalette(requestContentColor);
+    if (((QTextEdit*) tableWidget_1->cellWidget(qFloor(requestContent/16), requestContent%16))->palette().color(QPalette::Window) != indirectMatchColor) {
+        ((QTextEdit*) tableWidget_1->cellWidget(qFloor(requestContent/16), requestContent%16))->setPalette(requestContentColor);
     }
 }
 
-void MainWindow::showRequestMaskByte() {
+void MainWindow::showRequestMask_1_Byte() {
     qDebug() << Q_FUNC_INFO;
 
-    int requestContent = requestContentToByte();
-    int requestMask = requestMaskToByte();
+    int requestContent = requestContent_1_ToByte();
+    int requestMask = requestMask_1_ToByte();
     bool isMatch;
 
-    clearRequestMask();
+    clearRequestMask_1();
 
     int n=0;
     for(int i=0; i<tableSideCount; i++) {
@@ -500,29 +714,369 @@ void MainWindow::showRequestMaskByte() {
 
             // Repaint cell color according to former color
             if (isMatch) {
-                if (((QTextEdit*) tableWidget->cellWidget(i, j))->palette().color(QPalette::Window) == offerMaskColor) {
-                    ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(indirectMatchColor);
+                if (((QTextEdit*) tableWidget_1->cellWidget(i, j))->palette().color(QPalette::Window) == offerMaskColor) {
+                    ((QTextEdit*) tableWidget_1->cellWidget(i, j))->setPalette(indirectMatchColor);
                 }
                 else {
-                    ((QTextEdit*) tableWidget->cellWidget(i, j))->setPalette(requestMaskColor);
+                    ((QTextEdit*) tableWidget_1->cellWidget(i, j))->setPalette(requestMaskColor);
                 }
             }
             n++;
         }
     }
-    showRequestContentByte();
+    showRequestContent_1_Byte();
 }
 
-void MainWindow::refreshSpatial() {
+void MainWindow::refreshSpatial_1() {
     qDebug() << Q_FUNC_INFO;
 
-    clearSpatial();
+    clearSpatial_1();
 
-    showRequestMaskByte();
-    showOfferMaskByte();
+    showRequestMask_1_Byte();
+    showOfferMask_1_Byte();
 
-    int offerContent = offerContentToByte();
-    if(offerContent == requestContentToByte()) {
-         ((QTextEdit*) tableWidget->cellWidget(qFloor(offerContent/16), offerContent%16))->setPalette(directMatchColor);
+    int offerContent = offerContent_1_ToByte();
+    if(offerContent == requestContent_1_ToByte()) {
+         ((QTextEdit*) tableWidget_1->cellWidget(qFloor(offerContent/16), offerContent%16))->setPalette(directMatchColor);
+    }
+    copyColor(tableWidget_2);
+}
+
+
+/*
+ *
+ *  _2_
+ *
+ */
+
+int MainWindow::offerContent_2_ToByte() {
+    qDebug() << Q_FUNC_INFO;
+
+    quint8 offerContent;
+
+    offerContent = (int) offerContent_2_Byte_0_CheckBox->isChecked();
+    offerContent += (int) offerContent_2_Byte_1_CheckBox->isChecked() * 2;
+    offerContent += (int) offerContent_2_Byte_2_CheckBox->isChecked()   * 4;
+    offerContent += (int) offerContent_2_Byte_3_CheckBox->isChecked()   * 8;
+    offerContent += (int) offerContent_2_Byte_4_CheckBox->isChecked()  * 16;
+    offerContent += (int) offerContent_2_Byte_5_CheckBox->isChecked()  * 32;
+    offerContent += (int) offerContent_2_Byte_6_CheckBox->isChecked()  * 64;
+    offerContent += (int) offerContent_2_Byte_7_CheckBox->isChecked() * 128;
+
+    qDebug().noquote() << "offerContent: " << offerContent;
+    qDebug().noquote() << "offerContent: " << QString("%1").arg(offerContent, 8, 2, QLatin1Char('0'));
+
+    return offerContent;
+}
+
+int MainWindow::offerMask_2_ToByte() {
+    qDebug() << Q_FUNC_INFO;
+
+    quint8 offerMask;
+
+    offerMask = (int) offerMask_2_Byte_0_CheckBox->isChecked();
+    offerMask += (int) offerMask_2_Byte_1_CheckBox->isChecked() * 2;
+    offerMask += (int) offerMask_2_Byte_2_CheckBox->isChecked()   * 4;
+    offerMask += (int) offerMask_2_Byte_3_CheckBox->isChecked()   * 8;
+    offerMask += (int) offerMask_2_Byte_4_CheckBox->isChecked()  * 16;
+    offerMask += (int) offerMask_2_Byte_5_CheckBox->isChecked()  * 32;
+    offerMask += (int) offerMask_2_Byte_6_CheckBox->isChecked()  * 64;
+    offerMask += (int) offerMask_2_Byte_7_CheckBox->isChecked() * 128;
+
+    qDebug().noquote() << "offerMask: " << offerMask;
+    qDebug().noquote() << "offerMask: " << QString("%1").arg(offerMask, 8, 2, QLatin1Char('0'));
+
+    return offerMask;
+}
+
+int MainWindow::requestContent_2_ToByte() {
+    qDebug() << Q_FUNC_INFO;
+
+    quint8 requestContent;
+
+    requestContent = (int) requestContent_2_Byte_0_CheckBox->isChecked();
+    requestContent += (int) requestContent_2_Byte_1_CheckBox->isChecked() * 2;
+    requestContent += (int) requestContent_2_Byte_2_CheckBox->isChecked()   * 4;
+    requestContent += (int) requestContent_2_Byte_3_CheckBox->isChecked()   * 8;
+    requestContent += (int) requestContent_2_Byte_4_CheckBox->isChecked()  * 16;
+    requestContent += (int) requestContent_2_Byte_5_CheckBox->isChecked()  * 32;
+    requestContent += (int) requestContent_2_Byte_6_CheckBox->isChecked()  * 64;
+    requestContent += (int) requestContent_2_Byte_7_CheckBox->isChecked() * 128;
+
+    qDebug().noquote() << "requestContent: " << requestContent;
+    qDebug().noquote() << "requestContent: " << QString("%1").arg(requestContent, 8, 2, QLatin1Char('0'));
+
+    return requestContent;
+}
+
+int MainWindow::requestMask_2_ToByte() {
+    qDebug() << Q_FUNC_INFO;
+
+    quint8 requestMask;
+
+    requestMask = (int) requestMask_2_Byte_0_CheckBox->isChecked();
+    requestMask += (int) requestMask_2_Byte_1_CheckBox->isChecked() * 2;
+    requestMask += (int) requestMask_2_Byte_2_CheckBox->isChecked()   * 4;
+    requestMask += (int) requestMask_2_Byte_3_CheckBox->isChecked()   * 8;
+    requestMask += (int) requestMask_2_Byte_4_CheckBox->isChecked()  * 16;
+    requestMask += (int) requestMask_2_Byte_5_CheckBox->isChecked()  * 32;
+    requestMask += (int) requestMask_2_Byte_6_CheckBox->isChecked()  * 64;
+    requestMask += (int) requestMask_2_Byte_7_CheckBox->isChecked() * 128;
+
+    qDebug().noquote() << "requestMask: " << requestMask;
+    qDebug().noquote() << "requestMask: " << QString("%1").arg(requestMask, 8, 2, QLatin1Char('0'));
+
+    return requestMask;
+}
+
+
+
+void MainWindow::clearSpatial_2() {
+    qDebug() << Q_FUNC_INFO;
+
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
+            ((QTextEdit*) tableWidget_2->cellWidget(j, i))->setPalette(noColor);
+        }
+    }
+}
+
+void MainWindow::clearOfferContent_2() {
+    qDebug() << Q_FUNC_INFO;
+
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
+            if (((QTextEdit*) tableWidget_2->cellWidget(j, i))->palette().color(QPalette::Window) == offerContentColor) {
+                ((QTextEdit*) tableWidget_2->cellWidget(j, i))->setPalette(noColor);
+            }
+        }
+    }
+}
+
+void MainWindow::clearOfferMask_2() {
+    qDebug() << Q_FUNC_INFO;
+
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
+            if (((QTextEdit*) tableWidget_2->cellWidget(j, i))->palette().color(QPalette::Window) == offerMaskColor) {
+                ((QTextEdit*) tableWidget_2->cellWidget(j, i))->setPalette(noColor);
+            }
+        }
+    }
+}
+
+void MainWindow::clearRequestContent_2() {
+    qDebug() << Q_FUNC_INFO;
+
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
+            if (((QTextEdit*) tableWidget_2->cellWidget(j, i))->palette().color(QPalette::Window) == requestContentColor) {
+                ((QTextEdit*) tableWidget_2->cellWidget(j, i))->setPalette(noColor);
+            }
+        }
+    }
+}
+
+void MainWindow::clearRequestMask_2() {
+    qDebug() << Q_FUNC_INFO;
+
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
+            if (((QTextEdit*) tableWidget_2->cellWidget(j, i))->palette().color(QPalette::Window) == requestMaskColor) {
+                ((QTextEdit*) tableWidget_2->cellWidget(j, i))->setPalette(noColor);
+            }
+        }
+    }
+}
+
+
+
+
+void MainWindow::showOfferContent_2_Byte() {
+    qDebug() << Q_FUNC_INFO;
+
+    int offerContent = offerContent_2_ToByte();
+
+    clearOfferContent_2();
+
+    if (((QTextEdit*) tableWidget_2->cellWidget(offerContent%16, qFloor(offerContent/16)))->palette().color(QPalette::Window) != indirectMatchColor) {
+        ((QTextEdit*) tableWidget_2->cellWidget(offerContent%16, qFloor(offerContent/16)))->setPalette(offerContentColor);
+    }
+}
+
+void MainWindow::showOfferMask_2_Byte() {
+    qDebug() << Q_FUNC_INFO;
+
+    int offerContent = offerContent_2_ToByte();
+    int offerMask = offerMask_2_ToByte();
+    bool isMatch;
+
+    clearOfferMask_2();
+
+    int n=0;
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
+
+            // offerContent is equal n
+            if ((offerContent ^ n) == 0) {
+                isMatch = true;
+            }
+            else {
+
+                // offerContent neither equal n nor set true by the mask
+                if (~(~(offerContent ^ n) | offerMask) != 0) {
+                    isMatch = false;
+                }
+                else {
+                    isMatch = true;
+                }
+            }
+
+
+            // Repaint cell color according to former color
+            if (isMatch) {
+                if (((QTextEdit*) tableWidget_2->cellWidget(j, i))->palette().color(QPalette::Window) == requestMaskColor
+                        || ((QTextEdit*) tableWidget_2->cellWidget(j, i))->palette().color(QPalette::Window) == requestContentColor) {
+                    ((QTextEdit*) tableWidget_2->cellWidget(j, i))->setPalette(indirectMatchColor);
+                }
+                else {
+                    ((QTextEdit*) tableWidget_2->cellWidget(j, i))->setPalette(offerMaskColor);
+                }
+            }
+            n++;
+        }
+    }
+    showOfferContent_2_Byte();
+}
+
+void MainWindow::showRequestContent_2_Byte() {
+    qDebug() << Q_FUNC_INFO;
+
+    int requestContent = requestContent_2_ToByte();
+
+    clearRequestContent_2();
+
+    if (((QTextEdit*) tableWidget_2->cellWidget(requestContent%16, qFloor(requestContent/16)))->palette().color(QPalette::Window) != indirectMatchColor) {
+        ((QTextEdit*) tableWidget_2->cellWidget(requestContent%16, qFloor(requestContent/16)))->setPalette(requestContentColor);
+    }
+}
+
+void MainWindow::showRequestMask_2_Byte() {
+    qDebug() << Q_FUNC_INFO;
+
+    int requestContent = requestContent_2_ToByte();
+    int requestMask = requestMask_2_ToByte();
+    bool isMatch;
+
+    clearRequestMask_2();
+
+    int n=0;
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
+
+            // requestContent is equal n
+            if ((requestContent ^ n) == 0) {
+                isMatch = true;
+            }
+            else {
+
+                // requestContent neither equal n nor set true by the mask
+                if (~(~(requestContent ^ n) | requestMask) != 0) {
+                    isMatch = false;
+                }
+                else {
+                    isMatch = true;
+                }
+            }
+
+            // Repaint cell color according to former color
+            if (isMatch) {
+                if (((QTextEdit*) tableWidget_2->cellWidget(j, i))->palette().color(QPalette::Window) == offerMaskColor) {
+                    ((QTextEdit*) tableWidget_2->cellWidget(j, i))->setPalette(indirectMatchColor);
+                }
+                else {
+                    ((QTextEdit*) tableWidget_2->cellWidget(j, i))->setPalette(requestMaskColor);
+                }
+            }
+            n++;
+        }
+    }
+    showRequestContent_2_Byte();
+}
+
+void MainWindow::refreshSpatial_2() {
+    qDebug() << Q_FUNC_INFO;
+
+    clearSpatial_2();
+
+    showRequestMask_2_Byte();
+    showOfferMask_2_Byte();
+
+    int offerContent = offerContent_2_ToByte();
+    if(offerContent == requestContent_2_ToByte()) {
+         ((QTextEdit*) tableWidget_2->cellWidget(offerContent%16, qFloor(offerContent/16)))->setPalette(directMatchColor);
+    }
+//    copyColor(tableWidget_2);
+}
+
+
+/*
+ *
+ *  All
+ */
+
+void MainWindow::clearSpatialAll() {
+    qDebug() << Q_FUNC_INFO;
+
+    clearSpatial_1();
+    clearSpatial_2();
+
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
+            ((QTextEdit*) tableWidgetAll->cellWidget(i, j))->setPalette(noColor);
+        }
+    }
+}
+
+void MainWindow::refreshSpatialAll() {
+    qDebug() << Q_FUNC_INFO;
+
+    clearSpatial_1();
+    clearSpatial_2();
+    clearSpatialAll();
+
+    refreshSpatial_1();
+    refreshSpatial_2();
+
+
+//    showRequestMask_1_Byte();
+//    showOfferMask_1_Byte();
+
+//    int offerContent = offerContent_1_ToByte();
+//    if(offerContent == requestContent_1_ToByte()) {
+//         ((QTextEdit*) tableWidget_1->cellWidget(qFloor(offerContent/16), offerContent%16))->setPalette(directMatchColor);
+//    }
+//    copyColor(tableWidget_2);
+}
+
+
+
+void MainWindow::copyColor(QTableWidget* targetTable) {
+    qDebug() << Q_FUNC_INFO;
+
+
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
+            ((QTextEdit*) targetTable->cellWidget(i, j))->setPalette(((QTextEdit*) tableWidget_2->cellWidget(j, i))->palette().color(QPalette::Window));
+        }
+    }
+
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
+            if(((QTextEdit*) tableWidget_2->cellWidget(i, j))->palette().color(QPalette::Window) == indirectMatchColor
+                    && ((QTextEdit*) targetTable->cellWidget(i, j))->palette().color(QPalette::Window) == indirectMatchColor) {
+                ((QTextEdit*) targetTable->cellWidget(i, j))->setPalette(directMatchColor);
+            }
+        }
     }
 }
