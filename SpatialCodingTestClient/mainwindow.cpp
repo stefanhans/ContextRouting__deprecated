@@ -404,7 +404,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 //            ((QTextEdit*) tableWidgetAll->cellWidget(j, i))->setText(QString("%1").arg(n));
 //            ((QTextEdit*) tableWidgetAll->cellWidget(j, i))->setFont(QFont("Times", 8, QFont::Bold));
-//            ((QTextEdit*) tableWidgetAll->cellWidget(j, i))->setEnabled(false);
+            ((QTextEdit*) tableWidgetAll->cellWidget(j, i))->setEnabled(false);
             ((QTextEdit*) tableWidgetAll->cellWidget(j, i))->setPalette(QPalette(Qt::white));
 
             n++;
@@ -739,7 +739,6 @@ void MainWindow::refreshSpatial_1() {
     if(offerContent == requestContent_1_ToByte()) {
          ((QTextEdit*) tableWidget_1->cellWidget(qFloor(offerContent/16), offerContent%16))->setPalette(directMatchColor);
     }
-    copyColor(tableWidget_2);
 }
 
 
@@ -1048,15 +1047,28 @@ void MainWindow::refreshSpatialAll() {
     refreshSpatial_1();
     refreshSpatial_2();
 
-
-//    showRequestMask_1_Byte();
-//    showOfferMask_1_Byte();
-
-//    int offerContent = offerContent_1_ToByte();
-//    if(offerContent == requestContent_1_ToByte()) {
-//         ((QTextEdit*) tableWidget_1->cellWidget(qFloor(offerContent/16), offerContent%16))->setPalette(directMatchColor);
-//    }
-//    copyColor(tableWidget_2);
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
+            if(((QTextEdit*) tableWidget_1->cellWidget(i, j))->palette().color(QPalette::Window) == ((QTextEdit*) tableWidget_2->cellWidget(i, j))->palette().color(QPalette::Window)
+                    &&
+                    (((QTextEdit*) tableWidget_1->cellWidget(i, j))->palette().color(QPalette::Window) == indirectMatchColor
+                     ||
+                     ((QTextEdit*) tableWidget_1->cellWidget(i, j))->palette().color(QPalette::Window) == directMatchColor)) {
+                ((QTextEdit*) tableWidgetAll->cellWidget(i, j))->setPalette(((QTextEdit*) tableWidget_1->cellWidget(i, j))->palette().color(QPalette::Window));
+            }
+            else {
+                if((((QTextEdit*) tableWidget_1->cellWidget(i, j))->palette().color(QPalette::Window) == directMatchColor
+                    &&
+                    ((QTextEdit*) tableWidget_2->cellWidget(i, j))->palette().color(QPalette::Window) == indirectMatchColor)
+                        ||
+                        (((QTextEdit*) tableWidget_1->cellWidget(i, j))->palette().color(QPalette::Window) == indirectMatchColor
+                         &&
+                         ((QTextEdit*) tableWidget_2->cellWidget(i, j))->palette().color(QPalette::Window) == directMatchColor)) {
+                    ((QTextEdit*) tableWidgetAll->cellWidget(i, j))->setPalette(indirectMatchColor);
+                }
+            }
+        }
+    }
 }
 
 
