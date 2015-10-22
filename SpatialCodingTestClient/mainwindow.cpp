@@ -6,14 +6,6 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    // Matrix
-    matrixSideCount = 12;
-    matrix_min_x = 0;
-    matrix_min_y = 0;
-    matrix_max_x = matrixSideCount-1;
-    matrix_max_y = matrixSideCount-1;
-
-    min_x = min_y = max_x =  max_y = 0;
 
     // Palettes
     noColor = Qt::white;
@@ -38,73 +30,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     requestContentPalette.setColor(QPalette::Window, requestContentColor);
     requestMaskPalette.setColor(QPalette::Window, requestMaskColor);
-
-
-    // SpatialTest
-    spatialTestGBox = new QGroupBox(tr("Test Run Matrix"));
-    spatialTestGBox->setAutoFillBackground(true);
-    spatialTestGBox->setPalette(offerMaskPalette);
-
-    spatialTestTableLayout =  new QHBoxLayout;
-
-    // TestTable
-    tableTestWidget = new QTableWidget(matrixSideCount, matrixSideCount, this);
-
-    int cellSide = 510/matrixSideCount;
-    int fixedSide = matrixSideCount*cellSide+cellSide;
-    tableTestWidget->setFixedHeight(fixedSide);
-    tableTestWidget->setFixedWidth(fixedSide);
-
-    for(int i=0; i<matrixSideCount; i++) {
-        tableTestWidget->setColumnWidth(i, cellSide);
-        tableTestWidget->setRowHeight(i, cellSide);
-
-        for(int j=0; j<matrixSideCount; j++) {
-
-            tableTestWidget->setCellWidget(i, j, new QTextEdit);
-
-            ((QTextEdit*) tableTestWidget->cellWidget(i, j))->setEnabled(false);
-            ((QTextEdit*) tableTestWidget->cellWidget(i, j))->setPalette(QPalette(Qt::white));
-
-        }
-    }
-    drawTestMatrix();
-
-    spatialTestTableLayout->addWidget(tableTestWidget, 0, Qt::AlignHCenter);
-
-
-
-    startSpatialTest_Btn = new QPushButton(tr("Start Test"), this);
-    nextSpatialTest_Btn = new QPushButton(tr("Next Test"), this);
-    resetSpatialTest_Btn = new QPushButton(tr("Reset Test"), this);
-
-
-    spatiaTestGridLayout = new QGridLayout;
-    spatiaTestGridLayout->addLayout(spatialTestTableLayout, 0, 0, 1, 3);
-    spatiaTestGridLayout->addWidget(startSpatialTest_Btn, 1, 0);
-    spatiaTestGridLayout->addWidget(nextSpatialTest_Btn, 1, 1);
-    spatiaTestGridLayout->addWidget(resetSpatialTest_Btn, 1, 2);
-
-    spatialTestGBox->setLayout(spatiaTestGridLayout);
-
-
-    connect(startSpatialTest_Btn, SIGNAL(clicked(bool)), this, SLOT(startSpatialTest()));
-    connect(nextSpatialTest_Btn, SIGNAL(clicked(bool)), this, SLOT(nextSpatialTest()));
-    connect(resetSpatialTest_Btn, SIGNAL(clicked(bool)), this, SLOT(resetSpatialTest()));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     // Offer Content 1
     offerContent_1_ByteGroupBox = new QGroupBox(tr("Content 1 Byte"));
@@ -409,17 +334,19 @@ MainWindow::MainWindow(QWidget *parent)
 
     spatialTableLayout =  new QHBoxLayout;
 
-    tableWidget_1 = new QTableWidget(matrixSideCount, matrixSideCount, this);
+    tableSideCount = 16;
+    tableWidget_1 = new QTableWidget(tableSideCount, tableSideCount, this);
 
-    tableWidget_1->setFixedHeight(fixedSide);
-    tableWidget_1->setFixedWidth(fixedSide);
+    int cellSide = 30;
+    tableWidget_1->setFixedHeight(17*cellSide);
+    tableWidget_1->setFixedWidth(17*cellSide);
 
     int n=0;
-    for(int i=0; i<matrixSideCount; i++) {
+    for(int i=0; i<tableSideCount; i++) {
         tableWidget_1->setColumnWidth(i, cellSide);
         tableWidget_1->setRowHeight(i, cellSide);
 
-        for(int j=0; j<matrixSideCount; j++) {
+        for(int j=0; j<tableSideCount; j++) {
 
             tableWidget_1->setCellWidget(i, j, new QTextEdit);
 
@@ -435,17 +362,18 @@ MainWindow::MainWindow(QWidget *parent)
     spatialTableLayout->addWidget(tableWidget_1, 0, Qt::AlignHCenter);
 
 
-    tableWidget_2 = new QTableWidget(matrixSideCount, matrixSideCount, this);
+    tableWidget_2 = new QTableWidget(tableSideCount, tableSideCount, this);
 
-    tableWidget_2->setFixedHeight(fixedSide);
-    tableWidget_2->setFixedWidth(fixedSide);
+//    int cellSide = 40;
+    tableWidget_2->setFixedHeight(17*cellSide);
+    tableWidget_2->setFixedWidth(17*cellSide);
 
     n=0;
-    for(int i=0; i<matrixSideCount; i++) {
+    for(int i=0; i<tableSideCount; i++) {
         tableWidget_2->setColumnWidth(i, cellSide);
         tableWidget_2->setRowHeight(i, cellSide);
 
-        for(int j=0; j<matrixSideCount; j++) {
+        for(int j=0; j<tableSideCount; j++) {
 
             tableWidget_2->setCellWidget(j, i, new QTextEdit);
 
@@ -461,16 +389,16 @@ MainWindow::MainWindow(QWidget *parent)
     spatialTableLayout->addWidget(tableWidget_2, 0, Qt::AlignHCenter);
 
 
-    tableWidgetAll = new QTableWidget(matrixSideCount, matrixSideCount, this);
-    tableWidgetAll->setFixedHeight(fixedSide);
-    tableWidgetAll->setFixedWidth(fixedSide);
+    tableWidgetAll = new QTableWidget(tableSideCount, tableSideCount, this);
+    tableWidgetAll->setFixedHeight(17*cellSide);
+    tableWidgetAll->setFixedWidth(17*cellSide);
 
     n=0;
-    for(int i=0; i<matrixSideCount; i++) {
+    for(int i=0; i<tableSideCount; i++) {
         tableWidgetAll->setColumnWidth(i, cellSide);
         tableWidgetAll->setRowHeight(i, cellSide);
 
-        for(int j=0; j<matrixSideCount; j++) {
+        for(int j=0; j<tableSideCount; j++) {
 
             tableWidgetAll->setCellWidget(j, i, new QTextEdit);
 
@@ -497,11 +425,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Main Layout
     mainLayout = new QVBoxLayout;
-
-    // Test
-    spatialTestGBox = new QGroupBox(tr("Test"));
-    spatialTestGBox->setLayout(spatiaTestGridLayout);
-    mainLayout->addWidget(spatialTestGBox);
 
     // Offer
     offerGBox = new QGroupBox(tr("Offer"));
@@ -543,102 +466,6 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
 
-}
-
-
-void MainWindow::clearTestMatrix() {
-    qDebug() << Q_FUNC_INFO;
-
-    for(int x=matrix_min_x; x<=matrix_max_x; x++) {
-        for(int y=matrix_min_y; y<=matrix_max_y; y++) {
-            ((QTextEdit*) tableTestWidget->cellWidget(x, y))->setPalette(QPalette(noColor));
-        }
-    }
-}
-
-void MainWindow::drawTestMatrix() {
-    qDebug() << Q_FUNC_INFO;
-
-//    qDebug().noquote() << "min_x: " << min_x;
-//    qDebug().noquote() << "min_y: " << min_y;
-//    qDebug().noquote() << "max_x: " << max_x;
-//    qDebug().noquote() << "max_y: " << max_y;
-
-    clearTestMatrix();
-
-    for(int x=min_x; x<=max_x; x++) {
-        for(int y=min_y; y<=max_y; y++) {
-            ((QTextEdit*) tableTestWidget->cellWidget(y, x))->setPalette(QPalette(redColor));
-        }
-    }
-    tableTestWidget->repaint();
-}
-
-void MainWindow::startSpatialTest() {
-    qDebug() << Q_FUNC_INFO;
-
-    run_id = 0;
-    stop = false;
-    int delay=100;
-    int rand = qrand();
-
-    for(int i=0; i<30240; i++) {
-
-//        for(int d=0; d<=delay;d++) {
-//            rand = qrand();
-//        }
-
-        run_id++;
-        nextSpatialTest();
-
-        if(stop) {
-            qDebug().noquote() << "STOPPED at run_id " << run_id;
-            return;
-        }
-    }
-}
-
-
-void MainWindow::nextSpatialTest(){
-    qDebug() << Q_FUNC_INFO;
-
-//    qDebug().noquote() << "min_x: " << min_x;
-//    qDebug().noquote() << "min_y: " << min_y;
-//    qDebug().noquote() << "max_x: " << max_x;
-//    qDebug().noquote() << "max_y: " << max_y;
-
-    if(max_x < matrix_max_x) {
-        max_x++;
-    }
-    else if (max_y < matrix_max_y) {
-        max_x = min_x;
-        max_y++;
-    }
-    else if (min_x < matrix_max_x) {
-        min_x++;
-        max_x = min_x;
-        max_y = min_y;
-    }
-    else if (min_y < matrix_max_y) {
-        min_y++;
-        min_x = matrix_min_x;
-        max_x = min_x;
-        max_y = min_y;
-    }
-    else {
-        stop = true;
-    }
-
-
-    drawTestMatrix();
-}
-
-void MainWindow::resetSpatialTest(){
-    qDebug() << Q_FUNC_INFO;
-
-    min_x = min_y = max_x =  max_y = 0;
-
-    drawTestMatrix();
 }
 
 /*
@@ -730,8 +557,8 @@ int MainWindow::requestMask_1_ToByte() {
 void MainWindow::clearSpatial_1() {
     qDebug() << Q_FUNC_INFO;
 
-    for(int i=0; i<matrixSideCount; i++) {
-        for(int j=0; j<matrixSideCount; j++) {
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
             ((QTextEdit*) tableWidget_1->cellWidget(i, j))->setPalette(noColor);
         }
     }
@@ -740,8 +567,8 @@ void MainWindow::clearSpatial_1() {
 void MainWindow::clearOfferContent_1() {
     qDebug() << Q_FUNC_INFO;
 
-    for(int i=0; i<matrixSideCount; i++) {
-        for(int j=0; j<matrixSideCount; j++) {
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
             if (((QTextEdit*) tableWidget_1->cellWidget(i, j))->palette().color(QPalette::Window) == offerContentColor) {
                 ((QTextEdit*) tableWidget_1->cellWidget(i, j))->setPalette(noColor);
             }
@@ -752,8 +579,8 @@ void MainWindow::clearOfferContent_1() {
 void MainWindow::clearOfferMask_1() {
     qDebug() << Q_FUNC_INFO;
 
-    for(int i=0; i<matrixSideCount; i++) {
-        for(int j=0; j<matrixSideCount; j++) {
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
             if (((QTextEdit*) tableWidget_1->cellWidget(i, j))->palette().color(QPalette::Window) == offerMaskColor) {
                 ((QTextEdit*) tableWidget_1->cellWidget(i, j))->setPalette(noColor);
             }
@@ -764,8 +591,8 @@ void MainWindow::clearOfferMask_1() {
 void MainWindow::clearRequestContent_1() {
     qDebug() << Q_FUNC_INFO;
 
-    for(int i=0; i<matrixSideCount; i++) {
-        for(int j=0; j<matrixSideCount; j++) {
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
             if (((QTextEdit*) tableWidget_1->cellWidget(i, j))->palette().color(QPalette::Window) == requestContentColor) {
                 ((QTextEdit*) tableWidget_1->cellWidget(i, j))->setPalette(noColor);
             }
@@ -776,8 +603,8 @@ void MainWindow::clearRequestContent_1() {
 void MainWindow::clearRequestMask_1() {
     qDebug() << Q_FUNC_INFO;
 
-    for(int i=0; i<matrixSideCount; i++) {
-        for(int j=0; j<matrixSideCount; j++) {
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
             if (((QTextEdit*) tableWidget_1->cellWidget(i, j))->palette().color(QPalette::Window) == requestMaskColor) {
                 ((QTextEdit*) tableWidget_1->cellWidget(i, j))->setPalette(noColor);
             }
@@ -810,8 +637,8 @@ void MainWindow::showOfferMask_1_Byte() {
     clearOfferMask_1();
 
     int n=0;
-    for(int i=0; i<matrixSideCount; i++) {
-        for(int j=0; j<matrixSideCount; j++) {
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
 
             // offerContent is equal n
             if ((offerContent ^ n) == 0) {
@@ -867,8 +694,8 @@ void MainWindow::showRequestMask_1_Byte() {
     clearRequestMask_1();
 
     int n=0;
-    for(int i=0; i<matrixSideCount; i++) {
-        for(int j=0; j<matrixSideCount; j++) {
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
 
             // requestContent is equal n
             if ((requestContent ^ n) == 0) {
@@ -1006,8 +833,8 @@ int MainWindow::requestMask_2_ToByte() {
 void MainWindow::clearSpatial_2() {
     qDebug() << Q_FUNC_INFO;
 
-    for(int i=0; i<matrixSideCount; i++) {
-        for(int j=0; j<matrixSideCount; j++) {
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
             ((QTextEdit*) tableWidget_2->cellWidget(j, i))->setPalette(noColor);
         }
     }
@@ -1016,8 +843,8 @@ void MainWindow::clearSpatial_2() {
 void MainWindow::clearOfferContent_2() {
     qDebug() << Q_FUNC_INFO;
 
-    for(int i=0; i<matrixSideCount; i++) {
-        for(int j=0; j<matrixSideCount; j++) {
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
             if (((QTextEdit*) tableWidget_2->cellWidget(j, i))->palette().color(QPalette::Window) == offerContentColor) {
                 ((QTextEdit*) tableWidget_2->cellWidget(j, i))->setPalette(noColor);
             }
@@ -1028,8 +855,8 @@ void MainWindow::clearOfferContent_2() {
 void MainWindow::clearOfferMask_2() {
     qDebug() << Q_FUNC_INFO;
 
-    for(int i=0; i<matrixSideCount; i++) {
-        for(int j=0; j<matrixSideCount; j++) {
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
             if (((QTextEdit*) tableWidget_2->cellWidget(j, i))->palette().color(QPalette::Window) == offerMaskColor) {
                 ((QTextEdit*) tableWidget_2->cellWidget(j, i))->setPalette(noColor);
             }
@@ -1040,8 +867,8 @@ void MainWindow::clearOfferMask_2() {
 void MainWindow::clearRequestContent_2() {
     qDebug() << Q_FUNC_INFO;
 
-    for(int i=0; i<matrixSideCount; i++) {
-        for(int j=0; j<matrixSideCount; j++) {
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
             if (((QTextEdit*) tableWidget_2->cellWidget(j, i))->palette().color(QPalette::Window) == requestContentColor) {
                 ((QTextEdit*) tableWidget_2->cellWidget(j, i))->setPalette(noColor);
             }
@@ -1052,8 +879,8 @@ void MainWindow::clearRequestContent_2() {
 void MainWindow::clearRequestMask_2() {
     qDebug() << Q_FUNC_INFO;
 
-    for(int i=0; i<matrixSideCount; i++) {
-        for(int j=0; j<matrixSideCount; j++) {
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
             if (((QTextEdit*) tableWidget_2->cellWidget(j, i))->palette().color(QPalette::Window) == requestMaskColor) {
                 ((QTextEdit*) tableWidget_2->cellWidget(j, i))->setPalette(noColor);
             }
@@ -1086,8 +913,8 @@ void MainWindow::showOfferMask_2_Byte() {
     clearOfferMask_2();
 
     int n=0;
-    for(int i=0; i<matrixSideCount; i++) {
-        for(int j=0; j<matrixSideCount; j++) {
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
 
             // offerContent is equal n
             if ((offerContent ^ n) == 0) {
@@ -1143,8 +970,8 @@ void MainWindow::showRequestMask_2_Byte() {
     clearRequestMask_2();
 
     int n=0;
-    for(int i=0; i<matrixSideCount; i++) {
-        for(int j=0; j<matrixSideCount; j++) {
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
 
             // requestContent is equal n
             if ((requestContent ^ n) == 0) {
@@ -1203,8 +1030,8 @@ void MainWindow::clearSpatialAll() {
     clearSpatial_1();
     clearSpatial_2();
 
-    for(int i=0; i<matrixSideCount; i++) {
-        for(int j=0; j<matrixSideCount; j++) {
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
             ((QTextEdit*) tableWidgetAll->cellWidget(i, j))->setPalette(noColor);
         }
     }
@@ -1220,8 +1047,8 @@ void MainWindow::refreshSpatialAll() {
     refreshSpatial_1();
     refreshSpatial_2();
 
-    for(int i=0; i<matrixSideCount; i++) {
-        for(int j=0; j<matrixSideCount; j++) {
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
             if(((QTextEdit*) tableWidget_1->cellWidget(i, j))->palette().color(QPalette::Window) == ((QTextEdit*) tableWidget_2->cellWidget(i, j))->palette().color(QPalette::Window)
                     &&
                     (((QTextEdit*) tableWidget_1->cellWidget(i, j))->palette().color(QPalette::Window) == indirectMatchColor
@@ -1250,14 +1077,14 @@ void MainWindow::copyColor(QTableWidget* targetTable) {
     qDebug() << Q_FUNC_INFO;
 
 
-    for(int i=0; i<matrixSideCount; i++) {
-        for(int j=0; j<matrixSideCount; j++) {
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
             ((QTextEdit*) targetTable->cellWidget(i, j))->setPalette(((QTextEdit*) tableWidget_2->cellWidget(j, i))->palette().color(QPalette::Window));
         }
     }
 
-    for(int i=0; i<matrixSideCount; i++) {
-        for(int j=0; j<matrixSideCount; j++) {
+    for(int i=0; i<tableSideCount; i++) {
+        for(int j=0; j<tableSideCount; j++) {
             if(((QTextEdit*) tableWidget_2->cellWidget(i, j))->palette().color(QPalette::Window) == indirectMatchColor
                     && ((QTextEdit*) targetTable->cellWidget(i, j))->palette().color(QPalette::Window) == indirectMatchColor) {
                 ((QTextEdit*) targetTable->cellWidget(i, j))->setPalette(directMatchColor);
