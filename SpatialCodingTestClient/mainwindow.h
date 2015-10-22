@@ -24,6 +24,15 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    // Matrix
+    int matrixSideCount;
+
+    int matrix_min_x, matrix_min_y, matrix_max_x, matrix_max_y;
+    int min_x, min_y, max_x, max_y;
+
+    bool stop;
+    int run_id;
+
     QWidget *guiWidget;
     QScrollArea *guiScrollArea;
 
@@ -57,6 +66,16 @@ public:
     QColor directMatchColor;
     QColor indirectMatchColor;
 
+    // SpatialTest
+    QGroupBox *spatialTestGBox;
+    QGridLayout *spatiaTestGridLayout;
+
+    QHBoxLayout *spatialTestTableLayout;
+    QTableWidget *tableTestWidget;
+
+    QPushButton *startSpatialTest_Btn;
+    QPushButton *nextSpatialTest_Btn;
+    QPushButton *resetSpatialTest_Btn;
 
     // Offer
     QGroupBox *offerGBox;
@@ -188,13 +207,15 @@ public:
     QTableWidget *tableWidget_2;
     QTableWidget *tableWidgetAll;
 
-    int tableSideCount;
-
     // Interaction
     QGroupBox *interactionGBox;
     QGridLayout *interactionLayout;
 
 public slots:
+
+    void startSpatialTest();
+    void nextSpatialTest();
+    void resetSpatialTest();
 
     void showOfferContent_1_Byte();
     void showOfferMask_1_Byte();
@@ -216,6 +237,9 @@ public slots:
     void clearSpatialAll();
 
 private:
+
+    void clearTestMatrix();
+    void drawTestMatrix();
 
     int offerContent_1_ToByte();
     int offerMask_1_ToByte();
