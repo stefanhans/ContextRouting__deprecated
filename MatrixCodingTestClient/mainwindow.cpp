@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     // Matrix
-    matrixSideCount = 12;
+    matrixSideCount = 4;
     matrix_min_x = 0;
     matrix_min_y = 0;
     matrix_max_x = matrixSideCount-1;
@@ -31,14 +31,11 @@ MainWindow::MainWindow(QWidget *parent)
     indirectMatchColor = QColor(0, 255, 0, 80);
     directMatchColor = QColor(0, 255, 0, 255);
 
-
     offerContentPalette.setColor(QPalette::Window, offerContentColor);
     offerMaskPalette.setColor(QPalette::Window, offerMaskColor);
 
-
     requestContentPalette.setColor(QPalette::Window, requestContentColor);
     requestMaskPalette.setColor(QPalette::Window, requestMaskColor);
-
 
     // SpatialTest
     spatialTestGBox = new QGroupBox(tr("Test Run Matrix"));
@@ -72,12 +69,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     spatialTestTableLayout->addWidget(tableTestWidget, 0, Qt::AlignHCenter);
 
-
-
     startSpatialTest_Btn = new QPushButton(tr("Start Test"), this);
     nextSpatialTest_Btn = new QPushButton(tr("Next Test"), this);
     resetSpatialTest_Btn = new QPushButton(tr("Reset Test"), this);
-
 
     spatiaTestGridLayout = new QGridLayout;
     spatiaTestGridLayout->addLayout(spatialTestTableLayout, 0, 0, 1, 3);
@@ -87,24 +81,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     spatialTestGBox->setLayout(spatiaTestGridLayout);
 
-
     connect(startSpatialTest_Btn, SIGNAL(clicked(bool)), this, SLOT(startSpatialTest()));
     connect(nextSpatialTest_Btn, SIGNAL(clicked(bool)), this, SLOT(nextSpatialTest()));
     connect(resetSpatialTest_Btn, SIGNAL(clicked(bool)), this, SLOT(resetSpatialTest()));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     // Offer Content 1
     offerContent_1_ByteGroupBox = new QGroupBox(tr("Content 1 Byte"));
@@ -257,7 +236,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(requestContent_1_ByteBtn, SIGNAL(clicked(bool)), this, SLOT(showRequestContent_1_Byte()));
 
-
     // Request Mask 1
     requestMask_1_ByteGroupBox = new QGroupBox(tr("Mask 1 Byte"));
     requestMask_1_ByteGroupBox->setAutoFillBackground(true);
@@ -287,7 +265,6 @@ MainWindow::MainWindow(QWidget *parent)
     requestMask_1_ByteGroupBox->setLayout(requestMask_1_ByteHBoxLayout);
 
     connect(requestMask_1_ByteBtn, SIGNAL(clicked(bool)), this, SLOT(showRequestMask_1_Byte()));
-
 
     // Request Content 2
     requestContent_2_ByteGroupBox = new QGroupBox(tr("Content 2 Byte"));
@@ -319,7 +296,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(requestContent_2_ByteBtn, SIGNAL(clicked(bool)), this, SLOT(showRequestContent_2_Byte()));
 
-
     // Request Mask 2
     requestMask_2_ByteGroupBox = new QGroupBox(tr("Mask 2 Byte"));
     requestMask_2_ByteGroupBox->setAutoFillBackground(true);
@@ -350,8 +326,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(requestMask_2_ByteBtn, SIGNAL(clicked(bool)), this, SLOT(showRequestMask_2_Byte()));
 
-
-
     // Offer Layout
     offerLayout = new QGridLayout;
     offerLayout->addWidget(offerContent_1_ByteGroupBox, 0, 0);
@@ -368,7 +342,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Spatial Layout
     spatialLayout = new QGridLayout;
-
 
     // Spatial 1
     refreshSpatial_1_Btn = new QPushButton(tr("Refresh 1"), this);
@@ -392,8 +365,6 @@ MainWindow::MainWindow(QWidget *parent)
     spatialLayout->addWidget(clearSpatial_2_Btn, 1, 1);
 
     connect(clearSpatial_2_Btn, SIGNAL(clicked(bool)), this, SLOT(clearSpatial_2()));
-
-
 
     // Spatial All
     refreshSpatialAll_Btn = new QPushButton(tr("Refresh All"), this);
@@ -474,8 +445,6 @@ MainWindow::MainWindow(QWidget *parent)
 
             tableWidgetAll->setCellWidget(j, i, new QTextEdit);
 
-//            ((QTextEdit*) tableWidgetAll->cellWidget(j, i))->setText(QString("%1").arg(n));
-//            ((QTextEdit*) tableWidgetAll->cellWidget(j, i))->setFont(QFont("Times", 8, QFont::Bold));
             ((QTextEdit*) tableWidgetAll->cellWidget(j, i))->setEnabled(false);
             ((QTextEdit*) tableWidgetAll->cellWidget(j, i))->setPalette(QPalette(Qt::white));
 
@@ -485,15 +454,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     spatialTableLayout->addWidget(tableWidgetAll, 0, Qt::AlignHCenter);
 
-
-
     spatialLayout->addLayout(spatialTableLayout, 2, 0, 2, 0);
-
-
 
     // Interaction Layout
     interactionLayout = new QGridLayout;
-
 
     // Main Layout
     mainLayout = new QVBoxLayout;
@@ -559,11 +523,6 @@ void MainWindow::clearTestMatrix() {
 void MainWindow::drawTestMatrix() {
     qDebug() << Q_FUNC_INFO;
 
-//    qDebug().noquote() << "min_x: " << min_x;
-//    qDebug().noquote() << "min_y: " << min_y;
-//    qDebug().noquote() << "max_x: " << max_x;
-//    qDebug().noquote() << "max_y: " << max_y;
-
     clearTestMatrix();
 
     for(int x=min_x; x<=max_x; x++) {
@@ -579,14 +538,10 @@ void MainWindow::startSpatialTest() {
 
     run_id = 0;
     stop = false;
-    int delay=100;
-    int rand = qrand();
 
-    for(int i=0; i<30240; i++) {
+    resetSpatialTest();
 
-//        for(int d=0; d<=delay;d++) {
-//            rand = qrand();
-//        }
+    while(true) {
 
         run_id++;
         nextSpatialTest();
@@ -601,11 +556,6 @@ void MainWindow::startSpatialTest() {
 
 void MainWindow::nextSpatialTest(){
     qDebug() << Q_FUNC_INFO;
-
-//    qDebug().noquote() << "min_x: " << min_x;
-//    qDebug().noquote() << "min_y: " << min_y;
-//    qDebug().noquote() << "max_x: " << max_x;
-//    qDebug().noquote() << "max_y: " << max_y;
 
     if(max_x < matrix_max_x) {
         max_x++;
@@ -628,7 +578,6 @@ void MainWindow::nextSpatialTest(){
     else {
         stop = true;
     }
-
 
     drawTestMatrix();
 }
