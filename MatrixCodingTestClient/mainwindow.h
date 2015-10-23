@@ -30,7 +30,7 @@ public:
     int matrix_min_x, matrix_min_y, matrix_max_x, matrix_max_y;
     int min_x, min_y, max_x, max_y;
 
-    bool stop;
+    bool stop, repaint;
     int run_id;
 
     QWidget *guiWidget;
@@ -70,9 +70,27 @@ public:
     QGroupBox *spatialTestGBox;
     QGridLayout *spatiaTestGridLayout;
 
+    // SpatialTest Table
     QHBoxLayout *spatialTestTableLayout;
     QTableWidget *tableTestWidget;
 
+    // SpatialTest Config
+    QGroupBox *spatialTestConfigGBox;
+    QGridLayout *spatialTestConfigLayout;
+
+    QLabel *sideLengthConfigLabel;
+    QSpinBox *sideLengthConfigSpinBox;
+
+    QLabel *repaintConfigLabel;
+    QCheckBox *repaintConfigCheckBox;
+
+    QLabel *permutationFiguresConfigLabel;
+    QComboBox *permutationFiguresConfigComboBox;
+
+    QLabel *testResultLabel;
+    QLineEdit *testResultLineEdit;
+
+    // SpatialTest Buttons
     QPushButton *startSpatialTest_Btn;
     QPushButton *nextSpatialTest_Btn;
     QPushButton *resetSpatialTest_Btn;
@@ -217,6 +235,9 @@ public slots:
     void nextSpatialTest();
     void resetSpatialTest();
 
+    void changeSideLength(int);
+    void setRepainted(int);
+
     void showOfferContent_1_Byte();
     void showOfferMask_1_Byte();
     void showRequestContent_1_Byte();
@@ -260,8 +281,6 @@ private:
     void clearOfferMask_2();
     void clearRequestContent_2();
     void clearRequestMask_2();
-
-    void copyColor(QTableWidget* targetTable);
 };
 
 #endif // MAINWINDOW_H
