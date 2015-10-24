@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     requestContentPalette.setColor(QPalette::Window, requestContentColor);
     requestMaskPalette.setColor(QPalette::Window, requestMaskColor);
 
-    // SpatialTest
+    // SpatialTests
     spatialTestGBox = new QGroupBox(tr("Test Run Matrix"));
     spatialTestGBox->setAutoFillBackground(true);
     spatialTestGBox->setPalette(offerMaskPalette);
@@ -39,11 +39,11 @@ MainWindow::MainWindow(QWidget *parent)
     spatialTestConfigGBox = new QGroupBox(tr("Test Matrix Configuration"));
 
 
-    sideLengthConfigLabel = new QLabel(tr("Side Length"));
+    sideLengthConfigLabel = new QLabel(tr("Side Length: "));
     sideLengthConfigSpinBox = new QSpinBox();
     sideLengthConfigSpinBox->setMinimum(2);
     sideLengthConfigSpinBox->setMaximum(32);
-    sideLengthConfigSpinBox->setValue(4);
+    sideLengthConfigSpinBox->setValue(16);
     sideLengthConfigLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     sideLengthConfigLabel->setBuddy(sideLengthConfigSpinBox);
 
@@ -57,10 +57,11 @@ MainWindow::MainWindow(QWidget *parent)
     matrix_max_y = matrixSideCount-1;
 
     min_x = min_y = max_x =  max_y = 0;
+    tmp_matrix_min_x = tmp_matrix_min_y = tmp_matrix_max_x = tmp_matrix_max_y = -1;
 
     connect(sideLengthConfigSpinBox, SIGNAL(valueChanged(int)), this, SLOT(changeSideLength(int)));
 
-    repaintConfigLabel = new QLabel(tr("Repaint"));
+    repaintConfigLabel = new QLabel(tr("Repaint: "));
     repaintConfigCheckBox = new QCheckBox();
     repaintConfigLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     repaintConfigLabel->setBuddy(repaintConfigCheckBox);
@@ -69,17 +70,23 @@ MainWindow::MainWindow(QWidget *parent)
 
     repaint = repaintConfigCheckBox->isChecked();
 
-    permutationFiguresConfigLabel = new QLabel(tr("Possible Permutation Figures"));
+    permutationFiguresConfigLabel = new QLabel(tr("Possible Permutation Figures: "));
     permutationFiguresConfigComboBox = new QComboBox();
     permutationFiguresConfigComboBox->addItem(tr("All possible figures"));
     permutationFiguresConfigComboBox->addItem(tr("Only squares"));
     permutationFiguresConfigLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     permutationFiguresConfigLabel->setBuddy(permutationFiguresConfigComboBox);
 
-    testResultLabel = new QLabel(tr("Test Result"));
-    testResultLineEdit = new QLineEdit();
+    connect(permutationFiguresConfigComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(resetSpatialFullTest(int)));
+
+    testResultLabel = new QLabel(tr("Test Result: "));
+    testResultTextEdit = new QPlainTextEdit();
+    testResultTextEdit->setAutoFillBackground(true);
+    testResultTextEdit->setReadOnly(true);
+    testResultTextEdit->setLineWrapMode(QPlainTextEdit::WidgetWidth);
+    testResultTextEdit->setLineWidth(160);
     testResultLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    testResultLabel->setBuddy(testResultLineEdit);
+    testResultLabel->setBuddy(testResultTextEdit);
 
 
     spatialTestConfigLayout = new QGridLayout;
@@ -90,7 +97,7 @@ MainWindow::MainWindow(QWidget *parent)
     spatialTestConfigLayout->addWidget(permutationFiguresConfigLabel,    2, 0);
     spatialTestConfigLayout->addWidget(permutationFiguresConfigComboBox, 2, 1);
     spatialTestConfigLayout->addWidget(testResultLabel,                   3, 0);
-    spatialTestConfigLayout->addWidget(testResultLineEdit,                3, 1);
+    spatialTestConfigLayout->addWidget(testResultTextEdit,                3, 1);
 
     spatialTestConfigGBox->setLayout(spatialTestConfigLayout);
 
@@ -130,21 +137,36 @@ MainWindow::MainWindow(QWidget *parent)
     spatialTestTableLayout->addStretch();
 
 
-    startSpatialTest_Btn = new QPushButton(tr("Start Test"), this);
-    nextSpatialTest_Btn = new QPushButton(tr("Next Test"), this);
-    resetSpatialTest_Btn = new QPushButton(tr("Reset Test"), this);
+    // Spatial Full Test Buttons
+    startSpatialFullTest_Btn = new QPushButton(tr("Start Full Test"), this);
+    resetSpatialFullTest_Btn = new QPushButton(tr("Reset Full Test"), this);
+    nextSpatialFullTest_Btn = new QPushButton(tr("Next Single Test"), this);
 
+    connect(startSpatialFullTest_Btn, SIGNAL(clicked(bool)), this, SLOT(startSpatialFullTest()));
+    connect(resetSpatialFullTest_Btn, SIGNAL(clicked(bool)), this, SLOT(resetSpatialFullTest()));
+    connect(nextSpatialFullTest_Btn, SIGNAL(clicked(bool)), this, SLOT(nextSpatialSingleTest()));
+
+    // Spatial Single Test Buttons
+    startSpatialSingleTest_Btn = new QPushButton(tr("Start Single Test"), this);
+    nextSpatialSingleTest_Btn = new QPushButton(tr("Next Single Test Step"), this);
+    resetSpatialSingleTest_Btn = new QPushButton(tr("Reset Single Test"), this);
+
+
+    connect(startSpatialSingleTest_Btn, SIGNAL(clicked(bool)), this, SLOT(startSpatialSingleTest()));
+    connect(nextSpatialSingleTest_Btn, SIGNAL(clicked(bool)), this, SLOT(nextSpatialSingleTestStep()));
+    connect(resetSpatialSingleTest_Btn, SIGNAL(clicked(bool)), this, SLOT(resetSpatialSingleTest()));
+
+    // Spatial Test Buttons Layout
     spatiaTestGridLayout = new QGridLayout;
-    spatiaTestGridLayout->addLayout(spatialTestTableLayout, 0, 0, 1, 3);
-    spatiaTestGridLayout->addWidget(startSpatialTest_Btn, 2, 0);
-    spatiaTestGridLayout->addWidget(nextSpatialTest_Btn, 2, 1);
-    spatiaTestGridLayout->addWidget(resetSpatialTest_Btn, 2, 2);
+    spatiaTestGridLayout->addLayout(spatialTestTableLayout,     0, 0, 1, 5);
+    spatiaTestGridLayout->addWidget(startSpatialFullTest_Btn,   1, 0);
+    spatiaTestGridLayout->addWidget(resetSpatialFullTest_Btn,   1, 1);
+    spatiaTestGridLayout->addWidget(nextSpatialFullTest_Btn,    1, 2);
+    spatiaTestGridLayout->addWidget(startSpatialSingleTest_Btn, 2, 0);
+    spatiaTestGridLayout->addWidget(nextSpatialSingleTest_Btn,  2, 1);
+    spatiaTestGridLayout->addWidget(resetSpatialSingleTest_Btn, 2, 2);
 
     spatialTestGBox->setLayout(spatiaTestGridLayout);
-
-    connect(startSpatialTest_Btn, SIGNAL(clicked(bool)), this, SLOT(startSpatialTest()));
-    connect(nextSpatialTest_Btn, SIGNAL(clicked(bool)), this, SLOT(nextSpatialTest()));
-    connect(resetSpatialTest_Btn, SIGNAL(clicked(bool)), this, SLOT(resetSpatialTest()));
 
     // Offer Content 1
     offerContent_1_ByteGroupBox = new QGroupBox(tr("Content 1 Byte"));
@@ -610,6 +632,8 @@ void MainWindow::changeSideLength(int sideLength) {
     matrix_max_y = matrixSideCount-1;
 
     min_x = min_y = max_x =  max_y = 0;
+
+    tmp_matrix_min_x = tmp_matrix_min_y = tmp_matrix_max_x = tmp_matrix_max_y = -1;
 }
 
 void MainWindow::setRepainted(int checked) {
@@ -645,97 +669,238 @@ void MainWindow::drawTestMatrix() {
     }
 }
 
-void MainWindow::startSpatialTest() {
+void MainWindow::startSpatialFullTest() {
     qDebug() << Q_FUNC_INFO;
 
-    run_id = 0;
-    stop = false;
+    resetSpatialFullTest();
 
-    resetSpatialTest();
+    testResultTextEdit->setPlainText(QString(tr("Side Length\t: %1").arg(sideLengthConfigSpinBox->value())));
+    testResultTextEdit->appendPlainText(QString(tr("Repaint\t\t: %1").arg(repaintConfigCheckBox->isChecked()?"Yes":"No")));
+    testResultTextEdit->appendPlainText(QString(tr("Permutation Figure\t: %1").arg(permutationFiguresConfigComboBox->currentText())));
 
     while(true) {
 
         run_id++;
-        nextSpatialTest();
+        nextSpatialSingleTest();
 
         if(stop) {
             qDebug().noquote() << "STOPPED at run_id " << run_id;
-            testResultLineEdit->setText(QString(tr("Permutations: %1").arg(run_id)));
             return;
         }
     }
 }
 
 
-void MainWindow::nextSpatialTest(){
-    qDebug() << Q_FUNC_INFO;
 
-    if(permutationFiguresConfigComboBox->currentText() == "All possible figures") {
-
-        if(max_x < matrix_max_x) {
-            max_x++;
-        }
-        else if (max_y < matrix_max_y) {
-            max_x = min_x;
-            max_y++;
-        }
-        else if (min_x < matrix_max_x) {
-            min_x++;
-            max_x = min_x;
-            max_y = min_y;
-        }
-        else if (min_y < matrix_max_y) {
-            min_y++;
-            min_x = matrix_min_x;
-            max_x = min_x;
-            max_y = min_y;
-        }
-        else {
-            stop = true;
-        }
-
-        drawTestMatrix();
-    }
-
-
-    if(permutationFiguresConfigComboBox->currentText() == "Only squares") {
-
-        if(max_x < matrix_max_x && max_y < matrix_max_y) {
-            max_x++;
-            max_y++;
-        }
-        else if (min_x < matrix_max_x) {
-            min_x++;
-            max_x = min_x;
-            max_y = min_y;
-        }
-        else if (min_x < matrix_max_x) {
-            min_x++;
-            max_x = min_x;
-            max_y = min_y;
-        }
-        else if (min_y < matrix_max_y) {
-            min_y++;
-            min_x = matrix_min_x;
-            max_x = min_x;
-            max_y = min_y;
-        }
-        else {
-            stop = true;
-        }
-
-        drawTestMatrix();
-
-    }
-}
-
-void MainWindow::resetSpatialTest(){
+void MainWindow::resetSpatialFullTest(){
     qDebug() << Q_FUNC_INFO;
 
     min_x = min_y = max_x =  max_y = 0;
+    run_id = 0;
+    stop = false;
+
+    testResultTextEdit->clear();
+    tableTestWidget->repaint();
 
     drawTestMatrix();
+
+    tmp_matrix_min_x = tmp_matrix_min_y = tmp_matrix_max_x = tmp_matrix_max_y = -1;
 }
+
+void MainWindow::resetSpatialFullTest(int index) {
+    qDebug() << Q_FUNC_INFO;
+
+    qDebug() << index;
+
+
+    resetSpatialFullTest();
+}
+
+
+void MainWindow::nextSpatialSingleTest() {
+    qDebug() << Q_FUNC_INFO;
+
+    if(tmp_matrix_min_x == -1) {
+
+        tmp_matrix_min_x = matrix_min_x;
+        tmp_matrix_min_y = matrix_min_y;
+        tmp_matrix_max_x = matrix_max_x;
+        tmp_matrix_max_y = matrix_max_y;
+
+        min_x = matrix_min_x;
+        min_y = matrix_min_y;
+        max_x = matrix_max_x;
+        max_y = matrix_max_y;
+
+        qDebug() << "min_x = matrix_min_x: " << min_x;
+        qDebug() << "min_y = matrix_min_y: " << min_y;
+        qDebug() << "max_x = matrix_max_x: " << max_x;
+        qDebug() << "max_y = matrix_max_y: " << max_y;
+
+        drawTestMatrix();
+
+    }
+    else {
+        min_x = matrix_min_x;
+        min_y = matrix_min_y;
+        max_x = matrix_max_x;
+        max_y = matrix_max_y;
+    }
+
+    qDebug() << "min_x = matrix_min_x: " << min_x;
+    qDebug() << "min_y = matrix_min_y: " << min_y;
+    qDebug() << "max_x = matrix_max_x: " << max_x;
+    qDebug() << "max_y = matrix_max_y: " << max_y;
+
+    drawTestMatrix();
+
+
+    min_x = matrix_min_x;
+    min_y = matrix_min_y;
+    max_x /= 2;
+    max_y /= 2;
+
+    qDebug() << "min_x: " << min_x;
+    qDebug() << "min_y: " << min_y;
+    qDebug() << "max_x: " << max_x;
+    qDebug() << "max_y: " << max_y;
+    qDebug() << "max_x - min_x" << max_x - min_x;
+
+    drawTestMatrix();
+
+    min_x = max_x +1;
+    max_x = matrix_max_x;
+
+    drawTestMatrix();
+
+    min_x = matrix_min_x;
+    min_y = max_y + 1;
+    max_x /= 2;
+    max_y = matrix_max_y;
+
+
+    min_x = max_x +1;
+    max_x = matrix_max_x;
+
+    drawTestMatrix();
+
+
+
+//    while ( max_x - min_x >= 0 ) {
+//        drawTestMatrix();
+
+//        min_x = matrix_min_x;
+//        min_y = matrix_min_y;
+//        max_x /= 2;
+//        max_y /= 2;
+//    }
+
+//    if(permutationFiguresConfigComboBox->currentText() == "All possible figures") {
+
+//        if(max_x < matrix_max_x) {
+//            max_x++;
+//        }
+//        else if (max_y < matrix_max_y) {
+//            max_x = min_x;
+//            max_y++;
+//        }
+//        else if (min_x < matrix_max_x) {
+//            min_x++;
+//            max_x = min_x;
+//            max_y = min_y;
+//        }
+//        else if (min_y < matrix_max_y) {
+//            min_y++;
+//            min_x = matrix_min_x;
+//            max_x = min_x;
+//            max_y = min_y;
+//        }
+//        else {
+//            stop = true;
+//        }
+
+//        testResultTextEdit->clear();
+//        testResultTextEdit->setPlainText(QString(tr("Side Length\t: %1").arg(sideLengthConfigSpinBox->value())));
+//        testResultTextEdit->appendPlainText(QString(tr("Repaint\t\t: %1").arg(repaintConfigCheckBox->isChecked()?"Yes":"No")));
+//        testResultTextEdit->appendPlainText(QString(tr("Permutation Figure\t: %1").arg(permutationFiguresConfigComboBox->currentText())));
+
+//        run_id++;
+//        testResultTextEdit->appendPlainText(QString(tr("Tested Permutations\t: %1").arg(run_id)));
+
+//        drawTestMatrix();
+
+
+
+//    }
+
+//    if(permutationFiguresConfigComboBox->currentText() == "Only squares") {
+
+//        if(max_x < matrix_max_x && max_y < matrix_max_y) {
+//            max_x++;
+//            max_y++;
+//        }
+//        else if (min_x < matrix_max_x) {
+//            min_x++;
+//            max_x = min_x;
+//            max_y = min_y;
+//        }
+//        else if (min_x < matrix_max_x) {
+//            min_x++;
+//            max_x = min_x;
+//            max_y = min_y;
+//        }
+//        else if (min_y < matrix_max_y) {
+//            min_y++;
+//            min_x = matrix_min_x;
+//            max_x = min_x;
+//            max_y = min_y;
+//        }
+//        else {
+//            stop = true;
+//        }
+
+//        testResultTextEdit->clear();
+//        testResultTextEdit->setPlainText(QString(tr("Side Length\t: %1").arg(sideLengthConfigSpinBox->value())));
+//        testResultTextEdit->appendPlainText(QString(tr("Repaint\t\t: %1").arg(repaintConfigCheckBox->isChecked()?"Yes":"No")));
+//        testResultTextEdit->appendPlainText(QString(tr("Permutation Figure\t: %1").arg(permutationFiguresConfigComboBox->currentText())));
+
+//        run_id++;
+//        testResultTextEdit->appendPlainText(QString(tr("Tested Permutations\t: %1").arg(run_id)));
+
+//        drawTestMatrix();
+
+//    }
+}
+
+
+
+void MainWindow::startSpatialSingleTest() {
+    qDebug() << Q_FUNC_INFO;
+
+}
+
+void MainWindow::nextSpatialSingleTestStep() {
+    qDebug() << Q_FUNC_INFO;
+
+    int mask;
+
+    for(int bit=0; bit <=8; bit++) {
+        mask = (int) qPow(2, bit);
+        qDebug() << "mask: " << mask;
+
+        for(int i=0; i<=255; i+=mask) {
+            qDebug() << i << " += " << mask;
+
+        }
+    }
+
+}
+
+void MainWindow::resetSpatialSingleTest() {
+    qDebug() << Q_FUNC_INFO;
+
+}
+
 
 /*
  *

@@ -12,6 +12,7 @@
 #include <QLabel>
 #include <QSpinBox>
 #include <QLineEdit>
+#include <QPlainTextEdit>
 #include <QDateTimeEdit>
 #include <QTextEdit>
 #include <QScrollArea>
@@ -28,7 +29,9 @@ public:
     int matrixSideCount;
 
     int matrix_min_x, matrix_min_y, matrix_max_x, matrix_max_y;
-    int min_x, min_y, max_x, max_y;
+    int min_x, min_y, max_x, max_y;    
+
+    int tmp_matrix_min_x, tmp_matrix_min_y, tmp_matrix_max_x, tmp_matrix_max_y;
 
     bool stop, repaint;
     int run_id;
@@ -88,12 +91,18 @@ public:
     QComboBox *permutationFiguresConfigComboBox;
 
     QLabel *testResultLabel;
-    QLineEdit *testResultLineEdit;
+    QPlainTextEdit *testResultTextEdit;
 
-    // SpatialTest Buttons
-    QPushButton *startSpatialTest_Btn;
-    QPushButton *nextSpatialTest_Btn;
-    QPushButton *resetSpatialTest_Btn;
+    // FullTest Buttons
+    QPushButton *startSpatialFullTest_Btn;
+    QPushButton *nextSpatialFullTest_Btn;
+    QPushButton *resetSpatialFullTest_Btn;
+
+
+    // SpatialSingleTest Buttons
+    QPushButton *startSpatialSingleTest_Btn;
+    QPushButton *nextSpatialSingleTest_Btn;
+    QPushButton *resetSpatialSingleTest_Btn;
 
     // Offer
     QGroupBox *offerGBox;
@@ -231,9 +240,14 @@ public:
 
 public slots:
 
-    void startSpatialTest();
-    void nextSpatialTest();
-    void resetSpatialTest();
+    void startSpatialFullTest();
+    void resetSpatialFullTest();
+    void resetSpatialFullTest(int);
+    void nextSpatialSingleTest();
+
+    void startSpatialSingleTest();
+    void nextSpatialSingleTestStep();
+    void resetSpatialSingleTest();
 
     void changeSideLength(int);
     void setRepainted(int);
