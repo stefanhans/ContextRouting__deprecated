@@ -2,6 +2,7 @@
 
 #include <QDebug>
 #include <QtMath>
+#include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -30,20 +31,19 @@ MainWindow::MainWindow(QWidget *parent)
 
     // SpatialTests
     spatialTestGBox = new QGroupBox(tr("Test Run Matrix"));
-    spatialTestGBox->setAutoFillBackground(true);
-    spatialTestGBox->setPalette(offerMaskPalette);
+//    spatialTestGBox->setAutoFillBackground(true);
+//    spatialTestGBox->setPalette(QPalette(Qt::blue));
 
     spatialTestTableLayout =  new QHBoxLayout;
 
 
     spatialTestConfigGBox = new QGroupBox(tr("Test Matrix Configuration"));
 
-
     sideLengthConfigLabel = new QLabel(tr("Side Length: "));
     sideLengthConfigSpinBox = new QSpinBox();
     sideLengthConfigSpinBox->setMinimum(2);
     sideLengthConfigSpinBox->setMaximum(32);
-    sideLengthConfigSpinBox->setValue(16);
+    sideLengthConfigSpinBox->setValue(4);
     sideLengthConfigLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     sideLengthConfigLabel->setBuddy(sideLengthConfigSpinBox);
 
@@ -58,6 +58,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     min_x = min_y = max_x =  max_y = 0;
     tmp_matrix_min_x = tmp_matrix_min_y = tmp_matrix_max_x = tmp_matrix_max_y = -1;
+
+    run_id = 1;
 
     connect(sideLengthConfigSpinBox, SIGNAL(valueChanged(int)), this, SLOT(changeSideLength(int)));
 
@@ -74,6 +76,7 @@ MainWindow::MainWindow(QWidget *parent)
     permutationFiguresConfigComboBox = new QComboBox();
     permutationFiguresConfigComboBox->addItem(tr("All possible figures"));
     permutationFiguresConfigComboBox->addItem(tr("Only squares"));
+    permutationFiguresConfigComboBox->addItem(tr("Only distinct squares (recursive)"));
     permutationFiguresConfigLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     permutationFiguresConfigLabel->setBuddy(permutationFiguresConfigComboBox);
 
@@ -106,11 +109,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     // TestTable
     tableTestWidget = new QTableWidget(matrixSideCount, matrixSideCount, this);
+    tableTestWidgetFixedSide = 500;
+    tableTestWidgetFixedMargin = 28;
 
-    int cellSide = 510/matrixSideCount;
-    int fixedSide = matrixSideCount*cellSide+cellSide;
-    tableTestWidget->setFixedHeight(fixedSide);
-    tableTestWidget->setFixedWidth(fixedSide);
+    cellSide = tableTestWidgetFixedSide/matrixSideCount;
+    tableTestWidget->setFixedHeight(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
+    tableTestWidget->setFixedWidth(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
 
     for(int i=0; i<matrixSideCount; i++) {
         tableTestWidget->setColumnWidth(i, cellSide);
@@ -167,6 +171,184 @@ MainWindow::MainWindow(QWidget *parent)
     spatiaTestGridLayout->addWidget(resetSpatialSingleTest_Btn, 2, 2);
 
     spatialTestGBox->setLayout(spatiaTestGridLayout);
+
+
+
+
+
+
+
+    // Test Coding Matrices Header
+    testCodingMatricesHeaderGroupBox = new QGroupBox(tr("..."));
+//    testCodingMatricesHeaderGroupBox->setAutoFillBackground(true);
+//    testCodingMatricesHeaderGroupBox->setPalette(QPalette(Qt::lightGray));
+
+    testCodingMatricesHeaderLayout = new QHBoxLayout;
+    testCodingMatricesHeaderGroupBox->setLayout(testCodingMatricesHeaderLayout);
+
+    // Test Coding Matrices Tables
+    testCodingMatricesTablesGroupBox = new QGroupBox(tr("Tables"));
+//    testCodingMatricesTablesGroupBox->setAutoFillBackground(true);
+//    testCodingMatricesTablesGroupBox->setPalette(QPalette(Qt::lightGray));
+
+    testCodingMatricesTablesLayout = new QGridLayout;
+    testCodingMatricesTablesGroupBox->setLayout(testCodingMatricesTablesLayout);
+
+
+    // Test Coding Matrices
+    testCodingMatricesGroupBox = new QGroupBox(tr("Test Coding Matrices"));
+
+    testCodingMatricesLayout = new QVBoxLayout;
+    testCodingMatricesGroupBox->setLayout(testCodingMatricesLayout);
+
+    testCodingMatricesLayout->addWidget(testCodingMatricesHeaderGroupBox);
+    testCodingMatricesLayout->addWidget(testCodingMatricesTablesGroupBox);
+
+
+    // Table_1
+    testCodingMatricesTableGroupBox_1 = new QGroupBox(tr("no coding matrix loaded"));
+    testCodingMatricesTableWidget_1 = new QTableWidget(matrixSideCount, matrixSideCount, this);
+
+    cellSide = tableTestWidgetFixedSide/matrixSideCount;
+    testCodingMatricesTableWidget_1->setFixedHeight(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
+    testCodingMatricesTableWidget_1->setFixedWidth(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
+
+    for(int i=0; i<matrixSideCount; i++) {
+        testCodingMatricesTableWidget_1->setColumnWidth(i, cellSide);
+        testCodingMatricesTableWidget_1->setRowHeight(i, cellSide);
+
+        for(int j=0; j<matrixSideCount; j++) {
+
+            testCodingMatricesTableWidget_1->setCellWidget(i, j, new QTextEdit);
+
+            ((QTextEdit*) testCodingMatricesTableWidget_1->cellWidget(i, j))->setEnabled(false);
+            ((QTextEdit*) testCodingMatricesTableWidget_1->cellWidget(i, j))->setPalette(QPalette(Qt::white));
+
+
+        }
+    }
+
+    testCodingMatricesFile_Btn_1 = new QPushButton(tr("Load Matrix"));
+    testCodingMatricesFile_Btn_1->setFixedWidth(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
+    connect(testCodingMatricesFile_Btn_1, SIGNAL(clicked(bool)), this, SLOT(testCodingMatricesFileLoad_1()));
+
+    testCodingMatricesTableLayout_1 = new QVBoxLayout;
+    testCodingMatricesTableGroupBox_1->setLayout(testCodingMatricesTableLayout_1);
+
+    testCodingMatricesTableLayout_1->addWidget(testCodingMatricesTableWidget_1);
+    testCodingMatricesTableLayout_1->addWidget(testCodingMatricesFile_Btn_1);
+
+
+    // Table_2
+    testCodingMatricesTableGroupBox_2 = new QGroupBox(tr("no coding matrix loaded"));
+    testCodingMatricesTableWidget_2 = new QTableWidget(matrixSideCount, matrixSideCount, this);
+
+    cellSide = tableTestWidgetFixedSide/matrixSideCount;
+    testCodingMatricesTableWidget_2->setFixedHeight(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
+    testCodingMatricesTableWidget_2->setFixedWidth(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
+
+    for(int i=0; i<matrixSideCount; i++) {
+        testCodingMatricesTableWidget_2->setColumnWidth(i, cellSide);
+        testCodingMatricesTableWidget_2->setRowHeight(i, cellSide);
+
+        for(int j=0; j<matrixSideCount; j++) {
+
+            testCodingMatricesTableWidget_2->setCellWidget(i, j, new QTextEdit);
+
+            ((QTextEdit*) testCodingMatricesTableWidget_2->cellWidget(i, j))->setEnabled(false);
+            ((QTextEdit*) testCodingMatricesTableWidget_2->cellWidget(i, j))->setPalette(QPalette(Qt::white));
+
+        }
+    }
+
+    testCodingMatricesFile_Btn_2 = new QPushButton(tr("Load Matrix"));
+    testCodingMatricesFile_Btn_2->setFixedWidth(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
+    connect(testCodingMatricesFile_Btn_2, SIGNAL(clicked(bool)), this, SLOT(testCodingMatricesFileLoad_2()));
+
+    testCodingMatricesTableLayout_2 = new QVBoxLayout;
+    testCodingMatricesTableGroupBox_2->setLayout(testCodingMatricesTableLayout_2);
+
+    testCodingMatricesTableLayout_2->addWidget(testCodingMatricesTableWidget_2);
+    testCodingMatricesTableLayout_2->addWidget(testCodingMatricesFile_Btn_2);
+
+
+    // Table_3
+    testCodingMatricesTableGroupBox_3 = new QGroupBox(tr("no coding matrix loaded"));
+    testCodingMatricesTableWidget_3 = new QTableWidget(matrixSideCount, matrixSideCount, this);
+
+    cellSide = tableTestWidgetFixedSide/matrixSideCount;
+    testCodingMatricesTableWidget_3->setFixedHeight(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
+    testCodingMatricesTableWidget_3->setFixedWidth(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
+
+    for(int i=0; i<matrixSideCount; i++) {
+        testCodingMatricesTableWidget_3->setColumnWidth(i, cellSide);
+        testCodingMatricesTableWidget_3->setRowHeight(i, cellSide);
+
+        for(int j=0; j<matrixSideCount; j++) {
+
+            testCodingMatricesTableWidget_3->setCellWidget(i, j, new QTextEdit);
+
+            ((QTextEdit*) testCodingMatricesTableWidget_3->cellWidget(i, j))->setEnabled(false);
+            ((QTextEdit*) testCodingMatricesTableWidget_3->cellWidget(i, j))->setPalette(QPalette(Qt::white));
+
+        }
+    }
+
+    testCodingMatricesFile_Btn_3 = new QPushButton(tr("Load Matrix"));
+    testCodingMatricesFile_Btn_3->setFixedWidth(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
+    connect(testCodingMatricesFile_Btn_3, SIGNAL(clicked(bool)), this, SLOT(testCodingMatricesFileLoad_3()));
+
+    testCodingMatricesTableLayout_3 = new QVBoxLayout;
+    testCodingMatricesTableGroupBox_3->setLayout(testCodingMatricesTableLayout_3);
+
+    testCodingMatricesTableLayout_3->addWidget(testCodingMatricesTableWidget_3);
+    testCodingMatricesTableLayout_3->addWidget(testCodingMatricesFile_Btn_3);
+
+
+    // Table_4
+    testCodingMatricesTableGroupBox_4 = new QGroupBox(tr("no coding matrix loaded"));
+    testCodingMatricesTableWidget_4 = new QTableWidget(matrixSideCount, matrixSideCount, this);
+
+    cellSide = tableTestWidgetFixedSide/matrixSideCount;
+    testCodingMatricesTableWidget_4->setFixedHeight(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
+    testCodingMatricesTableWidget_4->setFixedWidth(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
+
+    for(int i=0; i<matrixSideCount; i++) {
+        testCodingMatricesTableWidget_4->setColumnWidth(i, cellSide);
+        testCodingMatricesTableWidget_4->setRowHeight(i, cellSide);
+
+        for(int j=0; j<matrixSideCount; j++) {
+
+            testCodingMatricesTableWidget_4->setCellWidget(i, j, new QTextEdit);
+
+            ((QTextEdit*) testCodingMatricesTableWidget_4->cellWidget(i, j))->setEnabled(false);
+            ((QTextEdit*) testCodingMatricesTableWidget_4->cellWidget(i, j))->setPalette(QPalette(Qt::white));
+
+        }
+    }
+
+    testCodingMatricesFile_Btn_4 = new QPushButton(tr("Load Matrix"));
+    testCodingMatricesFile_Btn_4->setFixedWidth(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
+    connect(testCodingMatricesFile_Btn_4, SIGNAL(clicked(bool)), this, SLOT(testCodingMatricesFileLoad_4()));
+
+    testCodingMatricesTableLayout_4 = new QVBoxLayout;
+    testCodingMatricesTableGroupBox_4->setLayout(testCodingMatricesTableLayout_4);
+
+    testCodingMatricesTableLayout_4->addWidget(testCodingMatricesTableWidget_4);
+    testCodingMatricesTableLayout_4->addWidget(testCodingMatricesFile_Btn_4);
+
+
+    testCodingMatricesTablesLayout->addWidget(testCodingMatricesTableGroupBox_1, 0, 0);
+    testCodingMatricesTablesLayout->addWidget(testCodingMatricesTableGroupBox_2, 0, 1);
+    testCodingMatricesTablesLayout->addWidget(testCodingMatricesTableGroupBox_3, 1, 0);
+    testCodingMatricesTablesLayout->addWidget(testCodingMatricesTableGroupBox_4, 1, 1);
+
+
+
+
+
+
+
 
     // Offer Content 1
     offerContent_1_ByteGroupBox = new QGroupBox(tr("Content 1 Byte"));
@@ -465,8 +647,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     tableWidget_1 = new QTableWidget(matrixSideCount, matrixSideCount, this);
 
-    tableWidget_1->setFixedHeight(fixedSide);
-    tableWidget_1->setFixedWidth(fixedSide);
+    tableWidget_1->setFixedHeight(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
+    tableWidget_1->setFixedWidth(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
 
     int n=0;
     for(int i=0; i<matrixSideCount; i++) {
@@ -491,8 +673,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     tableWidget_2 = new QTableWidget(matrixSideCount, matrixSideCount, this);
 
-    tableWidget_2->setFixedHeight(fixedSide);
-    tableWidget_2->setFixedWidth(fixedSide);
+    tableWidget_2->setFixedHeight(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
+    tableWidget_2->setFixedWidth(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
 
     n=0;
     for(int i=0; i<matrixSideCount; i++) {
@@ -516,8 +698,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     tableWidgetAll = new QTableWidget(matrixSideCount, matrixSideCount, this);
-    tableWidgetAll->setFixedHeight(fixedSide);
-    tableWidgetAll->setFixedWidth(fixedSide);
+    tableWidgetAll->setFixedHeight(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
+    tableWidgetAll->setFixedWidth(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
 
     n=0;
     for(int i=0; i<matrixSideCount; i++) {
@@ -546,9 +728,8 @@ MainWindow::MainWindow(QWidget *parent)
     mainLayout = new QVBoxLayout;
 
     // Test
-    spatialTestGBox = new QGroupBox(tr("Test"));
-    spatialTestGBox->setLayout(spatiaTestGridLayout);
     mainLayout->addWidget(spatialTestGBox);
+    mainLayout->addWidget(testCodingMatricesGroupBox);
 
     // Offer
     offerGBox = new QGroupBox(tr("Offer"));
@@ -592,24 +773,142 @@ MainWindow::~MainWindow()
 
 }
 
+void MainWindow::testCodingMatricesFileLoad_1() {
+    qDebug() << Q_FUNC_INFO;
+
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Matrices"), "/home/stefan/Development/ContextRouting/Matrices", tr("%1x%1 Matrix Files (*.%1x%1_matrix)").arg(matrixSideCount));
+    QFile file(fileName);
+
+    if (file.open(QFile::ReadOnly)) {
+
+        int row = 0;
+        QString line = file.readLine(200);
+        QStringList list;
+
+        while (file.canReadLine()) {
+            if (!line.startsWith("#") && line.contains(",")) {
+                list= line.simplified().split(",");
+                for (int col = 0; col < list.length(); ++col){
+
+                    testCodingMatricesTableWidget_1->setCellWidget(row, col, new QTextEdit);
+                    ((QTextEdit*) testCodingMatricesTableWidget_1->cellWidget(row, col))->setText(QString("%1").arg(list.at(col)));
+                    ((QTextEdit*) testCodingMatricesTableWidget_1->cellWidget(row, col))->setFont(QFont("Times", 8, QFont::Bold));
+                }
+                ++row;
+
+                line = file.readLine(200);
+            }
+        }
+    }
+    file.close();
+
+    testCodingMatricesTableGroupBox_1->setTitle(fileName.section('/', -1));
+}
+void MainWindow::testCodingMatricesFileLoad_2() {
+    qDebug() << Q_FUNC_INFO;
+
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Matrices"), "/home/stefan/Development/ContextRouting/Matrices", tr("%1x%1 Matrix Files (*.%1x%1_matrix)").arg(matrixSideCount));
+    QFile file(fileName);
+
+    if (file.open(QFile::ReadOnly)) {
+
+        int row = 0;
+        QString line = file.readLine(200);
+        QStringList list;
+
+        while (file.canReadLine()) {
+            if (!line.startsWith("#") && line.contains(",")) {
+                list= line.simplified().split(",");
+                for (int col = 0; col < list.length(); ++col){
+
+                    testCodingMatricesTableWidget_2->setCellWidget(row, col, new QTextEdit);
+                    ((QTextEdit*) testCodingMatricesTableWidget_2->cellWidget(row, col))->setText(QString("%1").arg(list.at(col)));
+                    ((QTextEdit*) testCodingMatricesTableWidget_2->cellWidget(row, col))->setFont(QFont("Times", 8, QFont::Bold));
+                }
+                ++row;
+
+                line = file.readLine(200);
+            }
+        }
+    }
+    file.close();
+    testCodingMatricesTableGroupBox_2->setTitle(fileName.section('/', -1));
+}
+void MainWindow::testCodingMatricesFileLoad_3() {
+    qDebug() << Q_FUNC_INFO;
+
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Matrices"), "/home/stefan/Development/ContextRouting/Matrices", tr("%1x%1 Matrix Files (*.%1x%1_matrix)").arg(matrixSideCount));
+    QFile file(fileName);
+
+    if (file.open(QFile::ReadOnly)) {
+
+        int row = 0;
+        QString line = file.readLine(200);
+        QStringList list;
+
+        while (file.canReadLine()) {
+            if (!line.startsWith("#") && line.contains(",")) {
+                list= line.simplified().split(",");
+                for (int col = 0; col < list.length(); ++col){
+
+                    testCodingMatricesTableWidget_3->setCellWidget(row, col, new QTextEdit);
+                    ((QTextEdit*) testCodingMatricesTableWidget_3->cellWidget(row, col))->setText(QString("%1").arg(list.at(col)));
+                    ((QTextEdit*) testCodingMatricesTableWidget_3->cellWidget(row, col))->setFont(QFont("Times", 8, QFont::Bold));
+                }
+                ++row;
+
+                line = file.readLine(200);
+            }
+        }
+    }
+    file.close();
+    testCodingMatricesTableGroupBox_3->setTitle(fileName.section('/', -1));
+}
+void MainWindow::testCodingMatricesFileLoad_4() {
+    qDebug() << Q_FUNC_INFO;
+
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Matrices"), "/home/stefan/Development/ContextRouting/Matrices", tr("%1x%1 Matrix Files (*.%1x%1_matrix)").arg(matrixSideCount));
+    QFile file(fileName);
+
+    if (file.open(QFile::ReadOnly)) {
+
+        int row = 0;
+        QString line = file.readLine(200);
+        QStringList list;
+
+        while (file.canReadLine()) {
+            if (!line.startsWith("#") && line.contains(",")) {
+                list= line.simplified().split(",");
+                for (int col = 0; col < list.length(); ++col){
+
+                    testCodingMatricesTableWidget_4->setCellWidget(row, col, new QTextEdit);
+                    ((QTextEdit*) testCodingMatricesTableWidget_4->cellWidget(row, col))->setText(QString("%1").arg(list.at(col)));
+                    ((QTextEdit*) testCodingMatricesTableWidget_4->cellWidget(row, col))->setFont(QFont("Times", 8, QFont::Bold));
+                }
+                ++row;
+
+                line = file.readLine(200);
+            }
+        }
+    }
+    file.close();
+    testCodingMatricesTableGroupBox_4->setTitle(fileName.section('/', -1));
+}
 
 void MainWindow::changeSideLength(int sideLength) {
     qDebug() << Q_FUNC_INFO;
 
-
-    tableTestWidget->clear();
-
-
     matrixSideCount = sideLength;
+
+    // Test Table
+    tableTestWidget->clear();
 
     tableTestWidget->setColumnCount(matrixSideCount);
     tableTestWidget->setRowCount(matrixSideCount);
 
-
-    int cellSide = 510/matrixSideCount;
-    int fixedSide = matrixSideCount*cellSide+cellSide;
-    tableTestWidget->setFixedHeight(fixedSide);
-    tableTestWidget->setFixedWidth(fixedSide);
+    cellSide = tableTestWidgetFixedSide/matrixSideCount;
+    tableTestWidget->setFixedHeight(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
+    tableTestWidget->setFixedWidth(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
 
     for(int i=0; i<matrixSideCount; i++) {
         tableTestWidget->setColumnWidth(i, cellSide);
@@ -621,6 +920,91 @@ void MainWindow::changeSideLength(int sideLength) {
 
             ((QTextEdit*) tableTestWidget->cellWidget(i, j))->setEnabled(false);
             ((QTextEdit*) tableTestWidget->cellWidget(i, j))->setPalette(QPalette(Qt::white));
+
+        }
+    }
+
+
+
+    // tableWidget_1
+    tableWidget_1->clear();
+
+    tableWidget_1->setColumnCount(matrixSideCount);
+    tableWidget_1->setRowCount(matrixSideCount);
+
+    cellSide = tableTestWidgetFixedSide/matrixSideCount;
+    tableWidget_1->setFixedHeight(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
+    tableWidget_1->setFixedWidth(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
+
+    int n = 0;
+    for(int i=0; i<matrixSideCount; i++) {
+        tableWidget_1->setColumnWidth(i, cellSide);
+        tableWidget_1->setRowHeight(i, cellSide);
+
+        for(int j=0; j<matrixSideCount; j++) {
+
+            tableWidget_1->setCellWidget(i, j, new QTextEdit);
+
+            ((QTextEdit*) tableWidget_1->cellWidget(i, j))->setText(QString("%1").arg(n));
+            ((QTextEdit*) tableWidget_1->cellWidget(i, j))->setFont(QFont("Times", 8, QFont::Bold));
+            ((QTextEdit*) tableWidget_1->cellWidget(i, j))->setEnabled(false);
+            ((QTextEdit*) tableWidget_1->cellWidget(i, j))->setPalette(QPalette(Qt::white));
+
+            n++;
+
+        }
+    }
+
+
+
+    // tableWidget_2
+    tableWidget_2->clear();
+
+    tableWidget_2->setColumnCount(matrixSideCount);
+    tableWidget_2->setRowCount(matrixSideCount);
+
+    cellSide = tableTestWidgetFixedSide/matrixSideCount;
+    tableWidget_2->setFixedHeight(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
+    tableWidget_2->setFixedWidth(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
+
+    n = 0;
+    for(int i=0; i<matrixSideCount; i++) {
+        tableWidget_2->setColumnWidth(i, cellSide);
+        tableWidget_2->setRowHeight(i, cellSide);
+
+        for(int j=0; j<matrixSideCount; j++) {
+
+            tableWidget_2->setCellWidget(i, j, new QTextEdit);
+
+            ((QTextEdit*) tableWidget_2->cellWidget(i, j))->setText(QString("%1").arg(n));
+            ((QTextEdit*) tableWidget_2->cellWidget(i, j))->setFont(QFont("Times", 8, QFont::Bold));
+            ((QTextEdit*) tableWidget_2->cellWidget(i, j))->setEnabled(false);
+            ((QTextEdit*) tableWidget_2->cellWidget(i, j))->setPalette(QPalette(Qt::white));
+
+            n++;
+        }
+    }
+
+    // tableWidgetAll
+    tableWidgetAll->clear();
+
+    tableWidgetAll->setColumnCount(matrixSideCount);
+    tableWidgetAll->setRowCount(matrixSideCount);
+
+    cellSide = tableTestWidgetFixedSide/matrixSideCount;
+    tableWidgetAll->setFixedHeight(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
+    tableWidgetAll->setFixedWidth(tableTestWidgetFixedSide+tableTestWidgetFixedMargin);
+
+    for(int i=0; i<matrixSideCount; i++) {
+        tableWidgetAll->setColumnWidth(i, cellSide);
+        tableWidgetAll->setRowHeight(i, cellSide);
+
+        for(int j=0; j<matrixSideCount; j++) {
+
+            tableWidgetAll->setCellWidget(i, j, new QTextEdit);
+
+            ((QTextEdit*) tableWidgetAll->cellWidget(i, j))->setEnabled(false);
+            ((QTextEdit*) tableWidgetAll->cellWidget(i, j))->setPalette(QPalette(Qt::white));
 
         }
     }
@@ -680,7 +1064,6 @@ void MainWindow::startSpatialFullTest() {
 
     while(true) {
 
-        run_id++;
         nextSpatialSingleTest();
 
         if(stop) {
@@ -696,7 +1079,7 @@ void MainWindow::resetSpatialFullTest(){
     qDebug() << Q_FUNC_INFO;
 
     min_x = min_y = max_x =  max_y = 0;
-    run_id = 0;
+    run_id = 1;
     stop = false;
 
     testResultTextEdit->clear();
@@ -720,17 +1103,40 @@ void MainWindow::resetSpatialFullTest(int index) {
 void MainWindow::nextSpatialSingleTest() {
     qDebug() << Q_FUNC_INFO;
 
-    if(tmp_matrix_min_x == -1) {
+    if(permutationFiguresConfigComboBox->currentText() == "Only distinct squares (recursive)") {
 
-        tmp_matrix_min_x = matrix_min_x;
-        tmp_matrix_min_y = matrix_min_y;
-        tmp_matrix_max_x = matrix_max_x;
-        tmp_matrix_max_y = matrix_max_y;
+        if(min_x == matrix_max_x && min_y == matrix_max_y) {
+            run_id++;
+            stop = true;
+            return;
+        }
 
-        min_x = matrix_min_x;
-        min_y = matrix_min_y;
-        max_x = matrix_max_x;
-        max_y = matrix_max_y;
+        if(tmp_matrix_min_x == -1) {
+
+            tmp_matrix_min_x = matrix_min_x;
+            tmp_matrix_min_y = matrix_min_y;
+            tmp_matrix_max_x = matrix_max_x;
+            tmp_matrix_max_y = matrix_max_y;
+
+            min_x = matrix_min_x;
+            min_y = matrix_min_y;
+            max_x = matrix_max_x;
+            max_y = matrix_max_y;
+
+            qDebug() << "min_x = matrix_min_x: " << min_x;
+            qDebug() << "min_y = matrix_min_y: " << min_y;
+            qDebug() << "max_x = matrix_max_x: " << max_x;
+            qDebug() << "max_y = matrix_max_y: " << max_y;
+
+            drawTestMatrix();
+
+        }
+        else {
+            min_x = matrix_min_x;
+            min_y = matrix_min_y;
+            max_x = matrix_max_x;
+            max_y = matrix_max_y;
+        }
 
         qDebug() << "min_x = matrix_min_x: " << min_x;
         qDebug() << "min_y = matrix_min_y: " << min_y;
@@ -739,137 +1145,152 @@ void MainWindow::nextSpatialSingleTest() {
 
         drawTestMatrix();
 
-    }
-    else {
+
         min_x = matrix_min_x;
         min_y = matrix_min_y;
+        max_x /= 2;
+        max_y /= 2;
+
+        qDebug() << "min_x: " << min_x;
+        qDebug() << "min_y: " << min_y;
+        qDebug() << "max_x: " << max_x;
+        qDebug() << "max_y: " << max_y;
+        qDebug() << "max_x - min_x" << max_x - min_x;
+
+        drawTestMatrix();
+
+        min_x = max_x +1;
         max_x = matrix_max_x;
+
+        drawTestMatrix();
+
+        min_x = matrix_min_x;
+        min_y = max_y + 1;
+        max_x /= 2;
         max_y = matrix_max_y;
+
+
+        min_x = max_x +1;
+        max_x = matrix_max_x;
+
+        drawTestMatrix();
+
+
+        stop = true;
+
+    //    while ( max_x - min_x >= 0 ) {
+    //        drawTestMatrix();
+
+    //        min_x = matrix_min_x;
+    //        min_y = matrix_min_y;
+    //        max_x /= 2;
+    //        max_y /= 2;
+    //    }
+
+
+        testResultTextEdit->clear();
+        testResultTextEdit->setPlainText(QString(tr("Side Length\t: %1").arg(sideLengthConfigSpinBox->value())));
+        testResultTextEdit->appendPlainText(QString(tr("Repaint\t\t: %1").arg(repaintConfigCheckBox->isChecked()?"Yes":"No")));
+        testResultTextEdit->appendPlainText(QString(tr("Permutation Figure\t: %1").arg(permutationFiguresConfigComboBox->currentText())));
+
+        run_id++;
+        testResultTextEdit->appendPlainText(QString(tr("Tested Permutations\t: %1").arg(run_id)));
+
+        drawTestMatrix();
+
     }
 
-    qDebug() << "min_x = matrix_min_x: " << min_x;
-    qDebug() << "min_y = matrix_min_y: " << min_y;
-    qDebug() << "max_x = matrix_max_x: " << max_x;
-    qDebug() << "max_y = matrix_max_y: " << max_y;
 
-    drawTestMatrix();
+    else if(permutationFiguresConfigComboBox->currentText() == "All possible figures") {
 
+        if(min_x == matrix_max_x && min_y == matrix_max_y) {
+            run_id++;
+            stop = true;
+            return;
+        }
 
-    min_x = matrix_min_x;
-    min_y = matrix_min_y;
-    max_x /= 2;
-    max_y /= 2;
+        if(max_x < matrix_max_x) {
+            max_x++;
+        }
+        else if (max_y < matrix_max_y) {
+            max_x = min_x;
+            max_y++;
+        }
+        else if (min_x < matrix_max_x) {
+            min_x++;
+            max_x = min_x;
+            max_y = min_y;
+        }
+        else if (min_y < matrix_max_y) {
+            min_y++;
+            min_x = matrix_min_x;
+            max_x = min_x;
+            max_y = min_y;
+        }
+        else {
+            stop = true;
+        }
 
-    qDebug() << "min_x: " << min_x;
-    qDebug() << "min_y: " << min_y;
-    qDebug() << "max_x: " << max_x;
-    qDebug() << "max_y: " << max_y;
-    qDebug() << "max_x - min_x" << max_x - min_x;
+        testResultTextEdit->clear();
+        testResultTextEdit->setPlainText(QString(tr("Side Length\t: %1").arg(sideLengthConfigSpinBox->value())));
+        testResultTextEdit->appendPlainText(QString(tr("Repaint\t\t: %1").arg(repaintConfigCheckBox->isChecked()?"Yes":"No")));
+        testResultTextEdit->appendPlainText(QString(tr("Permutation Figure\t: %1").arg(permutationFiguresConfigComboBox->currentText())));
 
-    drawTestMatrix();
+        run_id++;
+        testResultTextEdit->appendPlainText(QString(tr("Tested Permutations\t: %1").arg(run_id)));
 
-    min_x = max_x +1;
-    max_x = matrix_max_x;
-
-    drawTestMatrix();
-
-    min_x = matrix_min_x;
-    min_y = max_y + 1;
-    max_x /= 2;
-    max_y = matrix_max_y;
-
-
-    min_x = max_x +1;
-    max_x = matrix_max_x;
-
-    drawTestMatrix();
-
-
-
-//    while ( max_x - min_x >= 0 ) {
-//        drawTestMatrix();
-
-//        min_x = matrix_min_x;
-//        min_y = matrix_min_y;
-//        max_x /= 2;
-//        max_y /= 2;
-//    }
-
-//    if(permutationFiguresConfigComboBox->currentText() == "All possible figures") {
-
-//        if(max_x < matrix_max_x) {
-//            max_x++;
-//        }
-//        else if (max_y < matrix_max_y) {
-//            max_x = min_x;
-//            max_y++;
-//        }
-//        else if (min_x < matrix_max_x) {
-//            min_x++;
-//            max_x = min_x;
-//            max_y = min_y;
-//        }
-//        else if (min_y < matrix_max_y) {
-//            min_y++;
-//            min_x = matrix_min_x;
-//            max_x = min_x;
-//            max_y = min_y;
-//        }
-//        else {
-//            stop = true;
-//        }
-
-//        testResultTextEdit->clear();
-//        testResultTextEdit->setPlainText(QString(tr("Side Length\t: %1").arg(sideLengthConfigSpinBox->value())));
-//        testResultTextEdit->appendPlainText(QString(tr("Repaint\t\t: %1").arg(repaintConfigCheckBox->isChecked()?"Yes":"No")));
-//        testResultTextEdit->appendPlainText(QString(tr("Permutation Figure\t: %1").arg(permutationFiguresConfigComboBox->currentText())));
-
-//        run_id++;
-//        testResultTextEdit->appendPlainText(QString(tr("Tested Permutations\t: %1").arg(run_id)));
-
-//        drawTestMatrix();
+        drawTestMatrix();
 
 
 
-//    }
+    }
 
-//    if(permutationFiguresConfigComboBox->currentText() == "Only squares") {
+    else if(permutationFiguresConfigComboBox->currentText() == "Only squares") {
 
-//        if(max_x < matrix_max_x && max_y < matrix_max_y) {
-//            max_x++;
-//            max_y++;
-//        }
-//        else if (min_x < matrix_max_x) {
-//            min_x++;
-//            max_x = min_x;
-//            max_y = min_y;
-//        }
-//        else if (min_x < matrix_max_x) {
-//            min_x++;
-//            max_x = min_x;
-//            max_y = min_y;
-//        }
-//        else if (min_y < matrix_max_y) {
-//            min_y++;
-//            min_x = matrix_min_x;
-//            max_x = min_x;
-//            max_y = min_y;
-//        }
-//        else {
-//            stop = true;
-//        }
+        if(min_x == matrix_max_x && min_y == matrix_max_y) {
+            run_id++;
+            stop = true;
+            return;
+        }
 
-//        testResultTextEdit->clear();
-//        testResultTextEdit->setPlainText(QString(tr("Side Length\t: %1").arg(sideLengthConfigSpinBox->value())));
-//        testResultTextEdit->appendPlainText(QString(tr("Repaint\t\t: %1").arg(repaintConfigCheckBox->isChecked()?"Yes":"No")));
-//        testResultTextEdit->appendPlainText(QString(tr("Permutation Figure\t: %1").arg(permutationFiguresConfigComboBox->currentText())));
+        if(max_x < matrix_max_x && max_y < matrix_max_y) {
+            max_x++;
+            max_y++;
+        }
+        else if (min_x < matrix_max_x) {
+            min_x++;
+            max_x = min_x;
+            max_y = min_y;
+        }
+        else if (min_x < matrix_max_x) {
+            min_x++;
+            max_x = min_x;
+            max_y = min_y;
+        }
+        else if (min_y < matrix_max_y) {
+            min_y++;
+            min_x = matrix_min_x;
+            max_x = min_x;
+            max_y = min_y;
+        }
+        else {
+            stop = true;
+        }
 
-//        run_id++;
-//        testResultTextEdit->appendPlainText(QString(tr("Tested Permutations\t: %1").arg(run_id)));
+        testResultTextEdit->clear();
+        testResultTextEdit->setPlainText(QString(tr("Side Length\t: %1").arg(sideLengthConfigSpinBox->value())));
+        testResultTextEdit->appendPlainText(QString(tr("Repaint\t\t: %1").arg(repaintConfigCheckBox->isChecked()?"Yes":"No")));
+        testResultTextEdit->appendPlainText(QString(tr("Permutation Figure\t: %1").arg(permutationFiguresConfigComboBox->currentText())));
 
-//        drawTestMatrix();
+        run_id++;
+        testResultTextEdit->appendPlainText(QString(tr("Tested Permutations\t: %1").arg(run_id)));
 
-//    }
+        drawTestMatrix();
+
+    }
+    else {
+        stop = true;
+    }
 }
 
 
@@ -884,12 +1305,16 @@ void MainWindow::nextSpatialSingleTestStep() {
 
     int mask;
 
+    // ContentBrick's mask: Loop all permutations of one byte with 0-bits left and 1-bits (right both from none to all)
     for(int bit=0; bit <=8; bit++) {
         mask = (int) qPow(2, bit);
         qDebug() << "mask: " << mask;
 
+        // ContentBrick's content: Loop all permutations
         for(int i=0; i<=255; i+=mask) {
             qDebug() << i << " += " << mask;
+
+
 
         }
     }

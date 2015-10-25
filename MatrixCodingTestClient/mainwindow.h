@@ -9,6 +9,7 @@
 #include <QCheckBox>
 #include <QTableWidget>
 #include <QGridLayout>
+#include <QVBoxLayout>
 #include <QLabel>
 #include <QSpinBox>
 #include <QLineEdit>
@@ -76,6 +77,9 @@ public:
     // SpatialTest Table
     QHBoxLayout *spatialTestTableLayout;
     QTableWidget *tableTestWidget;
+    int tableTestWidgetFixedSide;
+    int tableTestWidgetFixedMargin;
+    int cellSide;
 
     // SpatialTest Config
     QGroupBox *spatialTestConfigGBox;
@@ -103,6 +107,42 @@ public:
     QPushButton *startSpatialSingleTest_Btn;
     QPushButton *nextSpatialSingleTest_Btn;
     QPushButton *resetSpatialSingleTest_Btn;
+
+    // Test Coding Matrices
+    QGroupBox *testCodingMatricesGroupBox;
+    QVBoxLayout *testCodingMatricesLayout;
+
+    // Test Coding Matrices Header
+    QGroupBox *testCodingMatricesHeaderGroupBox;
+    QHBoxLayout *testCodingMatricesHeaderLayout;
+
+    // Test Coding Matrices Tables
+    QGroupBox *testCodingMatricesTablesGroupBox;
+    QGridLayout *testCodingMatricesTablesLayout;
+
+    // Table_1
+    QGroupBox *testCodingMatricesTableGroupBox_1;
+    QVBoxLayout *testCodingMatricesTableLayout_1;
+    QTableWidget *testCodingMatricesTableWidget_1;
+    QPushButton *testCodingMatricesFile_Btn_1;
+
+    // Table_2
+    QGroupBox *testCodingMatricesTableGroupBox_2;
+    QVBoxLayout *testCodingMatricesTableLayout_2;
+    QTableWidget *testCodingMatricesTableWidget_2;
+    QPushButton *testCodingMatricesFile_Btn_2;
+
+    // Table_3
+    QGroupBox *testCodingMatricesTableGroupBox_3;
+    QVBoxLayout *testCodingMatricesTableLayout_3;
+    QTableWidget *testCodingMatricesTableWidget_3;
+    QPushButton *testCodingMatricesFile_Btn_3;
+
+    // Table_4
+    QGroupBox *testCodingMatricesTableGroupBox_4;
+    QVBoxLayout *testCodingMatricesTableLayout_4;
+    QTableWidget *testCodingMatricesTableWidget_4;
+    QPushButton *testCodingMatricesFile_Btn_4;
 
     // Offer
     QGroupBox *offerGBox;
@@ -251,6 +291,11 @@ public slots:
 
     void changeSideLength(int);
     void setRepainted(int);
+
+    void testCodingMatricesFileLoad_1();
+    void testCodingMatricesFileLoad_2();
+    void testCodingMatricesFileLoad_3();
+    void testCodingMatricesFileLoad_4();
 
     void showOfferContent_1_Byte();
     void showOfferMask_1_Byte();
