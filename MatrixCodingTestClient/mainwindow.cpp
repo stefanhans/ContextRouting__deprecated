@@ -1,5 +1,9 @@
 #include "mainwindow.h"
 
+#include <iostream>
+
+#define DEBUG 1
+
 #include <QDebug>
 #include <QtMath>
 #include <QFileDialog>
@@ -7,6 +11,8 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
+    if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
+
     // Palettes
     noColor = Qt::white;
     redColor = Qt::red;
@@ -60,6 +66,16 @@ MainWindow::MainWindow(QWidget *parent)
     tmp_matrix_min_x = tmp_matrix_min_y = tmp_matrix_max_x = tmp_matrix_max_y = -1;
 
     run_id = 1;
+
+    byteMatrix_1 = new ByteMatrix();
+    byteMatrix_2 = new ByteMatrix();
+    byteMatrix_3 = new ByteMatrix();
+    byteMatrix_4 = new ByteMatrix();
+
+    byteMatrix_1->sideLength = sideLengthConfigSpinBox->value();
+    byteMatrix_2->sideLength = sideLengthConfigSpinBox->value();
+    byteMatrix_3->sideLength = sideLengthConfigSpinBox->value();
+    byteMatrix_4->sideLength = sideLengthConfigSpinBox->value();
 
     connect(sideLengthConfigSpinBox, SIGNAL(valueChanged(int)), this, SLOT(changeSideLength(int)));
 
@@ -774,7 +790,7 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::testCodingMatricesFileLoad_1() {
-    qDebug() << Q_FUNC_INFO;
+    if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open Matrices"), "/home/stefan/Development/ContextRouting/Matrices", tr("%1x%1 Matrix Files (*.%1x%1_matrix)").arg(matrixSideCount));
     QFile file(fileName);
@@ -800,12 +816,15 @@ void MainWindow::testCodingMatricesFileLoad_1() {
             }
         }
     }
-    file.close();
-
+    file.close();    
     testCodingMatricesTableGroupBox_1->setTitle(fileName.section('/', -1));
+
+    // Load data into model
+    byteMatrix_1->loadDataFile(&file);
+
 }
 void MainWindow::testCodingMatricesFileLoad_2() {
-    qDebug() << Q_FUNC_INFO;
+    if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open Matrices"), "/home/stefan/Development/ContextRouting/Matrices", tr("%1x%1 Matrix Files (*.%1x%1_matrix)").arg(matrixSideCount));
     QFile file(fileName);
@@ -833,9 +852,12 @@ void MainWindow::testCodingMatricesFileLoad_2() {
     }
     file.close();
     testCodingMatricesTableGroupBox_2->setTitle(fileName.section('/', -1));
+
+    // Load data into model
+    byteMatrix_2->loadDataFile(&file);
 }
 void MainWindow::testCodingMatricesFileLoad_3() {
-    qDebug() << Q_FUNC_INFO;
+    if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open Matrices"), "/home/stefan/Development/ContextRouting/Matrices", tr("%1x%1 Matrix Files (*.%1x%1_matrix)").arg(matrixSideCount));
     QFile file(fileName);
@@ -863,9 +885,12 @@ void MainWindow::testCodingMatricesFileLoad_3() {
     }
     file.close();
     testCodingMatricesTableGroupBox_3->setTitle(fileName.section('/', -1));
+
+    // Load data into model
+    byteMatrix_3->loadDataFile(&file);
 }
 void MainWindow::testCodingMatricesFileLoad_4() {
-    qDebug() << Q_FUNC_INFO;
+    if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open Matrices"), "/home/stefan/Development/ContextRouting/Matrices", tr("%1x%1 Matrix Files (*.%1x%1_matrix)").arg(matrixSideCount));
     QFile file(fileName);
@@ -893,10 +918,13 @@ void MainWindow::testCodingMatricesFileLoad_4() {
     }
     file.close();
     testCodingMatricesTableGroupBox_4->setTitle(fileName.section('/', -1));
+
+    // Load data into model
+    byteMatrix_4->loadDataFile(&file);
 }
 
 void MainWindow::changeSideLength(int sideLength) {
-    qDebug() << Q_FUNC_INFO;
+    if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 
     matrixSideCount = sideLength;
 
@@ -1296,12 +1324,12 @@ void MainWindow::nextSpatialSingleTest() {
 
 
 void MainWindow::startSpatialSingleTest() {
-    qDebug() << Q_FUNC_INFO;
+    if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 
 }
 
 void MainWindow::nextSpatialSingleTestStep() {
-    qDebug() << Q_FUNC_INFO;
+    if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 
     int mask;
 
@@ -1314,7 +1342,7 @@ void MainWindow::nextSpatialSingleTestStep() {
         for(int i=0; i<=255; i+=mask) {
             qDebug() << i << " += " << mask;
 
-
+            ContextBrick *firstMatch = byteMatrix_1->getFirstMatch(1, 1, 1, 2);
 
         }
     }

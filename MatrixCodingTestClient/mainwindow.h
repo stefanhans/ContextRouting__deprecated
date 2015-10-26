@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "bytematrix.h"
+
 #include <QMainWindow>
 
 #include <QPushButton>
@@ -36,6 +38,11 @@ public:
 
     bool stop, repaint;
     int run_id;
+
+    ByteMatrix *byteMatrix_1;
+    ByteMatrix *byteMatrix_2;
+    ByteMatrix *byteMatrix_3;
+    ByteMatrix *byteMatrix_4;
 
     QWidget *guiWidget;
     QScrollArea *guiScrollArea;
