@@ -1331,21 +1331,66 @@ void MainWindow::startSpatialSingleTest() {
 void MainWindow::nextSpatialSingleTestStep() {
     if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 
-    int mask;
+//    int mask;
 
-    // ContentBrick's mask: Loop all permutations of one byte with 0-bits left and 1-bits (right both from none to all)
-    for(int bit=0; bit <=8; bit++) {
-        mask = (int) qPow(2, bit);
-        qDebug() << "mask: " << mask;
+//    // ContentBrick's mask: Loop all permutations of one byte with 0-bits left and 1-bits (right both from none to all)
+//    for(int bit=0; bit <=2; bit++) {
+//        mask = (int) qPow(2, bit);
+//        qDebug() << "mask: " << mask;
 
-        // ContentBrick's content: Loop all permutations
-        for(int i=0; i<=255; i+=mask) {
-            qDebug() << i << " += " << mask;
+//        // ContentBrick's content: Loop all permutations
+//        for(int content=0; content<4; content+=mask) {
 
-            ContextBrick *firstMatch = byteMatrix_1->getFirstMatch(1, 1, 1, 2);
+////            ContextBrick *firstMatch = byteMatrix_1->getFirstMatch(1, 1, 1, 2);
+//            qDebug() << QString("byteMatrix_1->isMatch(1, 1, %1, %2) => %3").arg(content).arg(mask).arg(byteMatrix_1->isMatch(1, 1, content, mask));
 
+//        }
+//    }
+
+    ContextBrick *contextBrick = new ContextBrick(0, 0);
+
+    for (int i=0; i < 16; i++) {
+        if(contextBrick->isMatch(i)) {
+
+            qDebug() << QString("contextBrick->isMatch(%1) => match").arg(i);
         }
+        else {
+
+            qDebug() << QString("contextBrick->isMatch(%1) => no match").arg(i);
+        }
+
     }
+
+//    qDebug() << "min_x: " << min_x;
+//    qDebug() << "min_y: " << min_y;
+//    qDebug() << "max_x: " << max_x;
+//    qDebug() << "max_y: " << max_y;
+
+//    qDebug() << "contextBrick->content: " << contextBrick->content;
+
+//    qDebug() << "byteMatrix_1->sideLength: " << byteMatrix_1->sideLength;
+
+//    do {
+//        while(contextBrick->setNextMaskInstance(byteMatrix_1->sideLength)) {
+//            for (int x = 0; x < byteMatrix_1->sideLength; x++) {
+//                for (int y = 0; y < byteMatrix_1->sideLength; y++)
+
+//                    if(byteMatrix_1->isMatch(min_x, min_y, max_x, max_y, contextBrick->content, contextBrick->mask)) {
+//                        qDebug() << QString("martix[%1][%2]: %3 => match").arg(x).arg(y).arg(byteMatrix_1->matrix[x][y]);
+
+//                    }
+//                    else {
+//                        qDebug() << QString("martix[%1][%2]: %3 => no match").arg(x).arg(y).arg(byteMatrix_1->matrix[x][y]);
+
+//                    }
+//            }
+
+//            qDebug() << "contextBrick->content: " << contextBrick->content;
+//            qDebug() << "contextBrick->mask: " << contextBrick->mask;
+//        }
+//    } while(contextBrick->setNextMask());
+
+
 
 }
 

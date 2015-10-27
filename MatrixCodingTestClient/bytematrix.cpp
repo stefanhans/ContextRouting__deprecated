@@ -12,10 +12,12 @@
 ByteMatrix::ByteMatrix():
     matrix(),
     sideLength(0),
-    min_x(0),
-    min_y(0),
-    max_x(0),
-    max_y(0),
+
+//    min_x(0),
+//    min_y(0),
+//    max_x(0),
+//    max_y(0),
+
     dataFile(){
     if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 }
