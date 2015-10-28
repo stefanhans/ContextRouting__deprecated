@@ -1,31 +1,35 @@
 #ifndef CONTEXTBRICK_H
 #define CONTEXTBRICK_H
 
-#define DEBUG 1
+#define DEBUG 0
 
 #include <QtGlobal>
 #include <QDebug>
 #include <QtMath>
 
-//typedef unsigned char byte_t;
+typedef unsigned char byte_t;
 
 class ContextBrick
 {
 public:
     ContextBrick();
 
-    ContextBrick(int content, int mask);
+    ContextBrick(byte_t content, byte_t mask);
 
-    int content;
-    int mask;
+    byte_t content;
+    byte_t mask;
 
-    inline bool isMatch(int in_content) {
+    inline bool isMatch(byte_t in_content) {
 
-        int notEqual = in_content ^ content;
-        if (notEqual == 0) {
+        if ((in_content ^ content) == 0) {
             return true;
         }
-        return ( ! (in_content ^ content) ) || mask;
+
+        if (~(~(in_content ^ content) | mask) != 0) {
+            return false;
+        }
+
+        return true;
     }
 
     inline bool setNextMatchingContent() {
@@ -59,7 +63,7 @@ public:
 
         tmp_content = content + mask - (content % mask) + 1;
 
-        if(tmp_content < 256) {
+        if(tmp_content < 255) {
 
             content = tmp_content;
 
@@ -72,7 +76,7 @@ public:
 
     inline bool setNextMaskInstance(int sideLength) {
 
-        int tmp_content;
+        byte_t tmp_content;
 
         if(mask == 0 && content < pow(2, sideLength) - 1) {
             content++;
@@ -83,7 +87,8 @@ public:
             return false;
         }
 
-        tmp_content = content + mask - (content % mask) + 1;
+        tmp_content = content + mask - (content % mask) + 10;
+        qDebug() << "tmp_content" << tmp_content;
 
         if(tmp_content < pow(2, sideLength) - 1) {
             content = tmp_content;

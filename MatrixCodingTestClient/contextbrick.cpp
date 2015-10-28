@@ -9,12 +9,12 @@ ContextBrick::ContextBrick() :
     if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 }
 
-ContextBrick::ContextBrick(int context, int mask) {
+ContextBrick::ContextBrick(byte_t context, byte_t mask) {
     if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 
     this->content = context;
     this->mask    = mask;
 
-    qDebug() << "initialized content: " << content;
-    qDebug() << "initialized mask: " << mask;
+//    qDebug() << "initialized content: " << content;
+//    qDebug() << "initialized mask: " << mask;
 }

@@ -24,7 +24,21 @@ public:
     QFile *dataFile;
 
     inline bool isMatch(int x, int y, int content, int mask) {
-        return ( ! ( matrix[x][y] ^ content ) ) || mask;
+
+        byte_t in_content = matrix[x][y];
+
+        qDebug() << "in_content: " << in_content;
+
+        if ((in_content ^ content) == 0) {
+            return true;
+        }
+
+        if (~(~(in_content ^ content) | mask) != 0) {
+            return false;
+        }
+
+        return true;
+
     }
 
     inline bool isMatch(int min_x, int min_y, int max_x, int max_y, int content, int mask) {

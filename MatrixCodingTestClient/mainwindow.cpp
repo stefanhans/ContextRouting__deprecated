@@ -1331,47 +1331,95 @@ void MainWindow::startSpatialSingleTest() {
 void MainWindow::nextSpatialSingleTestStep() {
     if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 
-//    int mask;
 
-//    // ContentBrick's mask: Loop all permutations of one byte with 0-bits left and 1-bits (right both from none to all)
-//    for(int bit=0; bit <=2; bit++) {
-//        mask = (int) qPow(2, bit);
-//        qDebug() << "mask: " << mask;
+    byte_t content, mask, tmp_content;
 
-//        // ContentBrick's content: Loop all permutations
-//        for(int content=0; content<4; content+=mask) {
+    mask=0;
+    content=0;
 
-////            ContextBrick *firstMatch = byteMatrix_1->getFirstMatch(1, 1, 1, 2);
-//            qDebug() << QString("byteMatrix_1->isMatch(1, 1, %1, %2) => %3").arg(content).arg(mask).arg(byteMatrix_1->isMatch(1, 1, content, mask));
+    qDebug() << QString("%1 % %2").arg(content).arg(mask);
+    while(content < pow(2, 4) - 1) {
+        content++;
+        qDebug() << QString("%1 % %2").arg(content).arg(mask);
+    }
 
-//        }
-//    }
 
-    ContextBrick *contextBrick = new ContextBrick(0, 0);
+    mask=1;
+    content=0;
 
-    for (int i=0; i < 16; i++) {
-        if(contextBrick->isMatch(i)) {
+    qDebug() << QString("%1 % %2").arg(content).arg(mask);
 
-            qDebug() << QString("contextBrick->isMatch(%1) => match").arg(i);
-        }
-        else {
+    while(content < pow(2, 4) - 2) {
+        content += 2;
+        qDebug() << QString("%1 % %2").arg(content).arg(mask);
+    }
 
-            qDebug() << QString("contextBrick->isMatch(%1) => no match").arg(i);
-        }
+    for(mask=3; mask < 255; mask = (mask+1)*2-1) {
+
+
+        content=0;
+
+            while(content < 127) {
+                qDebug() << QString("%1 % %2").arg(content).arg(mask);
+                content = (content + (mask - (content % mask)))+1;
+            }
+
+
+            qDebug() << QString("%1 % %2").arg(content).arg(mask);
+
+
 
     }
+ qDebug() << QString("%1 % %2").arg(content).arg(mask);
+
+//    mask=255;
+//    content=0;
+
+//    while(content < 127) {
+//        content = content + mask - (content % mask) + 1;
+//         qDebug() << QString("%1 % %2").arg(content).arg(mask);
+//    }
+
+//    ContextBrick *contextBrick = new ContextBrick(16, 7);
+
+//    for (int i=0; i < 256; i++) {
+//        if(contextBrick->isMatch(i)) {
+
+//            qDebug() << QString("contextBrick[%1][%2]->isMatch(%3) => match").arg(contextBrick->content).arg(contextBrick->mask).arg(i);
+//        }
+//        else {
+
+//            qDebug() << QString("contextBrick[%1][%2]->isMatch(%3) => no match").arg(contextBrick->content).arg(contextBrick->mask).arg(i);
+//        }
+
+//    }
+
+
+
+
 
 //    qDebug() << "min_x: " << min_x;
 //    qDebug() << "min_y: " << min_y;
 //    qDebug() << "max_x: " << max_x;
 //    qDebug() << "max_y: " << max_y;
 
-//    qDebug() << "contextBrick->content: " << contextBrick->content;
+////    qDebug() << "contextBrick->content: " << contextBrick->content;
 
-//    qDebug() << "byteMatrix_1->sideLength: " << byteMatrix_1->sideLength;
+////    qDebug() << "byteMatrix_1->sideLength: " << byteMatrix_1->sideLength;
 
-//    do {
-//        while(contextBrick->setNextMaskInstance(byteMatrix_1->sideLength)) {
+//    ContextBrick *contextBrick = new ContextBrick(0, 255);
+
+
+//    for(int i=0; i<10;i++) {
+
+//        qDebug() << "setNextMask returns: " << contextBrick->setNextMask();
+
+//        qDebug() << "contextBrick->content: " << contextBrick->content;
+//        qDebug() << "contextBrick->mask: " << contextBrick->mask;
+//    }
+
+////    do {
+//        do {
 //            for (int x = 0; x < byteMatrix_1->sideLength; x++) {
 //                for (int y = 0; y < byteMatrix_1->sideLength; y++)
 
@@ -1379,16 +1427,15 @@ void MainWindow::nextSpatialSingleTestStep() {
 //                        qDebug() << QString("martix[%1][%2]: %3 => match").arg(x).arg(y).arg(byteMatrix_1->matrix[x][y]);
 
 //                    }
-//                    else {
-//                        qDebug() << QString("martix[%1][%2]: %3 => no match").arg(x).arg(y).arg(byteMatrix_1->matrix[x][y]);
-
-//                    }
+////                    else {
+////                        qDebug() << QString("martix[%1][%2]: %3 => no match").arg(x).arg(y).arg(byteMatrix_1->matrix[x][y]);
+////                    }
 //            }
 
 //            qDebug() << "contextBrick->content: " << contextBrick->content;
 //            qDebug() << "contextBrick->mask: " << contextBrick->mask;
-//        }
-//    } while(contextBrick->setNextMask());
+//        } while(contextBrick->setNextMaskInstance(byteMatrix_1->sideLength));
+////    } while(contextBrick->setNextMask());
 
 
 
