@@ -43,7 +43,17 @@ public:
 
 
     inline bool setNextMask() {
+
         if(mask < 128) {
+            mask = (mask * 2) + 1;
+            return true;
+        }
+        return false;
+    }
+
+    inline bool setNextMask(int sideLength) {
+
+        if(mask < (sideLength * sideLength) / 2) {
             mask = (mask * 2) + 1;
             return true;
         }
@@ -53,19 +63,13 @@ public:
 
     inline bool setNextMaskInstance() {
 
-        int tmp_content;
-
-        if(mask == 0) {
-            content++;
-
-            return true;
+        if(mask > 128) {
+            return false;
         }
 
-        tmp_content = content + mask - (content % mask) + 1;
+        if(content < 256 - (mask+ 1)) {
 
-        if(tmp_content < 255) {
-
-            content = tmp_content;
+            content += mask + 1;
 
             return true;
         }
@@ -76,22 +80,14 @@ public:
 
     inline bool setNextMaskInstance(int sideLength) {
 
-        byte_t tmp_content;
-
-        if(mask == 0 && content < pow(2, sideLength) - 1) {
-            content++;
-            return true;
-        }
-
-        if(mask == 0) {
+        if(mask > (sideLength * sideLength) / 2) {
             return false;
         }
 
-        tmp_content = content + mask - (content % mask) + 10;
-        qDebug() << "tmp_content" << tmp_content;
+        if(content < (sideLength * sideLength) - (mask+ 1)) {
 
-        if(tmp_content < pow(2, sideLength) - 1) {
-            content = tmp_content;
+            content += mask + 1;
+
             return true;
         }
         return false;

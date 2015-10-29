@@ -48,7 +48,7 @@ MainWindow::MainWindow(QWidget *parent)
     sideLengthConfigLabel = new QLabel(tr("Side Length: "));
     sideLengthConfigSpinBox = new QSpinBox();
     sideLengthConfigSpinBox->setMinimum(2);
-    sideLengthConfigSpinBox->setMaximum(32);
+    sideLengthConfigSpinBox->setMaximum(16);
     sideLengthConfigSpinBox->setValue(4);
     sideLengthConfigLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     sideLengthConfigLabel->setBuddy(sideLengthConfigSpinBox);
@@ -1332,45 +1332,45 @@ void MainWindow::nextSpatialSingleTestStep() {
     if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 
 
-    byte_t content, mask, tmp_content;
+//    byte_t content, mask, tmp_content;
 
-    mask=0;
-    content=0;
+//    mask=0;
+//    content=0;
 
-    qDebug() << QString("%1 % %2").arg(content).arg(mask);
-    while(content < pow(2, 4) - 1) {
-        content++;
-        qDebug() << QString("%1 % %2").arg(content).arg(mask);
-    }
-
-
-    mask=1;
-    content=0;
-
-    qDebug() << QString("%1 % %2").arg(content).arg(mask);
-
-    while(content < pow(2, 4) - 2) {
-        content += 2;
-        qDebug() << QString("%1 % %2").arg(content).arg(mask);
-    }
-
-    for(mask=3; mask < 255; mask = (mask+1)*2-1) {
+//    qDebug() << QString("%1 % %2").arg(content).arg(mask);
+//    while(content < pow(2, 4) - 1) {
+//        content++;
+//        qDebug() << QString("%1 % %2").arg(content).arg(mask);
+//    }
 
 
-        content=0;
+//    mask=1;
+//    content=0;
 
-            while(content < 127) {
-                qDebug() << QString("%1 % %2").arg(content).arg(mask);
-                content = (content + (mask - (content % mask)))+1;
-            }
+//    qDebug() << QString("%1 % %2").arg(content).arg(mask);
+
+//    while(content < pow(2, 4) - 2) {
+//        content += 2;
+//        qDebug() << QString("%1 % %2").arg(content).arg(mask);
+//    }
+
+//    for(mask=3; mask < 255; mask = (mask+1)*2-1) {
 
 
-            qDebug() << QString("%1 % %2").arg(content).arg(mask);
+//        content=0;
+
+//            while(content < 127) {
+//                qDebug() << QString("%1 % %2").arg(content).arg(mask);
+//                content = (content + (mask - (content % mask)))+1;
+//            }
+
+
+//            qDebug() << QString("%1 % %2").arg(content).arg(mask);
 
 
 
-    }
- qDebug() << QString("%1 % %2").arg(content).arg(mask);
+//    }
+// qDebug() << QString("%1 % %2").arg(content).arg(mask);
 
 //    mask=255;
 //    content=0;
@@ -1418,24 +1418,60 @@ void MainWindow::nextSpatialSingleTestStep() {
 //        qDebug() << "contextBrick->mask: " << contextBrick->mask;
 //    }
 
-////    do {
+
+
+    ContextBrick *contextBrick = new ContextBrick(0, 0);
+
+    do {
+
+        contextBrick->content = 0;
+
+        do {
+
+//            qDebug() << QString("content: %1, mask: %2").arg(contextBrick->content).arg(contextBrick->mask);
+
+
+            for (int x = 0; x < byteMatrix_1->sideLength; x++) {
+
+                for (int y = 0; y < byteMatrix_1->sideLength; y++) {
+
+                    if(byteMatrix_1->isMatch(x, y, contextBrick->content, contextBrick->mask)) {
+
+                        qDebug() << QString("martix[%1][%2]: %3 => match content: %4, mask: %5").arg(x).arg(y).arg(byteMatrix_1->matrix[x][y]).arg(contextBrick->content).arg(contextBrick->mask);
+                    }
+                    else {
+                        qDebug() << QString("martix[%1][%2]: %3 => not match content: %4, mask: %5").arg(x).arg(y).arg(byteMatrix_1->matrix[x][y]).arg(contextBrick->content).arg(contextBrick->mask);
+                    }
+                }
+            }
+
+            qDebug() << "###################################################################################";
+
+        } while(contextBrick->setNextMaskInstance(matrixSideCount));
+
+    } while(contextBrick->setNextMask(matrixSideCount));
+
+
+
+
+//    do {
 //        do {
 //            for (int x = 0; x < byteMatrix_1->sideLength; x++) {
 //                for (int y = 0; y < byteMatrix_1->sideLength; y++)
 
 //                    if(byteMatrix_1->isMatch(min_x, min_y, max_x, max_y, contextBrick->content, contextBrick->mask)) {
-//                        qDebug() << QString("martix[%1][%2]: %3 => match").arg(x).arg(y).arg(byteMatrix_1->matrix[x][y]);
+//                        qDebug() << __FILE__ << "(" << __LINE__ << "): "  << QString("martix[%1][%2]: %3 => match").arg(x).arg(y).arg(byteMatrix_1->matrix[x][y]);
 
 //                    }
-////                    else {
-////                        qDebug() << QString("martix[%1][%2]: %3 => no match").arg(x).arg(y).arg(byteMatrix_1->matrix[x][y]);
-////                    }
+//                //                    else {
+//                //                        qDebug() << QString("martix[%1][%2]: %3 => no match").arg(x).arg(y).arg(byteMatrix_1->matrix[x][y]);
+//                //                    }
 //            }
 
 //            qDebug() << "contextBrick->content: " << contextBrick->content;
 //            qDebug() << "contextBrick->mask: " << contextBrick->mask;
 //        } while(contextBrick->setNextMaskInstance(byteMatrix_1->sideLength));
-////    } while(contextBrick->setNextMask());
+//    } while(contextBrick->setNextMask());
 
 
 
