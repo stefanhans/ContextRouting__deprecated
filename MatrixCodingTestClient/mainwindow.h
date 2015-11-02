@@ -52,6 +52,7 @@ public:
     // Colors & Palettes
     QColor noColor;
     QColor redColor;
+    QColor greenColor;
 
     QColor offerContentColor;
     QPalette offerContentPalette;

@@ -19,23 +19,20 @@ public:
     int matrix[16][16];
 
     int sideLength;
-//    int min_x, min_y, max_x, max_y;
 
     QFile *dataFile;
 
     inline bool isMatch(int x, int y, int content, int mask) {
-qDebug() << "";
+
         byte_t in_content = matrix[x][y];
 
-//        qDebug() << "in_content: " << in_content;
+        qDebug() << QString("isMatch matrix[%1][%2]: %3").arg(x).arg(y).arg(matrix[x][y]);
 
         if ((in_content ^ content) == 0) {
-            qDebug() << "((in_content ^ content) == 0)";
             return true;
         }
 
         if (~(~(in_content ^ content) | mask) != 0) {
-            qDebug() << "(~(~(in_content ^ content) | mask) != 0)";
             return false;
         }
 
@@ -45,9 +42,13 @@ qDebug() << "";
 
     inline bool isMatch(int min_x, int min_y, int max_x, int max_y, int content, int mask) {
 
-        for(int x = min_x; x <= max_x; x++) {
-            for(int y = min_y; y <= max_y; y++) {
-                if( ! isMatch(x, y, content, mask)) {
+        qDebug() << QString("isMatch matrix[%1,%2][%3,%4]").arg(min_x).arg(min_y).arg(max_x).arg(max_y);
+
+        for(int y = min_y; y <= max_y; y++) {
+            qDebug() << QString("outer loop y: %1").arg(y);
+            for(int x = min_x; x <= max_x; x++) {
+                qDebug() << QString("inner loop x: %1").arg(x);
+                if( ! isMatch(y, x, content, mask)) {
                     return false;
                 }
             }
