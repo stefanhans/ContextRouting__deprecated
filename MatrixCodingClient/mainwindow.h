@@ -1,8 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "bitmatrixmodel.h"
-#include "matrixtesttablewidget.h"
+#include "protocol.h"
+#include "globals.h"
+#include "codingmatrixwidget.h"
 
 
 #include <QMainWindow>
@@ -21,8 +22,9 @@
 #include <QDateTimeEdit>
 #include <QTextEdit>
 #include <QScrollArea>
-
 #include <QTableView>
+
+#include <QVector>
 
 class MainWindow : public QMainWindow
 {
@@ -31,12 +33,6 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
-
-
-
-//    BitMatrixModel *bitMatrixModel;
-//    QTableView *bitMatrixTableView;
-
 
 
     // Matrix
@@ -96,10 +92,18 @@ public:
     QPushButton *nextSpatialSingleTest_Btn;
     QPushButton *resetSpatialSingleTest_Btn;
 
-    // TEST matrixtesttablewidget
-    QGroupBox *matrixTestTableGBox;
-    QVBoxLayout *matrixTestTableLayout;
-    MatrixTestTableWidget *matrixTestTableWidget;
+    /*
+     * DYNAMIC CODING MATRIX WIDGET SECTION
+     *
+     */
+
+    QGroupBox *dynamicCodingMatricesGBox;
+    QGridLayout *dynamicCodingMatricesLayout;
+
+    QLabel *codingMatrixControlHeaderLabel;
+    QSpinBox *codingMatrixControlHeaderSpinBox;
+
+    QVector<CodingMatrixWidget*> dynamicCodingMatrixWidgets;
 
 public slots:
 

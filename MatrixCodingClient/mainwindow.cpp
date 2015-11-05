@@ -1,17 +1,11 @@
 #include "mainwindow.h"
-#include "bitmatrixmodel.h"
-
-#define DEBUG 1
 
 #include <QDebug>
+#include <QtMath>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-
-//    bitMatrixModel = new BitMatrixModel(this);
-//    bitMatrixTableView = new QTableView;
-//    bitMatrixTableView->setModel(bitMatrixModel);
 
     /*
      *
@@ -183,18 +177,46 @@ MainWindow::MainWindow(QWidget *parent)
     spatiaTestGridLayout->addLayout(spatialTestTableLayout,   0, 0);
     spatiaTestGridLayout->addWidget(testButtonGBox,           1, 0);
 
+    /*
+     *
+     *  DYNAMIC CODING MATRIX WIDGET SECTION
+     *
+     */
+    dynamicCodingMatricesGBox = new QGroupBox(tr("Coding Matrices"));
+    dynamicCodingMatricesLayout = new QGridLayout;
+    dynamicCodingMatricesGBox->setLayout(dynamicCodingMatricesLayout);
 
-    // TEST matrixtesttablewidget
-    matrixTestTableGBox = new QGroupBox(tr("TEST matrixtesttablewidget"));
-    matrixTestTableLayout = new QVBoxLayout;
-    matrixTestTableGBox->setLayout(matrixTestTableLayout);
-    matrixTestTableWidget = new MatrixTestTableWidget(4, 4);
-    matrixTestTableLayout->addWidget((QTableWidget*) matrixTestTableWidget);
+    // Control Header - Coding Matrix Tables Count
+    codingMatrixControlHeaderLabel = new QLabel(tr("Coding Matrix Tables Count: "));
+    codingMatrixControlHeaderSpinBox = new QSpinBox();
+    codingMatrixControlHeaderSpinBox->setMinimum(1);
+    codingMatrixControlHeaderSpinBox->setMaximum(255);
+    codingMatrixControlHeaderSpinBox->setValue(6);
+    codingMatrixControlHeaderLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    codingMatrixControlHeaderLabel->setBuddy(codingMatrixControlHeaderSpinBox);
+
+//    connect(sideLengthConfigSpinBox, SIGNAL(valueChanged(int)), this, SLOT(changeSideLength(int)));
+
+    dynamicCodingMatricesLayout->addWidget(codingMatrixControlHeaderLabel, 0, 0);
+    dynamicCodingMatricesLayout->addWidget(codingMatrixControlHeaderSpinBox, 0, 1);
+
+
+
+    for(int i=0; i<=5; i++) {
+        dynamicCodingMatrixWidgets.push_back(new CodingMatrixWidget(this));
+        dynamicCodingMatrixWidgets.at(i)->setTitle(tr("Coding Matrix %1").arg(i+1));
+    }
+
+    // Layout Integrations
+    for(int i=0; i<5; i++) {
+        dynamicCodingMatricesLayout->addWidget(dynamicCodingMatrixWidgets.at(i), qFloor(i/3)+1, i%3);
+    }
+
 
     // GUI - Main Layout
     mainLayout = new QVBoxLayout;
     mainLayout->addWidget(spatialTestGBox);
-    mainLayout->addWidget(matrixTestTableGBox);
+    mainLayout->addWidget(dynamicCodingMatricesGBox);
     mainLayout->addStretch();
 
     // GUI - Widget
