@@ -1,8 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "protocol.h"
 #include "globals.h"
+#include "protocol.h"
 #include "codingmatrixwidget.h"
 
 
@@ -25,6 +25,7 @@
 #include <QTableView>
 
 #include <QVector>
+#include <QtMath>
 
 class MainWindow : public QMainWindow
 {

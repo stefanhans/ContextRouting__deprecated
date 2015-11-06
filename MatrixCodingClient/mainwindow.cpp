@@ -1,8 +1,5 @@
 #include "mainwindow.h"
 
-#include <QDebug>
-#include <QtMath>
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -202,13 +199,14 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
-    for(int i=0; i<=5; i++) {
+    for(int i=0; i<6; i++) {
+
         dynamicCodingMatrixWidgets.push_back(new CodingMatrixWidget(this));
         dynamicCodingMatrixWidgets.at(i)->setTitle(tr("Coding Matrix %1").arg(i+1));
     }
 
     // Layout Integrations
-    for(int i=0; i<5; i++) {
+    for(int i=0; i<6; i++) {
         dynamicCodingMatricesLayout->addWidget(dynamicCodingMatrixWidgets.at(i), qFloor(i/3)+1, i%3);
     }
 

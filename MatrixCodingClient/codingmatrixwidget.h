@@ -1,9 +1,22 @@
 #ifndef CODINGMATRIXWIDGET_H
 #define CODINGMATRIXWIDGET_H
 
+#include "globals.h"
+#include "bytematrix.h"
+
 #include <QGroupBox>
 #include <QVBoxLayout>
+#include <QGridLayout>
 #include <QTableWidget>
+#include <QLabel>
+#include <QLineEdit>
+#include <QCheckBox>
+#include <QSpinBox>
+#include <QPushButton>
+#include <QTextEdit>
+#include <QFile>
+#include <QVector>
+#include <QPair>
 
 class CodingMatrixWidget : public QGroupBox
 {
@@ -11,10 +24,6 @@ class CodingMatrixWidget : public QGroupBox
 
 public:
     CodingMatrixWidget(QWidget *parent = 0);
-
-
-    QVBoxLayout *codingMatrixLayout;
-    QTableWidget *codingMatrixTable;
 
 
     int tableTestWidgetFixedSide;
@@ -31,8 +40,51 @@ public:
     bool stop, repaint;
     int run_id;
 
+    // Main Layout
+    QVBoxLayout *codingMatrixLayout;
+
+
+    // Header Layout
+    QGridLayout *headerLayout;
+
+    QLabel *locationCxBkLbl;
+    QLineEdit *locationCxBkLnEd;
+
+    QLabel *maskCxBkLbl;
+    QLineEdit *maskCxBkLnEd;
+
+    QLabel *repaintProgressLbl;
+    QCheckBox *repaintProgressCkBx;
+
+    QPushButton *loadCodingMatrixBtn;
+
+
+    // Table
+    QTableWidget *codingMatrixTable;
+
+
+    // Button Layout
+    QGridLayout *buttonLayout;
+
+    QPushButton *startEncodingBtn;
+    QPushButton *nextEncodingStepBtn;
+    QPushButton *resetEncodingBtn;
+
+    // Report
+    QTextEdit *encodingReportTxEd;
+
+
     void clearTestMatrix();
     void drawTestMatrix();
+
+    ByteMatrix *byteMatrix;
+
+    ContextBrick *contextBrick;
+
+
+public slots:
+
+    void loadCodingMatrix();
 };
 
 #endif // CODINGMATRIXWIDGET_H

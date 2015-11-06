@@ -1,6 +1,7 @@
 #ifndef PROTOCOL_H
 #define PROTOCOL_H
 
+#include "globals.h"
 /*
  *
  *      Excerpts from RFC draft:

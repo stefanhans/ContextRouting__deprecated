@@ -14,7 +14,4 @@ ContextBrick::ContextBrick(byte_t context, byte_t mask) {
 
     this->content = context;
     this->mask    = mask;
-
-//    qDebug() << "initialized content: " << content;
-//    qDebug() << "initialized mask: " << mask;
 }
