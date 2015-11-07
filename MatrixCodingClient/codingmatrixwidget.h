@@ -3,6 +3,7 @@
 
 #include "globals.h"
 #include "bytematrix.h"
+#include "contextbrick.h"
 
 #include <QGroupBox>
 #include <QVBoxLayout>
@@ -13,7 +14,7 @@
 #include <QCheckBox>
 #include <QSpinBox>
 #include <QPushButton>
-#include <QTextEdit>
+#include <QPlainTextEdit>
 #include <QFile>
 #include <QVector>
 #include <QPair>
@@ -71,7 +72,7 @@ public:
     QPushButton *resetEncodingBtn;
 
     // Report
-    QTextEdit *encodingReportTxEd;
+    QPlainTextEdit *encodingReportTxEd;
 
 
     void clearTestMatrix();
@@ -85,6 +86,13 @@ public:
 public slots:
 
     void loadCodingMatrix();
+    void startEncoding();
+    void nextEncodingStep();
+    void resetEncoding();
+
+private:
+
+    void paintContextBrick(QColor contentColor = Qt::gray, QColor maskColor = Qt::lightGray);
 };
 
 #endif // CODINGMATRIXWIDGET_H

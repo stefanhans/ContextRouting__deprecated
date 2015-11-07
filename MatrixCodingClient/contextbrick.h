@@ -5,7 +5,6 @@
 
 #include <QtGlobal>
 #include <QDebug>
-#include <QtMath>
 
 typedef unsigned char byte_t;
 
@@ -13,15 +12,18 @@ class ContextBrick
 {
 public:
     ContextBrick() :
-        content(0), mask(0) {}
+        content(0),
+        mask(0) {}
 
     ContextBrick(byte_t content, byte_t mask) :
-        content(content), mask(mask) {}
+        content(content),
+        mask(mask) {}
 
     byte_t content;
     byte_t mask;
 
     inline bool isMatch(byte_t in_content) {
+        if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 
         if ((in_content ^ content) == 0) {
             return true;
@@ -35,6 +37,7 @@ public:
     }
 
     inline bool setNextMatchingContent() {
+        if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 
         if(isMatch(content+1)) {
             content += 1;
@@ -45,6 +48,7 @@ public:
 
 
     inline bool setNextMask() {
+        if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 
         if(mask < 128) {
             mask = (mask * 2) + 1;
@@ -54,6 +58,7 @@ public:
     }
 
     inline bool setNextMask(int sideLength) {
+        if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 
         if(mask < (sideLength * sideLength) / 2) {
             mask = (mask * 2) + 1;
@@ -64,6 +69,7 @@ public:
 
 
     inline bool setNextMaskInstance() {
+        if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 
         if(mask > 128) {
             return false;
@@ -81,6 +87,7 @@ public:
 
 
     inline bool setNextMaskInstance(int sideLength) {
+        if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 
         if(mask > (sideLength * sideLength) / 2) {
             return false;

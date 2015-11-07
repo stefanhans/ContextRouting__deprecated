@@ -98,12 +98,18 @@ CodingMatrixWidget::CodingMatrixWidget(QWidget *parent)
     buttonLayout = new QGridLayout;
 
     startEncodingBtn = new QPushButton(tr("Start Encoding"));
+    connect(startEncodingBtn, SIGNAL(clicked(bool)), this, SLOT(startEncoding()));
+
     nextEncodingStepBtn = new QPushButton(tr("Next Encoding Step"));
+    connect(nextEncodingStepBtn, SIGNAL(clicked(bool)), this, SLOT(nextEncodingStep()));
+
     resetEncodingBtn = new QPushButton(tr("Reset Encoding"));
+    connect(resetEncodingBtn, SIGNAL(clicked(bool)), this, SLOT(resetEncoding()));
 
     // Report
-    encodingReportTxEd = new QTextEdit;
+    encodingReportTxEd = new QPlainTextEdit;
     encodingReportTxEd->setFixedHeight(200);
+    encodingReportTxEd->setReadOnly(true);
 
     buttonLayout->addWidget(startEncodingBtn,    0, 0);
     buttonLayout->addWidget(nextEncodingStepBtn, 0, 1);
@@ -154,19 +160,68 @@ void CodingMatrixWidget::loadCodingMatrix() {
     }
 
     file.close();
+
+    byteMatrix->dataUrl = fileName;
+
     setTitle(fileName.section('/', -1));
 
-    locationCxBkLnEd->setReadOnly(false);
     locationCxBkLnEd->setText(QString("%1  %2").arg(contextBrick->content, 8, 2, QLatin1Char('0')).arg(contextBrick->content));
-    locationCxBkLnEd->setReadOnly(true);
 
 
-    maskCxBkLnEd->setReadOnly(false);
     maskCxBkLnEd->setText(QString("%1  %2").arg(contextBrick->mask, 8, 2, QLatin1Char('0')).arg(contextBrick->mask));
-    maskCxBkLnEd->setReadOnly(true);
 
     ((QTextEdit*) codingMatrixTable->cellWidget(0, 0))->setPalette(QPalette(Qt::gray));
 
-    byteMatrix->printMatrix();
+    if (DEBUG) byteMatrix->printMatrix();
 }
+
+
+void CodingMatrixWidget::startEncoding() {
+    if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
+
+
+    encodingReportTxEd->setPlainText(byteMatrix->printMatrix());
+
+}
+
+void CodingMatrixWidget::nextEncodingStep() {
+    if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
+
+    encodingReportTxEd->appendPlainText(QString(tr("Encoding Step\t: %1").arg(QString("%1").arg(run_id++), 3, QLatin1Char(' '))));
+
+    paintContextBrick(Qt::green);
+}
+
+void CodingMatrixWidget::resetEncoding() {
+    if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
+
+    run_id=1;
+    encodingReportTxEd->clear();
+}
+
+void CodingMatrixWidget::paintContextBrick(QColor contentColor, QColor maskColor) {
+    if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
+
+    // max_x, max_y < sideLength
+    if(byteMatrix->max_x < byteMatrix->sideLength-1) {
+        byteMatrix->max_x++;
+    }
+    if(byteMatrix->max_y < byteMatrix->sideLength-1) {
+        byteMatrix->max_y++;
+    }
+
+
+    for(int row=byteMatrix->min_x; row<=byteMatrix->max_x; row++) {
+        for(int col=byteMatrix->min_y; col<=byteMatrix->max_y; col++) {
+
+            if(((QTextEdit*) codingMatrixTable->cellWidget(row, col))->toPlainText().toInt() == 2) {
+                ((QTextEdit*) codingMatrixTable->cellWidget(row, col))->setPalette(QPalette(contentColor));
+            }
+            else {
+                ((QTextEdit*) codingMatrixTable->cellWidget(row, col))->setPalette(QPalette(maskColor));
+            }
+        }
+    }
+}
+
 

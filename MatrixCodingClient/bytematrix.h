@@ -2,15 +2,14 @@
 #define BYTEMATRIX_H
 
 #include "globals.h"
-#include "contextbrick.h"
 
-#include <QFile>
+#include <QUrl>
 #include <QtGlobal>
 #include <QDebug>
 #include <QtMath>
 
 
-//typedef unsigned char byte_t;
+typedef unsigned char byte_t;
 
 
 class ByteMatrix
@@ -19,15 +18,22 @@ public:
     ByteMatrix():
         matrix(),
         sideLength(0),
-        dataFile(){}
+        dataUrl(),
+        min_x(),
+        min_y(),
+        max_x(),
+        max_y() {}
 
     int matrix[16][16];
 
     int sideLength;
 
-    QFile *dataFile;
+    QUrl dataUrl;
 
-    inline bool isMatch(int x, int y, int content, int mask) {
+    int min_x, min_y, max_x, max_y;
+
+    inline bool isMatch(int x, int y, byte_t content, byte_t mask) {
+        if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 
         byte_t in_content = matrix[x][y];
 
@@ -45,7 +51,8 @@ public:
 
     }
 
-    inline bool isMatch(int min_x, int min_y, int max_x, int max_y, int content, int mask) {
+    inline bool isMatch(int min_x, int min_y, int max_x, int max_y, byte_t content, byte_t mask) {
+        if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 
         qDebug() << QString("isMatch matrix[%1,%2][%3,%4]").arg(min_x).arg(min_y).arg(max_x).arg(max_y);
 
@@ -61,7 +68,8 @@ public:
         return true;
     }
 
-    inline bool isSuperset(int min_x, int min_y, int max_x, int max_y, int content, int mask) {
+    inline bool isSuperset(int min_x, int min_y, int max_x, int max_y, byte_t content, byte_t mask) {
+        if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 
         if( ! isMatch(min_x, min_y, max_x, max_y, content, mask)) {
             return false;
@@ -90,22 +98,40 @@ public:
         return false;
     }
 
-    inline void printMatrix() {
+    inline QString printMatrix() {
+        if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 
-        QString matrixOut;
+        QString matrixOut(QString("\nCurrent Loaded Matrix Data:\n%1\n").arg(LINE_SEPARATOR));
+
+        matrixOut.append(QString("dataUrl: %1\n").arg(dataUrl.toString()));
+
+        matrixOut.append(QString("matrix: \n"));
         for (int row = 0; row < sideLength; ++row){
+
+            matrixOut.append("\t");
+
             for (int col = 0; col < sideLength; ++col){
                 if(col < sideLength-1) {
 
-                    matrixOut.append(QString("%1, ").arg(matrix[row][col]));
+                    matrixOut.append(QString("%1, ").arg(QString("%1").arg(matrix[row][col]), 3, QLatin1Char(' ')));
                 }
                 else {
-                    matrixOut.append(QString("%1\n").arg(matrix[row][col]));
+                    matrixOut.append(QString("%1\n").arg(QString("%1").arg(matrix[row][col]), 3, QLatin1Char(' ')));
                 }
             }
-
         }
+        matrixOut.append("\n");
+
+        matrixOut.append(QString("sideLength: %1\n").arg(sideLength));
+        matrixOut.append(QString("min_x: %1\n").arg(min_x));
+        matrixOut.append(QString("min_y: %1\n").arg(min_y));
+        matrixOut.append(QString("max_x: %1\n").arg(max_x));
+        matrixOut.append(QString("max_y: %1\n").arg(max_y));
+        matrixOut.append(QString("%1\n").arg(LINE_SEPARATOR));
+
         qDebug().noquote() << matrixOut;
+
+        return matrixOut;
     }
 
 };
