@@ -134,6 +134,8 @@ void CodingMatrixWidget::loadCodingMatrix() {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open Matrices"), "/home/stefan/Development/ContextRouting/Matrices", tr("%1x%1 Matrix Files (*.%1x%1_matrix)").arg(matrixSideCount));
     QFile file(fileName);
 
+    int highestNumber = 0;
+
     if (file.open(QFile::ReadOnly)) {
 
         int row = 0;
@@ -145,12 +147,16 @@ void CodingMatrixWidget::loadCodingMatrix() {
                 list= line.simplified().split(",");
                 for (int col = 0; col < list.length(); ++col){
 
-                    ((QTextEdit*) codingMatrixTable->cellWidget(row, col))->setText(QString("%1").arg(list.at(col)));
+                    ((QTextEdit*) codingMatrixTable->cellWidget(row, col))->setPlainText(QString("%1").arg(list.at(col)));
                     ((QTextEdit*) codingMatrixTable->cellWidget(row, col))->setFont(QFont("Times", 8, QFont::Bold));
                     ((QTextEdit*) codingMatrixTable->cellWidget(row, col))->setAutoFillBackground(true);
                     ((QTextEdit*) codingMatrixTable->cellWidget(row, col))->setPalette(QPalette(Qt::white));
 
                     byteMatrix->matrix[row][col] = list.at(col).toInt();
+
+                    if( highestNumber < list.at(col).toInt() ) {
+                        highestNumber = list.at(col).toInt();
+                    }
                 }
                 ++row;
                 ++byteMatrix->sideLength;
@@ -163,6 +169,7 @@ void CodingMatrixWidget::loadCodingMatrix() {
     file.close();
 
     byteMatrix->dataUrl = fileName;
+    byteMatrix->highestNumber = highestNumber;
 
     setTitle(fileName.section('/', -1));
 
@@ -192,6 +199,7 @@ void CodingMatrixWidget::startEncoding() {
 
 void CodingMatrixWidget::nextEncodingStep() {
     if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
+
     qDebug() << contextBrick->content << " == " << pow(byteMatrix->sideLength, 2);
     qDebug() << contextBrick->content << " == " << pow(2, byteMatrix->sideLength);
 
@@ -229,8 +237,21 @@ void CodingMatrixWidget::resetEncoding() {
 void CodingMatrixWidget::displayContextBrick() {
     if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 
-    locationCxBkLnEd->setText(QString("%1  %2").arg(contextBrick->content, 8, 2, QLatin1Char('0')).arg(contextBrick->content));
-    maskCxBkLnEd->setText(QString("%1  %2").arg(contextBrick->mask, 8, 2, QLatin1Char('0')).arg(contextBrick->mask));
+    int highestNumberLength = 1;
+
+    qDebug() << "byteMatrix->highestNumber" << byteMatrix->highestNumber;
+
+    for(int i = 1; i < 8; i++) {
+        qDebug() << "i" << i;
+        qDebug() << "pow(2, i)" << pow(2, i);
+        if(pow(2, i) > byteMatrix->highestNumber) {
+            highestNumberLength = i;
+            break;
+        }
+    }
+
+    locationCxBkLnEd->setText(QString("%1  %2").arg(contextBrick->content, highestNumberLength, 2, QLatin1Char('0')).arg(contextBrick->content));
+    maskCxBkLnEd->setText(QString("%1  %2").arg(contextBrick->mask, highestNumberLength, 2, QLatin1Char('0')).arg(contextBrick->mask));
 }
 
 void CodingMatrixWidget::paintContextBrick(QColor contentColor, QColor maskColor) {
@@ -238,6 +259,12 @@ void CodingMatrixWidget::paintContextBrick(QColor contentColor, QColor maskColor
 
     for(int row=0; row<byteMatrix->sideLength; row++) {
         for(int col=0; col<byteMatrix->sideLength; col++) {
+
+            /*
+             * Crash after second file load and do not stop after end of test.4x4_matrix
+             *
+             */
+
 
             qDebug() << "codingMatrixTable->cellWidget(row, col))->toPlainText(): " << ((QTextEdit*) codingMatrixTable->cellWidget(row, col))->toPlainText();
             qDebug() << "row, col: " << row << ", " << col;

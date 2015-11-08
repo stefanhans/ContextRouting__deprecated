@@ -19,10 +19,11 @@ public:
         matrix(),
         sideLength(0),
         dataUrl(),
-        min_x(),
-        min_y(),
-        max_x(),
-        max_y() {}
+        min_x(0),
+        min_y(0),
+        max_x(0),
+        max_y(0),
+        highestNumber(256) {}
 
     int matrix[16][16];
 
@@ -30,7 +31,7 @@ public:
 
     QUrl dataUrl;
 
-    int min_x, min_y, max_x, max_y;
+    int min_x, min_y, max_x, max_y, highestNumber;
 
     inline bool isMatch(int x, int y, byte_t content, byte_t mask) {
         if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
