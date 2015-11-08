@@ -5,6 +5,7 @@
 #include <QTableWidget>
 #include <QSpacerItem>
 #include <QFileDialog>
+#include <QtMath>
 
 CodingMatrixWidget::CodingMatrixWidget(QWidget *parent)
     : QGroupBox(parent)
@@ -165,12 +166,9 @@ void CodingMatrixWidget::loadCodingMatrix() {
 
     setTitle(fileName.section('/', -1));
 
-    locationCxBkLnEd->setText(QString("%1  %2").arg(contextBrick->content, 8, 2, QLatin1Char('0')).arg(contextBrick->content));
+    displayContextBrick();
+    paintContextBrick();
 
-
-    maskCxBkLnEd->setText(QString("%1  %2").arg(contextBrick->mask, 8, 2, QLatin1Char('0')).arg(contextBrick->mask));
-
-    ((QTextEdit*) codingMatrixTable->cellWidget(0, 0))->setPalette(QPalette(Qt::gray));
 
     if (DEBUG) byteMatrix->printMatrix();
 }
@@ -182,44 +180,76 @@ void CodingMatrixWidget::startEncoding() {
 
     encodingReportTxEd->setPlainText(byteMatrix->printMatrix());
 
+    stop = 0;
+
+    while(stop == 0) {
+        nextEncodingStep();
+    }
+
+
+
 }
 
 void CodingMatrixWidget::nextEncodingStep() {
     if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
+    qDebug() << contextBrick->content << " == " << pow(byteMatrix->sideLength, 2);
+    qDebug() << contextBrick->content << " == " << pow(2, byteMatrix->sideLength);
+
+    if ( (contextBrick->content == pow(byteMatrix->sideLength, 2)) || ( (contextBrick->content == 0) && (contextBrick->mask+1 == pow(2, byteMatrix->sideLength))) ) {
+        stop = 1;
+        return;
+    }
 
     encodingReportTxEd->appendPlainText(QString(tr("Encoding Step\t: %1").arg(QString("%1").arg(run_id++), 3, QLatin1Char(' '))));
 
-    paintContextBrick(Qt::green);
+    paintContextBrick(Qt::white, Qt::white);
+
+    if( ! contextBrick->setNextMaskInstance(byteMatrix->sideLength)) {
+        contextBrick->content = 0;
+        contextBrick->setNextMask();
+    }
+
+
+    displayContextBrick();
+    paintContextBrick();
 }
 
 void CodingMatrixWidget::resetEncoding() {
     if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 
+    paintContextBrick(Qt::white, Qt::white);
+    contextBrick->reset();
+    displayContextBrick();
+    paintContextBrick();
+
     run_id=1;
     encodingReportTxEd->clear();
+}
+
+void CodingMatrixWidget::displayContextBrick() {
+    if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
+
+    locationCxBkLnEd->setText(QString("%1  %2").arg(contextBrick->content, 8, 2, QLatin1Char('0')).arg(contextBrick->content));
+    maskCxBkLnEd->setText(QString("%1  %2").arg(contextBrick->mask, 8, 2, QLatin1Char('0')).arg(contextBrick->mask));
 }
 
 void CodingMatrixWidget::paintContextBrick(QColor contentColor, QColor maskColor) {
     if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 
-    // max_x, max_y < sideLength
-    if(byteMatrix->max_x < byteMatrix->sideLength-1) {
-        byteMatrix->max_x++;
-    }
-    if(byteMatrix->max_y < byteMatrix->sideLength-1) {
-        byteMatrix->max_y++;
-    }
+    for(int row=0; row<byteMatrix->sideLength; row++) {
+        for(int col=0; col<byteMatrix->sideLength; col++) {
 
+            qDebug() << "codingMatrixTable->cellWidget(row, col))->toPlainText(): " << ((QTextEdit*) codingMatrixTable->cellWidget(row, col))->toPlainText();
+            qDebug() << "row, col: " << row << ", " << col;
 
-    for(int row=byteMatrix->min_x; row<=byteMatrix->max_x; row++) {
-        for(int col=byteMatrix->min_y; col<=byteMatrix->max_y; col++) {
-
-            if(((QTextEdit*) codingMatrixTable->cellWidget(row, col))->toPlainText().toInt() == 2) {
-                ((QTextEdit*) codingMatrixTable->cellWidget(row, col))->setPalette(QPalette(contentColor));
-            }
-            else {
+            if(contextBrick->isMatch(((QTextEdit*) codingMatrixTable->cellWidget(row, col))->toPlainText().toInt())) {
                 ((QTextEdit*) codingMatrixTable->cellWidget(row, col))->setPalette(QPalette(maskColor));
             }
+
+            if(((QTextEdit*) codingMatrixTable->cellWidget(row, col))->toPlainText().toInt() == (int) contextBrick->content) {
+                ((QTextEdit*) codingMatrixTable->cellWidget(row, col))->setPalette(QPalette(contentColor));
+            }
+
         }
     }
 }

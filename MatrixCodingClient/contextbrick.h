@@ -22,6 +22,11 @@ public:
     byte_t content;
     byte_t mask;
 
+    inline void reset() {
+        content = 0;
+        mask = 0;
+    }
+
     inline bool isMatch(byte_t in_content) {
         if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
 

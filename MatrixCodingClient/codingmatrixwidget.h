@@ -92,6 +92,8 @@ public slots:
 
 private:
 
+    void displayContextBrick();
+
     void paintContextBrick(QColor contentColor = Qt::gray, QColor maskColor = Qt::lightGray);
 };
 
