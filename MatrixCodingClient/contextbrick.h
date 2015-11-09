@@ -90,9 +90,12 @@ public:
     }
 
 
-
-    inline bool setNextMaskInstance(int sideLength) {
+    inline bool setNextMaskInstance(int sideLength, int highestNumber = 15) {
         if (DEBUG) qDebug().nospace()  << __FILE__ << "(" << __LINE__ << "): "  << Q_FUNC_INFO;
+
+        if(content == highestNumber) {
+            return false;
+        }
 
         if(mask > (sideLength * sideLength) / 2) {
             return false;
