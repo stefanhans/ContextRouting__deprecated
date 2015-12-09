@@ -2,19 +2,25 @@
 
 
 
-Internet Engineering Task Force                              Stefan Hans
-Internet-Draft                                 FernUniversitaet in Hagen
-Intended status: Experimental                                  June 2015
-Expires: December 3, 2015
+Network Working Group                                        Stefan Hans
+Internet-Draft                                          December 9, 2015
+Intended status: Experimental
+Expires: June 11, 2016
 
 
-                        Context Routing Protocol
+                   Contextinformation Routing Network
                         DraftRFC_ContextRouting
 
 Abstract
 
-   The Context Routing Protocol is a communication framework
-   specification enabling a context matching service.
+   The Contextinformation Routing Network is a communication framework
+   enabling a generic service to join matching contextinformation
+   respectively its communication partners.  The communication partners
+   send and receive data packets containing, inter alia, encoded
+   contextinformation in the form of paired bit strings.  The network
+   uses the TCP/IP layer to transport the data packets and needed meta
+   information.  It compares the paired bit strings without information
+   about its meaning.
 
 Status of This Memo
 
@@ -31,7 +37,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 3, 2015.
+   This Internet-Draft will expire on June 11, 2016.
 
 Copyright Notice
 
@@ -44,29 +50,27 @@ Copyright Notice
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
+
+
+
+Stefan Hans               Expires June 11, 2016                 [Page 1]
+
+Internet-Draft               Context Routing               December 2015
+
+
    include Simplified BSD License text as described in Section 4.e of
    the Trust Legal Provisions and are provided without warranty as
    described in the Simplified BSD License.
 
-
-
-
-
-
-Stefan Hans             Expires December 3, 2015                [Page 1]
-
-Internet-Draft               Context Routing                   June 2015
-
-
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-   2.  Context Datagram  . . . . . . . . . . . . . . . . . . . . . .   2
-     2.1.  Header  . . . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  Context Datagram  . . . . . . . . . . . . . . . . . . . . . .   3
+     2.1.  Header  . . . . . . . . . . . . . . . . . . . . . . . . .   3
        2.1.1.  sg_request  . . . . . . . . . . . . . . . . . . . . .   3
        2.1.2.  sg_profile  . . . . . . . . . . . . . . . . . . . . .   3
-       2.1.3.  version . . . . . . . . . . . . . . . . . . . . . . .   3
-       2.1.4.  channel . . . . . . . . . . . . . . . . . . . . . . .   3
+       2.1.3.  version . . . . . . . . . . . . . . . . . . . . . . .   4
+       2.1.4.  channel . . . . . . . . . . . . . . . . . . . . . . .   4
        2.1.5.  UUID  . . . . . . . . . . . . . . . . . . . . . . . .   4
        2.1.6.  IP address  . . . . . . . . . . . . . . . . . . . . .   4
        2.1.7.  IP port . . . . . . . . . . . . . . . . . . . . . . .   4
@@ -74,7 +78,7 @@ Table of Contents
        2.1.9.  add_type  . . . . . . . . . . . . . . . . . . . . . .   4
        2.1.10. add_size  . . . . . . . . . . . . . . . . . . . . . .   4
        2.1.11. additional data . . . . . . . . . . . . . . . . . . .   4
-       2.1.12. Service Groups  . . . . . . . . . . . . . . . . . . .   4
+       2.1.12. Service Groups  . . . . . . . . . . . . . . . . . . .   5
      2.2.  Context . . . . . . . . . . . . . . . . . . . . . . . . .   5
        2.2.1.  type  . . . . . . . . . . . . . . . . . . . . . . . .   5
        2.2.2.  content . . . . . . . . . . . . . . . . . . . . . . .   5
@@ -93,26 +97,34 @@ Table of Contents
 
 1.  Introduction
 
-   .
+   First of all I want to describe the term of contextinformation as it
+   is used here.  Information has a context and the separation between
+   information and its context is fuzzy and ultimately academic.
+   Therefore no distinction between information and context is made in
+   this regard, and both together are defined as contextinformation.
+   Contextinformation is a quite unlimited form which can describe
+   virtually all describable.  Similiarly, every contextinformation can
+   be encoded or digitalized, if the size of the encoding is not
+   limited.  But in practice one has to cope with another aspect of
+
+
+
+Stefan Hans               Expires June 11, 2016                 [Page 2]
+
+Internet-Draft               Context Routing               December 2015
+
+
+   contextinformation, which will be named inaccuracy here.  For a
+   matching contextinformation I want to define a certain inaccuracy.
+   For this a kind of bit mask is defined.  So exist paired bit strings
+   representing an encoded contextinformation and the inaccuracy of the
+   contextinformation searched.
 
 2.  Context Datagram
 
    Datastructure of the context datagram. (max.  MTU 1200 Byte)
 
 2.1.  Header
-
-
-
-
-
-
-
-
-
-Stefan Hans             Expires December 3, 2015                [Page 2]
-
-Internet-Draft               Context Routing                   June 2015
-
 
        Figure 2.1.1 shows the header section of the context datagram
 
@@ -150,6 +162,14 @@ Internet-Draft               Context Routing                   June 2015
    sender of this datagram.  The services which are available have the
    appropriate bit switched on (see figure 2.1.2).
 
+
+
+
+Stefan Hans               Expires June 11, 2016                 [Page 3]
+
+Internet-Draft               Context Routing               December 2015
+
+
 2.1.3.  version
 
    The version of the Context Datagram Specification of this datagram.
@@ -162,13 +182,6 @@ Internet-Draft               Context Routing                   June 2015
    future.  The value for the core functionality is 1 which has to be
    used at the moment.  The value 0 is reserved for testing and all
    other values has no meaning so far.
-
-
-
-Stefan Hans             Expires December 3, 2015                [Page 3]
-
-Internet-Draft               Context Routing                   June 2015
-
 
 2.1.5.  UUID
 
@@ -206,25 +219,16 @@ Internet-Draft               Context Routing                   June 2015
    core functionality is the service_id which has to be used at the
    moment (see 2.1.2).
 
+
+
+Stefan Hans               Expires June 11, 2016                 [Page 4]
+
+Internet-Draft               Context Routing               December 2015
+
+
 2.1.12.  Service Groups
 
    'Service Groups' describes the role(s) in the Context Network.
-
-
-
-
-
-
-
-
-
-
-
-
-Stefan Hans             Expires December 3, 2015                [Page 4]
-
-Internet-Draft               Context Routing                   June 2015
-
 
    Figure 2.1.2 shows the service groups and its defined first two bits.
 
@@ -273,13 +277,9 @@ Internet-Draft               Context Routing                   June 2015
 
 
 
-
-
-
-
-Stefan Hans             Expires December 3, 2015                [Page 5]
+Stefan Hans               Expires June 11, 2016                 [Page 5]
 
-Internet-Draft               Context Routing                   June 2015
+Internet-Draft               Context Routing               December 2015
 
 
 2.2.3.  mask
@@ -333,9 +333,9 @@ Internet-Draft               Context Routing                   June 2015
 
 
 
-Stefan Hans             Expires December 3, 2015                [Page 6]
+Stefan Hans               Expires June 11, 2016                 [Page 6]
 
-Internet-Draft               Context Routing                   June 2015
+Internet-Draft               Context Routing               December 2015
 
 
 2.3.2.  text_type
@@ -372,7 +372,6 @@ Internet-Draft               Context Routing                   June 2015
 Author's Address
 
    Stefan Hans
-   FernUniversitaet in Hagen
    Rotwandstr.
    Baldham  85598
    Germany
@@ -389,4 +388,5 @@ Author's Address
 
 
 
-Stefan Hans             Expires December 3, 2015                [Page 7]
+
+Stefan Hans               Expires June 11, 2016                 [Page 7]
