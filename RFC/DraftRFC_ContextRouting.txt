@@ -230,20 +230,19 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
                   on (see figure 2.1.2).
 
    version
-                  The version of the Context Datagram Specification of
-                  this datagram.  It has a left 4-bit part which
-                  represents the major number and a right 4-bit part
-                  which represents the minor number.
+                  The version of this specification.  It has a higher
+                  4-bit part which represents the major number and a
+                  lowere 4-bit part which represents the minor number.
 
    channel
                   The channel can be used to separate context packet
                   traffic in the future.  The value for the core
                   functionality is 1 which has to be used at the moment.
                   The value 0 is reserved for testing and all other
-                  values has no meaning so far.
+                  values have no meaning so far.
 
    UUID
-                  The UUID is the unique identifier for the datagram.
+                  The UUID is the unique identifier for the CIP.
 
    IP address
                   A 32-bit IP address in Network Byte Order.
@@ -254,23 +253,24 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    time
                   Unix time of datagram introduction, i.e. the number of
                   seconds between 00:00:00 UTC on 1 January 1970 and the
-                  moment the datagram arrived in the context network for
-                  the first time.
+                  moment the CIP arrived in the CRN for the first time.
 
    add_type
                   The type of the following data of the datagram.  The
                   value for the core functionality is 1 which has to be
                   used at the moment.  The value 0 is reserved for
-                  testing and all other values has no meaning so far.
+                  testing and all other values have no meaning so far.
 
    add_size
-                  The size of the following context data of the
-                  datagram, i.e. the number of Context Bricks.
+                  The size of the following header data of the datagram,
+                  i.e. the number of bytes.
 
    additional data
                   The additional data as specified in type and size.
                   The data for the core functionality is the service_id
                   which has to be used at the moment (see 2.1.2).
+
+
 
 
 
