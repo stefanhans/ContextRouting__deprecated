@@ -1,0 +1,448 @@
+
+
+
+
+Network Working Group                                        Stefan Hans
+Internet-Draft                                         December 16, 2015
+Intended status: Experimental
+Expires: June 18, 2016
+
+
+  Contextinformation Paket (CIP) Specification for Contextinformation
+                        Routing Networks (CRNs)
+                       CIP Specification for CRNs
+
+Abstract
+
+   Contextinformation Paket (CIP) is a datastructure to store and
+   transfer contextinformation plus header and possibly application data
+   through Contextinformation Routing Networks (CRNs).  This document is
+   the specification of CIP.  For an overview about CRN please see
+   document.
+
+   This document does not cover other specifications or requirements
+   concerning CRN.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at http://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on June 18, 2016.
+
+Copyright Notice
+
+   Copyright (c) 2015 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (http://trustee.ietf.org/license-info) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+
+
+
+Stefan Hans               Expires June 18, 2016                 [Page 1]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
+
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  Header  . . . . . . . . . . . . . . . . . . . . . . . . . . .   3
+     2.1.  Elements  . . . . . . . . . . . . . . . . . . . . . . . .   4
+     2.2.  Service Groups  . . . . . . . . . . . . . . . . . . . . .   5
+   3.  Contextinformation  . . . . . . . . . . . . . . . . . . . . .   6
+   4.  Data  . . . . . . . . . . . . . . . . . . . . . . . . . . . .   7
+   5.  Context Bricks  . . . . . . . . . . . . . . . . . . . . . . .   8
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   8
+
+1.  Introduction
+
+   The main ideas had emerged while thinking about Context Aware
+   Services and trying to find answers to the following questions:
+
+      How can an open standard connect communication partners having
+      matching communication interests and context?
+
+      How can it be open for any kind of new definitions of interests
+      and context to anybody?
+
+      How can it be organized to maximize the availabilty of the service
+      and to minimize the customizing effort for its clients?
+
+   In an attempt of a definition of information and context it has
+   turned out that there is no useful clear distinction between the two.
+   The term of Contextinformation (CI) shall cover both aspects of
+   information in this document.
+
+   Now let me introduce two communication roles, i.e. Offer and Request,
+   and location as an example for a CI.  Offer says "I'm available for
+   anybody to contact me" and Request says "I am only looking for in the
+   first place".  Both have a quite exact information about their
+   location and can define an surrounding area where Offer is available
+   respectively Request is searching.  If the exact location is not
+   outside the surrounding area, it is defined as directly related.
+   Provided that, these aspects of CI are named CI-Content (exact
+   location) and CI-Mask (surrounding area).  This is essential for the
+   understanding of the concept of CI.  The CI of Offer and Request are
+   matching, in this case, if the exact location of one is in the
+   surrounding area of the other and vice versa.  Then Offer's CI,
+
+
+
+
+Stefan Hans               Expires June 18, 2016                 [Page 2]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
+
+   including contact information, will be send to Request and possibly
+   Request contacts Offer directly.
+
+   One could now determine a specification for this purpose as one
+   example of CI.  Let me introduce the concept of Contextinformation
+   Coding (CIC) instead.  CIC means both a definition of an encoding
+   resp. decoding protocol for a particular kind of CI and an encoded
+   concrete piece of CI.  For unambiguity the terms "CIC-Protocol" and
+   "encoded CI" will be used in this document, if needed.  A CIC-
+   Protocol and all its encoded CI is linked by a CIC-Number.  Applied
+   to our location based example we would determine a specification for
+   this purpose, call it a CIC and assign a free CIC-Number to it.  Then
+   all encoded CI is processed directly by the same algorithm to find
+   matching CI, i.e. without an idea of the certain meaning of the used
+   CIC.  Therefore CI will be encoded in a pair of bit strings
+   representing CI-Content and CI-Mask.  Looking at one bit then it is
+   sufficient for a match, if CI-Content is equal or both CI-Masks mark
+   them as non-relevant.  Then a performant bitwise operation can be
+   executed to find matching CI.
+
+   A Contextinformation Packet (CIP) is the datastructure to encapsulate
+   contextinformation and other data and divided in three parts:
+
+   o  Header
+
+   o  Contextinformation
+
+   o  Data
+
+   The Contextinformation Routing takes place in an overlay network
+   built normally on top of the TCP/IP layer.  It is oriented towards
+   known concepts of network routing and others more.
+
+2.  Header
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Stefan Hans               Expires June 18, 2016                 [Page 3]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
+
+       Figure 2.1.1 shows the header section of the context datagram
+
+   0                   1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   | sg_request (1)| sg_profile (1)|  version (1)  |  channel (1)  | |
+   |                                                               | |
+   |                            UUID (16)                          | |
+   |                                                               | |
+   |                                                               | fix
+   |                          IP address (4)                       | |
+   |            IP port (2)        |                               | |
+   |                            time (8)                           | |
+   |                               |  add_type (1) |  add_size (1) |---
+   | ............................................................  | |
+   | .............. additional data up to 255 bytes .............  | opt
+   | ............................................................  | |
+   +---------------------------------------------------------------+
+
+   Format of datagrams containing context information.  Field sizes are
+    given in octets.  Unless otherwise specified, fields contain binary
+    integers, in normal Internet order with the most-significant octet
+                first.  Each tick mark represents one bit.
+
+2.1.  Elements
+
+   sg_request
+                  The Service Groups Request shows the relevant
+                  service_groups requested by the datagram.  The
+                  services which are requested by this datagram have the
+                  appropriate bit switched on (see figure 2.1.2).
+
+   sg_profile
+                  The Service Groups Profile shows all available service
+                  groups of the sender of this datagram.  The services
+                  which are available have the appropriate bit switched
+                  on (see figure 2.1.2).
+
+   version
+                  The version of this specification.  It has a higher
+                  4-bit part which represents the major number and a
+                  lowere 4-bit part which represents the minor number.
+
+   channel
+                  The channel can be used to separate context packet
+                  traffic in the future.  The value for the core
+                  functionality is 1 which has to be used at the moment.
+
+
+
+
+Stefan Hans               Expires June 18, 2016                 [Page 4]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
+
+                  The value 0 is reserved for testing and all other
+                  values have no meaning so far.
+
+   UUID
+                  The UUID is the unique identifier for the CIP.
+
+   IP address
+                  A 32-bit IP address in Network Byte Order.
+
+   IP port
+                  A 16-bit port number in Network Byte Order.
+
+   time
+                  Unix time of datagram introduction, i.e. the number of
+                  seconds between 00:00:00 UTC on 1 January 1970 and the
+                  moment the CIP arrived in the CRN for the first time.
+
+   add_type
+                  The type of the following data of the datagram.  The
+                  value for the core functionality is 1 which has to be
+                  used at the moment.  The value 0 is reserved for
+                  testing and all other values have no meaning so far.
+
+   add_size
+                  The size of the following header data of the datagram,
+                  i.e. the number of bytes.
+
+   additional data
+                  The additional data as specified in type and size.
+                  The data for the core functionality is the service_id
+                  which has to be used at the moment (see 2.1.2).
+
+2.2.  Service Groups
+
+   'Service Groups' describes the role(s) in the Context Network.
+
+   Figure 2.1.2 shows the service groups and its defined first two bits.
+
+   0         1         2  ---------------------------------------   8
+   +---------+---------+--------------------------------------------+
+   | client  | gateway |           not yet defined                  |
+   +--------------------------------------------------------------- +
+
+     Thus the integer 1 means 'client', 2 means 'gateway' and 3 means
+                                   both.
+
+
+
+
+
+
+Stefan Hans               Expires June 18, 2016                 [Page 5]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
+
+3.  Contextinformation
+
+       Figure 2.2.1 shows the context (brick) section of the context
+    datagram.  A context brick consists of two bytes: content und mask.
+
+   0                   1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |   type (1)    |  content (1)  |   mask (1)    |  add_size (1) | fix
+   +---------------------------------------------------------------+---
+   | ............................................................  | |
+   | .............. additional data up to 510 bytes .............  | opt
+   | .............. i.e. up to 255 context bricks  ..............  | |
+   | ............................................................  | |
+   +---------------------------------------------------------------+
+
+   Format of datagrams containing context information.  Field sizes are
+    given in octets.  Unless otherwise specified, fields contain binary
+    integers, in normal Internet order with the most-significant octet
+                                  first.
+
+   type
+                  The type can be used to specify different context
+                  designs in the future.  The value for the core
+                  functionality is 1 which has to be used at the moment.
+                  The value 0 is reserved for testing and all other
+                  values has no meaning so far.
+
+   content
+                  The content is the first part of a Context Brick (see
+                  section 2.4).  It is used in the core functionality to
+                  specify the kind of context coding.
+
+   mask
+                  The mask is the second part of a Context Brick (see
+                  section 2.4).  It is not used in the core
+                  functionality so far.
+
+   add_size
+                  The number of Context Bricks as additional data (up to
+                  255).
+
+   additional data
+                  The additional data contains the number of Context
+                  Bricks (see section 2.4) as specified in add_size.
+
+
+
+
+
+
+Stefan Hans               Expires June 18, 2016                 [Page 6]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
+
+4.  Data
+
+   The following figure shows the data section of the context datagram.
+     This section has no meaning for the Context Routing itself.  The
+    meaning of this section is only relevant to the clients.  Therefore
+      the following structure has to be seen as a default and can be
+     changed, if another specification is agreed between the concerned
+   clients.  The 'add_size' has to be as if the default structure would
+         be actual, i.e. available is then 'add_size + 141' bytes.
+
+   0                   1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  add_size (1) | text_type (1) |                               | |
+   |                                                               | |
+   |                          text (140)                           | fix
+   |                                                               | |
+   +---------------------------------------------------------------+---
+   | ............................................................  | |
+   | ........ additional data up to 255 bytes (add_size) ........  | opt
+   | ............................................................  | |
+   +---------------------------------------------------------------+
+
+   Format of datagrams containing context information.  Field sizes are
+    given in octets.  Unless otherwise specified, fields contain binary
+    integers, in normal Internet order with the most-significant octet
+   first.  Each tick mark represents one bit.  The area for 'text (140)'
+                     does not correspond to 140 bytes.
+
+   add_size
+                  The size of additional data in bytes.
+
+   text_type
+                  The meaning or format of the following text, e.g.
+                  plain text, URL.
+
+   text
+                  A fixed sized text, that means it has possibly to be
+                  padded by blanks up to 140 characters.
+
+   additional data
+                  Any data in a size as specified by 'add_size', i.e.
+                  limited by 255.
+
+
+
+
+
+
+
+
+Stefan Hans               Expires June 18, 2016                 [Page 7]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
+
+5.  Context Bricks
+
+   A Context Brick is a pair of bytes in particular content and mask.
+   It describes a piece of information and the relevance of its
+   exactness.  The meaning of the Context Bricks is not known by the
+   Context Network.
+
+   content
+                  The content represents an exact information encoded in
+                  a byte.
+
+   mask
+                  The mask represents the relevance of the exactness of
+                  the content in a byte.  For that a 1 makes the
+                  corresponding bit of the content irrelevant.  Two bits
+                  are corresponding, if they are at the same place in
+                  the byte.
+
+Author's Address
+
+   Stefan Hans
+   Rotwandstr.
+   Baldham  85598
+   Germany
+
+   Email: uni@stefan-hans.de
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Stefan Hans               Expires June 18, 2016                 [Page 8]
