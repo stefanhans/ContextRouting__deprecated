@@ -3,9 +3,9 @@
 
 
 Network Working Group                                        Stefan Hans
-Internet-Draft                                         December 14, 2015
+Internet-Draft                                         December 16, 2015
 Intended status: Experimental
-Expires: June 16, 2016
+Expires: June 18, 2016
 
 
          Concepts of Contextinformation Routing Networks (CRNs)
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 16, 2016.
+   This Internet-Draft will expire on June 18, 2016.
 
 
 
@@ -53,7 +53,7 @@ Status of This Memo
 
 
 
-Stefan Hans               Expires June 16, 2016                 [Page 1]
+Stefan Hans               Expires June 18, 2016                 [Page 1]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
@@ -82,12 +82,16 @@ Table of Contents
      2.3.  Distinction and Deployment  . . . . . . . . . . . . . . .   4
    3.  Contextinformation Packet (CIP) . . . . . . . . . . . . . . .   4
      3.1.  Header  . . . . . . . . . . . . . . . . . . . . . . . . .   4
-       3.1.1.  Service Groups  . . . . . . . . . . . . . . . . . . .   6
-     3.2.  Contextinformation  . . . . . . . . . . . . . . . . . . .   6
-     3.3.  Data  . . . . . . . . . . . . . . . . . . . . . . . . . .   7
-     3.4.  Context Bricks  . . . . . . . . . . . . . . . . . . . . .   8
-   4.  Contextinformation Routing (CIR)  . . . . . . . . . . . . . .   8
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   8
+       3.1.1.  Elements  . . . . . . . . . . . . . . . . . . . . . .   5
+       3.1.2.  Service Groups  . . . . . . . . . . . . . . . . . . .   6
+     3.2.  Contextinformation  . . . . . . . . . . . . . . . . . . .   7
+     3.3.  Data  . . . . . . . . . . . . . . . . . . . . . . . . . .   8
+     3.4.  Context Bricks  . . . . . . . . . . . . . . . . . . . . .   9
+   4.  Contextinformation Routing (CIR)  . . . . . . . . . . . . . .   9
+     4.1.  Structure and Limitations . . . . . . . . . . . . . . . .   9
+     4.2.  Types . . . . . . . . . . . . . . . . . . . . . . . . . .   9
+     4.3.  Distinction and Deployment  . . . . . . . . . . . . . . .   9
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   9
 
 1.  Introduction
 
@@ -103,17 +107,15 @@ Table of Contents
       How can it be organized to maximize the availabilty of the service
       and to minimize the customizing effort for its clients?
 
-   In an attempt of a definition of information and context it has
-   turned out that there is no useful clear distinction between the two.
 
 
-
-
-Stefan Hans               Expires June 16, 2016                 [Page 2]
+Stefan Hans               Expires June 18, 2016                 [Page 2]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
 
+   In an attempt of a definition of information and context it has
+   turned out that there is no useful clear distinction between the two.
    The term of Contextinformation (CI) shall cover both aspects of
    information in this document.
 
@@ -158,31 +160,71 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
    o  Data
 
-   The Contextinformation Routing takes place in an overlay network
-   built normally on top of the TCP/IP layer.  It is oriented towards
-   known concepts of network routing and others more.
 
 
 
 
-Stefan Hans               Expires June 16, 2016                 [Page 3]
+
+Stefan Hans               Expires June 18, 2016                 [Page 3]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
 
+   The Contextinformation Routing takes place in an overlay network
+   built normally on top of the TCP/IP layer.  It is oriented towards
+   known concepts of network routing and others more.
+
 2.  Contextinformation Coding (CIC)
+
+   Based on any describable a CIC-Protocol defines an injective function
+   between this CI and an encoded CI-Content, i.e. there is exactly one
+   bit string for every discribed content of the CIC-Protocol.  CI-Mask,
+   the second bit string, is not defined individually by the CIC-
+   Protocol.
 
 2.1.  Structure and Limitations
 
+   CIC contains of CI-Bricks
+
 2.2.  Types
 
+   CIC contains of CI-Bricks
+
 2.3.  Distinction and Deployment
+
+   CIC contains of CI-Bricks
 
 3.  Contextinformation Packet (CIP)
 
    Datastructure of the Contextinformation Packet. (max.  MTU 1200 Byte)
 
 3.1.  Header
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Stefan Hans               Expires June 18, 2016                 [Page 4]
+
+Internet-Draft     Contextinformation Routing Networks     December 2015
+
 
        Figure 2.1.1 shows the header section of the context datagram
 
@@ -208,6 +250,8 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
     integers, in normal Internet order with the most-significant octet
                 first.  Each tick mark represents one bit.
 
+3.1.1.  Elements
+
    sg_request
                   The Service Groups Request shows the relevant
                   service_groups requested by the datagram.  The
@@ -217,15 +261,6 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    sg_profile
                   The Service Groups Profile shows all available service
                   groups of the sender of this datagram.  The services
-
-
-
-
-Stefan Hans               Expires June 16, 2016                 [Page 4]
-
-Internet-Draft     Contextinformation Routing Networks     December 2015
-
-
                   which are available have the appropriate bit switched
                   on (see figure 2.1.2).
 
@@ -238,6 +273,15 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
                   The channel can be used to separate context packet
                   traffic in the future.  The value for the core
                   functionality is 1 which has to be used at the moment.
+
+
+
+
+Stefan Hans               Expires June 18, 2016                 [Page 5]
+
+Internet-Draft     Contextinformation Routing Networks     December 2015
+
+
                   The value 0 is reserved for testing and all other
                   values have no meaning so far.
 
@@ -270,19 +314,7 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
                   The data for the core functionality is the service_id
                   which has to be used at the moment (see 2.1.2).
 
-
-
-
-
-
-
-
-Stefan Hans               Expires June 16, 2016                 [Page 5]
-
-Internet-Draft     Contextinformation Routing Networks     December 2015
-
-
-3.1.1.  Service Groups
+3.1.2.  Service Groups
 
    'Service Groups' describes the role(s) in the Context Network.
 
@@ -295,6 +327,16 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
      Thus the integer 1 means 'client', 2 means 'gateway' and 3 means
                                    both.
+
+
+
+
+
+
+Stefan Hans               Expires June 18, 2016                 [Page 6]
+
+Internet-Draft     Contextinformation Routing Networks     December 2015
+
 
 3.2.  Contextinformation
 
@@ -330,14 +372,6 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
                   specify the kind of context coding.
 
    mask
-
-
-
-Stefan Hans               Expires June 16, 2016                 [Page 6]
-
-Internet-Draft     Contextinformation Routing Networks     December 2015
-
-
                   The mask is the second part of a Context Brick (see
                   section 2.4).  It is not used in the core
                   functionality so far.
@@ -349,6 +383,16 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    additional data
                   The additional data contains the number of Context
                   Bricks (see section 2.4) as specified in add_size.
+
+
+
+
+
+
+Stefan Hans               Expires June 18, 2016                 [Page 7]
+
+Internet-Draft     Contextinformation Routing Networks     December 2015
+
 
 3.3.  Data
 
@@ -386,14 +430,6 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
                   The meaning or format of the following text, e.g.
                   plain text, URL.
 
-
-
-
-Stefan Hans               Expires June 16, 2016                 [Page 7]
-
-Internet-Draft     Contextinformation Routing Networks     December 2015
-
-
    text
                   A fixed sized text, that means it has possibly to be
                   padded by blanks up to 140 characters.
@@ -401,6 +437,18 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    additional data
                   Any data in a size as specified by 'add_size', i.e.
                   limited by 255.
+
+
+
+
+
+
+
+
+Stefan Hans               Expires June 18, 2016                 [Page 8]
+
+Internet-Draft     Contextinformation Routing Networks     December 2015
+
 
 3.4.  Context Bricks
 
@@ -422,6 +470,24 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
 4.  Contextinformation Routing (CIR)
 
+   Based on any describable a CIC-Protocol defines an injective function
+   between this CI and an encoded CI-Content, i.e. there is exactly one
+   bit string for every discribed content of the CIC-Protocol.  CI-Mask,
+   the second bit string, is not defined individually by the CIC-
+   Protocol.
+
+4.1.  Structure and Limitations
+
+   CIC contains of CI-Bricks
+
+4.2.  Types
+
+   CIC contains of CI-Bricks
+
+4.3.  Distinction and Deployment
+
+   CIC contains of CI-Bricks
+
 Author's Address
 
    Stefan Hans
@@ -435,14 +501,4 @@ Author's Address
 
 
 
-
-
-
-
-
-
-
-
-
-
-Stefan Hans               Expires June 16, 2016                 [Page 8]
+Stefan Hans               Expires June 18, 2016                 [Page 9]
