@@ -3,9 +3,9 @@
 
 
 Network Working Group                                        Stefan Hans
-Internet-Draft                                         December 16, 2015
+Internet-Draft                                         December 18, 2015
 Intended status: Experimental
-Expires: June 18, 2016
+Expires: June 20, 2016
 
 
   Contextinformation Paket (CIP) Specification for Contextinformation
@@ -38,7 +38,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 18, 2016.
+   This Internet-Draft will expire on June 20, 2016.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Stefan Hans               Expires June 18, 2016                 [Page 1]
+Stefan Hans               Expires June 20, 2016                 [Page 1]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Stefan Hans               Expires June 18, 2016                 [Page 2]
+Stefan Hans               Expires June 20, 2016                 [Page 2]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
@@ -165,7 +165,7 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 
 
-Stefan Hans               Expires June 18, 2016                 [Page 3]
+Stefan Hans               Expires June 20, 2016                 [Page 3]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
@@ -221,7 +221,7 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 
 
-Stefan Hans               Expires June 18, 2016                 [Page 4]
+Stefan Hans               Expires June 20, 2016                 [Page 4]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
@@ -277,7 +277,7 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 
 
-Stefan Hans               Expires June 18, 2016                 [Page 5]
+Stefan Hans               Expires June 20, 2016                 [Page 5]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
@@ -333,7 +333,7 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 
 
-Stefan Hans               Expires June 18, 2016                 [Page 6]
+Stefan Hans               Expires June 20, 2016                 [Page 6]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
@@ -389,7 +389,7 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 
 
-Stefan Hans               Expires June 18, 2016                 [Page 7]
+Stefan Hans               Expires June 20, 2016                 [Page 7]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
@@ -445,4 +445,4 @@ Author's Address
 
 
 
-Stefan Hans               Expires June 18, 2016                 [Page 8]
+Stefan Hans               Expires June 20, 2016                 [Page 8]

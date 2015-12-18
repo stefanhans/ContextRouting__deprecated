@@ -3,9 +3,9 @@
 
 
 Network Working Group                                        Stefan Hans
-Internet-Draft                                         December 16, 2015
+Internet-Draft                                         December 18, 2015
 Intended status: Experimental
-Expires: June 18, 2016
+Expires: June 20, 2016
 
 
          Concepts of Contextinformation Routing Networks (CRNs)
@@ -14,10 +14,9 @@ Expires: June 18, 2016
 Abstract
 
    Contextinformation Routing Network (CRN) is a communication framework
-   enabling a generic service to join matching contextinformation
+   enabling a universal service to join matching contextinformation
    respectively its communication partners.  This document describes the
-   main ideas and resulting concepts of a Contextinformation Routing
-   Network by explaining its main components, which are
+   concepts of CRNs by explaining its main components, which are
 
    o  Contextinformation (CI)
 
@@ -45,7 +44,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 18, 2016.
+   This Internet-Draft will expire on June 20, 2016.
 
 
 
@@ -53,7 +52,8 @@ Status of This Memo
 
 
 
-Stefan Hans               Expires June 18, 2016                 [Page 1]
+
+Stefan Hans               Expires June 20, 2016                 [Page 1]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
@@ -98,89 +98,100 @@ Table of Contents
    The main ideas had emerged while thinking about Context Aware
    Services and trying to find answers to the following questions:
 
-      How can an open standard connect communication partners having
-      matching communication interests and context?
+      How can a framework connect communication partners with matching
+      communication interests and context?
 
-      How can it be open for any kind of new definitions of interests
-      and context to anybody?
+      How can it be open for new types of interests and context to
+      anybody?
 
       How can it be organized to maximize the availabilty of the service
       and to minimize the customizing effort for its clients?
 
 
 
-Stefan Hans               Expires June 18, 2016                 [Page 2]
+Stefan Hans               Expires June 20, 2016                 [Page 2]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
 
-   In an attempt of a definition of information and context it has
+   In an attempt at a definition of information and context it has
    turned out that there is no useful clear distinction between the two.
-   The term of Contextinformation (CI) shall cover both aspects of
-   information in this document.
+   Thus the term of Contextinformation (CI) means information within its
+   described context, i.e. context becomes part of CI by describing it.
 
-   Now let me introduce two communication roles, i.e. Offer and Request,
-   and location as an example for a CI.  Offer says "I'm available for
-   anybody to contact me" and Request says "I am only looking for in the
-   first place".  Both have a quite exact information about their
-   location and can define an surrounding area where Offer is available
-   respectively Request is searching.  If the exact location is not
-   outside the surrounding area, it is defined as directly related.
-   Provided that, these aspects of CI are named CI-Content (exact
-   location) and CI-Mask (surrounding area).  This is essential for the
-   understanding of the concept of CI.  The CI of Offer and Request are
-   matching, in this case, if the exact location of one is in the
-   surrounding area of the other and vice versa.  Then Offer's CI,
-   including contact information, will be send to Request and possibly
-   Request contacts Offer directly.
+   Here the universal approach to find matching CI is that each kind of
+   CI has to be encoded as bit string individually.  Contextinformation
+   Coding (CIC) means both, an encoding resp. decoding protocol (CIC-
+   Protocol) for a particular type of CI and an concrete piece of
+   encoded CI.  Every CIC has a unique identifier, called CIC-Number.  A
+   CIC-Protocol and all its encoded CI are linked by a unique CIC-
+   Number.  Encoded CI in the form of a bit string, named CI-Content, is
+   one half of a pair of bit strings.  The other half of the encoded CI,
+   named CI-Mask, is used to define the accuracy of the searched match.
+   Then it is sufficient for a match, if CI-Content is equal or both CI-
+   Masks mark them as non-relevant.
 
-   One could now determine a specification for this purpose as one
-   example of CI.  Let me introduce the concept of Contextinformation
-   Coding (CIC) instead.  CIC means both a definition of an encoding
-   resp. decoding protocol for a particular kind of CI and an encoded
-   concrete piece of CI.  For unambiguity the terms "CIC-Protocol" and
-   "encoded CI" will be used in this document, if needed.  A CIC-
-   Protocol and all its encoded CI is linked by a CIC-Number.  Applied
-   to our location based example we would determine a specification for
-   this purpose, call it a CIC and assign a free CIC-Number to it.  Then
-   all encoded CI is processed directly by the same algorithm to find
-   matching CI, i.e. without an idea of the certain meaning of the used
-   CIC.  Therefore CI will be encoded in a pair of bit strings
-   representing CI-Content and CI-Mask.  Looking at one bit then it is
-   sufficient for a match, if CI-Content is equal or both CI-Masks mark
-   them as non-relevant.  Then a performant bitwise operation can be
-   executed to find matching CI.
+   Let me illustrate this with an example.  Offer and Request are two
+   communication roles, and location is a type of CI.  Offer says "I'm
+   available for any Request witch matching CI to contact me" and
+   Request says "I'm searching for any Offer with matching CI".  Both
+   have an exact information about their location and can define a
+   surrounding area where Offer is available respectively Request is
+   searching.  CI-Content, as encoded location CI, defines with CI-Mask
+   the surrounding area by marking a bit of CI-Content as true in any
+   case concerning the match.  This has the consequence that the
+   location is always included in the surrounding area.  Here the CI of
+   Offer and Request are matching, if the exact location of one is in
+   the surrounding area of the other and vice versa.
 
-   A Contextinformation Packet (CIP) is the datastructure to encapsulate
-   contextinformation and other data and divided in three parts:
+   Encoded CI is encapsulated in a datastructure named
+   Contextinformation Packet (CIP).  It is divided in three parts:
 
-   o  Header
+   o  Header Data
 
    o  Contextinformation
 
-   o  Data
+   o  Client Data
+
+   All information between CRN-Nodes will be transfered via CIPs.  CIP
+   were created by client applications originally and send into a CRN.
+
+   Contextinformation Routing (CIR) takes place in an overlay network
+   built normally on top of the TCP/IP layer.  It is organized by using
+   CI-Content as index and represents a virtual tree of CIC.  It is
+   oriented towards known concepts of network routing and others more.
 
 
 
 
 
-
-Stefan Hans               Expires June 18, 2016                 [Page 3]
+Stefan Hans               Expires June 20, 2016                 [Page 3]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
 
-   The Contextinformation Routing takes place in an overlay network
-   built normally on top of the TCP/IP layer.  It is oriented towards
-   known concepts of network routing and others more.
-
 2.  Contextinformation Coding (CIC)
 
-   Based on any describable a CIC-Protocol defines an injective function
-   between this CI and an encoded CI-Content, i.e. there is exactly one
-   bit string for every discribed content of the CIC-Protocol.  CI-Mask,
-   the second bit string, is not defined individually by the CIC-
-   Protocol.
+   A CIC-Protocol defines an injective function between this CI and an
+   encoded CI-Content, i.e. there is exactly one bit string for every
+   discribed content of the CIC-Protocol.  Together with the unique CIC-
+   Numbers every CI has xxxxx CI-Mask, the second bit string, is not
+   defined individually by the CIC-Protocol.  One could now determine a
+   specification for this purpose as one example of CI.  Let me
+   introduce the concept of Contextinformation Coding (CIC) instead.
+   CIC means both a definition of an encoding resp. decoding protocol
+   for a particular kind of CI and an encoded concrete piece of CI.  For
+   unambiguity the terms "CIC-Protocol" and "encoded CI" will be used in
+   this document, if needed.  A CIC-Protocol and all its encoded CI is
+   linked by a CIC-Number.  Applied to our location based example we
+   would determine a specification for this purpose, call it a CIC and
+   assign a free CIC-Number to it.  Then all encoded CI is processed
+   directly by the same algorithm to find matching CI, i.e. without an
+   idea of the certain meaning of the used CIC.  Therefore CI will be
+   encoded in a pair of bit strings representing CI-Content and CI-Mask.
+   Looking at one bit then it is sufficient for a match, if CI-Content
+   is equal or both CI-Masks mark them as non-relevant.  Then a
+   performant bitwise operation can be executed to find matching CI.
 
 2.1.  Structure and Limitations
 
@@ -210,18 +221,7 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-Stefan Hans               Expires June 18, 2016                 [Page 4]
+Stefan Hans               Expires June 20, 2016                 [Page 4]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
@@ -277,7 +277,7 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
 
 
-Stefan Hans               Expires June 18, 2016                 [Page 5]
+Stefan Hans               Expires June 20, 2016                 [Page 5]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
@@ -333,7 +333,7 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
 
 
-Stefan Hans               Expires June 18, 2016                 [Page 6]
+Stefan Hans               Expires June 20, 2016                 [Page 6]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
@@ -389,7 +389,7 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
 
 
-Stefan Hans               Expires June 18, 2016                 [Page 7]
+Stefan Hans               Expires June 20, 2016                 [Page 7]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
@@ -445,7 +445,7 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
 
 
-Stefan Hans               Expires June 18, 2016                 [Page 8]
+Stefan Hans               Expires June 20, 2016                 [Page 8]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
@@ -501,4 +501,4 @@ Author's Address
 
 
 
-Stefan Hans               Expires June 18, 2016                 [Page 9]
+Stefan Hans               Expires June 20, 2016                 [Page 9]
