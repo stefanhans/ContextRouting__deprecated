@@ -417,7 +417,7 @@ Internet-Draft         CIP Specification for CRNs          December 2015
    [RFC5944]  Perkins, C., "Concepts of Contextinformation Routing
               Networks (CRNs)", November 2010,
               <https://github.com/stefanhans/ContextRouting/raw/master/
-              RFC/DraftRFC_ContextRouting.txt>.
+              RFC/DraftRFC_ContextRouting.html>.
 
 Author's Address
 
