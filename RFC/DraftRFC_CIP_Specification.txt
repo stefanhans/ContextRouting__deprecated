@@ -3,9 +3,9 @@
 
 
 Network Working Group                                        Stefan Hans
-Internet-Draft                                         December 18, 2015
+Internet-Draft                                         December 19, 2015
 Intended status: Experimental
-Expires: June 20, 2016
+Expires: June 21, 2016
 
 
   Contextinformation Paket (CIP) Specification for Contextinformation
@@ -14,14 +14,12 @@ Expires: June 20, 2016
 
 Abstract
 
-   Contextinformation Paket (CIP) is a datastructure to store and
-   transfer contextinformation plus header and possibly application data
-   through Contextinformation Routing Networks (CRNs).  This document is
-   the specification of CIP.  For an overview about CRN please see
-   document.
-
-   This document does not cover other specifications or requirements
-   concerning CRN.
+   Contextinformation Paket (CIP) is the datastructure to transfer
+   contextinformation plus header and possibly application data through
+   Contextinformation Routing Networks (CRNs).  All information which
+   has to be transfered inside CRNs has to be encapsulated within CIPs.
+   This document is the specification of CIP.  For an overview about
+   CRNs please see document RFC 5944 [RFC5944].
 
 Status of This Memo
 
@@ -38,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 20, 2016.
+   This Internet-Draft will expire on June 21, 2016.
 
 Copyright Notice
 
@@ -50,16 +48,16 @@ Copyright Notice
    (http://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
 
 
 
-Stefan Hans               Expires June 20, 2016                 [Page 1]
+Stefan Hans               Expires June 21, 2016                 [Page 1]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
 
-   to this document.  Code Components extracted from this document must
-   include Simplified BSD License text as described in Section 4.e of
    the Trust Legal Provisions and are provided without warranty as
    described in the Simplified BSD License.
 
@@ -72,6 +70,7 @@ Table of Contents
    3.  Contextinformation  . . . . . . . . . . . . . . . . . . . . .   6
    4.  Data  . . . . . . . . . . . . . . . . . . . . . . . . . . . .   7
    5.  Context Bricks  . . . . . . . . . . . . . . . . . . . . . . .   8
+   6.  Informative References  . . . . . . . . . . . . . . . . . . .   8
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   8
 
 1.  Introduction
@@ -105,17 +104,15 @@ Table of Contents
    understanding of the concept of CI.  The CI of Offer and Request are
    matching, in this case, if the exact location of one is in the
    surrounding area of the other and vice versa.  Then Offer's CI,
+   including contact information, will be send to Request and possibly
+   Request contacts Offer directly.
 
 
 
-
-Stefan Hans               Expires June 20, 2016                 [Page 2]
+Stefan Hans               Expires June 21, 2016                 [Page 2]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
-
-   including contact information, will be send to Request and possibly
-   Request contacts Offer directly.
 
    One could now determine a specification for this purpose as one
    example of CI.  Let me introduce the concept of Contextinformation
@@ -165,7 +162,10 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 
 
-Stefan Hans               Expires June 20, 2016                 [Page 3]
+
+
+
+Stefan Hans               Expires June 21, 2016                 [Page 3]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
@@ -221,7 +221,7 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 
 
-Stefan Hans               Expires June 20, 2016                 [Page 4]
+Stefan Hans               Expires June 21, 2016                 [Page 4]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
@@ -277,7 +277,7 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 
 
-Stefan Hans               Expires June 20, 2016                 [Page 5]
+Stefan Hans               Expires June 21, 2016                 [Page 5]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
@@ -333,7 +333,7 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 
 
-Stefan Hans               Expires June 20, 2016                 [Page 6]
+Stefan Hans               Expires June 21, 2016                 [Page 6]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
@@ -389,7 +389,7 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 
 
-Stefan Hans               Expires June 20, 2016                 [Page 7]
+Stefan Hans               Expires June 21, 2016                 [Page 7]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
@@ -411,6 +411,13 @@ Internet-Draft         CIP Specification for CRNs          December 2015
                   corresponding bit of the content irrelevant.  Two bits
                   are corresponding, if they are at the same place in
                   the byte.
+
+6.  Informative References
+
+   [RFC5944]  Perkins, C., "Concepts of Contextinformation Routing
+              Networks (CRNs)", November 2010,
+              <https://github.com/stefanhans/ContextRouting/raw/master/
+              RFC/DraftRFC_ContextRouting.txt>.
 
 Author's Address
 
@@ -438,11 +445,4 @@ Author's Address
 
 
 
-
-
-
-
-
-
-
-Stefan Hans               Expires June 20, 2016                 [Page 8]
+Stefan Hans               Expires June 21, 2016                 [Page 8]

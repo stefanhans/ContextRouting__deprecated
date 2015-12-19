@@ -3,9 +3,9 @@
 
 
 Network Working Group                                        Stefan Hans
-Internet-Draft                                         December 18, 2015
+Internet-Draft                                         December 19, 2015
 Intended status: Experimental
-Expires: June 20, 2016
+Expires: June 21, 2016
 
 
          Concepts of Contextinformation Routing Networks (CRNs)
@@ -44,7 +44,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 20, 2016.
+   This Internet-Draft will expire on June 21, 2016.
 
 
 
@@ -53,7 +53,7 @@ Status of This Memo
 
 
 
-Stefan Hans               Expires June 20, 2016                 [Page 1]
+Stefan Hans               Expires June 21, 2016                 [Page 1]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Stefan Hans               Expires June 20, 2016                 [Page 2]
+Stefan Hans               Expires June 21, 2016                 [Page 2]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
@@ -153,8 +153,9 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
    o  Client Data
 
-   All information between CRN-Nodes will be transfered via CIPs.  CIP
-   were created by client applications originally and send into a CRN.
+   All information which has to be transfered inside CRNs has to be
+   encapsulated within CIPs.  CIP were created by client applications
+   originally and send into a CRN.
 
    Contextinformation Routing (CIR) takes place in an overlay network
    built normally on top of the TCP/IP layer.  It is organized by using
@@ -164,8 +165,7 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
 
 
-
-Stefan Hans               Expires June 20, 2016                 [Page 3]
+Stefan Hans               Expires June 21, 2016                 [Page 3]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
@@ -221,7 +221,7 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
 
 
-Stefan Hans               Expires June 20, 2016                 [Page 4]
+Stefan Hans               Expires June 21, 2016                 [Page 4]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
@@ -277,7 +277,7 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
 
 
-Stefan Hans               Expires June 20, 2016                 [Page 5]
+Stefan Hans               Expires June 21, 2016                 [Page 5]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
@@ -333,7 +333,7 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
 
 
-Stefan Hans               Expires June 20, 2016                 [Page 6]
+Stefan Hans               Expires June 21, 2016                 [Page 6]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
@@ -389,7 +389,7 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
 
 
-Stefan Hans               Expires June 20, 2016                 [Page 7]
+Stefan Hans               Expires June 21, 2016                 [Page 7]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
@@ -445,7 +445,7 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
 
 
-Stefan Hans               Expires June 20, 2016                 [Page 8]
+Stefan Hans               Expires June 21, 2016                 [Page 8]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
@@ -501,4 +501,4 @@ Author's Address
 
 
 
-Stefan Hans               Expires June 20, 2016                 [Page 9]
+Stefan Hans               Expires June 21, 2016                 [Page 9]
