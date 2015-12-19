@@ -81,17 +81,15 @@ Table of Contents
      2.2.  Types . . . . . . . . . . . . . . . . . . . . . . . . . .   4
      2.3.  Distinction and Deployment  . . . . . . . . . . . . . . .   4
    3.  Contextinformation Packet (CIP) . . . . . . . . . . . . . . .   4
-     3.1.  Header  . . . . . . . . . . . . . . . . . . . . . . . . .   4
-       3.1.1.  Elements  . . . . . . . . . . . . . . . . . . . . . .   5
-       3.1.2.  Service Groups  . . . . . . . . . . . . . . . . . . .   6
-     3.2.  Contextinformation  . . . . . . . . . . . . . . . . . . .   7
-     3.3.  Data  . . . . . . . . . . . . . . . . . . . . . . . . . .   8
-     3.4.  Context Bricks  . . . . . . . . . . . . . . . . . . . . .   9
-   4.  Contextinformation Routing (CIR)  . . . . . . . . . . . . . .   9
-     4.1.  Structure and Limitations . . . . . . . . . . . . . . . .   9
-     4.2.  Types . . . . . . . . . . . . . . . . . . . . . . . . . .   9
-     4.3.  Distinction and Deployment  . . . . . . . . . . . . . . .   9
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   9
+     3.1.  Header Data . . . . . . . . . . . . . . . . . . . . . . .   4
+     3.2.  Contextinformation  . . . . . . . . . . . . . . . . . . .   5
+     3.3.  Client Data . . . . . . . . . . . . . . . . . . . . . . .   5
+   4.  Contextinformation Routing (CIR)  . . . . . . . . . . . . . .   5
+     4.1.  Structure and Limitations . . . . . . . . . . . . . . . .   5
+     4.2.  Types . . . . . . . . . . . . . . . . . . . . . . . . . .   5
+     4.3.  Distinction and Deployment  . . . . . . . . . . . . . . .   5
+   5.  Informative References  . . . . . . . . . . . . . . . . . . .   5
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   5
 
 1.  Introduction
 
@@ -106,6 +104,8 @@ Table of Contents
 
       How can it be organized to maximize the availabilty of the service
       and to minimize the customizing effort for its clients?
+
+
 
 
 
@@ -207,15 +207,15 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
 3.  Contextinformation Packet (CIP)
 
-   Datastructure of the Contextinformation Packet. (max.  MTU 1200 Byte)
+   For the concepts of the CIP's main parts see the following sections.
+   For detailed CIP specification see Internet-Draft "Contextinformation
+   Paket (CIP) Specification for Contextinformation Routing Networks
+   (CRNs)" [CIP_Spec].
 
-3.1.  Header
+3.1.  Header Data
 
-
-
-
-
-
+   The header data start with a part with fixed size and structure
+   followed by a dynamic part.
 
 
 
@@ -226,247 +226,12 @@ Stefan Hans               Expires June 21, 2016                 [Page 4]
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
 
-       Figure 2.1.1 shows the header section of the context datagram
-
-   0                   1                   2                   3
-   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   | sg_request (1)| sg_profile (1)|  version (1)  |  channel (1)  | |
-   |                                                               | |
-   |                            UUID (16)                          | |
-   |                                                               | |
-   |                                                               | fix
-   |                          IP address (4)                       | |
-   |            IP port (2)        |                               | |
-   |                            time (8)                           | |
-   |                               |  add_type (1) |  add_size (1) |---
-   | ............................................................  | |
-   | .............. additional data up to 255 bytes .............  | opt
-   | ............................................................  | |
-   +---------------------------------------------------------------+
-
-   Format of datagrams containing context information.  Field sizes are
-    given in octets.  Unless otherwise specified, fields contain binary
-    integers, in normal Internet order with the most-significant octet
-                first.  Each tick mark represents one bit.
-
-3.1.1.  Elements
-
-   sg_request
-                  The Service Groups Request shows the relevant
-                  service_groups requested by the datagram.  The
-                  services which are requested by this datagram have the
-                  appropriate bit switched on (see figure 2.1.2).
-
-   sg_profile
-                  The Service Groups Profile shows all available service
-                  groups of the sender of this datagram.  The services
-                  which are available have the appropriate bit switched
-                  on (see figure 2.1.2).
-
-   version
-                  The version of this specification.  It has a higher
-                  4-bit part which represents the major number and a
-                  lowere 4-bit part which represents the minor number.
-
-   channel
-                  The channel can be used to separate context packet
-                  traffic in the future.  The value for the core
-                  functionality is 1 which has to be used at the moment.
-
-
-
-
-Stefan Hans               Expires June 21, 2016                 [Page 5]
-
-Internet-Draft     Contextinformation Routing Networks     December 2015
-
-
-                  The value 0 is reserved for testing and all other
-                  values have no meaning so far.
-
-   UUID
-                  The UUID is the unique identifier for the CIP.
-
-   IP address
-                  A 32-bit IP address in Network Byte Order.
-
-   IP port
-                  A 16-bit port number in Network Byte Order.
-
-   time
-                  Unix time of datagram introduction, i.e. the number of
-                  seconds between 00:00:00 UTC on 1 January 1970 and the
-                  moment the CIP arrived in the CRN for the first time.
-
-   add_type
-                  The type of the following data of the datagram.  The
-                  value for the core functionality is 1 which has to be
-                  used at the moment.  The value 0 is reserved for
-                  testing and all other values have no meaning so far.
-
-   add_size
-                  The size of the following header data of the datagram,
-                  i.e. the number of bytes.
-
-   additional data
-                  The additional data as specified in type and size.
-                  The data for the core functionality is the service_id
-                  which has to be used at the moment (see 2.1.2).
-
-3.1.2.  Service Groups
-
-   'Service Groups' describes the role(s) in the Context Network.
-
-   Figure 2.1.2 shows the service groups and its defined first two bits.
-
-   0         1         2  ---------------------------------------   8
-   +---------+---------+--------------------------------------------+
-   | client  | gateway |           not yet defined                  |
-   +--------------------------------------------------------------- +
-
-     Thus the integer 1 means 'client', 2 means 'gateway' and 3 means
-                                   both.
-
-
-
-
-
-
-Stefan Hans               Expires June 21, 2016                 [Page 6]
-
-Internet-Draft     Contextinformation Routing Networks     December 2015
-
-
 3.2.  Contextinformation
 
-       Figure 2.2.1 shows the context (brick) section of the context
-    datagram.  A context brick consists of two bytes: content und mask.
+3.3.  Client Data
 
-   0                   1                   2                   3
-   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |   type (1)    |  content (1)  |   mask (1)    |  add_size (1) | fix
-   +---------------------------------------------------------------+---
-   | ............................................................  | |
-   | .............. additional data up to 510 bytes .............  | opt
-   | .............. i.e. up to 255 context bricks  ..............  | |
-   | ............................................................  | |
-   +---------------------------------------------------------------+
-
-   Format of datagrams containing context information.  Field sizes are
-    given in octets.  Unless otherwise specified, fields contain binary
-    integers, in normal Internet order with the most-significant octet
-                                  first.
-
-   type
-                  The type can be used to specify different context
-                  designs in the future.  The value for the core
-                  functionality is 1 which has to be used at the moment.
-                  The value 0 is reserved for testing and all other
-                  values has no meaning so far.
-
-   content
-                  The content is the first part of a Context Brick (see
-                  section 2.4).  It is used in the core functionality to
-                  specify the kind of context coding.
-
-   mask
-                  The mask is the second part of a Context Brick (see
-                  section 2.4).  It is not used in the core
-                  functionality so far.
-
-   add_size
-                  The number of Context Bricks as additional data (up to
-                  255).
-
-   additional data
-                  The additional data contains the number of Context
-                  Bricks (see section 2.4) as specified in add_size.
-
-
-
-
-
-
-Stefan Hans               Expires June 21, 2016                 [Page 7]
-
-Internet-Draft     Contextinformation Routing Networks     December 2015
-
-
-3.3.  Data
-
-   The following figure shows the data section of the context datagram.
-     This section has no meaning for the Context Routing itself.  The
-    meaning of this section is only relevant to the clients.  Therefore
-      the following structure has to be seen as a default and can be
-     changed, if another specification is agreed between the concerned
-   clients.  The 'add_size' has to be as if the default structure would
-         be actual, i.e. available is then 'add_size + 141' bytes.
-
-   0                   1                   2                   3
-   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |  add_size (1) | text_type (1) |                               | |
-   |                                                               | |
-   |                          text (140)                           | fix
-   |                                                               | |
-   +---------------------------------------------------------------+---
-   | ............................................................  | |
-   | ........ additional data up to 255 bytes (add_size) ........  | opt
-   | ............................................................  | |
-   +---------------------------------------------------------------+
-
-   Format of datagrams containing context information.  Field sizes are
-    given in octets.  Unless otherwise specified, fields contain binary
-    integers, in normal Internet order with the most-significant octet
-   first.  Each tick mark represents one bit.  The area for 'text (140)'
-                     does not correspond to 140 bytes.
-
-   add_size
-                  The size of additional data in bytes.
-
-   text_type
-                  The meaning or format of the following text, e.g.
-                  plain text, URL.
-
-   text
-                  A fixed sized text, that means it has possibly to be
-                  padded by blanks up to 140 characters.
-
-   additional data
-                  Any data in a size as specified by 'add_size', i.e.
-                  limited by 255.
-
-
-
-
-
-
-
-
-Stefan Hans               Expires June 21, 2016                 [Page 8]
-
-Internet-Draft     Contextinformation Routing Networks     December 2015
-
-
-3.4.  Context Bricks
-
-   A Context Brick is a pair of bytes in particular content and mask.
-   It describes a piece of information and the relevance of its
-   exactness.  The meaning of the Context Bricks is not known by the
-   Context Network.
-
-   content
-                  The content represents an exact information encoded in
-                  a byte.
-
-   mask
-                  The mask represents the relevance of the exactness of
-                  the content in a byte.  For that a 1 makes the
-                  corresponding bit of the content irrelevant.  Two bits
-                  are corresponding, if they are at the same place in
-                  the byte.
+   The header data start with a part with fixed size and structure
+   followed by a dynamic part.
 
 4.  Contextinformation Routing (CIR)
 
@@ -488,6 +253,15 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
    CIC contains of CI-Bricks
 
+5.  Informative References
+
+   [CIP_Spec]
+              Hans, S., "Contextinformation Paket (CIP) Specification
+              for Contextinformation Routing Networks (CRNs)", Januar
+              2016,
+              <https://github.com/stefanhans/ContextRouting/raw/master/
+              RFC/DraftRFC_CIP_Specification.txt>.
+
 Author's Address
 
    Stefan Hans
@@ -501,4 +275,6 @@ Author's Address
 
 
 
-Stefan Hans               Expires June 21, 2016                 [Page 9]
+
+
+Stefan Hans               Expires June 21, 2016                 [Page 5]

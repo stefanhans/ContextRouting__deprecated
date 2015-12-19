@@ -19,7 +19,7 @@ Abstract
    Contextinformation Routing Networks (CRNs).  All information which
    has to be transfered inside CRNs has to be encapsulated within CIPs.
    This document is the specification of CIP.  For an overview about
-   CRNs please see document RFC 5944 [RFC5944].
+   CRNs please see document Contextinformation Routing Networks [CRNs].
 
 Status of This Memo
 
@@ -414,10 +414,10 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 6.  Informative References
 
-   [RFC5944]  Perkins, C., "Concepts of Contextinformation Routing
-              Networks (CRNs)", November 2010,
+   [CRNs]     Hans, S., "Concepts of Contextinformation Routing Networks
+              (CRNs)", Januar 2016,
               <https://github.com/stefanhans/ContextRouting/raw/master/
-              RFC/DraftRFC_ContextRouting.html>.
+              RFC/DraftRFC_ContextRouting.txt>.
 
 Author's Address
 
