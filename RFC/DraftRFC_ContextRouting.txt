@@ -3,9 +3,9 @@
 
 
 Network Working Group                                        Stefan Hans
-Internet-Draft                                         December 19, 2015
+Internet-Draft                                         December 21, 2015
 Intended status: Experimental
-Expires: June 21, 2016
+Expires: June 23, 2016
 
 
          Concepts of Contextinformation Routing Networks (CRNs)
@@ -44,7 +44,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 21, 2016.
+   This Internet-Draft will expire on June 23, 2016.
 
 
 
@@ -53,7 +53,7 @@ Status of This Memo
 
 
 
-Stefan Hans               Expires June 21, 2016                 [Page 1]
+Stefan Hans               Expires June 23, 2016                 [Page 1]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
@@ -78,10 +78,12 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Contextinformation Coding (CIC) . . . . . . . . . . . . . . .   4
      2.1.  Structure and Limitations . . . . . . . . . . . . . . . .   4
+       2.1.1.  CIC-Bricks  . . . . . . . . . . . . . . . . . . . . .   4
+       2.1.2.  Composite Pattern . . . . . . . . . . . . . . . . . .   4
      2.2.  Types . . . . . . . . . . . . . . . . . . . . . . . . . .   4
      2.3.  Distinction and Deployment  . . . . . . . . . . . . . . .   4
    3.  Contextinformation Packet (CIP) . . . . . . . . . . . . . . .   4
-     3.1.  Header Data . . . . . . . . . . . . . . . . . . . . . . .   4
+     3.1.  Header Data . . . . . . . . . . . . . . . . . . . . . . .   5
      3.2.  Contextinformation  . . . . . . . . . . . . . . . . . . .   5
      3.3.  Client Data . . . . . . . . . . . . . . . . . . . . . . .   5
    4.  Contextinformation Routing (CIR)  . . . . . . . . . . . . . .   5
@@ -89,7 +91,7 @@ Table of Contents
      4.2.  Types . . . . . . . . . . . . . . . . . . . . . . . . . .   5
      4.3.  Distinction and Deployment  . . . . . . . . . . . . . . .   5
    5.  Informative References  . . . . . . . . . . . . . . . . . . .   5
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   5
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   6
 
 1.  Introduction
 
@@ -107,9 +109,7 @@ Table of Contents
 
 
 
-
-
-Stefan Hans               Expires June 21, 2016                 [Page 2]
+Stefan Hans               Expires June 23, 2016                 [Page 2]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
@@ -159,43 +159,49 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
    Contextinformation Routing (CIR) takes place in an overlay network
    built normally on top of the TCP/IP layer.  It is organized by using
-   CI-Content as index and represents a virtual tree of CIC.  It is
-   oriented towards known concepts of network routing and others more.
+   CI-Content as index and represents a virtual tree of CICs.  It is
+   oriented towards known concepts of network routing and others network
+   concepts.
 
 
 
-
-Stefan Hans               Expires June 21, 2016                 [Page 3]
+Stefan Hans               Expires June 23, 2016                 [Page 3]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
 
 2.  Contextinformation Coding (CIC)
 
-   A CIC-Protocol defines an injective function between this CI and an
-   encoded CI-Content, i.e. there is exactly one bit string for every
-   discribed content of the CIC-Protocol.  Together with the unique CIC-
-   Numbers every CI has xxxxx CI-Mask, the second bit string, is not
-   defined individually by the CIC-Protocol.  One could now determine a
-   specification for this purpose as one example of CI.  Let me
-   introduce the concept of Contextinformation Coding (CIC) instead.
-   CIC means both a definition of an encoding resp. decoding protocol
-   for a particular kind of CI and an encoded concrete piece of CI.  For
-   unambiguity the terms "CIC-Protocol" and "encoded CI" will be used in
-   this document, if needed.  A CIC-Protocol and all its encoded CI is
-   linked by a CIC-Number.  Applied to our location based example we
-   would determine a specification for this purpose, call it a CIC and
-   assign a free CIC-Number to it.  Then all encoded CI is processed
-   directly by the same algorithm to find matching CI, i.e. without an
-   idea of the certain meaning of the used CIC.  Therefore CI will be
-   encoded in a pair of bit strings representing CI-Content and CI-Mask.
-   Looking at one bit then it is sufficient for a match, if CI-Content
-   is equal or both CI-Masks mark them as non-relevant.  Then a
-   performant bitwise operation can be executed to find matching CI.
+   A CIC-Protocol defines an injective function between a set of CI and
+   a set of permutations of a bit string with a fixed byte length (CI-
+   Content), i.e. there is exactly one bit string for every discribed
+   content of the CIC-Protocol.  Every CIC-Protocol and all its encoded
+   CI have an individual CIC-Numbers.  In general a CIC-Number can be
+   well-known or temporary.  Every network can have its own CIC-Numbers.
+   This aspect is comparable with port numbers.  CI-Mask, the second bit
+   string, is not defined individually by the CIC-Protocol.
+
+   Furthermore, CIC definitions can use other CIC definitions like in a
+   hierarchical tree.  The leaves of this tree are called CIC-Modules.
+   CRNs provides routing infrastructure of encoded CI and CIC-Protocol
+   definitions as well.
+
+   Although encoded CI is limited to 255 byte per packet (CIP), it is
+   theoretically unlimited because it can be spead over different
+   packets limitless.
 
 2.1.  Structure and Limitations
 
    CIC contains of CI-Bricks
+
+2.1.1.  CIC-Bricks
+
+   CIC consists of a pair of bit string with its length rounded up to
+   the next byte.
+
+2.1.2.  Composite Pattern
+
+   CIC
 
 2.2.  Types
 
@@ -212,19 +218,18 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    Paket (CIP) Specification for Contextinformation Routing Networks
    (CRNs)" [CIP_Spec].
 
+
+
+
+Stefan Hans               Expires June 23, 2016                 [Page 4]
+
+Internet-Draft     Contextinformation Routing Networks     December 2015
+
+
 3.1.  Header Data
 
    The header data start with a part with fixed size and structure
    followed by a dynamic part.
-
-
-
-
-
-Stefan Hans               Expires June 21, 2016                 [Page 4]
-
-Internet-Draft     Contextinformation Routing Networks     December 2015
-
 
 3.2.  Contextinformation
 
@@ -235,11 +240,10 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
 4.  Contextinformation Routing (CIR)
 
-   Based on any describable a CIC-Protocol defines an injective function
-   between this CI and an encoded CI-Content, i.e. there is exactly one
-   bit string for every discribed content of the CIC-Protocol.  CI-Mask,
-   the second bit string, is not defined individually by the CIC-
-   Protocol.
+   For the concepts of the CIR's main parts see the following sections.
+   For detailed CIR specification see Internet-Draft "Contextinformation
+   Routing (CIR) Specification for Contextinformation Routing Networks
+   (CRNs)" [CIR_Spec].
 
 4.1.  Structure and Limitations
 
@@ -262,6 +266,22 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
               <https://github.com/stefanhans/ContextRouting/raw/master/
               RFC/DraftRFC_CIP_Specification.txt>.
 
+   [CIR_Spec]
+              Hans, S., "Contextinformation Routing (CIR) Specification
+              for Contextinformation Routing Networks (CRNs)", Januar
+              2016,
+              <https://github.com/stefanhans/ContextRouting/raw/master/
+              RFC/DraftRFC_CIR_Specification.txt>.
+
+
+
+
+
+Stefan Hans               Expires June 23, 2016                 [Page 5]
+
+Internet-Draft     Contextinformation Routing Networks     December 2015
+
+
 Author's Address
 
    Stefan Hans
@@ -277,4 +297,40 @@ Author's Address
 
 
 
-Stefan Hans               Expires June 21, 2016                 [Page 5]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Stefan Hans               Expires June 23, 2016                 [Page 6]
