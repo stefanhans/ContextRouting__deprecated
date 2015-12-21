@@ -82,15 +82,16 @@ Table of Contents
        2.1.2.  Composite Pattern . . . . . . . . . . . . . . . . . .   4
      2.2.  Types . . . . . . . . . . . . . . . . . . . . . . . . . .   4
      2.3.  Distinction and Deployment  . . . . . . . . . . . . . . .   4
-   3.  Contextinformation Packet (CIP) . . . . . . . . . . . . . . .   4
+   3.  Contextinformation Packet (CIP) . . . . . . . . . . . . . . .   5
      3.1.  Header Data . . . . . . . . . . . . . . . . . . . . . . .   5
      3.2.  Contextinformation  . . . . . . . . . . . . . . . . . . .   5
      3.3.  Client Data . . . . . . . . . . . . . . . . . . . . . . .   5
    4.  Contextinformation Routing (CIR)  . . . . . . . . . . . . . .   5
-     4.1.  Structure and Limitations . . . . . . . . . . . . . . . .   5
-     4.2.  Types . . . . . . . . . . . . . . . . . . . . . . . . . .   5
-     4.3.  Distinction and Deployment  . . . . . . . . . . . . . . .   5
-   5.  Informative References  . . . . . . . . . . . . . . . . . . .   5
+     4.1.  Overlay Network . . . . . . . . . . . . . . . . . . . . .   5
+     4.2.  Encoded CI Routing  . . . . . . . . . . . . . . . . . . .   5
+     4.3.  Client's Network Address Updates  . . . . . . . . . . . .   5
+     4.4.  CIC-Protocol Request Routing  . . . . . . . . . . . . . .   6
+   5.  Informative References  . . . . . . . . . . . . . . . . . . .   6
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   6
 
 1.  Introduction
@@ -104,8 +105,7 @@ Table of Contents
       How can it be open for new types of interests and context to
       anybody?
 
-      How can it be organized to maximize the availabilty of the service
-      and to minimize the customizing effort for its clients?
+
 
 
 
@@ -113,6 +113,9 @@ Stefan Hans               Expires June 23, 2016                 [Page 2]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
+
+      How can it be organized to maximize the availabilty of the service
+      and to minimize the customizing effort for its clients?
 
    In an attempt at a definition of information and context it has
    turned out that there is no useful clear distinction between the two.
@@ -159,9 +162,6 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
    Contextinformation Routing (CIR) takes place in an overlay network
    built normally on top of the TCP/IP layer.  It is organized by using
-   CI-Content as index and represents a virtual tree of CICs.  It is
-   oriented towards known concepts of network routing and others network
-   concepts.
 
 
 
@@ -169,6 +169,10 @@ Stefan Hans               Expires June 23, 2016                 [Page 3]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
+
+   CI-Content as index and represents a virtual tree of CICs.  It is
+   oriented towards known concepts of network routing and others network
+   concepts.
 
 2.  Contextinformation Coding (CIC)
 
@@ -211,12 +215,8 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
    CIC contains of CI-Bricks
 
-3.  Contextinformation Packet (CIP)
 
-   For the concepts of the CIP's main parts see the following sections.
-   For detailed CIP specification see Internet-Draft "Contextinformation
-   Paket (CIP) Specification for Contextinformation Routing Networks
-   (CRNs)" [CIP_Spec].
+
 
 
 
@@ -226,34 +226,63 @@ Stefan Hans               Expires June 23, 2016                 [Page 4]
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
 
+3.  Contextinformation Packet (CIP)
+
+   For the concepts of the CIP's main parts see the following sections.
+   For detailed CIP specification see Internet-Draft "Contextinformation
+   Paket (CIP) Specification for Contextinformation Routing Networks
+   (CRNs)" [CIP_Spec].
+
 3.1.  Header Data
 
-   The header data start with a part with fixed size and structure
-   followed by a dynamic part.
+   The header data start with a part with fixed size and static
+   structure followed by a dynamic part.  The dynamic part starts with
+   two bytes defining the type and the length of the following dynamic
+   part.
 
 3.2.  Contextinformation
 
+   The Contextinformation part has leading bytes to specify the type and
+   one byte for the number of CI-Bricks following.  A CI-Brick is pair
+   of bit strings with a length of one byte, i.e. one byte CI-Content
+   linked with one byte of CI-Mask.  The type specified by the first
+   bytes is like a meta or root CIC-Number and is mainly free for future
+   use.
+
 3.3.  Client Data
 
-   The header data start with a part with fixed size and structure
-   followed by a dynamic part.
+   The client data part has leading two bytes.  One byte for type of
+   client data and one byte for the number of bytes following.
 
 4.  Contextinformation Routing (CIR)
 
-   For the concepts of the CIR's main parts see the following sections.
-   For detailed CIR specification see Internet-Draft "Contextinformation
+   For the main concepts of the CIR see the following sections.  For
+   detailed CIR specification see Internet-Draft "Contextinformation
    Routing (CIR) Specification for Contextinformation Routing Networks
    (CRNs)" [CIR_Spec].
 
-4.1.  Structure and Limitations
+4.1.  Overlay Network
 
    CIC contains of CI-Bricks
 
-4.2.  Types
+4.2.  Encoded CI Routing
 
    CIC contains of CI-Bricks
 
-4.3.  Distinction and Deployment
+4.3.  Client's Network Address Updates
+
+   CIC contains of CI-Bricks
+
+
+
+
+
+Stefan Hans               Expires June 23, 2016                 [Page 5]
+
+Internet-Draft     Contextinformation Routing Networks     December 2015
+
+
+4.4.  CIC-Protocol Request Routing
 
    CIC contains of CI-Bricks
 
@@ -273,15 +302,6 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
               <https://github.com/stefanhans/ContextRouting/raw/master/
               RFC/DraftRFC_CIR_Specification.txt>.
 
-
-
-
-
-Stefan Hans               Expires June 23, 2016                 [Page 5]
-
-Internet-Draft     Contextinformation Routing Networks     December 2015
-
-
 Author's Address
 
    Stefan Hans
@@ -290,26 +310,6 @@ Author's Address
    Germany
 
    Email: uni@stefan-hans.de
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
