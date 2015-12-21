@@ -77,19 +77,18 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Contextinformation Coding (CIC) . . . . . . . . . . . . . . .   4
-     2.1.  Structure and Limitations . . . . . . . . . . . . . . . .   4
+     2.1.  Structure . . . . . . . . . . . . . . . . . . . . . . . .   4
        2.1.1.  CIC-Bricks  . . . . . . . . . . . . . . . . . . . . .   4
-       2.1.2.  Composite Pattern . . . . . . . . . . . . . . . . . .   4
-     2.2.  Types . . . . . . . . . . . . . . . . . . . . . . . . . .   4
-     2.3.  Distinction and Deployment  . . . . . . . . . . . . . . .   4
+     2.2.  Types of CIC-Modules  . . . . . . . . . . . . . . . . . .   4
+     2.3.  Distinction and Deployment  . . . . . . . . . . . . . . .   5
    3.  Contextinformation Packet (CIP) . . . . . . . . . . . . . . .   5
      3.1.  Header Data . . . . . . . . . . . . . . . . . . . . . . .   5
      3.2.  Contextinformation  . . . . . . . . . . . . . . . . . . .   5
      3.3.  Client Data . . . . . . . . . . . . . . . . . . . . . . .   5
-   4.  Contextinformation Routing (CIR)  . . . . . . . . . . . . . .   5
-     4.1.  Overlay Network . . . . . . . . . . . . . . . . . . . . .   5
-     4.2.  Encoded CI Routing  . . . . . . . . . . . . . . . . . . .   5
-     4.3.  Client's Network Address Updates  . . . . . . . . . . . .   5
+   4.  Contextinformation Routing (CIR)  . . . . . . . . . . . . . .   6
+     4.1.  Overlay Network . . . . . . . . . . . . . . . . . . . . .   6
+     4.2.  Encoded CI Routing  . . . . . . . . . . . . . . . . . . .   6
+     4.3.  Client's Network Address Updates  . . . . . . . . . . . .   6
      4.4.  CIC-Protocol Request Routing  . . . . . . . . . . . . . .   6
    5.  Informative References  . . . . . . . . . . . . . . . . . . .   6
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   6
@@ -105,7 +104,8 @@ Table of Contents
       How can it be open for new types of interests and context to
       anybody?
 
-
+      How can it be organized to maximize the availabilty of the service
+      and to minimize the customizing effort for its clients?
 
 
 
@@ -113,9 +113,6 @@ Stefan Hans               Expires June 23, 2016                 [Page 2]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
-
-      How can it be organized to maximize the availabilty of the service
-      and to minimize the customizing effort for its clients?
 
    In an attempt at a definition of information and context it has
    turned out that there is no useful clear distinction between the two.
@@ -162,6 +159,9 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
    Contextinformation Routing (CIR) takes place in an overlay network
    built normally on top of the TCP/IP layer.  It is organized by using
+   CI-Content as index and represents a virtual tree of CICs.  It is
+   oriented towards known concepts of network routing and others network
+   concepts.
 
 
 
@@ -170,20 +170,19 @@ Stefan Hans               Expires June 23, 2016                 [Page 3]
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
 
-   CI-Content as index and represents a virtual tree of CICs.  It is
-   oriented towards known concepts of network routing and others network
-   concepts.
-
 2.  Contextinformation Coding (CIC)
 
    A CIC-Protocol defines an injective function between a set of CI and
    a set of permutations of a bit string with a fixed byte length (CI-
-   Content), i.e. there is exactly one bit string for every discribed
+   Content), i.e. there is exactly one bit string for every described
    content of the CIC-Protocol.  Every CIC-Protocol and all its encoded
    CI have an individual CIC-Numbers.  In general a CIC-Number can be
    well-known or temporary.  Every network can have its own CIC-Numbers.
    This aspect is comparable with port numbers.  CI-Mask, the second bit
-   string, is not defined individually by the CIC-Protocol.
+   string, is not defined individually by the CIC-Protocol.  CI-Masks
+   are not part of the CIC-Protocol, but can be seen as part of encoded
+   CI.  In this regard one bit of a CI-Mask may enlarge or double the
+   matching CI-Content permutations.
 
    Furthermore, CIC definitions can use other CIC definitions like in a
    hierarchical tree.  The leaves of this tree are called CIC-Modules.
@@ -191,33 +190,34 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    definitions as well.
 
    Although encoded CI is limited to 255 byte per packet (CIP), it is
-   theoretically unlimited because it can be spead over different
+   theoretically unlimited because it can be spread over different
    packets limitless.
 
-2.1.  Structure and Limitations
+2.1.  Structure
 
-   CIC contains of CI-Bricks
+   A CIC can be part of other CICs and can contain other CICs.  All
+   together it builds a complex hierarchical tree.  A CIC, which does
+   not contain other CICs, represents a leave of the CIC-Tree and is
+   called a CIC-Module.
 
 2.1.1.  CIC-Bricks
 
-   CIC consists of a pair of bit string with its length rounded up to
-   the next byte.
+   CIC consists of a pair of bit strings with its length rounded up to
+   the next byte.  One of these byte pair is called a CIC-Brick.  One
+   byte string is named CI-Content and the other is named CI-Mask.  CI-
+   Content stands either for encoded CI or for a CIC-Number.  Depending
+   on the CIC type not every combination of bits of a CI-Mask makes
+   sense.  For a CIC-Number CI-Mask has no meaning so far.  These
+   meaningless bits respectively combinations of bits are called CIC-
+   Spam.
 
-2.1.2.  Composite Pattern
+2.2.  Types of CIC-Modules
 
-   CIC
+   The main differentiating features of the CIC types are the following:
 
-2.2.  Types
-
-   CIC contains of CI-Bricks
-
-2.3.  Distinction and Deployment
-
-   CIC contains of CI-Bricks
-
-
-
-
+   Relation between defined and possible permutations
+                  (1:2) A binary CIC-Module, e.g. female or male.
+                  (1:n) A linear list as CIC-Module, e.g. age.
 
 
 
@@ -225,6 +225,25 @@ Stefan Hans               Expires June 23, 2016                 [Page 4]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
+
+                  (n:m) A set as CIC-Module, e.g. interests.
+
+
+
+   Complexity of CIC structure
+                  The complexity increases with the number of nodes of
+                  the CIC-Tree.
+
+
+
+   Coding function
+                  Explicit mapping or calculating functions.
+
+
+
+2.3.  Distinction and Deployment
+
+   CIC contains of CI-Bricks
 
 3.  Contextinformation Packet (CIP)
 
@@ -254,6 +273,15 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    The client data part has leading two bytes.  One byte for type of
    client data and one byte for the number of bytes following.
 
+
+
+
+
+Stefan Hans               Expires June 23, 2016                 [Page 5]
+
+Internet-Draft     Contextinformation Routing Networks     December 2015
+
+
 4.  Contextinformation Routing (CIR)
 
    For the main concepts of the CIR see the following sections.  For
@@ -272,15 +300,6 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 4.3.  Client's Network Address Updates
 
    CIC contains of CI-Bricks
-
-
-
-
-
-Stefan Hans               Expires June 23, 2016                 [Page 5]
-
-Internet-Draft     Contextinformation Routing Networks     December 2015
-
 
 4.4.  CIC-Protocol Request Routing
 
@@ -310,25 +329,6 @@ Author's Address
    Germany
 
    Email: uni@stefan-hans.de
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
