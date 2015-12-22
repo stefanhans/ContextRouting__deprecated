@@ -3,9 +3,9 @@
 
 
 Network Working Group                                        Stefan Hans
-Internet-Draft                                         December 21, 2015
+Internet-Draft                                         December 22, 2015
 Intended status: Experimental
-Expires: June 23, 2016
+Expires: June 24, 2016
 
 
          Concepts of Contextinformation Routing Networks (CRNs)
@@ -44,7 +44,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 23, 2016.
+   This Internet-Draft will expire on June 24, 2016.
 
 
 
@@ -53,7 +53,7 @@ Status of This Memo
 
 
 
-Stefan Hans               Expires June 23, 2016                 [Page 1]
+Stefan Hans               Expires June 24, 2016                 [Page 1]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
@@ -79,19 +79,20 @@ Table of Contents
    2.  Contextinformation Coding (CIC) . . . . . . . . . . . . . . .   4
      2.1.  Structure . . . . . . . . . . . . . . . . . . . . . . . .   4
        2.1.1.  CIC-Bricks  . . . . . . . . . . . . . . . . . . . . .   4
-     2.2.  Types of CIC-Modules  . . . . . . . . . . . . . . . . . .   4
-     2.3.  Distinction and Deployment  . . . . . . . . . . . . . . .   5
-   3.  Contextinformation Packet (CIP) . . . . . . . . . . . . . . .   5
-     3.1.  Header Data . . . . . . . . . . . . . . . . . . . . . . .   5
-     3.2.  Contextinformation  . . . . . . . . . . . . . . . . . . .   5
-     3.3.  Client Data . . . . . . . . . . . . . . . . . . . . . . .   5
+     2.2.  Distinguishing Criterions of CIC  . . . . . . . . . . . .   5
+     2.3.  Deployment of CIC-Protocols . . . . . . . . . . . . . . .   6
+   3.  Contextinformation Packet (CIP) . . . . . . . . . . . . . . .   6
+     3.1.  Header Data . . . . . . . . . . . . . . . . . . . . . . .   6
+     3.2.  Contextinformation  . . . . . . . . . . . . . . . . . . .   6
+     3.3.  Client Data . . . . . . . . . . . . . . . . . . . . . . .   6
    4.  Contextinformation Routing (CIR)  . . . . . . . . . . . . . .   6
      4.1.  Overlay Network . . . . . . . . . . . . . . . . . . . . .   6
-     4.2.  Encoded CI Routing  . . . . . . . . . . . . . . . . . . .   6
-     4.3.  Client's Network Address Updates  . . . . . . . . . . . .   6
-     4.4.  CIC-Protocol Request Routing  . . . . . . . . . . . . . .   6
-   5.  Informative References  . . . . . . . . . . . . . . . . . . .   6
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   6
+     4.2.  Encoded CI Routing  . . . . . . . . . . . . . . . . . . .   7
+     4.3.  Client's Network Address Updates  . . . . . . . . . . . .   7
+     4.4.  CIC-Protocol Request Routing  . . . . . . . . . . . . . .   7
+     4.5.  Metadata  . . . . . . . . . . . . . . . . . . . . . . . .   7
+   5.  Informative References  . . . . . . . . . . . . . . . . . . .   7
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   7
 
 1.  Introduction
 
@@ -104,15 +105,17 @@ Table of Contents
       How can it be open for new types of interests and context to
       anybody?
 
-      How can it be organized to maximize the availabilty of the service
-      and to minimize the customizing effort for its clients?
 
 
 
-Stefan Hans               Expires June 23, 2016                 [Page 2]
+
+Stefan Hans               Expires June 24, 2016                 [Page 2]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
+
+      How can it be organized to maximize the availabilty of the service
+      and to minimize the customizing effort for its clients?
 
    In an attempt at a definition of information and context it has
    turned out that there is no useful clear distinction between the two.
@@ -159,16 +162,17 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
    Contextinformation Routing (CIR) takes place in an overlay network
    built normally on top of the TCP/IP layer.  It is organized by using
-   CI-Content as index and represents a virtual tree of CICs.  It is
-   oriented towards known concepts of network routing and others network
-   concepts.
 
 
 
-Stefan Hans               Expires June 23, 2016                 [Page 3]
+Stefan Hans               Expires June 24, 2016                 [Page 3]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
+
+   CI-Content as index and represents a virtual tree of CICs.  It is
+   oriented towards known concepts of network routing and others network
+   concepts.
 
 2.  Contextinformation Coding (CIC)
 
@@ -198,7 +202,9 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    A CIC can be part of other CICs and can contain other CICs.  All
    together it builds a complex hierarchical tree.  A CIC, which does
    not contain other CICs, represents a leave of the CIC-Tree and is
-   called a CIC-Module.
+   called a CIC-Module.  Some types of CICs are a hierarchy of its own.
+   One of these is the CIC-Dictionary a taxonomy like tree of textual
+   descriptions.
 
 2.1.1.  CIC-Bricks
 
@@ -211,39 +217,76 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    meaningless bits respectively combinations of bits are called CIC-
    Spam.
 
-2.2.  Types of CIC-Modules
-
-   The main differentiating features of the CIC types are the following:
-
-   Relation between defined and possible permutations
-                  (1:2) A binary CIC-Module, e.g. female or male.
-                  (1:n) A linear list as CIC-Module, e.g. age.
 
 
 
-Stefan Hans               Expires June 23, 2016                 [Page 4]
+
+Stefan Hans               Expires June 24, 2016                 [Page 4]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
 
-                  (n:m) A set as CIC-Module, e.g. interests.
+2.2.  Distinguishing Criterions of CIC
 
+   The main distinguishing criterions of CICs are the following:
 
+   Utilization
+                  Relation between defined and possible permutations
+                  determine the utilization of a CIC.
 
-   Complexity of CIC structure
-                  The complexity increases with the number of nodes of
-                  the CIC-Tree.
+                  (2:256) A binary CIC-Module, e.g. female or male.
+                  (1:2) A linear list as CIC-Module, e.g. age (1-128).
+                  (1:1) A set with all permutations available as CIC-
+                  Module, e.g. interests (8).
 
 
 
    Coding function
-                  Explicit mapping or calculating functions.
+                  (explicit mapping) A list of items possibly ordered by
+                  means of similarity regarding the use of a CI-Mask.
+                  (calculation) A calculation function does the codings,
+                  e.g.  GPS data.
 
 
 
-2.3.  Distinction and Deployment
+   Coding unit
+                  (number) The meaning of the coding is related to
+                  numbers.
+                  (words) The meaning of the coding is described by
+                  words.
 
-   CIC contains of CI-Bricks
+
+
+   Availability of CIC-Protocol
+                  (open access) Greatest possible distribution is
+                  accepted or even wanted.  The CIC-Number could
+                  (exclusive access) The access is limited for various
+                  reasons.
+                  (permanent) The CIC-Protocol should be mature and
+                  normally closed to modifications.
+                  (limited in time) Ad-hoc CIC-Protocol or refreshable,
+                  e.g. daily.
+
+
+
+   Use of CIC-Spam
+                  CIC-Spam are unused bits of CICs and can be used to
+                  hide CI by filling it with agreed bit strings.  Maybe
+                  other use will emerge in the future.
+
+
+
+
+Stefan Hans               Expires June 24, 2016                 [Page 5]
+
+Internet-Draft     Contextinformation Routing Networks     December 2015
+
+
+2.3.  Deployment of CIC-Protocols
+
+   CRNs provide an infrastructure for CIC-Protocols.  This can, but must
+   not, be used for distributing CIC-Protocols.  Any other way is
+   possible according to the intended availability.
 
 3.  Contextinformation Packet (CIP)
 
@@ -273,15 +316,6 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    The client data part has leading two bytes.  One byte for type of
    client data and one byte for the number of bytes following.
 
-
-
-
-
-Stefan Hans               Expires June 23, 2016                 [Page 5]
-
-Internet-Draft     Contextinformation Routing Networks     December 2015
-
-
 4.  Contextinformation Routing (CIR)
 
    For the main concepts of the CIR see the following sections.  For
@@ -291,19 +325,41 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
 4.1.  Overlay Network
 
-   CIC contains of CI-Bricks
+   CIR can be build on any digital network.  Especially internet,
+   intranets and peer-to-peer networks on the TCP/IP layer.
+
+
+
+
+
+
+Stefan Hans               Expires June 24, 2016                 [Page 6]
+
+Internet-Draft     Contextinformation Routing Networks     December 2015
+
 
 4.2.  Encoded CI Routing
 
-   CIC contains of CI-Bricks
+   This routing is oriented on the CI-Bricks using CI-Content as index.
+   If a bit of CI-Mask is true, the routing will be split to follow both
+   pathes of the indexing.
 
 4.3.  Client's Network Address Updates
 
-   CIC contains of CI-Bricks
+   To optimize the availibility of the clients in volatile networks,
+   e.g. mobile devices in the internet, CRNs have a procedure to check
+   the availability the clients' address information and the clients
+   have a procedure to update these.
 
 4.4.  CIC-Protocol Request Routing
 
-   CIC contains of CI-Bricks
+   Similar to the encoded CI routing CRNs provide an infrastructure to
+   store and retrieve CIC-Protocols.
+
+4.5.  Metadata
+
+   CRNs communicate aggregations and other metadata, if asked for or if
+   the resultset of matching CI is too large.
 
 5.  Informative References
 
@@ -333,4 +389,4 @@ Author's Address
 
 
 
-Stefan Hans               Expires June 23, 2016                 [Page 6]
+Stefan Hans               Expires June 24, 2016                 [Page 7]
