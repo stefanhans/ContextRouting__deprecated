@@ -3,9 +3,9 @@
 
 
 Network Working Group                                        Stefan Hans
-Internet-Draft                                         December 22, 2015
+Internet-Draft                                         December 27, 2015
 Intended status: Experimental
-Expires: June 24, 2016
+Expires: June 29, 2016
 
 
   Contextinformation Paket (CIP) Specification for Contextinformation
@@ -36,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 24, 2016.
+   This Internet-Draft will expire on June 29, 2016.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Stefan Hans               Expires June 24, 2016                 [Page 1]
+Stefan Hans               Expires June 29, 2016                 [Page 1]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Stefan Hans               Expires June 24, 2016                 [Page 2]
+Stefan Hans               Expires June 29, 2016                 [Page 2]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
@@ -120,13 +120,13 @@ Internet-Draft         CIP Specification for CRNs          December 2015
    One could now determine a specification for this purpose as one
    example of CI.  Let me introduce the concept of Contextinformation
    Coding (CIC) instead.  CIC means both a definition of an encoding
-   resp. decoding protocol for a particular kind of CI and an encoded
-   concrete piece of CI.  For unambiguity the terms "CIC-Protocol" and
-   "encoded CI" will be used in this document, if needed.  A CIC-
-   Protocol and all its encoded CI is linked by a CIC-Number.  Applied
-   to our location based example we would determine a specification for
-   this purpose, call it a CIC and assign a free CIC-Number to it.  Then
-   all encoded CI is processed directly by the same algorithm to find
+   resp. decoding ruleset for a particular kind of CI and an encoded
+   concrete piece of CI.  For unambiguity the terms "CIC-Ruleset" and
+   "encoded CI" will be used in this document, if needed.  A CIC-Ruleset
+   and all its encoded CI is linked by a CIC-Number.  Applied to our
+   location based example we would determine a specification for this
+   purpose, call it a CIC and assign a free CIC-Number to it.  Then all
+   encoded CI is processed directly by the same algorithm to find
    matching CI, i.e. without an idea of the certain meaning of the used
    CIC.  Therefore CI will be encoded in a pair of bit strings
    representing CI-Content and CI-Mask.  Looking at one bit then it is
@@ -165,7 +165,7 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 
 
-Stefan Hans               Expires June 24, 2016                 [Page 3]
+Stefan Hans               Expires June 29, 2016                 [Page 3]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
@@ -221,7 +221,7 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 
 
-Stefan Hans               Expires June 24, 2016                 [Page 4]
+Stefan Hans               Expires June 29, 2016                 [Page 4]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
@@ -277,7 +277,7 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 
 
-Stefan Hans               Expires June 24, 2016                 [Page 5]
+Stefan Hans               Expires June 29, 2016                 [Page 5]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
@@ -333,7 +333,7 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 
 
-Stefan Hans               Expires June 24, 2016                 [Page 6]
+Stefan Hans               Expires June 29, 2016                 [Page 6]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
@@ -389,7 +389,7 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 
 
-Stefan Hans               Expires June 24, 2016                 [Page 7]
+Stefan Hans               Expires June 29, 2016                 [Page 7]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
@@ -445,4 +445,4 @@ Author's Address
 
 
 
-Stefan Hans               Expires June 24, 2016                 [Page 8]
+Stefan Hans               Expires June 29, 2016                 [Page 8]
