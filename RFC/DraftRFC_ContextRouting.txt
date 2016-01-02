@@ -76,26 +76,27 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-   2.  Contextinformation Coding (CIC) . . . . . . . . . . . . . . .   4
-     2.1.  Internal Structure  . . . . . . . . . . . . . . . . . . .   4
-       2.1.1.  CIC-Brick . . . . . . . . . . . . . . . . . . . . . .   4
-       2.1.2.  CIC-Number  . . . . . . . . . . . . . . . . . . . . .   5
-       2.1.3.  CIC-Spam  . . . . . . . . . . . . . . . . . . . . . .   5
-       2.1.4.  Limitations . . . . . . . . . . . . . . . . . . . . .   5
-     2.2.  CIC's Application Types . . . . . . . . . . . . . . . . .   5
-     2.3.  Deployment of CIC-Rulesets  . . . . . . . . . . . . . . .   6
-     2.4.  Emergence and Future Use  . . . . . . . . . . . . . . . .   6
-   3.  Contextinformation Packet (CIP) . . . . . . . . . . . . . . .   6
-     3.1.  Header Data . . . . . . . . . . . . . . . . . . . . . . .   6
-     3.2.  Contextinformation  . . . . . . . . . . . . . . . . . . .   6
-     3.3.  Client Data . . . . . . . . . . . . . . . . . . . . . . .   7
-   4.  Contextinformation Routing (CIR)  . . . . . . . . . . . . . .   7
-     4.1.  Overlay Network . . . . . . . . . . . . . . . . . . . . .   7
-     4.2.  Encoded CI Routing  . . . . . . . . . . . . . . . . . . .   7
-     4.3.  Client's Network Address Updates  . . . . . . . . . . . .   7
-     4.4.  CIC-Ruleset Request Routing . . . . . . . . . . . . . . .   7
-     4.5.  Metadata  . . . . . . . . . . . . . . . . . . . . . . . .   7
-   5.  Informative References  . . . . . . . . . . . . . . . . . . .   7
+   2.  Motivation  . . . . . . . . . . . . . . . . . . . . . . . . .   4
+   3.  Contextinformation Coding (CIC) . . . . . . . . . . . . . . .   4
+     3.1.  Internal Structure  . . . . . . . . . . . . . . . . . . .   4
+       3.1.1.  CIC-Brick . . . . . . . . . . . . . . . . . . . . . .   4
+       3.1.2.  CIC-Number  . . . . . . . . . . . . . . . . . . . . .   5
+       3.1.3.  CIC-Spam  . . . . . . . . . . . . . . . . . . . . . .   5
+       3.1.4.  Limitations . . . . . . . . . . . . . . . . . . . . .   5
+     3.2.  CIC's Application Types . . . . . . . . . . . . . . . . .   5
+     3.3.  Deployment of CIC-Rulesets  . . . . . . . . . . . . . . .   6
+     3.4.  Emergence and Future Use  . . . . . . . . . . . . . . . .   6
+   4.  Contextinformation Packet (CIP) . . . . . . . . . . . . . . .   6
+     4.1.  Header Data . . . . . . . . . . . . . . . . . . . . . . .   6
+     4.2.  Contextinformation  . . . . . . . . . . . . . . . . . . .   6
+     4.3.  Client Data . . . . . . . . . . . . . . . . . . . . . . .   7
+   5.  Contextinformation Routing (CIR)  . . . . . . . . . . . . . .   7
+     5.1.  Overlay Network . . . . . . . . . . . . . . . . . . . . .   7
+     5.2.  Encoded CI Routing  . . . . . . . . . . . . . . . . . . .   7
+     5.3.  Client's Network Address Updates  . . . . . . . . . . . .   7
+     5.4.  CIC-Ruleset Request Routing . . . . . . . . . . . . . . .   7
+     5.5.  Metadata  . . . . . . . . . . . . . . . . . . . . . . . .   7
+   6.  Informative References  . . . . . . . . . . . . . . . . . . .   7
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   8
 
 1.  Introduction
@@ -105,7 +106,6 @@ Table of Contents
 
       How can a framework connect communication partners with matching
       communication interests and context?
-
 
 
 
@@ -180,7 +180,11 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    network routing and others network principles as well as B-tree like
    datastructures.
 
-2.  Contextinformation Coding (CIC)
+2.  Motivation
+
+   The motivation for this RFC is to .
+
+3.  Contextinformation Coding (CIC)
 
    Contextinformation Coding (CIC), i.e. a CIC-Ruleset, defines an
    injective function between a set of CI and a set of permutations of a
@@ -190,7 +194,7 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    by the CIC-Ruleset.  CI-Masks are not part of the CIC-Ruleset, but
    can be seen as part of encoded CI.
 
-2.1.  Internal Structure
+3.1.  Internal Structure
 
    The internal structure of CIC is self-referential.  This means an
    encoded CI can be part of other encoded CI and can contain other
@@ -201,7 +205,7 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    called CIC-Module.  The outermost CIC is called a Root-CIC.  A Root-
    CIC can be part of another CIC.  There it is no longer a Root-CIC.
 
-2.1.1.  CIC-Brick
+3.1.1.  CIC-Brick
 
    Encoded CI consists of a pair of bit strings with its length rounded
    up to the next byte.  One of these byte pairs is called a CIC-Brick.
@@ -210,10 +214,6 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    CIC-Brick can contain more than one items, i.e. encoded CI and CIC-
    Numbers.  The Root-CIC must have a length rounded up to the next byte
    lately.
-
-
-
-
 
 
 
@@ -241,7 +241,7 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    match(Offer, Request) = ( NOT ( Offer-Content XOR Request-Content ) )
    OR ( Offer-Mask AND Request-Mask )
 
-2.1.2.  CIC-Number
+3.1.2.  CIC-Number
 
    Every CIC-Ruleset and all its encoded CI have an individual CIC-
    Number in common.  In general a CIC-Number can be well-known or
@@ -249,13 +249,13 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    they are part of the Contextinformation Packet specification (CIP-
    Specification).
 
-2.1.3.  CIC-Spam
+3.1.3.  CIC-Spam
 
    CIC-Spam describes bits of a CIC which have no meaning.  This refers
    to CI-Content and, more frequent, to CI-Mask.  CIC-Spam can be used
    for other purposes theoretically.
 
-2.1.4.  Limitations
+3.1.4.  Limitations
 
    Contextinformation Packet (CIP) defines a maximum number of CI-
    Bricks.  But a CIC can use an unlimited number of CIPs in a row.
@@ -266,7 +266,7 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    Contextinformation Routing Network (CRN) with its own CICs.  There
    the CIC finds its route through these CRNs.
 
-2.2.  CIC's Application Types
+3.2.  CIC's Application Types
 
    It is not specified how CI or CIC should look like.  But some aspects
    shall be introduced here:
@@ -292,13 +292,13 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    identifier of the application or the CIC has no knowing about an
    application at all.
 
-2.3.  Deployment of CIC-Rulesets
+3.3.  Deployment of CIC-Rulesets
 
    CRNs provide an infrastructure for CIC-Rulesets.  This can, but must
    not, be used for distributing CIC-Rulesets.  Any other way is
    possible according to the intended availability.
 
-2.4.  Emergence and Future Use
+3.4.  Emergence and Future Use
 
    Due to the simple basic principles, the broad applicability and the
    unrestricted length of CI, the resulting codings and the applications
@@ -308,21 +308,21 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    complete or major relevant ones are missing still.  Therefore the
    specifications leave room for future use.
 
-3.  Contextinformation Packet (CIP)
+4.  Contextinformation Packet (CIP)
 
    For the concepts of the CIP's main parts see the following sections.
    For detailed CIP specification see Internet-Draft "Contextinformation
    Paket (CIP) Specification for Contextinformation Routing Networks
    (CRNs)" [CIP_Spec].
 
-3.1.  Header Data
+4.1.  Header Data
 
    The header data concern all metadata not directly related to CIC.
    The header data starts with a part with fixed size and static
    structure followed by a dynamic part.  The static part defines the
    dynamic part's type and its length.
 
-3.2.  Contextinformation
+4.2.  Contextinformation
 
    The Contextinformation part has leading bytes to specify the type and
    one byte for the number of CI-Bricks following.  A CI-Brick is pair
@@ -338,48 +338,48 @@ Stefan Hans               Expires June 3, 2016                  [Page 6]
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
 
-3.3.  Client Data
+4.3.  Client Data
 
    The client data starts with a part with fixed size and static
    structure followed by a dynamic part.  The static part only defines
    the dynamic part's type and its length.
 
-4.  Contextinformation Routing (CIR)
+5.  Contextinformation Routing (CIR)
 
    For the main concepts of the CIR see the following sections.  For
    detailed CIR specification see Internet-Draft "Contextinformation
    Routing (CIR) Specification for Contextinformation Routing Networks
    (CRNs)" [CIR_Spec].
 
-4.1.  Overlay Network
+5.1.  Overlay Network
 
    CIR can be build on any digital network.  Especially internet,
    intranets and peer-to-peer networks on the TCP/IP layer.
 
-4.2.  Encoded CI Routing
+5.2.  Encoded CI Routing
 
    This routing is oriented on the CI-Bricks using CI-Content as index.
    If a bit of CI-Mask is true, the routing will be split to follow both
    pathes of the indexing.
 
-4.3.  Client's Network Address Updates
+5.3.  Client's Network Address Updates
 
    To optimize the availibility of the clients in volatile networks,
    e.g. mobile devices in the internet, CRNs have a procedure to check
    the availability the clients' address information and the clients
    have a procedure to update these.
 
-4.4.  CIC-Ruleset Request Routing
+5.4.  CIC-Ruleset Request Routing
 
    Similar to the encoded CI routing CRNs provide an infrastructure to
    store and retrieve CIC-Rulesets.
 
-4.5.  Metadata
+5.5.  Metadata
 
    CRNs communicate aggregations and other metadata, if asked for or if
    the resultset of matching CI is too large.
 
-5.  Informative References
+6.  Informative References
 
 
 
