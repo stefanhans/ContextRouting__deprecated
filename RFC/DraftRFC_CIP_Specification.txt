@@ -3,9 +3,9 @@
 
 
 Network Working Group                                        Stefan Hans
-Internet-Draft                                         December 27, 2015
+Internet-Draft                                             December 2015
 Intended status: Experimental
-Expires: June 29, 2016
+Expires: June 3, 2016
 
 
   Contextinformation Paket (CIP) Specification for Contextinformation
@@ -36,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 29, 2016.
+   This Internet-Draft will expire on June 3, 2016.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Stefan Hans               Expires June 29, 2016                 [Page 1]
+Stefan Hans               Expires June 3, 2016                  [Page 1]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
@@ -65,15 +65,18 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Header  . . . . . . . . . . . . . . . . . . . . . . . . . . .   3
-     2.1.  Elements  . . . . . . . . . . . . . . . . . . . . . . . .   4
-     2.2.  Service Groups  . . . . . . . . . . . . . . . . . . . . .   5
-     2.3.  Additional Header Data  . . . . . . . . . . . . . . . . .   6
-       2.3.1.  Type 1  . . . . . . . . . . . . . . . . . . . . . . .   6
-   3.  Contextinformation  . . . . . . . . . . . . . . . . . . . . .   6
-   4.  Data  . . . . . . . . . . . . . . . . . . . . . . . . . . . .   7
-   5.  Context Bricks  . . . . . . . . . . . . . . . . . . . . . . .   8
-   6.  Informative References  . . . . . . . . . . . . . . . . . . .   8
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   8
+     2.1.  Fix Sized Elements  . . . . . . . . . . . . . . . . . . .   4
+     2.2.  Enumerations for Fixed Size Elements  . . . . . . . . . .   5
+       2.2.1.  Service Groups  . . . . . . . . . . . . . . . . . . .   5
+       2.2.2.  Channels  . . . . . . . . . . . . . . . . . . . . . .   6
+     2.3.  Dynamic Sized Elements  . . . . . . . . . . . . . . . . .   6
+     2.4.  Additional Types  . . . . . . . . . . . . . . . . . . . .   6
+       2.4.1.  Public Key (add_type 1) . . . . . . . . . . . . . . .   6
+   3.  Contextinformation  . . . . . . . . . . . . . . . . . . . . .   7
+   4.  Client Data . . . . . . . . . . . . . . . . . . . . . . . . .   8
+   5.  Context Bricks  . . . . . . . . . . . . . . . . . . . . . . .   9
+   6.  Informative References  . . . . . . . . . . . . . . . . . . .   9
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   9
 
 1.  Introduction
 
@@ -103,17 +106,17 @@ Table of Contents
    outside the surrounding area, it is defined as directly related.
    Provided that, these aspects of CI are named CI-Content (exact
    location) and CI-Mask (surrounding area).  This is essential for the
-   understanding of the concept of CI.  The CI of Offer and Request are
-   matching, in this case, if the exact location of one is in the
-   surrounding area of the other and vice versa.  Then Offer's CI,
 
 
 
-Stefan Hans               Expires June 29, 2016                 [Page 2]
+Stefan Hans               Expires June 3, 2016                  [Page 2]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
 
+   understanding of the concept of CI.  The CI of Offer and Request are
+   matching, in this case, if the exact location of one is in the
+   surrounding area of the other and vice versa.  Then Offer's CI,
    including contact information, will be send to Request and possibly
    Request contacts Offer directly.
 
@@ -162,10 +165,7 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 
 
-
-
-
-Stefan Hans               Expires June 29, 2016                 [Page 3]
+Stefan Hans               Expires June 3, 2016                  [Page 3]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
@@ -194,7 +194,7 @@ Internet-Draft         CIP Specification for CRNs          December 2015
     integers, in normal Internet order with the most-significant octet
                 first.  Each tick mark represents one bit.
 
-2.1.  Elements
+2.1.  Fix Sized Elements
 
    sg_request
                   The Service Groups Request shows the relevant
@@ -221,7 +221,7 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 
 
-Stefan Hans               Expires June 29, 2016                 [Page 4]
+Stefan Hans               Expires June 3, 2016                  [Page 4]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
@@ -258,7 +258,9 @@ Internet-Draft         CIP Specification for CRNs          December 2015
                   The data for the core functionality is the service_id
                   which has to be used at the moment (see 2.1.2).
 
-2.2.  Service Groups
+2.2.  Enumerations for Fixed Size Elements
+
+2.2.1.  Service Groups
 
    'Service Groups' describes the role(s) in the Context Network.
 
@@ -275,16 +277,45 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 
 
-
-
-Stefan Hans               Expires June 29, 2016                 [Page 5]
+Stefan Hans               Expires June 3, 2016                  [Page 5]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
 
-2.3.  Additional Header Data
+2.2.2.  Channels
 
-2.3.1.  Type 1
+   'Service Groups' describes the role(s) in the Context Network.
+
+   Figure 2.1.2 shows the service groups and its defined first two bits.
+
+   0         1         2  ---------------------------------------   8
+   +---------+---------+--------------------------------------------+
+   | client  | gateway |           not yet defined                  |
+   +--------------------------------------------------------------- +
+
+     Thus the integer 1 means 'client', 2 means 'gateway' and 3 means
+                                   both.
+
+2.3.  Dynamic Sized Elements
+
+   add_type
+                  The type of the following data of the datagram.  The
+                  value for the core functionality is 1 which has to be
+                  used at the moment.  The value 0 is reserved for
+                  testing and all other values have no meaning so far.
+
+   add_size
+                  The size of the following header data of the datagram,
+                  i.e. the number of bytes.
+
+   additional data
+                  The additional data as specified in type and size.
+                  The data for the core functionality is the service_id
+                  which has to be used at the moment (see 2.1.2).
+
+2.4.  Additional Types
+
+2.4.1.  Public Key (add_type 1)
 
    Additional header data can be used to transfer authentication data
    like public keys.
@@ -298,6 +329,14 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
      Thus the integer 1 means 'client', 2 means 'gateway' and 3 means
                                    both.
+
+
+
+
+Stefan Hans               Expires June 3, 2016                  [Page 6]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
 
 3.  Contextinformation
 
@@ -328,16 +367,6 @@ Internet-Draft         CIP Specification for CRNs          December 2015
                   values has no meaning so far.
 
    content
-
-
-
-
-
-Stefan Hans               Expires June 29, 2016                 [Page 6]
-
-Internet-Draft         CIP Specification for CRNs          December 2015
-
-
                   The content is the first part of a Context Brick (see
                   section 2.4).  It is used in the core functionality to
                   specify the kind of context coding.
@@ -355,7 +384,17 @@ Internet-Draft         CIP Specification for CRNs          December 2015
                   The additional data contains the number of Context
                   Bricks (see section 2.4) as specified in add_size.
 
-4.  Data
+
+
+
+
+
+Stefan Hans               Expires June 3, 2016                  [Page 7]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
+
+4.  Client Data
 
    The following figure shows the data section of the context datagram.
      This section has no meaning for the Context Routing itself.  The
@@ -387,13 +426,6 @@ Internet-Draft         CIP Specification for CRNs          December 2015
    add_size
                   The size of additional data in bytes.
 
-
-
-Stefan Hans               Expires June 29, 2016                 [Page 7]
-
-Internet-Draft         CIP Specification for CRNs          December 2015
-
-
    text_type
                   The meaning or format of the following text, e.g.
                   plain text, URL.
@@ -405,6 +437,18 @@ Internet-Draft         CIP Specification for CRNs          December 2015
    additional data
                   Any data in a size as specified by 'add_size', i.e.
                   limited by 255.
+
+
+
+
+
+
+
+
+Stefan Hans               Expires June 3, 2016                  [Page 8]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
 
 5.  Context Bricks
 
@@ -445,4 +489,16 @@ Author's Address
 
 
 
-Stefan Hans               Expires June 29, 2016                 [Page 8]
+
+
+
+
+
+
+
+
+
+
+
+
+Stefan Hans               Expires June 3, 2016                  [Page 9]

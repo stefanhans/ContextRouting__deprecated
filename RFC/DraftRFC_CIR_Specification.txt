@@ -3,9 +3,9 @@
 
 
 Network Working Group                                        Stefan Hans
-Internet-Draft                                         December 27, 2015
+Internet-Draft                                             December 2015
 Intended status: Experimental
-Expires: June 29, 2016
+Expires: June 3, 2016
 
 
  Contextinformation Routing (CIR) Specification for Contextinformation
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 29, 2016.
+   This Internet-Draft will expire on June 3, 2016.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Stefan Hans               Expires June 29, 2016                 [Page 1]
+Stefan Hans               Expires June 3, 2016                  [Page 1]
 
 Internet-Draft         CIR Specification for CRNs          December 2015
 
@@ -109,4 +109,4 @@ Author's Address
 
 
 
-Stefan Hans               Expires June 29, 2016                 [Page 2]
+Stefan Hans               Expires June 3, 2016                  [Page 2]
