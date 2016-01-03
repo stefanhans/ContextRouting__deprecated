@@ -81,22 +81,23 @@ Table of Contents
      3.1.  Internal Structure  . . . . . . . . . . . . . . . . . . .   4
        3.1.1.  CIC-Brick . . . . . . . . . . . . . . . . . . . . . .   4
        3.1.2.  CIC-Number  . . . . . . . . . . . . . . . . . . . . .   5
-       3.1.3.  CIC-Spam  . . . . . . . . . . . . . . . . . . . . . .   5
-       3.1.4.  Limitations . . . . . . . . . . . . . . . . . . . . .   5
-     3.2.  CIC's Application Types . . . . . . . . . . . . . . . . .   5
+       3.1.3.  CIC-Padding . . . . . . . . . . . . . . . . . . . . .   5
+       3.1.4.  CIC-Spam  . . . . . . . . . . . . . . . . . . . . . .   5
+       3.1.5.  Limitations . . . . . . . . . . . . . . . . . . . . .   5
+     3.2.  CIC's Application Types . . . . . . . . . . . . . . . . .   6
      3.3.  Deployment of CIC-Rulesets  . . . . . . . . . . . . . . .   6
      3.4.  Emergence and Future Use  . . . . . . . . . . . . . . . .   6
    4.  Contextinformation Packet (CIP) . . . . . . . . . . . . . . .   6
-     4.1.  Header Data . . . . . . . . . . . . . . . . . . . . . . .   6
-     4.2.  Contextinformation  . . . . . . . . . . . . . . . . . . .   6
+     4.1.  Header Data . . . . . . . . . . . . . . . . . . . . . . .   7
+     4.2.  Contextinformation  . . . . . . . . . . . . . . . . . . .   7
      4.3.  Client Data . . . . . . . . . . . . . . . . . . . . . . .   7
    5.  Contextinformation Routing (CIR)  . . . . . . . . . . . . . .   7
      5.1.  Overlay Network . . . . . . . . . . . . . . . . . . . . .   7
      5.2.  Encoded CI Routing  . . . . . . . . . . . . . . . . . . .   7
      5.3.  Client's Network Address Updates  . . . . . . . . . . . .   7
-     5.4.  CIC-Ruleset Request Routing . . . . . . . . . . . . . . .   7
-     5.5.  Metadata  . . . . . . . . . . . . . . . . . . . . . . . .   7
-   6.  Informative References  . . . . . . . . . . . . . . . . . . .   7
+     5.4.  CIC-Ruleset Request Routing . . . . . . . . . . . . . . .   8
+     5.5.  Metadata  . . . . . . . . . . . . . . . . . . . . . . . .   8
+   6.  Informative References  . . . . . . . . . . . . . . . . . . .   8
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   8
 
 1.  Introduction
@@ -104,8 +105,7 @@ Table of Contents
    The main ideas had emerged while thinking about context-aware
    services and trying to find answers to the following questions:
 
-      How can a framework connect communication partners with matching
-      communication interests and context?
+
 
 
 
@@ -113,6 +113,9 @@ Stefan Hans               Expires June 3, 2016                  [Page 2]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
+
+      How can a framework connect communication partners with matching
+      communication interests and context?
 
       How can it be open for all types of interests and context?
 
@@ -159,9 +162,6 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
    o  Contextinformation
 
-   o  Client Data
-
-
 
 
 
@@ -169,6 +169,8 @@ Stefan Hans               Expires June 3, 2016                  [Page 3]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
+
+   o  Client Data
 
    All information which has to be transfered inside CRNs has to be
    encapsulated within CIPs.  CIP were created by client applications
@@ -182,7 +184,12 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
 2.  Motivation
 
-   The motivation for this RFC is to .
+   The motivation for this document is mainly the publication to prevent
+   proprietary rights of third parties hindering the general
+   availability of its described concepts.  Another additional
+   motivation is the exchange with interested experts.  This draft is a
+   first step to a possible formal recognition as an Internet Standard
+   in the future.
 
 3.  Contextinformation Coding (CIC)
 
@@ -211,13 +218,6 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    up to the next byte.  One of these byte pairs is called a CIC-Brick.
    One byte string is named CI-Content and the other is named CI-Mask.
    CI-Content stands either for encoded CI or for a CIC-Number.  One
-   CIC-Brick can contain more than one items, i.e. encoded CI and CIC-
-   Numbers.  The Root-CIC must have a length rounded up to the next byte
-   lately.
-
-
-
-
 
 
 
@@ -225,6 +225,10 @@ Stefan Hans               Expires June 3, 2016                  [Page 4]
 
 Internet-Draft     Contextinformation Routing Networks     December 2015
 
+
+   CIC-Brick can contain more than one items, i.e. encoded CI and CIC-
+   Numbers.  The Root-CIC must have a length rounded up to the next byte
+   lately.
 
              Figure 1.1.1 shows the structure of a CIC-Brick.
 
@@ -249,13 +253,19 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    they are part of the Contextinformation Packet specification (CIP-
    Specification).
 
-3.1.3.  CIC-Spam
+3.1.3.  CIC-Padding
 
    CIC-Spam describes bits of a CIC which have no meaning.  This refers
    to CI-Content and, more frequent, to CI-Mask.  CIC-Spam can be used
    for other purposes theoretically.
 
-3.1.4.  Limitations
+3.1.4.  CIC-Spam
+
+   CIC-Spam describes bits of a CIC which have no meaning.  This refers
+   to CI-Content and, more frequent, to CI-Mask.  CIC-Spam can be used
+   for other purposes theoretically.
+
+3.1.5.  Limitations
 
    Contextinformation Packet (CIP) defines a maximum number of CI-
    Bricks.  But a CIC can use an unlimited number of CIPs in a row.
@@ -263,6 +273,15 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    Routing (CIR), i.e. the matching communication partner, is the start
    point for the next CIR, related to the next CIP, and so on.  Seen
    from another perspective, every CIP lives in its own
+
+
+
+
+Stefan Hans               Expires June 3, 2016                  [Page 5]
+
+Internet-Draft     Contextinformation Routing Networks     December 2015
+
+
    Contextinformation Routing Network (CRN) with its own CICs.  There
    the CIC finds its route through these CRNs.
 
@@ -273,14 +292,6 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
 
    Changebility, i.e. from a static CIC to permanent updatable CIC-
    Ruleset.
-
-
-
-
-Stefan Hans               Expires June 3, 2016                  [Page 5]
-
-Internet-Draft     Contextinformation Routing Networks     December 2015
-
 
    Clarity, i.e. how protected is encoded CI especially the CIC-Number
    from being misinterpreted.
@@ -315,6 +326,18 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    Paket (CIP) Specification for Contextinformation Routing Networks
    (CRNs)" [CIP_Spec].
 
+
+
+
+
+
+
+
+Stefan Hans               Expires June 3, 2016                  [Page 6]
+
+Internet-Draft     Contextinformation Routing Networks     December 2015
+
+
 4.1.  Header Data
 
    The header data concern all metadata not directly related to CIC.
@@ -330,13 +353,6 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    linked with one byte of CI-Mask.  The type specified by the first
    bytes is like a meta or root CIC-Number and is mainly free for future
    use.
-
-
-
-Stefan Hans               Expires June 3, 2016                  [Page 6]
-
-Internet-Draft     Contextinformation Routing Networks     December 2015
-
 
 4.3.  Client Data
 
@@ -369,6 +385,15 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    the availability the clients' address information and the clients
    have a procedure to update these.
 
+
+
+
+
+Stefan Hans               Expires June 3, 2016                  [Page 7]
+
+Internet-Draft     Contextinformation Routing Networks     December 2015
+
+
 5.4.  CIC-Ruleset Request Routing
 
    Similar to the encoded CI routing CRNs provide an infrastructure to
@@ -380,19 +405,6 @@ Internet-Draft     Contextinformation Routing Networks     December 2015
    the resultset of matching CI is too large.
 
 6.  Informative References
-
-
-
-
-
-
-
-
-
-Stefan Hans               Expires June 3, 2016                  [Page 7]
-
-Internet-Draft     Contextinformation Routing Networks     December 2015
-
 
    [CIP_Spec]
               Hans, S., "Contextinformation Paket (CIP) Specification
@@ -416,18 +428,6 @@ Author's Address
    Germany
 
    Email: uni@stefan-hans.de
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

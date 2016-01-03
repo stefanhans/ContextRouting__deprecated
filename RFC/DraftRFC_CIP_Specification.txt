@@ -19,7 +19,8 @@ Abstract
    Contextinformation Routing Networks (CRNs).  All information which
    has to be transfered inside CRNs has to be encapsulated within CIPs.
    This document is the specification of CIP.  For an overview about
-   CRNs please see document Contextinformation Routing Networks [CRNs].
+   CRNs please see Internet-Draft "Concepts of Contextinformation
+   Routing Networks (CRNs)" [CRNs].
 
 Status of This Memo
 
@@ -49,7 +50,6 @@ Copyright Notice
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
-   include Simplified BSD License text as described in Section 4.e of
 
 
 
@@ -58,114 +58,58 @@ Stefan Hans               Expires June 3, 2016                  [Page 1]
 Internet-Draft         CIP Specification for CRNs          December 2015
 
 
+   include Simplified BSD License text as described in Section 4.e of
    the Trust Legal Provisions and are provided without warranty as
    described in the Simplified BSD License.
 
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-   2.  Header  . . . . . . . . . . . . . . . . . . . . . . . . . . .   3
-     2.1.  Fix Sized Elements  . . . . . . . . . . . . . . . . . . .   4
-     2.2.  Enumerations for Fixed Size Elements  . . . . . . . . . .   5
-       2.2.1.  Service Groups  . . . . . . . . . . . . . . . . . . .   5
-       2.2.2.  Channels  . . . . . . . . . . . . . . . . . . . . . .   6
-     2.3.  Dynamic Sized Elements  . . . . . . . . . . . . . . . . .   6
-     2.4.  Additional Types  . . . . . . . . . . . . . . . . . . . .   6
-       2.4.1.  Public Key (add_type 1) . . . . . . . . . . . . . . .   6
-   3.  Contextinformation  . . . . . . . . . . . . . . . . . . . . .   7
-   4.  Client Data . . . . . . . . . . . . . . . . . . . . . . . . .   8
-   5.  Context Bricks  . . . . . . . . . . . . . . . . . . . . . . .   9
-   6.  Informative References  . . . . . . . . . . . . . . . . . . .   9
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   9
+   2.  Motivation  . . . . . . . . . . . . . . . . . . . . . . . . .   2
+   3.  Header  . . . . . . . . . . . . . . . . . . . . . . . . . . .   2
+     3.1.  Fix Sized Elements  . . . . . . . . . . . . . . . . . . .   3
+     3.2.  Enumerations for Fixed Sized Elements . . . . . . . . . .   4
+       3.2.1.  Service Groups  . . . . . . . . . . . . . . . . . . .   4
+       3.2.2.  Channels  . . . . . . . . . . . . . . . . . . . . . .   5
+     3.3.  Dynamic Sized Elements  . . . . . . . . . . . . . . . . .   5
+     3.4.  Additional Types  . . . . . . . . . . . . . . . . . . . .   5
+       3.4.1.  Public Key (add_type 1) . . . . . . . . . . . . . . .   5
+   4.  Contextinformation  . . . . . . . . . . . . . . . . . . . . .   6
+   5.  Client Data . . . . . . . . . . . . . . . . . . . . . . . . .   7
+   6.  Context Bricks  . . . . . . . . . . . . . . . . . . . . . . .   8
+   7.  Informative References  . . . . . . . . . . . . . . . . . . .   8
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   8
 
 1.  Introduction
 
-   The main ideas had emerged while thinking about Context Aware
-   Services and trying to find answers to the following questions:
+   CIP
 
-      How can an open standard connect communication partners having
-      matching communication interests and context?
+2.  Motivation
 
-      How can it be open for any kind of new definitions of interests
-      and context to anybody?
+   The motivation for this document is mainly the publication to prevent
+   proprietary rights of third parties hindering the general
+   availability of its described concepts.  Another additional
+   motivation is the exchange with interested experts.  This draft is a
+   first step to a possible formal recognition as an Internet Standard
+   in the future.
 
-      How can it be organized to maximize the availabilty of the service
-      and to minimize the customizing effort for its clients?
+3.  Header
 
-   In an attempt of a definition of information and context it has
-   turned out that there is no useful clear distinction between the two.
-   The term of Contextinformation (CI) shall cover both aspects of
-   information in this document.
 
-   Now let me introduce two communication roles, i.e. Offer and Request,
-   and location as an example for a CI.  Offer says "I'm available for
-   anybody to contact me" and Request says "I am only looking for in the
-   first place".  Both have a quite exact information about their
-   location and can define an surrounding area where Offer is available
-   respectively Request is searching.  If the exact location is not
-   outside the surrounding area, it is defined as directly related.
-   Provided that, these aspects of CI are named CI-Content (exact
-   location) and CI-Mask (surrounding area).  This is essential for the
+
+
+
+
+
+
+
+
+
+
 
 
 
 Stefan Hans               Expires June 3, 2016                  [Page 2]
-
-Internet-Draft         CIP Specification for CRNs          December 2015
-
-
-   understanding of the concept of CI.  The CI of Offer and Request are
-   matching, in this case, if the exact location of one is in the
-   surrounding area of the other and vice versa.  Then Offer's CI,
-   including contact information, will be send to Request and possibly
-   Request contacts Offer directly.
-
-   One could now determine a specification for this purpose as one
-   example of CI.  Let me introduce the concept of Contextinformation
-   Coding (CIC) instead.  CIC means both a definition of an encoding
-   resp. decoding ruleset for a particular kind of CI and an encoded
-   concrete piece of CI.  For unambiguity the terms "CIC-Ruleset" and
-   "encoded CI" will be used in this document, if needed.  A CIC-Ruleset
-   and all its encoded CI is linked by a CIC-Number.  Applied to our
-   location based example we would determine a specification for this
-   purpose, call it a CIC and assign a free CIC-Number to it.  Then all
-   encoded CI is processed directly by the same algorithm to find
-   matching CI, i.e. without an idea of the certain meaning of the used
-   CIC.  Therefore CI will be encoded in a pair of bit strings
-   representing CI-Content and CI-Mask.  Looking at one bit then it is
-   sufficient for a match, if CI-Content is equal or both CI-Masks mark
-   them as non-relevant.  Then a performant bitwise operation can be
-   executed to find matching CI.
-
-   A Contextinformation Packet (CIP) is the datastructure to encapsulate
-   contextinformation and other data and divided in three parts:
-
-   o  Header
-
-   o  Contextinformation
-
-   o  Data
-
-   The Contextinformation Routing takes place in an overlay network
-   built normally on top of the TCP/IP layer.  It is oriented towards
-   known concepts of network routing and others more.
-
-2.  Header
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Stefan Hans               Expires June 3, 2016                  [Page 3]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
@@ -194,7 +138,7 @@ Internet-Draft         CIP Specification for CRNs          December 2015
     integers, in normal Internet order with the most-significant octet
                 first.  Each tick mark represents one bit.
 
-2.1.  Fix Sized Elements
+3.1.  Fix Sized Elements
 
    sg_request
                   The Service Groups Request shows the relevant
@@ -221,7 +165,7 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 
 
-Stefan Hans               Expires June 3, 2016                  [Page 4]
+Stefan Hans               Expires June 3, 2016                  [Page 3]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
@@ -258,11 +202,67 @@ Internet-Draft         CIP Specification for CRNs          December 2015
                   The data for the core functionality is the service_id
                   which has to be used at the moment (see 2.1.2).
 
-2.2.  Enumerations for Fixed Size Elements
+3.2.  Enumerations for Fixed Sized Elements
 
-2.2.1.  Service Groups
+3.2.1.  Service Groups
 
    'Service Groups' describes the role(s) in the Context Network.
+
+   Figure 2.1.2 shows the service groups and its defined first two bits.
+
+   0         1         2  ---------------------------------------   8
+   +---------+---------+--------------------------------------------+
+   | client  | gateway |           not yet defined                  |
+   +--------------------------------------------------------------- +
+
+     Thus the integer 1 means 'client', 2 means 'gateway' and 3 means
+                                   both.
+
+
+
+
+Stefan Hans               Expires June 3, 2016                  [Page 4]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
+
+3.2.2.  Channels
+
+   'Service Groups' describes the role(s) in the Context Network.
+
+   Figure 2.1.2 shows the service groups and its defined first two bits.
+
+   0         1         2  ---------------------------------------   8
+   +---------+---------+--------------------------------------------+
+   | client  | gateway |           not yet defined                  |
+   +--------------------------------------------------------------- +
+
+     Thus the integer 1 means 'client', 2 means 'gateway' and 3 means
+                                   both.
+
+3.3.  Dynamic Sized Elements
+
+   add_type
+                  The type of the following data of the datagram.  The
+                  value for the core functionality is 1 which has to be
+                  used at the moment.  The value 0 is reserved for
+                  testing and all other values have no meaning so far.
+
+   add_size
+                  The size of the following header data of the datagram,
+                  i.e. the number of bytes.
+
+   additional data
+                  The additional data as specified in type and size.
+                  The data for the core functionality is the service_id
+                  which has to be used at the moment (see 2.1.2).
+
+3.4.  Additional Types
+
+3.4.1.  Public Key (add_type 1)
+
+   Additional header data can be used to transfer authentication data
+   like public keys.
 
    Figure 2.1.2 shows the service groups and its defined first two bits.
 
@@ -282,63 +282,7 @@ Stefan Hans               Expires June 3, 2016                  [Page 5]
 Internet-Draft         CIP Specification for CRNs          December 2015
 
 
-2.2.2.  Channels
-
-   'Service Groups' describes the role(s) in the Context Network.
-
-   Figure 2.1.2 shows the service groups and its defined first two bits.
-
-   0         1         2  ---------------------------------------   8
-   +---------+---------+--------------------------------------------+
-   | client  | gateway |           not yet defined                  |
-   +--------------------------------------------------------------- +
-
-     Thus the integer 1 means 'client', 2 means 'gateway' and 3 means
-                                   both.
-
-2.3.  Dynamic Sized Elements
-
-   add_type
-                  The type of the following data of the datagram.  The
-                  value for the core functionality is 1 which has to be
-                  used at the moment.  The value 0 is reserved for
-                  testing and all other values have no meaning so far.
-
-   add_size
-                  The size of the following header data of the datagram,
-                  i.e. the number of bytes.
-
-   additional data
-                  The additional data as specified in type and size.
-                  The data for the core functionality is the service_id
-                  which has to be used at the moment (see 2.1.2).
-
-2.4.  Additional Types
-
-2.4.1.  Public Key (add_type 1)
-
-   Additional header data can be used to transfer authentication data
-   like public keys.
-
-   Figure 2.1.2 shows the service groups and its defined first two bits.
-
-   0         1         2  ---------------------------------------   8
-   +---------+---------+--------------------------------------------+
-   | client  | gateway |           not yet defined                  |
-   +--------------------------------------------------------------- +
-
-     Thus the integer 1 means 'client', 2 means 'gateway' and 3 means
-                                   both.
-
-
-
-
-Stefan Hans               Expires June 3, 2016                  [Page 6]
-
-Internet-Draft         CIP Specification for CRNs          December 2015
-
-
-3.  Contextinformation
+4.  Contextinformation
 
        Figure 2.2.1 shows the context (brick) section of the context
     datagram.  A context brick consists of two bytes: content und mask.
@@ -389,12 +333,12 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 
 
-Stefan Hans               Expires June 3, 2016                  [Page 7]
+Stefan Hans               Expires June 3, 2016                  [Page 6]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
 
-4.  Client Data
+5.  Client Data
 
    The following figure shows the data section of the context datagram.
      This section has no meaning for the Context Routing itself.  The
@@ -445,12 +389,12 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 
 
-Stefan Hans               Expires June 3, 2016                  [Page 8]
+Stefan Hans               Expires June 3, 2016                  [Page 7]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
 
-5.  Context Bricks
+6.  Context Bricks
 
    A Context Brick is a pair of bytes in particular content and mask.
    It describes a piece of information and the relevance of its
@@ -468,7 +412,7 @@ Internet-Draft         CIP Specification for CRNs          December 2015
                   are corresponding, if they are at the same place in
                   the byte.
 
-6.  Informative References
+7.  Informative References
 
    [CRNs]     Hans, S., "Concepts of Contextinformation Routing Networks
               (CRNs)", Januar 2016,
@@ -501,4 +445,4 @@ Author's Address
 
 
 
-Stefan Hans               Expires June 3, 2016                  [Page 9]
+Stefan Hans               Expires June 3, 2016                  [Page 8]

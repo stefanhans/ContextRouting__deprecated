@@ -16,7 +16,8 @@ Abstract
 
    Contextinformation Routing (CIR) is routing through
    Contextinformation Routing Networks (CRNs).  For an overview about
-   CRNs please see document Contextinformation Routing Networks [CRNs].
+   CRNs please see Internet-Draft "Concepts of Contextinformation
+   Routing Networks (CRNs)" [CRNs].
 
 Status of This Memo
 
@@ -52,7 +53,6 @@ Copyright Notice
 
 
 
-
 Stefan Hans               Expires June 3, 2016                  [Page 1]
 
 Internet-Draft         CIR Specification for CRNs          December 2015
@@ -61,29 +61,39 @@ Internet-Draft         CIR Specification for CRNs          December 2015
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-   2.  Encoded CI Routing  . . . . . . . . . . . . . . . . . . . . .   2
-   3.  Client's Network Address Updates  . . . . . . . . . . . . . .   2
-   4.  CIC-Ruleset Request Routing . . . . . . . . . . . . . . . . .   2
-   5.  Informative References  . . . . . . . . . . . . . . . . . . .   2
+   2.  Motivation  . . . . . . . . . . . . . . . . . . . . . . . . .   2
+   3.  Encoded CI Routing  . . . . . . . . . . . . . . . . . . . . .   2
+   4.  Client's Network Address Updates  . . . . . . . . . . . . . .   2
+   5.  CIC-Ruleset Request Routing . . . . . . . . . . . . . . . . .   2
+   6.  Informative References  . . . . . . . . . . . . . . . . . . .   2
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   2
 
 1.  Introduction
 
    introduction
 
-2.  Encoded CI Routing
+2.  Motivation
+
+   The motivation for this document is mainly the publication to prevent
+   proprietary rights of third parties hindering the general
+   availability of its described concepts.  Another additional
+   motivation is the exchange with interested experts.  This draft is a
+   first step to a possible formal recognition as an Internet Standard
+   in the future.
+
+3.  Encoded CI Routing
 
    introduction
 
-3.  Client's Network Address Updates
+4.  Client's Network Address Updates
 
    introduction
 
-4.  CIC-Ruleset Request Routing
+5.  CIC-Ruleset Request Routing
 
    introduction
 
-5.  Informative References
+6.  Informative References
 
    [CRNs]     Hans, S., "Concepts of Contextinformation Routing Networks
               (CRNs)", Januar 2016,
@@ -91,6 +101,18 @@ Table of Contents
               RFC/DraftRFC_ContextRouting.txt>.
 
 Author's Address
+
+
+
+
+
+
+
+
+Stefan Hans               Expires June 3, 2016                  [Page 2]
+
+Internet-Draft         CIR Specification for CRNs          December 2015
+
 
    Stefan Hans
    Rotwandstr.
@@ -109,4 +131,38 @@ Author's Address
 
 
 
-Stefan Hans               Expires June 3, 2016                  [Page 2]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Stefan Hans               Expires June 3, 2016                  [Page 3]
