@@ -3,9 +3,9 @@
 
 
 Network Working Group                                        Stefan Hans
-Internet-Draft                                          January 20, 2016
+Internet-Draft                                          January 22, 2016
 Intended status: Experimental
-Expires: July 23, 2016
+Expires: July 25, 2016
 
 
          Concepts of Contextinformation Routing Networks (CRNs)
@@ -44,7 +44,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on July 23, 2016.
+   This Internet-Draft will expire on July 25, 2016.
 
 
 
@@ -53,7 +53,7 @@ Status of This Memo
 
 
 
-Stefan Hans               Expires July 23, 2016                 [Page 1]
+Stefan Hans               Expires July 25, 2016                 [Page 1]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
@@ -84,20 +84,20 @@ Table of Contents
        3.1.3.  CIC-Spam and CIC-Padding  . . . . . . . . . . . . . .   6
      3.2.  Limitations . . . . . . . . . . . . . . . . . . . . . . .   6
      3.3.  Boolean Operations  . . . . . . . . . . . . . . . . . . .   6
-     3.4.  Types of CIC-Rulesets !!!!! . . . . . . . . . . . . . . .   7
+     3.4.  Types of CIC-Rulesets . . . . . . . . . . . . . . . . . .   7
      3.5.  Deployment of CIC-Rulesets  . . . . . . . . . . . . . . .   7
      3.6.  Emergence and Future Use  . . . . . . . . . . . . . . . .   7
-   4.  Contextinformation Packet (CIP) . . . . . . . . . . . . . . .   8
-     4.1.  Header Data . . . . . . . . . . . . . . . . . . . . . . .   8
-     4.2.  Contextinformation  . . . . . . . . . . . . . . . . . . .   8
+   4.  Contextinformation Packet (CIP) . . . . . . . . . . . . . . .   7
+     4.1.  Header Data . . . . . . . . . . . . . . . . . . . . . . .   7
+     4.2.  Contextinformation  . . . . . . . . . . . . . . . . . . .   7
      4.3.  Client Data . . . . . . . . . . . . . . . . . . . . . . .   8
    5.  Contextinformation Routing (CIR)  . . . . . . . . . . . . . .   8
      5.1.  Overlay Network . . . . . . . . . . . . . . . . . . . . .   8
      5.2.  Encoded CI Routing  . . . . . . . . . . . . . . . . . . .   8
-     5.3.  Client's Network Address Updates  . . . . . . . . . . . .   9
-     5.4.  CIC-Ruleset Request Routing . . . . . . . . . . . . . . .   9
-     5.5.  Metadata  . . . . . . . . . . . . . . . . . . . . . . . .   9
-   6.  Informative References  . . . . . . . . . . . . . . . . . . .   9
+     5.3.  Client's Network Address Updates  . . . . . . . . . . . .   8
+     5.4.  CIC-Ruleset Request Routing . . . . . . . . . . . . . . .   8
+     5.5.  Metadata  . . . . . . . . . . . . . . . . . . . . . . . .   8
+   6.  Informative References  . . . . . . . . . . . . . . . . . . .   8
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   9
 
 1.  Introduction
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Stefan Hans               Expires July 23, 2016                 [Page 2]
+Stefan Hans               Expires July 25, 2016                 [Page 2]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
@@ -165,7 +165,7 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
 
-Stefan Hans               Expires July 23, 2016                 [Page 3]
+Stefan Hans               Expires July 25, 2016                 [Page 3]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
@@ -221,7 +221,7 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
 
-Stefan Hans               Expires July 23, 2016                 [Page 4]
+Stefan Hans               Expires July 25, 2016                 [Page 4]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
@@ -277,7 +277,7 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
 
-Stefan Hans               Expires July 23, 2016                 [Page 5]
+Stefan Hans               Expires July 25, 2016                 [Page 5]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
@@ -333,43 +333,15 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
 
-Stefan Hans               Expires July 23, 2016                 [Page 6]
+Stefan Hans               Expires July 25, 2016                 [Page 6]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
-3.4.  Types of CIC-Rulesets !!!!!
+3.4.  Types of CIC-Rulesets
+
    It is neither specified how CIC-Rulesets should look like nor exist
-   any regulations how they should interact with applications.  But some
-   aspects of CIC-Rulesets shall be introduced here:
-
-   Variability
-             Is a CIC-Ruleset static or can it be changed?  Does the
-             degree of freedom allow to introduce new parts into the
-             existing ruleset or only to choose between existing ones?
-
-
-
-   Uniqueness
-             How protected is the encoded CI, especially the CIC-Number,
-             from being misinterpreted or misused? (!!Insert of new or
-             only authenticated update of one offer!!)
-
-
-
-   Availability
-             Availability, i.e. CI can be hidden by using CIC-Spam as an
-             unique identifier only known by certain communication
-             partners.
-
-
-
-   Degree of linkage
-             Degree of linkage to the application, e.g. the CIC is
-             simply a unique identifier of the application or the CIC
-             has no knowing about an application at all.
-
-
+   any regulations how they should interact with applications.
 
 3.5.  Deployment of CIC-Rulesets
 
@@ -386,13 +358,6 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
    CRNs.  Even the main application principles of today are possibly not
    complete or major relevant ones are missing still.  Therefore the
    specifications leave room for future use.
-
-
-
-Stefan Hans               Expires July 23, 2016                 [Page 7]
-
-Internet-Draft     Contextinformation Routing Networks      January 2016
-
 
 4.  Contextinformation Packet (CIP)
 
@@ -416,6 +381,18 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
    linked with one byte of CI-Mask.  The type specified by the first
    bytes is like a meta or root CIC-Number and is mainly free for future
    use.
+
+
+
+
+
+
+
+
+Stefan Hans               Expires July 25, 2016                 [Page 7]
+
+Internet-Draft     Contextinformation Routing Networks      January 2016
+
 
 4.3.  Client Data
 
@@ -441,15 +418,6 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
    If a bit of CI-Mask is true, the routing will be split to follow both
    pathes of the indexing.
 
-
-
-
-
-Stefan Hans               Expires July 23, 2016                 [Page 8]
-
-Internet-Draft     Contextinformation Routing Networks      January 2016
-
-
 5.3.  Client's Network Address Updates
 
    To optimize the availibility of the clients in volatile networks,
@@ -468,6 +436,19 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
    the result set of matching CI is too large.
 
 6.  Informative References
+
+
+
+
+
+
+
+
+
+Stefan Hans               Expires July 25, 2016                 [Page 8]
+
+Internet-Draft     Contextinformation Routing Networks      January 2016
+
 
    [CIP_Spec]
               Hans, S., "Contextinformation Paket (CIP) Specification
@@ -501,4 +482,23 @@ Author's Address
 
 
 
-Stefan Hans               Expires July 23, 2016                 [Page 9]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Stefan Hans               Expires July 25, 2016                 [Page 9]
