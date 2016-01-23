@@ -3,9 +3,9 @@
 
 
 Network Working Group                                        Stefan Hans
-Internet-Draft                                          January 22, 2016
+Internet-Draft                                          January 23, 2016
 Intended status: Experimental
-Expires: July 25, 2016
+Expires: July 26, 2016
 
 
          Concepts of Contextinformation Routing Networks (CRNs)
@@ -44,7 +44,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on July 25, 2016.
+   This Internet-Draft will expire on July 26, 2016.
 
 
 
@@ -53,7 +53,7 @@ Status of This Memo
 
 
 
-Stefan Hans               Expires July 25, 2016                 [Page 1]
+Stefan Hans               Expires July 26, 2016                 [Page 1]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
@@ -90,14 +90,15 @@ Table of Contents
    4.  Contextinformation Packet (CIP) . . . . . . . . . . . . . . .   7
      4.1.  Header Data . . . . . . . . . . . . . . . . . . . . . . .   7
      4.2.  Contextinformation  . . . . . . . . . . . . . . . . . . .   7
-     4.3.  Client Data . . . . . . . . . . . . . . . . . . . . . . .   8
+     4.3.  Application Data  . . . . . . . . . . . . . . . . . . . .   8
    5.  Contextinformation Routing (CIR)  . . . . . . . . . . . . . .   8
      5.1.  Overlay Network . . . . . . . . . . . . . . . . . . . . .   8
      5.2.  Encoded CI Routing  . . . . . . . . . . . . . . . . . . .   8
-     5.3.  Client's Network Address Updates  . . . . . . . . . . . .   8
-     5.4.  CIC-Ruleset Request Routing . . . . . . . . . . . . . . .   8
-     5.5.  Metadata  . . . . . . . . . . . . . . . . . . . . . . . .   8
-   6.  Informative References  . . . . . . . . . . . . . . . . . . .   8
+       5.2.1.  Structural Conception . . . . . . . . . . . . . . . .   8
+     5.3.  Application's Network Address Updates . . . . . . . . . .   9
+     5.4.  CIC-Ruleset Request Routing . . . . . . . . . . . . . . .   9
+     5.5.  Metadata  . . . . . . . . . . . . . . . . . . . . . . . .   9
+   6.  Informative References  . . . . . . . . . . . . . . . . . . .   9
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   9
 
 1.  Introduction
@@ -105,15 +106,15 @@ Table of Contents
    It all began thinking about context-aware services.  Here, context-
    awareness shouldn't be limited to location-based aspects, but it
    should cover any kind of context.  Concepts for an open, unrestricted
-   and flexible structure to support context-aware services had to be
 
 
 
-Stefan Hans               Expires July 25, 2016                 [Page 2]
+Stefan Hans               Expires July 26, 2016                 [Page 2]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
+   and flexible structure to support context-aware services had to be
    developed.  It should not only be applicable for established
    services, but also ready for the emergence of new ones.  For this
    purpose the following questions had to be answered:
@@ -128,8 +129,8 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
       How can it be organized to maximize the availabilty of the
       service?
 
-      How can it be organized to minimize the customizing effort for its
-      clients?
+      How can it be organized to minimize the customizing effort for
+      applications using the service?
    Let me now introduce the main concepts:
 
    Contextinformation (CI)
@@ -161,15 +162,15 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
              example.  Offer and Request are two communication roles,
              and location is a type of CI.  Offer says "I'm available
              for any Request with matching CI to contact me" and Request
-             says "I'm searching for any Offer with matching CI".  Both
 
 
 
-Stefan Hans               Expires July 25, 2016                 [Page 3]
+Stefan Hans               Expires July 26, 2016                 [Page 3]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
+             says "I'm searching for any Offer with matching CI".  Both
              have an exact information about their location and can
              define a surrounding area where Offer is available
              respectively Request is searching.  CI-Content, as the
@@ -190,7 +191,7 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
              *  Contextinformation
 
-             *  Client Data
+             *  Application Data
 
              All information which has to be transfered inside CRNs has
              to be encapsulated within CIPs.
@@ -220,8 +221,7 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
 
-
-Stefan Hans               Expires July 25, 2016                 [Page 4]
+Stefan Hans               Expires July 26, 2016                 [Page 4]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
@@ -277,7 +277,7 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
 
-Stefan Hans               Expires July 25, 2016                 [Page 5]
+Stefan Hans               Expires July 26, 2016                 [Page 5]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
@@ -333,7 +333,7 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
 
-Stefan Hans               Expires July 25, 2016                 [Page 6]
+Stefan Hans               Expires July 26, 2016                 [Page 6]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
@@ -389,14 +389,14 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
 
-Stefan Hans               Expires July 25, 2016                 [Page 7]
+Stefan Hans               Expires July 26, 2016                 [Page 7]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
-4.3.  Client Data
+4.3.  Application Data
 
-   The client data starts with a part with fixed size and static
+   The application data starts with a part with fixed size and static
    structure followed by a dynamic part.  The static part only defines
    the dynamic part's type and its length.
 
@@ -409,7 +409,7 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 5.1.  Overlay Network
 
-   CIR can be build on any digital network.  Especially internet,
+   CIR can be build on any digital network.  Especially the internet,
    intranets and peer-to-peer networks on the TCP/IP layer.
 
 5.2.  Encoded CI Routing
@@ -418,11 +418,48 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
    If a bit of CI-Mask is true, the routing will be split to follow both
    pathes of the indexing.
 
-5.3.  Client's Network Address Updates
+5.2.1.  Structural Conception
 
-   To optimize the availibility of the clients in volatile networks,
-   e.g. mobile devices in the internet, CRNs have a procedure to check
-   the availability the clients' address information and the clients
+   We distinguish between the two main roles Participant and User with
+   regard to CIR.  A Participant (CRN-Node) offers CI or provides
+   explicitly an active role in CIR.  An User only uses CIR requesting
+   CI or metadata.  The following concepts refer to how CRNs are built
+   up with CRN-Nodes dynamically.
+
+   CIR-Registration
+             At first an active CRN-Node has to be known as entry point
+             or to be established to create a new CRN.  This CRN-Node is
+             called CRN-Root.  A CRN-Root knows all major subnets
+             concerning the CIC-Content used as index (CI-Index).  New
+             Participants can be registered by requesting the CRN-Root
+             or any known CRN-Node being on the relevant path, i.e. on
+             the CI-Index of the new participant.  If not explicitly
+             requested differently a new participant will be registered
+             or mounted above the first ambigous CI-Brick, i.e. before
+             the first byte of CI-Mask not equal 0.
+
+
+
+   Subnetting
+             x
+
+
+
+Stefan Hans               Expires July 26, 2016                 [Page 8]
+
+Internet-Draft     Contextinformation Routing Networks      January 2016
+
+
+   Redundancy
+             x
+
+
+
+5.3.  Application's Network Address Updates
+
+   To optimize the availibility of the applications in volatile
+   networks, e.g. mobile devices in the internet, CRNs have a procedure
+   to check the applications' address information and the applications
    have a procedure to update these.
 
 5.4.  CIC-Ruleset Request Routing
@@ -436,19 +473,6 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
    the result set of matching CI is too large.
 
 6.  Informative References
-
-
-
-
-
-
-
-
-
-Stefan Hans               Expires July 25, 2016                 [Page 8]
-
-Internet-Draft     Contextinformation Routing Networks      January 2016
-
 
    [CIP_Spec]
               Hans, S., "Contextinformation Paket (CIP) Specification
@@ -477,28 +501,4 @@ Author's Address
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Stefan Hans               Expires July 25, 2016                 [Page 9]
+Stefan Hans               Expires July 26, 2016                 [Page 9]

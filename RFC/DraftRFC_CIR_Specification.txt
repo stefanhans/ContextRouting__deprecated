@@ -63,14 +63,26 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Motivation  . . . . . . . . . . . . . . . . . . . . . . . . .   2
    3.  Encoded CI Routing  . . . . . . . . . . . . . . . . . . . . .   2
-   4.  Client's Network Address Updates  . . . . . . . . . . . . . .   2
+   4.  Application's Network Address Updates . . . . . . . . . . . .   2
    5.  CIC-Ruleset Request Routing . . . . . . . . . . . . . . . . .   2
-   6.  Informative References  . . . . . . . . . . . . . . . . . . .   2
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   2
+   6.  Informative References  . . . . . . . . . . . . . . . . . . .   3
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   3
 
 1.  Introduction
 
-   introduction
+   The concepts and the implementations should be aware of the following
+   patterns as described in the "The Reactive Manifesto" [Manifesto],
+   i.e. they should be:
+
+   o  Responsive
+
+   o  Resilient
+
+   o  Elastic
+
+   o  Message Driven
+
+   These aspects will be referred to in the follwing sections.
 
 2.  Motivation
 
@@ -85,25 +97,13 @@ Table of Contents
 
    introduction
 
-4.  Client's Network Address Updates
+4.  Application's Network Address Updates
 
    introduction
 
 5.  CIC-Ruleset Request Routing
 
    introduction
-
-6.  Informative References
-
-   [CRNs]     Hans, S., "Concepts of Contextinformation Routing Networks
-              (CRNs)", Januar 2016,
-              <https://github.com/stefanhans/ContextRouting/raw/master/
-              RFC/DraftRFC_ContextRouting.txt>.
-
-Author's Address
-
-
-
 
 
 
@@ -114,26 +114,26 @@ Stefan Hans               Expires June 3, 2016                  [Page 2]
 Internet-Draft         CIR Specification for CRNs          December 2015
 
 
+6.  Informative References
+
+   [CRNs]     Hans, S., "Concepts of Contextinformation Routing Networks
+              (CRNs)", Januar 2016,
+              <https://github.com/stefanhans/ContextRouting/raw/master/
+              RFC/DraftRFC_ContextRouting.txt>.
+
+   [Manifesto]
+              Boner, J., Farley, D., Kuhn, R., and M. Thompson, "The
+              Reactive Manifesto", September 2014,
+              <http://www.reactivemanifesto.org>.
+
+Author's Address
+
    Stefan Hans
    Rotwandstr.
    Baldham  85598
    Germany
 
    Email: uni@stefan-hans.de
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

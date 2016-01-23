@@ -65,43 +65,43 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-   2.  Motivation  . . . . . . . . . . . . . . . . . . . . . . . . .   2
-   3.  Header  . . . . . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  Motivation  . . . . . . . . . . . . . . . . . . . . . . . . .   3
+   3.  Header  . . . . . . . . . . . . . . . . . . . . . . . . . . .   3
      3.1.  Fix Sized Elements  . . . . . . . . . . . . . . . . . . .   3
-     3.2.  Enumerations for Fixed Sized Elements . . . . . . . . . .   4
-       3.2.1.  Service Groups  . . . . . . . . . . . . . . . . . . .   4
+     3.2.  Enumerations for Fixed Sized Elements . . . . . . . . . .   5
+       3.2.1.  Service Groups  . . . . . . . . . . . . . . . . . . .   5
        3.2.2.  Channels  . . . . . . . . . . . . . . . . . . . . . .   5
      3.3.  Dynamic Sized Elements  . . . . . . . . . . . . . . . . .   5
-     3.4.  Additional Types  . . . . . . . . . . . . . . . . . . . .   5
-       3.4.1.  Public Key (add_type 1) . . . . . . . . . . . . . . .   5
+     3.4.  Additional Types  . . . . . . . . . . . . . . . . . . . .   6
+       3.4.1.  Public Key (add_type 1) . . . . . . . . . . . . . . .   6
    4.  Contextinformation  . . . . . . . . . . . . . . . . . . . . .   6
-   5.  Client Data . . . . . . . . . . . . . . . . . . . . . . . . .   7
+   5.  Application Data  . . . . . . . . . . . . . . . . . . . . . .   7
    6.  Context Bricks  . . . . . . . . . . . . . . . . . . . . . . .   8
    7.  Informative References  . . . . . . . . . . . . . . . . . . .   8
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   8
 
 1.  Introduction
 
-   CIP
+   Contextinformation Packet (CIP) is the datastructure to encapsulate
+   encoded CI.  A CIP is divided into three parts:
 
-2.  Motivation
-
-   The motivation for this document is mainly the publication to prevent
-   proprietary rights of third parties hindering the general
-   availability of its described concepts.  Another additional
-   motivation is the exchange with interested experts.  This draft is a
-   first step to a possible formal recognition as an Internet Standard
-   in the future.
-
-3.  Header
+   Header Data
+             This data describes how the data of the following two parts
+             has to be processed.
 
 
 
+   Contextinformation
+             This data describes the context of all ongoing processings,
+             especially routing.
 
 
 
-
-
+   Application Data
+             This data is meant normally for applications outside the
+             CRN.  By internal routing procedures the applications are
+             the nodes of the CRN itself and therefore this data is
+             used, in this case, not by applications outside the CRN.
 
 
 
@@ -114,7 +114,21 @@ Stefan Hans               Expires June 3, 2016                  [Page 2]
 Internet-Draft         CIP Specification for CRNs          December 2015
 
 
-       Figure 2.1.1 shows the header section of the context datagram
+   All information which has to be transfered inside CRNs has to be
+   encapsulated within CIPs.
+
+2.  Motivation
+
+   The motivation for this document is mainly the publication to prevent
+   proprietary rights of third parties hindering the general
+   availability of its described concepts.  Another additional
+   motivation is the exchange with interested experts.  This draft is a
+   first step to a possible formal recognition as an Internet Standard
+   in the future.
+
+3.  Header
+
+              Figure 2.1.1 shows the header data of the CIP.
 
    0                   1                   2                   3
    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -133,10 +147,9 @@ Internet-Draft         CIP Specification for CRNs          December 2015
    | ............................................................  | |
    +---------------------------------------------------------------+
 
-   Format of datagrams containing context information.  Field sizes are
-    given in octets.  Unless otherwise specified, fields contain binary
-    integers, in normal Internet order with the most-significant octet
-                first.  Each tick mark represents one bit.
+     Field sizes are given in octets.  Fields contain bytes, in normal
+   Internet order with the most-significant octet first.  Each tick mark
+                            represents one bit.
 
 3.1.  Fix Sized Elements
 
@@ -149,6 +162,14 @@ Internet-Draft         CIP Specification for CRNs          December 2015
    sg_profile
                   The Service Groups Profile shows all available service
                   groups of the sender of this datagram.  The services
+
+
+
+Stefan Hans               Expires June 3, 2016                  [Page 3]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
+
                   which are available have the appropriate bit switched
                   on (see figure 2.1.2).
 
@@ -161,15 +182,6 @@ Internet-Draft         CIP Specification for CRNs          December 2015
                   The channel can be used to separate context packet
                   traffic in the future.  The value for the core
                   functionality is 1 which has to be used at the moment.
-
-
-
-
-Stefan Hans               Expires June 3, 2016                  [Page 3]
-
-Internet-Draft         CIP Specification for CRNs          December 2015
-
-
                   The value 0 is reserved for testing and all other
                   values have no meaning so far.
 
@@ -202,6 +214,18 @@ Internet-Draft         CIP Specification for CRNs          December 2015
                   The data for the core functionality is the service_id
                   which has to be used at the moment (see 2.1.2).
 
+
+
+
+
+
+
+
+Stefan Hans               Expires June 3, 2016                  [Page 4]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
+
 3.2.  Enumerations for Fixed Sized Elements
 
 3.2.1.  Service Groups
@@ -217,14 +241,6 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
      Thus the integer 1 means 'client', 2 means 'gateway' and 3 means
                                    both.
-
-
-
-
-Stefan Hans               Expires June 3, 2016                  [Page 4]
-
-Internet-Draft         CIP Specification for CRNs          December 2015
-
 
 3.2.2.  Channels
 
@@ -257,6 +273,15 @@ Internet-Draft         CIP Specification for CRNs          December 2015
                   The data for the core functionality is the service_id
                   which has to be used at the moment (see 2.1.2).
 
+
+
+
+
+Stefan Hans               Expires June 3, 2016                  [Page 5]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
+
 3.4.  Additional Types
 
 3.4.1.  Public Key (add_type 1)
@@ -274,14 +299,6 @@ Internet-Draft         CIP Specification for CRNs          December 2015
      Thus the integer 1 means 'client', 2 means 'gateway' and 3 means
                                    both.
 
-
-
-
-Stefan Hans               Expires June 3, 2016                  [Page 5]
-
-Internet-Draft         CIP Specification for CRNs          December 2015
-
-
 4.  Contextinformation
 
        Figure 2.2.1 shows the context (brick) section of the context
@@ -298,10 +315,9 @@ Internet-Draft         CIP Specification for CRNs          December 2015
    | ............................................................  | |
    +---------------------------------------------------------------+
 
-   Format of datagrams containing context information.  Field sizes are
-    given in octets.  Unless otherwise specified, fields contain binary
-    integers, in normal Internet order with the most-significant octet
-                                  first.
+     Field sizes are given in octets.  Fields contain bytes, in normal
+   Internet order with the most-significant octet first.  Each tick mark
+                            represents one bit.
 
    type
                   The type can be used to specify different context
@@ -314,6 +330,13 @@ Internet-Draft         CIP Specification for CRNs          December 2015
                   The content is the first part of a Context Brick (see
                   section 2.4).  It is used in the core functionality to
                   specify the kind of context coding.
+
+
+
+Stefan Hans               Expires June 3, 2016                  [Page 6]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
 
    mask
                   The mask is the second part of a Context Brick (see
@@ -328,17 +351,7 @@ Internet-Draft         CIP Specification for CRNs          December 2015
                   The additional data contains the number of Context
                   Bricks (see section 2.4) as specified in add_size.
 
-
-
-
-
-
-Stefan Hans               Expires June 3, 2016                  [Page 6]
-
-Internet-Draft         CIP Specification for CRNs          December 2015
-
-
-5.  Client Data
+5.  Application Data
 
    The following figure shows the data section of the context datagram.
      This section has no meaning for the Context Routing itself.  The
@@ -351,21 +364,15 @@ Internet-Draft         CIP Specification for CRNs          December 2015
    0                   1                   2                   3
    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |  add_size (1) | text_type (1) |                               | |
-   |                                                               | |
-   |                          text (140)                           | fix
-   |                                                               | |
-   +---------------------------------------------------------------+---
+   |   type (1)    |  add_size (1) | ............................  | fix
    | ............................................................  | |
    | ........ additional data up to 255 bytes (add_size) ........  | opt
    | ............................................................  | |
    +---------------------------------------------------------------+
 
-   Format of datagrams containing context information.  Field sizes are
-    given in octets.  Unless otherwise specified, fields contain binary
-    integers, in normal Internet order with the most-significant octet
-   first.  Each tick mark represents one bit.  The area for 'text (140)'
-                     does not correspond to 140 bytes.
+     Field sizes are given in octets.  Fields contain bytes, in normal
+   Internet order with the most-significant octet first.  Each tick mark
+                            represents one bit.
 
    add_size
                   The size of additional data in bytes.
@@ -379,13 +386,6 @@ Internet-Draft         CIP Specification for CRNs          December 2015
                   padded by blanks up to 140 characters.
 
    additional data
-                  Any data in a size as specified by 'add_size', i.e.
-                  limited by 255.
-
-
-
-
-
 
 
 
@@ -393,6 +393,9 @@ Stefan Hans               Expires June 3, 2016                  [Page 7]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
+
+                  Any data in a size as specified by 'add_size', i.e.
+                  limited by 255.
 
 6.  Context Bricks
 
@@ -427,9 +430,6 @@ Author's Address
    Germany
 
    Email: uni@stefan-hans.de
-
-
-
 
 
 
