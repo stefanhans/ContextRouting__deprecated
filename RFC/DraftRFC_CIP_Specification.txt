@@ -230,27 +230,27 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 3.2.1.  Service Groups
 
-   'Service Groups' describes the role(s) in the Context Network.
+   'Service Groups' describes the role(s) in CRNs.
 
    Figure 2.1.2 shows the service groups and its defined first two bits.
 
-   0         1         2  ---------------------------------------   8
-   +---------+---------+--------------------------------------------+
-   | client  | gateway |           not yet defined                  |
+   0         1         2         3  ------------------------------  8
+   +---------+---------+---------|----------------------------------+
+   | gateway | router  | storage |         not yet defined          |
    +--------------------------------------------------------------- +
 
-     Thus the integer 1 means 'client', 2 means 'gateway' and 3 means
-                                   both.
+   Thus the integer 1 means 'gateway', 2 means 'router' and 3 means both
+                               and so forth.
 
 3.2.2.  Channels
 
-   'Service Groups' describes the role(s) in the Context Network.
+   'Channels' describes the separated channels in CRNs.
 
    Figure 2.1.2 shows the service groups and its defined first two bits.
 
    0         1         2  ---------------------------------------   8
    +---------+---------+--------------------------------------------+
-   | client  | gateway |           not yet defined                  |
+   | heartbeat  | routing | application           not yet defined   |
    +--------------------------------------------------------------- +
 
      Thus the integer 1 means 'client', 2 means 'gateway' and 3 means
