@@ -3,9 +3,9 @@
 
 
 Network Working Group                                        Stefan Hans
-Internet-Draft                                          January 25, 2016
+Internet-Draft                                          January 28, 2016
 Intended status: Experimental
-Expires: July 28, 2016
+Expires: July 31, 2016
 
 
          Concepts of Contextinformation Routing Networks (CRNs)
@@ -44,7 +44,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on July 28, 2016.
+   This Internet-Draft will expire on July 31, 2016.
 
 
 
@@ -53,7 +53,7 @@ Status of This Memo
 
 
 
-Stefan Hans               Expires July 28, 2016                 [Page 1]
+Stefan Hans               Expires July 31, 2016                 [Page 1]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Stefan Hans               Expires July 28, 2016                 [Page 2]
+Stefan Hans               Expires July 31, 2016                 [Page 2]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
@@ -131,10 +131,13 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
       How can it be organized to minimize the customizing effort for
       applications using the service?
+
+
+
    Let me now introduce the main concepts:
 
    Contextinformation (CI)
-             Contextinformation refers mainly to the known terms
+             Contextinformation (CI) refers mainly to the known terms
              information and context.  Due to the lack of an useful
              clear distinction between the two, CI is defined here as
              information within its described context, i.e. context
@@ -147,38 +150,40 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
    Contextinformation Coding (CIC)
-             Contextinformation Coding (CIC) is that conversion of CI
-             and CIC means both, an encoding resp. decoding ruleset
-             (CIC-Ruleset) for a particular type of CI and an concrete
-             piece of encoded CI.  Every CIC has an identifier, called
-             CIC-Number.  A CIC-Ruleset and all its encoded CI are
-             linked by this CIC-Number.  Encoded CI has the form of a
-             bit string, named CI-Content, and is one half of a pair of
-             bit strings.  The other half of the encoded CI, named CI-
-             Mask, is used to define the accuracy of the searched match.
-             Then it is sufficient for a bitwise match of two pieces of
-             CI, if both CI-Contents are equal or both CI-Masks mark
-             them as non-relevant.  Let me illustrate this with an
-             example.  Offer and Request are two communication roles,
-             and location is a type of CI.  Offer says "I'm available
-             for any Request with matching CI to contact me" and Request
+             Contextinformation Coding (CIC) is the conversion of (a
+             certain kind of) CI.  CIC means both, an encoding resp.
+             decoding ruleset (CIC-Ruleset) for a particular type of CI
+             and one of its instance, i.e. a concrete piece of encoded
+             CI.  Every CIC has an identifier, called CIC-Number.  A
+             CIC-Ruleset and all its encoded CI are linked by this CIC-
+             Number.  Encoded CI has the form of two parallel bit
+             strings of equal length.  This pair consists of CI-Content,
+             an instance of the CIC-Ruleset, and CI-Mask, which is used
+             to define the accuracy of the searched match.  Then it is
+             sufficient for a bitwise match of two pieces of CI, if both
 
 
 
-Stefan Hans               Expires July 28, 2016                 [Page 3]
+
+Stefan Hans               Expires July 31, 2016                 [Page 3]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
-             says "I'm searching for any Offer with matching CI".  Both
-             have an exact information about their location and can
-             define a surrounding area where Offer is available
-             respectively Request is searching.  CI-Content, as the
-             encoded location, together with CI-Mask defines the
-             surrounding area by marking bits of CI-Content as true in
-             any case concerning the match.  Here the CI of Offer and
-             Request are matching, if the location of one is in the
-             surrounding area of the other and vice versa.
+             CI-Contents are equal or both CI-Masks mark them as non-
+             relevant.
+             Let me illustrate this with an example.  Offer and Request
+             are two communication roles, and location is a type of CI.
+             Offer says "I'm available for any Request with matching CI
+             to contact me" and Request says "I'm searching for any
+             Offer with matching CI".  Both have an exact information
+             about their location and can define a surrounding area
+             where Offer is available respectively Request is searching.
+             CI-Content, as the encoded location, together with CI-Mask
+             defines the surrounding area by marking bits of CI-Content
+             as true in any case concerning the match.  Here the CI of
+             Offer and Request are matching, if the location of one is
+             in the surrounding area of the other and vice versa.
 
 
 
@@ -213,18 +218,16 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
    proprietary rights of third parties hindering the general
    availability of its described concepts.  Another additional
    motivation is the exchange with interested experts.  This draft is a
-   first step to a possible formal recognition as an Internet Standard
-   in the future.
 
 
 
-
-
-
-Stefan Hans               Expires July 28, 2016                 [Page 4]
+Stefan Hans               Expires July 31, 2016                 [Page 4]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
+
+   first step towards a possible formal recognition as an Internet
+   Standard in the future.
 
 3.  Contextinformation Coding (CIC)
 
@@ -241,11 +244,12 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
    The internal structure of CIC is self-referential.  This means an
    encoded CI can be part of other encoded CI and can contain other
    encoded CI.  Likewise a CIC-Ruleset can be part of other CIC-Rulesets
-   and can contain other CIC-Rulesets.  A CIC needs at least one CIC-
-   Number and additionally every exchangable internal CIC needs one CIC-
-   Number for each possible CIC.  A CIC, not containing other CICs, is
-   called CIC-Module.  The outermost CIC is called a Root-CIC.  A Root-
-   CIC can be part of another CIC.  There it is no longer a Root-CIC.
+   and can contain other CIC-Rulesets.  A CIC, not containing other
+   CICs, is called CIC-Module.  The outermost CIC is called a Root-CIC.
+   A Root-CIC can be part of another CIC.  There it is no longer a Root-
+   CIC.  Every CIC needs at least one CIC-Number.  A CIC can even be
+   interchangeable internally and in which case it needs one CIC-Number
+   for each possible CIC.
 
 3.1.1.  CIC-Brick
 
@@ -257,7 +261,7 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
    Numbers.  The Root-CIC must have a length rounded up to the next byte
    lately.
 
-             Figure 1.1.1 shows the structure of a CIC-Brick.
+               Figure 1 shows the structure of a CIC-Brick.
 
    0     1     2     3     4     5     6     7     8
    + ----+---- +-----+-----+-----+-----+-----+-----+
@@ -269,18 +273,17 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
    The calculation of a match between two CI-Bricks uses the following
    function resp. bitwise expression:
 
-   match(Offer, Request) = ( NOT ( Offer-Content XOR Request-Content ) )
-   OR ( Offer-Mask AND Request-Mask )
 
 
 
 
-
-
-Stefan Hans               Expires July 28, 2016                 [Page 5]
+Stefan Hans               Expires July 31, 2016                 [Page 5]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
+
+   match(Offer, Request) = ( NOT ( Offer-Content XOR Request-Content ) )
+   OR ( Offer-Mask AND Request-Mask )
 
 3.1.2.  CIC-Number
 
@@ -292,14 +295,11 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 3.1.3.  CIC-Spam and CIC-Padding
 
-   CIC-Spam describes bits of a CIC which have no meaning.  If encoded
-   CI does not have the agreed length of its CIC-Ruleset, it will be
-   filled up with pairs CIC-Spam (0-bits or NULL values).  This is
-   called CIC-Padding.  E.g. a CIC-Ruleset "ASCII character set" used
-   for keyword matching needs an agreed length in bytes with CIC-Padding
-   accordingly.  Other kind of CIC-Spam may only refer to CI-Content
-   and, more frequent, to CI-Mask.  CIC-Spam can be used for other
-   purposes theoretically.
+   CIC-Spam describes bits of a CIC which have no meaning.  Every
+   encoded CI of the same CIC-Number must have the same length.  If
+   encoded CI does not have the agreed length of its CIC-Ruleset, it
+   will be filled with CIC-Spam (0-bits resp. NULL values).  This is
+   called CIC-Padding.
 
 3.2.  Limitations
 
@@ -315,7 +315,7 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 3.3.  Boolean Operations
 
    Boolean operations are not applicable to CICs directly, but to their
-   results sets.  I.e. instead to use boolean operations on encoded CI
+   results sets.  I.e. instead to use boolean operations on encoded CI,
    set operations have to be used on result sets.
 
       Boolean conjuntion (AND) equates to set intersection (INTERSECT)
@@ -333,7 +333,7 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
 
-Stefan Hans               Expires July 28, 2016                 [Page 6]
+Stefan Hans               Expires July 31, 2016                 [Page 6]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
@@ -389,7 +389,7 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
 
-Stefan Hans               Expires July 28, 2016                 [Page 7]
+Stefan Hans               Expires July 31, 2016                 [Page 7]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
@@ -445,7 +445,7 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
 
-Stefan Hans               Expires July 28, 2016                 [Page 8]
+Stefan Hans               Expires July 31, 2016                 [Page 8]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
@@ -501,4 +501,4 @@ Author's Address
 
 
 
-Stefan Hans               Expires July 28, 2016                 [Page 9]
+Stefan Hans               Expires July 31, 2016                 [Page 9]
