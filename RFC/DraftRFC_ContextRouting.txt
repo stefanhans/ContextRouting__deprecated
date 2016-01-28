@@ -75,8 +75,8 @@ Copyright Notice
 
 Table of Contents
 
-   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-   2.  Motivation  . . . . . . . . . . . . . . . . . . . . . . . . .   4
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
+   2.  Motivation  . . . . . . . . . . . . . . . . . . . . . . . . .   5
    3.  Contextinformation Coding (CIC) . . . . . . . . . . . . . . .   5
      3.1.  Internal Structure  . . . . . . . . . . . . . . . . . . .   5
        3.1.1.  CIC-Brick . . . . . . . . . . . . . . . . . . . . . .   5
@@ -92,20 +92,20 @@ Table of Contents
      4.2.  Contextinformation  . . . . . . . . . . . . . . . . . . .   7
      4.3.  Application Data  . . . . . . . . . . . . . . . . . . . .   8
    5.  Contextinformation Routing (CIR)  . . . . . . . . . . . . . .   8
-     5.1.  Overlay Network . . . . . . . . . . . . . . . . . . . . .   8
-     5.2.  Encoded CI Routing  . . . . . . . . . . . . . . . . . . .   8
-       5.2.1.  Structural Conception . . . . . . . . . . . . . . . .   8
-     5.3.  Application's Network Address Updates . . . . . . . . . .   9
-     5.4.  CIC-Ruleset Request Routing . . . . . . . . . . . . . . .   9
-     5.5.  Metadata  . . . . . . . . . . . . . . . . . . . . . . . .   9
-   6.  Informative References  . . . . . . . . . . . . . . . . . . .   9
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   9
+     5.1.  Universal Aspects . . . . . . . . . . . . . . . . . . . .   8
+       5.1.1.  Overlay Network . . . . . . . . . . . . . . . . . . .   8
+       5.1.2.  Encoded CI as Index . . . . . . . . . . . . . . . . .   8
+       5.1.3.  Conception as Reactive System . . . . . . . . . . . .   8
+     5.2.  Different Purposes  . . . . . . . . . . . . . . . . . . .  10
+       5.2.1.  Application's CI Match  . . . . . . . . . . . . . . .  10
+       5.2.2.  Application's Network Address Updates . . . . . . . .  10
+       5.2.3.  CIC-Ruleset Requests  . . . . . . . . . . . . . . . .  10
+       5.2.4.  Storage and Data Analytics  . . . . . . . . . . . . .  10
+       5.2.5.  Metadata and Internal Usage . . . . . . . . . . . . .  10
+   6.  Informative References  . . . . . . . . . . . . . . . . . . .  11
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  11
 
-1.  Introduction
 
-   It all began thinking about context-aware services.  Here, context-
-   awareness shouldn't be limited to location-based aspects, but it
-   should cover any kind of context.  Concepts for an open, unrestricted
 
 
 
@@ -114,6 +114,11 @@ Stefan Hans               Expires July 31, 2016                 [Page 2]
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
+1.  Introduction
+
+   It all began thinking about context-aware services.  Here, context-
+   awareness shouldn't be limited to location-based aspects, but it
+   should cover any kind of context.  Concepts for an open, unrestricted
    and flexible structure to support context-aware services had to be
    developed.  It should not only be applicable for established
    services, but also ready for the emergence of new ones.  For this
@@ -157,11 +162,6 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
              CI.  Every CIC has an identifier, called CIC-Number.  A
              CIC-Ruleset and all its encoded CI are linked by this CIC-
              Number.  Encoded CI has the form of two parallel bit
-             strings of equal length.  This pair consists of CI-Content,
-             an instance of the CIC-Ruleset, and CI-Mask, which is used
-             to define the accuracy of the searched match.  Then it is
-             sufficient for a bitwise match of two pieces of CI, if both
-
 
 
 
@@ -170,6 +170,10 @@ Stefan Hans               Expires July 31, 2016                 [Page 3]
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
+             strings of equal length.  This pair consists of CI-Content,
+             an instance of the CIC-Ruleset, and CI-Mask, which is used
+             to define the accuracy of the searched match.  Then it is
+             sufficient for a bitwise match of two pieces of CI, if both
              CI-Contents are equal or both CI-Masks mark them as non-
              relevant.
              Let me illustrate this with an example.  Offer and Request
@@ -212,12 +216,8 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
 
-2.  Motivation
 
-   The motivation for this document is mainly the publication to prevent
-   proprietary rights of third parties hindering the general
-   availability of its described concepts.  Another additional
-   motivation is the exchange with interested experts.  This draft is a
+
 
 
 
@@ -226,6 +226,12 @@ Stefan Hans               Expires July 31, 2016                 [Page 4]
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
+2.  Motivation
+
+   The motivation for this document is mainly the publication to prevent
+   proprietary rights of third parties hindering the general
+   availability of its described concepts.  Another additional
+   motivation is the exchange with interested experts.  This draft is a
    first step towards a possible formal recognition as an Internet
    Standard in the future.
 
@@ -261,6 +267,21 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
    Numbers.  The Root-CIC must have a length rounded up to the next byte
    lately.
 
+
+
+
+
+
+
+
+
+
+
+Stefan Hans               Expires July 31, 2016                 [Page 5]
+
+Internet-Draft     Contextinformation Routing Networks      January 2016
+
+
                Figure 1 shows the structure of a CIC-Brick.
 
    0     1     2     3     4     5     6     7     8
@@ -272,15 +293,6 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
    The calculation of a match between two CI-Bricks uses the following
    function resp. bitwise expression:
-
-
-
-
-
-Stefan Hans               Expires July 31, 2016                 [Page 5]
-
-Internet-Draft     Contextinformation Routing Networks      January 2016
-
 
    match(Offer, Request) = ( NOT ( Offer-Content XOR Request-Content ) )
    OR ( Offer-Mask AND Request-Mask )
@@ -318,18 +330,6 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
    results sets.  I.e. instead to use boolean operations on encoded CI,
    set operations have to be used on result sets.
 
-      Boolean conjuntion (AND) equates to set intersection (INTERSECT)
-
-      Boolean disjuntion (OR) equates to set union (UNION)
-
-      Boolean negation (NOT) equates to set difference (MINUS)
-
-   These set operations are executed normally outside the CRNs.
-
-
-
-
-
 
 
 
@@ -337,6 +337,14 @@ Stefan Hans               Expires July 31, 2016                 [Page 6]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
+
+      Boolean conjuntion (AND) equates to set intersection (INTERSECT)
+
+      Boolean disjuntion (OR) equates to set union (UNION)
+
+      Boolean negation (NOT) equates to set difference (MINUS)
+
+   These set operations are executed normally outside the CRNs.
 
 3.4.  Types of CIC-Rulesets
 
@@ -378,14 +386,6 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
    The Contextinformation part has leading bytes to specify the type and
    one byte for the number of CI-Bricks following.  A CI-Brick is pair
    of bit strings with a length of one byte, i.e. one byte CI-Content
-   linked with one byte of CI-Mask.  The type specified by the first
-   bytes is like a meta or root CIC-Number and is mainly free for future
-   use.
-
-
-
-
-
 
 
 
@@ -393,6 +393,10 @@ Stefan Hans               Expires July 31, 2016                 [Page 7]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
+
+   linked with one byte of CI-Mask.  The type specified by the first
+   bytes is like a meta or root CIC-Number and is mainly free for future
+   use.
 
 4.3.  Application Data
 
@@ -407,26 +411,28 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
    Routing (CIR) Specification for Contextinformation Routing Networks
    (CRNs)" [CIR_Spec].
 
-5.1.  Overlay Network
+5.1.  Universal Aspects
 
-   CIR can be build on any digital network.  Especially the internet,
-   intranets and peer-to-peer networks on the TCP/IP layer.
+   Independent of the purpose, the following aspects of CIR are
+   universal:
 
-5.2.  Encoded CI Routing
+5.1.1.  Overlay Network
 
-   This routing is oriented on the CI-Bricks using CI-Content as index.
-   If a bit of CI-Mask is true, the routing will be split to follow both
-   pathes of the indexing.
+   CIR can be build on top of any digital network, especially on top of
+   the TCP/IP layer over the internet, intranets and (mobile) ad-hoc
+   networks.
 
-5.2.1.  Structural Conception
+5.1.2.  Encoded CI as Index
 
-   We distinguish between the two main roles Participant and User with
-   regard to CIR.  A Participant (CRN-Node) offers CI or provides
-   explicitly an active role in CIR.  An User only uses CIR requesting
-   CI or metadata.  The following concepts refer to how CRNs are built
-   up with CRN-Nodes dynamically.
+   CIR can be build on top of any digital network, especially on top of
+   the TCP/IP layer over the internet, intranets and (mobile) ad-hoc
+   networks.
 
-   CIR-Registration
+5.1.3.  Conception as Reactive System
+
+   According to 'The Reactive Manifesto':
+
+   Responsive
              At first an active CRN-Node has to be known as entry point
              or to be established to create a new CRN.  This CRN-Node is
              called CRN-Root.  A CRN-Root knows all major subnets
@@ -435,13 +441,7 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
              or any known CRN-Node being on the relevant path, i.e. on
              the CI-Index of the new participant.  If not explicitly
              requested differently a new participant will be registered
-             or mounted above the first ambigous CI-Brick, i.e. before
-             the first byte of CI-Mask not equal 0.
 
-
-
-   Subnetting
-             x
 
 
 
@@ -450,27 +450,117 @@ Stefan Hans               Expires July 31, 2016                 [Page 8]
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
-   Redundancy
-             x
+             or mounted above the first ambigous CI-Brick, i.e. before
+             the first byte of CI-Mask not equal 0.
+
+             The system responds in a timely manner if at all possible.
+             Responsiveness is the cornerstone of usability and utility,
+             but more than that, responsiveness means that problems may
+             be detected quickly and dealt with effectively.  Responsive
+             systems focus on providing rapid and consistent response
+             times, establishing reliable upper bounds so they deliver a
+             consistent quality of service.  This consistent behaviour
+             in turn simplifies error handling, builds end user
+             confidence, and encourages further interaction.
 
 
 
-5.3.  Application's Network Address Updates
+   Resilient
+             The system stays responsive in the face of failure.  This
+             applies not only to highly-available, mission critical
+             systems - any system that is not resilient will be
+             unresponsive after a failure.  Resilience is achieved by
+             replication, containment, isolation and delegation.
+             Failures are contained within each component, isolating
+             components from each other and thereby ensuring that parts
+             of the system can fail and recover without compromising the
+             system as a whole.  Recovery of each component is delegated
+             to another (external) component and high-availability is
+             ensured by replication where necessary.  The client of a
+             component is not burdened with handling its failures.
+
+
+
+   Elastic
+             The system stays responsive under varying workload.
+             Reactive Systems can react to changes in the input rate by
+             increasing or decreasing the resources allocated to service
+             these inputs.  This implies designs that have no contention
+             points or central bottlenecks, resulting in the ability to
+             shard or replicate components and distribute inputs among
+             them.  Reactive Systems support predictive, as well as
+             Reactive, scaling algorithms by providing relevant live
+             performance measures.  They achieve elasticity in a cost-
+             effective way on commodity hardware and software platforms.
+
+
+
+   Message Driven
+             Reactive Systems rely on asynchronous message-passing to
+             establish a boundary between components that ensures loose
+
+
+
+Stefan Hans               Expires July 31, 2016                 [Page 9]
+
+Internet-Draft     Contextinformation Routing Networks      January 2016
+
+
+             coupling, isolation, location transparency, and provides
+             the means to delegate errors as messages.  Employing
+             explicit message-passing enables load management,
+             elasticity, and flow control by shaping and monitoring the
+             message queues in the system and applying back-pressure
+             when necessary.  Location transparent messaging as a means
+             of communication makes it possible for the management of
+             failure to work with the same constructs and semantics
+             across a cluster or within a single host.  Non-blocking
+             communication allows recipients to only consume resources
+             while active, leading to less system overhead.
+
+
+
+5.2.  Different Purposes
+
+   Apart from the very varied end use of applications, there are the
+   following intrinsic purposes of CIR:
+
+5.2.1.  Application's CI Match
+
+   This routing is oriented on the CI-Bricks using CI-Content as index.
+   If a bit of CI-Mask is true, the routing will be split to follow both
+   pathes of the indexing.
+
+5.2.2.  Application's Network Address Updates
 
    To optimize the availibility of the applications in volatile
    networks, e.g. mobile devices in the internet, CRNs have a procedure
    to check the applications' address information and the applications
    have a procedure to update these.
 
-5.4.  CIC-Ruleset Request Routing
+5.2.3.  CIC-Ruleset Requests
 
    Similar to the encoded CI routing CRNs provide an infrastructure to
    store and retrieve CIC-Rulesets.
 
-5.5.  Metadata
+5.2.4.  Storage and Data Analytics
+
+   Similar to the encoded CI routing CRNs provide an infrastructure to
+   store and retrieve CIC-Rulesets.
+
+5.2.5.  Metadata and Internal Usage
 
    CRNs communicate aggregations and other metadata, if asked for or if
    the result set of matching CI is too large.
+
+
+
+
+
+Stefan Hans               Expires July 31, 2016                [Page 10]
+
+Internet-Draft     Contextinformation Routing Networks      January 2016
+
 
 6.  Informative References
 
@@ -501,4 +591,26 @@ Author's Address
 
 
 
-Stefan Hans               Expires July 31, 2016                 [Page 9]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Stefan Hans               Expires July 31, 2016                [Page 11]
