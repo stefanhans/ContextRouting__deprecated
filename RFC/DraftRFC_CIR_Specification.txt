@@ -73,8 +73,8 @@ Table of Contents
 1.  Introduction
 
    The concepts and the implementations should be aware of the following
-   patterns as described in the "The Reactive Manifesto" [Manifesto],
-   i.e. they should be:
+   patterns as described in the "The Reactive Manifesto"
+   [ReactiveManifesto], i.e. they should be:
 
    o  Responsive
 
@@ -262,7 +262,7 @@ Internet-Draft         CIR Specification for CRNs          December 2015
               <https://github.com/stefanhans/ContextRouting/raw/master/
               RFC/DraftRFC_ContextRouting.txt>.
 
-   [Manifesto]
+   [ReactiveManifesto]
               Boner, J., Farley, D., Kuhn, R., and M. Thompson, "The
               Reactive Manifesto", September 2014,
               <http://www.reactivemanifesto.org>.
