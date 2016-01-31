@@ -396,8 +396,10 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 5.1.  Universal Aspects
 
-   Independent of the purpose, the following aspects of CIR are
-   universal:
+   Within CRNs, and according to client-server model, the client aspects
+   of CIR are referred to as CIR-Client(s) and the server aspects as
+   CIR_Server(s) analogously.  Independent of the purpose, the following
+   aspects of CIR are universal:
 
 5.1.1.  Overlay Network
 
@@ -407,40 +409,38 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 5.1.2.  Encoded CI as Index
 
-   The .
+   The structural factor of CIR is the encoded CI itself.  CI-Content is
+   used like an index and CI-Mask marks the branchings.  The lowest
+   number of branchings of a routing responsibility (CIR-Node)
+   corresponds to the permutations of a byte of encoded CI, i.e. 256
+   (cf.  CIC-Brick).  Thus CIR structure can be described as a tree data
+   structure (CIR-Tree) with that particular degree of 256.
 
 5.1.3.  Conception as Reactive System
 
    According to "The Reactive Manifesto" [ReactiveManifesto] CIR is
-   oriented towards the followowing conceptual specifications:
+   oriented towards the following conceptual specifications:
 
    Responsive
-             A heartbeat-like concept within the overlay network is used
-             to ensure that the system reacts in a timely manner.
+             The CIR-Servers use a heartbeat to communicate within the
+             overlay network to ensure that the system reacts in a
+             timely manner.
 
 
 
    Resilient
-             CRNs, and the participants of CIR in particular, avoid any
-             single point of failure by replicating relevant information
-             and delegating isolated tasks according to current
-             availability of services within the CRN.
+             CRNs, and CIR-Servers in particular, avoid any single point
+             of failure by replicating relevant information and
+             delegating isolated tasks according to current availability
+             of services within the CRN.
 
 
 
    Elastic
-
-
-
-
-   Message Driven
-
-
-
-
-
-
-
+             Every hardware device being a part of a CRN has a role as
+             CIR-Server soever, and resources accordingly.  In case of
+             an impending partial overload appropriate procedures
+             distribute proactively the load among suitable CIR-Servers.
 
 
 
@@ -448,6 +448,13 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 Stefan Hans              Expires August 3, 2016                 [Page 8]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
+
+
+   Message Driven
+             To avoid having resources blocked while waiting for
+             response CIR send message without relying on the response.
+             !?!
+
 
 
 5.2.  Different Purposes
@@ -491,13 +498,6 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
    Routing (CIR), i.e. the matching communication partner, is the start
    point for the next CIR, related to the next CIP, and so on.  Seen
    from another perspective, every CIP lives in its own
-   Contextinformation Routing Network (CRN) with its own CICs.  There
-   the CIC finds its route through these CRNs.
-
-
-
-
-
 
 
 
@@ -505,6 +505,9 @@ Stefan Hans              Expires August 3, 2016                 [Page 9]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
+
+   Contextinformation Routing Network (CRN) with its own CICs.  There
+   the CIC finds its route through these CRNs.
 
 7.  Emergence and Future Use
 
@@ -545,9 +548,6 @@ Author's Address
    Germany
 
    Email: uni@stefan-hans.de
-
-
-
 
 
 
