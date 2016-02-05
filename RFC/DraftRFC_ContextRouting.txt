@@ -3,9 +3,9 @@
 
 
 Network Working Group                                        Stefan Hans
-Internet-Draft                                          January 31, 2016
+Internet-Draft                                              January 2016
 Intended status: Experimental
-Expires: August 3, 2016
+Expires: July 4, 2016
 
 
          Concepts of Contextinformation Routing Networks (CRNs)
@@ -44,7 +44,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on August 3, 2016.
+   This Internet-Draft will expire on July 4, 2016.
 
 
 
@@ -53,7 +53,7 @@ Status of This Memo
 
 
 
-Stefan Hans              Expires August 3, 2016                 [Page 1]
+Stefan Hans               Expires July 4, 2016                  [Page 1]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Stefan Hans              Expires August 3, 2016                 [Page 2]
+Stefan Hans               Expires July 4, 2016                  [Page 2]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
@@ -165,7 +165,7 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
 
-Stefan Hans              Expires August 3, 2016                 [Page 3]
+Stefan Hans               Expires July 4, 2016                  [Page 3]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
@@ -221,7 +221,7 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
 
-Stefan Hans              Expires August 3, 2016                 [Page 4]
+Stefan Hans               Expires July 4, 2016                  [Page 4]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
@@ -277,7 +277,7 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
 
-Stefan Hans              Expires August 3, 2016                 [Page 5]
+Stefan Hans               Expires July 4, 2016                  [Page 5]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
@@ -333,7 +333,7 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
 
-Stefan Hans              Expires August 3, 2016                 [Page 6]
+Stefan Hans               Expires July 4, 2016                  [Page 6]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
@@ -389,7 +389,7 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
 
-Stefan Hans              Expires August 3, 2016                 [Page 7]
+Stefan Hans               Expires July 4, 2016                  [Page 7]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
@@ -422,9 +422,8 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
    oriented towards the following conceptual specifications:
 
    Responsive
-             The CIR-Servers use a heartbeat to communicate within the
-             overlay network to ensure that the system reacts in a
-             timely manner.
+             The CIR-Servers use a heartbeat functionality to ensure
+             that the system reacts in a timely manner.
 
 
 
@@ -437,15 +436,16 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
    Elastic
-             Every hardware device being a part of a CRN has a role as
-             CIR-Server soever, and resources accordingly.  In case of
-             an impending partial overload appropriate procedures
+             As part of a CRN every hardware device has a role as CIR-
+             Server soever, and provides resources accordingly.  In case
+             of an impending partial overload appropriate procedures
              distribute proactively the load among suitable CIR-Servers.
 
 
 
 
-Stefan Hans              Expires August 3, 2016                 [Page 8]
+
+Stefan Hans               Expires July 4, 2016                  [Page 8]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
@@ -453,7 +453,8 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
    Message Driven
              To avoid having resources blocked while waiting for
              response CIR send message without relying on the response.
-             !?!
+             In other words, it doesn't matter for recipients who send
+             this message.
 
 
 
@@ -497,15 +498,15 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
    Here, related to one CIP, the end point of the Contextinformation
    Routing (CIR), i.e. the matching communication partner, is the start
    point for the next CIR, related to the next CIP, and so on.  Seen
-   from another perspective, every CIP lives in its own
 
 
 
-Stefan Hans              Expires August 3, 2016                 [Page 9]
+Stefan Hans               Expires July 4, 2016                  [Page 9]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
+   from another perspective, every CIP lives in its own
    Contextinformation Routing Network (CRN) with its own CICs.  There
    the CIC finds its route through these CRNs.
 
@@ -556,5 +557,4 @@ Author's Address
 
 
 
-
-Stefan Hans              Expires August 3, 2016                [Page 10]
+Stefan Hans               Expires July 4, 2016                 [Page 10]

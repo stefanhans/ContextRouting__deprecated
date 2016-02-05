@@ -92,8 +92,8 @@ Table of Contents
    proprietary rights of third parties hindering the general
    availability of its described concepts.  Another additional
    motivation is the exchange with interested experts.  This draft is a
-   first step to a possible formal recognition as an Internet Standard
-   in the future.
+   first step towards a possible formal recognition as an Internet
+   Standard in the future.
 
 3.  Encoded CI Routing
 
