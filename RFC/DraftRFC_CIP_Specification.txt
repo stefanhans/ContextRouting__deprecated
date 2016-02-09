@@ -66,23 +66,27 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Motivation  . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   3.  Zero as Default Value . . . . . . . . . . . . . . . . . . . .   3
-   4.  Header  . . . . . . . . . . . . . . . . . . . . . . . . . . .   3
-     4.1.  Fix Sized Elements  . . . . . . . . . . . . . . . . . . .   4
-     4.2.  Enumerations for Fixed Sized Elements . . . . . . . . . .   5
-       4.2.1.  Service Groups  . . . . . . . . . . . . . . . . . . .   5
-       4.2.2.  Channels  . . . . . . . . . . . . . . . . . . . . . .   5
-     4.3.  Dynamic Sized Elements  . . . . . . . . . . . . . . . . .   5
-     4.4.  Additional Types  . . . . . . . . . . . . . . . . . . . .   6
-       4.4.1.  Public Key (dyn_type 1) . . . . . . . . . . . . . . .   6
-   5.  Contextinformation  . . . . . . . . . . . . . . . . . . . . .   6
-     5.1.  Fixed Sized Elements  . . . . . . . . . . . . . . . . . .   7
-     5.2.  Dynamic Sized Elements  . . . . . . . . . . . . . . . . .   7
-   6.  Application Data  . . . . . . . . . . . . . . . . . . . . . .   8
-     6.1.  Fixed Sized Elements  . . . . . . . . . . . . . . . . . .   8
-     6.2.  Dynamic Sized Elements  . . . . . . . . . . . . . . . . .   8
-   7.  Informative References  . . . . . . . . . . . . . . . . . . .   8
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   9
+   3.  Binary Representations  . . . . . . . . . . . . . . . . . . .   3
+   4.  Header  . . . . . . . . . . . . . . . . . . . . . . . . . . .   4
+     4.1.  Fix Sized Header Elements . . . . . . . . . . . . . . . .   5
+     4.2.  Enumerations for Fixed Sized Header Elements  . . . . . .   6
+       4.2.1.  Service Groups  . . . . . . . . . . . . . . . . . . .   6
+       4.2.2.  Channels  . . . . . . . . . . . . . . . . . . . . . .   7
+     4.3.  Dynamic Sized Header Elements . . . . . . . . . . . . . .   7
+     4.4.  Additional Header Types . . . . . . . . . . . . . . . . .   7
+       4.4.1.  Public Key (type 1) . . . . . . . . . . . . . . . . .   7
+   5.  Contextinformation  . . . . . . . . . . . . . . . . . . . . .   8
+     5.1.  Fixed Sized Contextinformation Elements . . . . . . . . .   8
+     5.2.  Enumerations for Fixed Sized Contextinformation Elements    9
+       5.2.1.  Types . . . . . . . . . . . . . . . . . . . . . . . .   9
+       5.2.2.  Content and Mask  . . . . . . . . . . . . . . . . . .   9
+     5.3.  Dynamic Sized Contextinformation Elements . . . . . . . .   9
+   6.  Application Data  . . . . . . . . . . . . . . . . . . . . . .   9
+     6.1.  Fixed Sized Application Data Elements . . . . . . . . . .  10
+     6.2.  Dynamic Sized Application Data Elements . . . . . . . . .  10
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
+   8.  Informative References  . . . . . . . . . . . . . . . . . . .  10
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  11
 
 1.  Introduction
 
@@ -105,15 +109,12 @@ Table of Contents
 
 
 
-   Application Data
-
-
-
 Stefan Hans               Expires June 3, 2016                  [Page 2]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
 
+   Application Data
              The application data starts with a part with fixed size and
              static structure followed by a dynamic part.  The static
              part only defines the dynamic part's type and its length.
@@ -132,34 +133,33 @@ Internet-Draft         CIP Specification for CRNs          December 2015
    first step towards a possible formal recognition as an Internet
    Standard in the future.
 
-3.  Zero as Default Value
+3.  Binary Representations
 
-   .
+   Ordered Numbering
+                  Bytes representing an ordered numbering show integers
+                  from 0-255 (see figure 1).
 
-4.  Header
+   Bitwise Flags
+                  These bytes represent a one or more constellation (see
+                  figure 2).
 
-              Figure 2.1.1 shows the header data of the CIP.
+   Combined Numbering
+                  The representations of ordered numbering and bitwise
+                  flags can be combined freely within one or more bytes.
 
-   0                   1                   2                   3
-   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   | sg_request (1)| sg_profile (1)|  version (1)  |  channel (1)  | |
-   |                                                               | |
-   |                            UUID (16)                          | |
-   |                                                               | |
-   |                                                               | fix
-   |                          IP address (4)                       | |
-   |            IP port (2)        |                               | |
-   |                            time (8)                           | |
-   |                               |  dyn_type (1) |  dyn_size (1) |---
-   | ............................................................  | |
-   | .............. additional data up to 255 bytes .............  | dyn
-   | ............................................................  | |
-   +---------------------------------------------------------------+
+   Well Known Representations
+                  These representations are well known as standards like
+                  IP address, port number, UUID etc..
 
-     Field sizes are given in octets.  Fields contain bytes, in normal
-   Internet order with the most-significant octet first.  Each tick mark
-                            represents one bit.
+   Reserved Zero Value (RZV)
+                  Nearly all of the not well known representations have
+                  the so called Reserved Zero Value.  That means zero as
+                  value is reserved for developing and testing purposes.
+
+
+
+
+
 
 
 
@@ -170,31 +170,117 @@ Stefan Hans               Expires June 3, 2016                  [Page 3]
 Internet-Draft         CIP Specification for CRNs          December 2015
 
 
-4.1.  Fix Sized Elements
+          Figure 1 shows bytes representing an ordered numbering.
 
-   sg_request
+   0 1 2 3 4 5 6 7 8
+   +-+-+-+-+-+-+-+-+
+   |0|0|0|0|0|0|0|0| 0 represents "Null"
+   |0|0|0|0|0|0|0|1| 1 represents "A"
+   |0|0|0|0|0|0|1|0| 2 represents "B"
+   |0|0|0|0|0|0|1|1| 3 represents "C"
+   |0|0|0|0|0|1|0|0| 4 represents "D"
+   |...............|
+   |1|1|1|1|1|1|1|1| 255
+   +-+-+-+-+-+-+-+-+
+
+             Figure 2 shows bytes representing bitwise flags.
+
+   0 1 2 3 4 5 6 7 8
+   +-+-+-+-+-+-+-+-+
+   |0|0|0|0|0|0|0|0| 0 represents "Null"
+   |1|0|0|0|0|0|0|0| 1 represents "A, not B, not C"
+   |1|1|0|0|0|0|0|0| 2 represents "A, B, not C"
+   |1|1|1|0|0|0|0|0| 3 represents "A, B, C"
+   |0|1|0|0|0|0|0|0| 4 represents "not A, B, not C"
+   |...............|
+   +-+-+-+-+-+-+-+-+
+
+4.  Header
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Stefan Hans               Expires June 3, 2016                  [Page 4]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
+
+              Figure 2.1.1 shows the header data of the CIP.
+
+   0                   1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |   request (1) |  profile (1)  |  version (1)  |  channel (1)  | |
+   |                                                               | |
+   |                            UUID (16)                          | |
+   |                                                               | |
+   |                                                               | fix
+   |                          IP address (4)                       | |
+   |            IP port (2)        |                               | |
+   |                            time (8)                           | |
+   |                               |   type (1)   |    size (1)    |---
+   | ............................................................  | |
+   | .............. additional data up to 255 bytes .............  | dyn
+   | ............................................................  | |
+   +---------------------------------------------------------------+
+
+     Field sizes are given in octets.  Fields contain bytes, in normal
+   Internet order with the most-significant octet first.  Each tick mark
+                            represents one bit.
+
+4.1.  Fix Sized Header Elements
+
+   request (RZV)
                   The Service Groups Request shows the relevant
                   service_groups requested by the datagram.  The
                   services which are requested by this datagram have the
                   appropriate bit switched on (see figure 2.1.2).
 
-   sg_profile
+   profile (RZV)
                   The Service Groups Profile shows all available service
                   groups of the sender of this datagram.  The services
                   which are available have the appropriate bit switched
                   on (see figure 2.1.2).
 
-   version
+   version (RZV)
                   The version of this specification.  It has a higher
                   4-bit part which represents the major number and a
                   lowere 4-bit part which represents the minor number.
 
-   channel
+   channel (RZV)
                   The channel can be used to separate context packet
                   traffic in the future.  The value for the core
                   functionality is 1 which has to be used at the moment.
                   The value 0 is reserved for testing and all other
                   values have no meaning so far.
+
+
+
+Stefan Hans               Expires June 3, 2016                  [Page 5]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
 
    UUID
                   The UUID is the unique identifier for the CIP.
@@ -210,22 +296,13 @@ Internet-Draft         CIP Specification for CRNs          December 2015
                   seconds between 00:00:00 UTC on 1 January 1970 and the
                   moment the CIP arrived in the CRN for the first time.
 
-   dyn_type
+   type (RZV)
                   The type of the following data of the datagram.  The
                   value for the core functionality is 1 which has to be
                   used at the moment.  The value 0 is reserved for
                   testing and all other values have no meaning so far.
 
-   dyn_size
-
-
-
-
-Stefan Hans               Expires June 3, 2016                  [Page 4]
-
-Internet-Draft         CIP Specification for CRNs          December 2015
-
-
+   size
                   The size of the following header data of the datagram,
                   i.e. the number of bytes.
 
@@ -234,13 +311,13 @@ Internet-Draft         CIP Specification for CRNs          December 2015
                   The data for the core functionality is the service_id
                   which has to be used at the moment (see 2.1.2).
 
-4.2.  Enumerations for Fixed Sized Elements
+4.2.  Enumerations for Fixed Sized Header Elements
 
 4.2.1.  Service Groups
 
    'Service Groups' describes the role(s) in CRNs.
 
-   Figure 2.1.2 shows the service groups and its defined first two bits.
+     Figure 3 shows the service groups and its defined first two bits.
 
    0         1         2         3  ------------------------------  8
    +---------+---------+---------|----------------------------------+
@@ -249,83 +326,6 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
    Thus the integer 1 means 'gateway', 2 means 'router' and 3 means both
                                and so forth.
-
-4.2.2.  Channels
-
-   'Channels' describes the separated channels in CRNs.
-
-   Figure 2.1.2 shows the service groups and its defined first two bits.
-
-   0         1         2  ---------------------------------------   8
-   +---------+---------+--------------------------------------------+
-   | heartbeat  | routing | application           not yet defined   |
-   +--------------------------------------------------------------- +
-
-     Thus the integer 1 means 'client', 2 means 'gateway' and 3 means
-                                   both.
-
-4.3.  Dynamic Sized Elements
-
-   dyn_type
-                  The type of the following data of the datagram.  The
-                  value for the core functionality is 1 which has to be
-                  used at the moment.  The value 0 is reserved for
-                  testing and all other values have no meaning so far.
-
-   dyn_size
-
-
-
-
-Stefan Hans               Expires June 3, 2016                  [Page 5]
-
-Internet-Draft         CIP Specification for CRNs          December 2015
-
-
-                  The size of the following header data of the datagram,
-                  i.e. the number of bytes.
-
-   additional data
-                  The additional data as specified in type and size.
-                  The data for the core functionality is the service_id
-                  which has to be used at the moment (see 2.1.2).
-
-4.4.  Additional Types
-
-4.4.1.  Public Key (dyn_type 1)
-
-   Additional header data can be used to transfer authentication data
-   like public keys.
-
-   Figure 2.1.2 shows the service groups and its defined first two bits.
-
-   0         1         2  ---------------------------------------   8
-   +---------+---------+--------------------------------------------+
-   | client  | gateway |           not yet defined                  |
-   +--------------------------------------------------------------- +
-
-     Thus the integer 1 means 'client', 2 means 'gateway' and 3 means
-                                   both.
-
-5.  Contextinformation
-
-       Figure 2.2.1 shows the context (brick) section of the context
-    datagram.  A context brick consists of two bytes: content und mask.
-
-   0                   1                   2                   3
-   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |   type (1)    |  content (1)  |   mask (1)    |  dyn_size (1) | fix
-   +---------------------------------------------------------------+---
-   | ............................................................  | |
-   | .............. additional data up to 510 bytes .............  | dyn
-   | .............. i.e. up to 255 context bricks  ..............  | |
-   | ............................................................  | |
-   +---------------------------------------------------------------+
-
-     Field sizes are given in octets.  Fields contain bytes, in normal
-   Internet order with the most-significant octet first.  Each tick mark
-                            represents one bit.
 
 
 
@@ -338,34 +338,130 @@ Stefan Hans               Expires June 3, 2016                  [Page 6]
 Internet-Draft         CIP Specification for CRNs          December 2015
 
 
-5.1.  Fixed Sized Elements
+4.2.2.  Channels
+
+   'channel' describes the separated channels in CRNs.
+
+     Figure 4 shows the service groups and its defined first two bits.
+
+   0         1         2  ---------------------------------------   8
+   +---------+---------+--------------------------------------------+
+   | heartbeat  | routing | application           not yet defined   |
+   +--------------------------------------------------------------- +
+
+     Thus the integer 1 means 'client', 2 means 'gateway' and 3 means
+                                   both.
+
+4.3.  Dynamic Sized Header Elements
 
    type
+                  The type of the following data of the datagram.  The
+                  value for the core functionality is 1 which has to be
+                  used at the moment.  The value 0 is reserved for
+                  testing and all other values have no meaning so far.
+
+   size
+                  The size of the following header data of the datagram,
+                  i.e. the number of bytes.
+
+   additional data
+                  The additional data as specified in type and size.
+                  The data for the core functionality is the service_id
+                  which has to be used at the moment (see 2.1.2).
+
+4.4.  Additional Header Types
+
+4.4.1.  Public Key (type 1)
+
+   Additional header data can be used to transfer authentication data
+   like public keys.
+
+     Figure 5 shows the service groups and its defined first two bits.
+
+   0         1         2  ---------------------------------------   8
+   +---------+---------+--------------------------------------------+
+   | client  | gateway |           not yet defined                  |
+   +--------------------------------------------------------------- +
+
+     Thus the integer 1 means 'client', 2 means 'gateway' and 3 means
+                                   both.
+
+
+
+
+Stefan Hans               Expires June 3, 2016                  [Page 7]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
+
+5.  Contextinformation
+
+       Figure 2.2.1 shows the context (brick) section of the context
+    datagram.  A context brick consists of two bytes: content und mask.
+
+   0                   1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |   type (1)    |  content (1)  |   mask (1)    |   size (1)    | fix
+   | ............................................................  | |
+   | .............. additional data up to 510 bytes .............  | dyn
+   | .............. i.e. up to 255 context bricks  ..............  | |
+   | ............................................................  | |
+   +---------------------------------------------------------------+
+
+     Field sizes are given in octets.  Fields contain bytes, in normal
+   Internet order with the most-significant octet first.  Each tick mark
+                            represents one bit.
+
+5.1.  Fixed Sized Contextinformation Elements
+
+   type (RZV)
                   The type can be used to specify different context
                   designs in the future.  The value for the core
                   functionality is 1 which has to be used at the moment.
                   The value 0 is reserved for testing and all other
                   values has no meaning so far.
 
-   content
+   content (RZV)
                   The content is the first part of a Context Brick (see
                   section 2.4).  It is used in the core functionality to
                   specify the kind of context coding.
 
-   mask
+   mask (RZV)
                   The mask is the second part of a Context Brick (see
                   section 2.4).  It is not used in the core
                   functionality so far.
 
-   dyn_size
+   size
                   The number of Context Bricks as additional data (up to
                   255).
 
    additional data
                   The additional data contains the number of Context
-                  Bricks (see section 2.4) as specified in dyn_size.
+                  Bricks (see section 2.4) as specified in size.
 
-5.2.  Dynamic Sized Elements
+
+
+
+
+
+Stefan Hans               Expires June 3, 2016                  [Page 8]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
+
+5.2.  Enumerations for Fixed Sized Contextinformation Elements
+
+5.2.1.  Types
+
+   'type' describes the very main types of contextinformation in CRNs.
+
+5.2.2.  Content and Mask
+
+   The usage of 'content' and 'mask' depends on 'type' and is not yet
+   finally decided.
+
+5.3.  Dynamic Sized Contextinformation Elements
 
    A Context Brick is a pair of bytes in particular content and mask.
    It describes a piece of information and the relevance of its
@@ -383,33 +479,47 @@ Internet-Draft         CIP Specification for CRNs          December 2015
                   are corresponding, if they are at the same place in
                   the byte.
 
+6.  Application Data
 
 
 
 
 
 
-Stefan Hans               Expires June 3, 2016                  [Page 7]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Stefan Hans               Expires June 3, 2016                  [Page 9]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
-
-6.  Application Data
 
    The following figure shows the data section of the context datagram.
      This section has no meaning for the Context Routing itself.  The
     meaning of this section is only relevant to the clients.  Therefore
       the following structure has to be seen as a default and can be
      changed, if another specification is agreed between the concerned
-   clients.  The 'dyn_size' has to be as if the default structure would
-         be actual, i.e. available is then 'dyn_size + 141' bytes.
+    clients.  The 'size' has to be as if the default structure would be
+            actual, i.e. available is then 'size + 141' bytes.
 
    0                   1                   2                   3
-   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |   type (1)    |  dyn_size (1) | ............................  | fix
+   |   type (1)    |   size (1)    | ............................  | fix
    | ............................................................  | |
-   | ........ additional data up to 255 bytes (dyn_size) ........  | dyn
+   | .......... additional data up to 255 bytes (size) ..........  | dyn
    | ............................................................  | |
    +---------------------------------------------------------------+
 
@@ -417,21 +527,26 @@ Internet-Draft         CIP Specification for CRNs          December 2015
    Internet order with the most-significant octet first.  Each tick mark
                             represents one bit.
 
-6.1.  Fixed Sized Elements
+6.1.  Fixed Sized Application Data Elements
 
-   type
+   type (RZV)
                   The meaning or format of the following text, e.g.
                   plain text, URL.
 
-   dyn_size
+   size
                   The size of additional data in bytes.
 
-6.2.  Dynamic Sized Elements
+6.2.  Dynamic Sized Application Data Elements
 
    According to the type of the application data as many bytes as
-   specified by dyn_size.
+   specified by size.
 
-7.  Informative References
+7.  Security Considerations
+
+   The use of packets described in this memo has no direct impact on the
+   security of the Internet.
+
+8.  Informative References
 
    [CRNs]     Hans, S., "Concepts of Contextinformation Routing Networks
               (CRNs)", Januar 2016,
@@ -442,10 +557,7 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 
 
-
-
-
-Stefan Hans               Expires June 3, 2016                  [Page 8]
+Stefan Hans               Expires June 3, 2016                 [Page 10]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
@@ -501,4 +613,4 @@ Author's Address
 
 
 
-Stefan Hans               Expires June 3, 2016                  [Page 9]
+Stefan Hans               Expires June 3, 2016                 [Page 11]

@@ -102,9 +102,9 @@ Table of Contents
        5.2.5.  Metadata and Internal Usage . . . . . . . . . . . . .   9
    6.  Limitations . . . . . . . . . . . . . . . . . . . . . . . . .   9
    7.  Emergence and Future Use  . . . . . . . . . . . . . . . . . .  10
-   8.  Informative References  . . . . . . . . . . . . . . . . . . .  10
+   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
+   9.  Informative References  . . . . . . . . . . . . . . . . . . .  10
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  10
-
 
 
 
@@ -520,7 +520,12 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
    complete or major relevant ones are missing still.  Therefore the
    specifications leave room for future use.
 
-8.  Informative References
+8.  Security Considerations
+
+   The use of contextinformation routing networks described in this memo
+   has no direct impact on the security of the Internet.
+
+9.  Informative References
 
    [CIP_Spec]
               Hans, S., "Contextinformation Paket (CIP) Specification
@@ -549,11 +554,6 @@ Author's Address
    Germany
 
    Email: uni@stefan-hans.de
-
-
-
-
-
 
 
 

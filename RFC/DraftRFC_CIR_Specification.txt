@@ -67,8 +67,9 @@ Table of Contents
    4.  Encoded CI Routing  . . . . . . . . . . . . . . . . . . . . .   5
    5.  Application's Network Address Updates . . . . . . . . . . . .   5
    6.  CIC-Ruleset Request Routing . . . . . . . . . . . . . . . . .   5
-   7.  Informative References  . . . . . . . . . . . . . . . . . . .   5
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   5
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
+   8.  Informative References  . . . . . . . . . . . . . . . . . . .   5
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   6
 
 1.  Introduction
 
@@ -105,7 +106,6 @@ Table of Contents
             ______          ______            .      +-------+      .
            / ENRP \        / ENRP \           .      |       |      .
            |Server| <----> |Server|<----------.----->|  PE 1 |      .
-           \______/  ENRP  \______/  ASAP(1)  .      |       |      .
 
 
 
@@ -114,6 +114,7 @@ Stefan Hans               Expires June 3, 2016                  [Page 2]
 Internet-Draft         CIR Specification for CRNs          December 2015
 
 
+           \______/  ENRP  \______/  ASAP(1)  .      |       |      .
                               ^               .      +-------+      .
                               |               .                     .
                               | ASAP(2)       .     Server Pool     .
@@ -159,7 +160,6 @@ Internet-Draft         CIR Specification for CRNs          December 2015
                                          |
                                          |
                                          V
-
 
 
 
@@ -255,7 +255,12 @@ Internet-Draft         CIR Specification for CRNs          December 2015
 
    introduction
 
-7.  Informative References
+7.  Security Considerations
+
+   The use of contextinformation routing described in this memo has no
+   direct impact on the security of the Internet.
+
+8.  Informative References
 
    [CRNs]     Hans, S., "Concepts of Contextinformation Routing Networks
               (CRNs)", Januar 2016,
@@ -267,11 +272,6 @@ Internet-Draft         CIR Specification for CRNs          December 2015
               Reactive Manifesto", September 2014,
               <http://www.reactivemanifesto.org>.
 
-Author's Address
-
-
-
-
 
 
 
@@ -282,14 +282,14 @@ Stefan Hans               Expires June 3, 2016                  [Page 5]
 Internet-Draft         CIR Specification for CRNs          December 2015
 
 
+Author's Address
+
    Stefan Hans
    Rotwandstr.
    Baldham  85598
    Germany
 
    Email: uni@stefan-hans.de
-
-
 
 
 
