@@ -69,6 +69,8 @@ Table of Contents
    6.  CIC-Ruleset Request Routing . . . . . . . . . . . . . . . . .   5
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
    8.  Informative References  . . . . . . . . . . . . . . . . . . .   5
+   Appendix A.  CRN's Glossary . . . . . . . . . . . . . . . . . . .   6
+   Appendix B.  CRN's Abbreviations  . . . . . . . . . . . . . . . .   6
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   6
 
 1.  Introduction
@@ -104,8 +106,6 @@ Table of Contents
 
                                                .......................
             ______          ______            .      +-------+      .
-           / ENRP \        / ENRP \           .      |       |      .
-           |Server| <----> |Server|<----------.----->|  PE 1 |      .
 
 
 
@@ -114,6 +114,8 @@ Stefan Hans               Expires June 3, 2016                  [Page 2]
 Internet-Draft         CIR Specification for CRNs          December 2015
 
 
+           / ENRP \        / ENRP \           .      |       |      .
+           |Server| <----> |Server|<----------.----->|  PE 1 |      .
            \______/  ENRP  \______/  ASAP(1)  .      |       |      .
                               ^               .      +-------+      .
                               |               .                     .
@@ -160,8 +162,6 @@ Internet-Draft         CIR Specification for CRNs          December 2015
                                          |
                                          |
                                          V
-
-
 
 
 
@@ -282,6 +282,32 @@ Stefan Hans               Expires June 3, 2016                  [Page 5]
 Internet-Draft         CIR Specification for CRNs          December 2015
 
 
+Appendix A.  CRN's Glossary
+
+   content
+                  The content represents an exact information encoded in
+                  a byte.
+
+   mask
+                  The mask represents the relevance of the exactness of
+                  the content in a byte.  For that a 1 makes the
+                  corresponding bit of the content irrelevant.  Two bits
+                  are corresponding, if they are at the same place in
+                  the byte.
+
+Appendix B.  CRN's Abbreviations
+
+   +--------------+------------------------------------+
+   | Abbreviation | Meaning                            |
+   +--------------+------------------------------------+
+   | CI           | Contextinformation                 |
+   | CIC          | Contextinformation Coding          |
+   | CIP          | Contextinformation Packet          |
+   | CIR          | Contextinformation Routing         |
+   | CRN          | Contextinformation Routing Network |
+   | RZV          | Reserved Zero Value                |
+   +--------------+------------------------------------+
+
 Author's Address
 
    Stefan Hans
@@ -290,32 +316,6 @@ Author's Address
    Germany
 
    Email: uni@stefan-hans.de
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

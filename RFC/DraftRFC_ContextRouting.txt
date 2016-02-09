@@ -104,8 +104,8 @@ Table of Contents
    7.  Emergence and Future Use  . . . . . . . . . . . . . . . . . .  10
    8.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
    9.  Informative References  . . . . . . . . . . . . . . . . . . .  10
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  10
-
+   Appendix A.  CRN's Glossary . . . . . . . . . . . . . . . . . . .  10
+   Appendix B.  CRN's Abbreviations  . . . . . . . . . . . . . . . .  11
 
 
 
@@ -113,6 +113,8 @@ Stefan Hans               Expires July 4, 2016                  [Page 2]
 
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
+
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  11
 
 1.  Introduction
 
@@ -160,8 +162,6 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
              conversion rules (CIC-Ruleset) for a particular type of CI
              and a concrete piece of encoded CI.  Every CIC has an
              identifier, called CIC-Number.  A CIC-Ruleset and all its
-             encoded CI are linked by this CIC-Number.  Encoded CI has
-             the form of two parallel bit strings of equal length.  This
 
 
 
@@ -170,6 +170,8 @@ Stefan Hans               Expires July 4, 2016                  [Page 3]
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
+             encoded CI are linked by this CIC-Number.  Encoded CI has
+             the form of two parallel bit strings of equal length.  This
              pair consists of CI-Content, an instance of the CIC-
              Ruleset, and CI-Mask, which is used to define the accuracy
              of the searched match.  Then it is sufficient for a bitwise
@@ -212,8 +214,6 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
              oriented towards known concepts of network routing, peer-
              to-peer and others network principles and B-tree like
              datastructures.
-
-
 
 
 
@@ -546,6 +546,41 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
               Reactive Manifesto", September 2014,
               <http://www.reactivemanifesto.org>.
 
+Appendix A.  CRN's Glossary
+
+   content
+                  The content represents an exact information encoded in
+                  a byte.
+
+   mask
+
+
+
+
+Stefan Hans               Expires July 4, 2016                 [Page 10]
+
+Internet-Draft     Contextinformation Routing Networks      January 2016
+
+
+                  The mask represents the relevance of the exactness of
+                  the content in a byte.  For that a 1 makes the
+                  corresponding bit of the content irrelevant.  Two bits
+                  are corresponding, if they are at the same place in
+                  the byte.
+
+Appendix B.  CRN's Abbreviations
+
+   +--------------+------------------------------------+
+   | Abbreviation | Meaning                            |
+   +--------------+------------------------------------+
+   | CI           | Contextinformation                 |
+   | CIC          | Contextinformation Coding          |
+   | CIP          | Contextinformation Packet          |
+   | CIR          | Contextinformation Routing         |
+   | CRN          | Contextinformation Routing Network |
+   | RZV          | Reserved Zero Value                |
+   +--------------+------------------------------------+
+
 Author's Address
 
    Stefan Hans
@@ -557,4 +592,25 @@ Author's Address
 
 
 
-Stefan Hans               Expires July 4, 2016                 [Page 10]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Stefan Hans               Expires July 4, 2016                 [Page 11]
