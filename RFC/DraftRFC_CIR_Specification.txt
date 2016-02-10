@@ -228,7 +228,7 @@ Internet-Draft         CIR Specification for CRNs          December 2015
 
              the CI-Index of the new participant.  If not explicitly
              requested differently a new participant will be registered
-             or mounted above the first ambigous CI-Brick, i.e. before
+             or mounted above the first ambigous CIC-Brick, i.e. before
              the first byte of CI-Mask not equal 0.
 
 

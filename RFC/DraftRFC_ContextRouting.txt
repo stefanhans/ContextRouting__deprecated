@@ -105,7 +105,7 @@ Table of Contents
    8.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
    9.  Informative References  . . . . . . . . . . . . . . . . . . .  10
    Appendix A.  CRN's Glossary . . . . . . . . . . . . . . . . . . .  10
-   Appendix B.  CRN's Abbreviations  . . . . . . . . . . . . . . . .  11
+   Appendix B.  CRN's Abbreviations  . . . . . . . . . . . . . . . .  12
 
 
 
@@ -114,7 +114,7 @@ Stefan Hans               Expires July 4, 2016                  [Page 2]
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  11
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  12
 
 1.  Introduction
 
@@ -172,11 +172,11 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
              encoded CI are linked by this CIC-Number.  Encoded CI has
              the form of two parallel bit strings of equal length.  This
-             pair consists of CI-Content, an instance of the CIC-
+             pair consists of CIC-Content, an instance of the CIC-
              Ruleset, and CI-Mask, which is used to define the accuracy
              of the searched match.  Then it is sufficient for a bitwise
-             match of two pieces of CI, if both CI-Contents are equal or
-             both CI-Masks mark them as non-relevant.
+             match of two pieces of CI, if both CIC-Contents are equal
+             or both CI-Masks mark them as non-relevant.
              Let me illustrate this with an example.  Offer and Request
              are two communication roles, and location is a type of CI.
              Offer says "I'm available for any Request with matching CI
@@ -184,8 +184,8 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
              Offer with matching CI".  Both have an exact information
              about their location and can define a surrounding area
              where Offer is available respectively Request is searching.
-             CI-Content, as the encoded location, together with CI-Mask
-             defines the surrounding area by marking bits of CI-Content
+             CIC-Content, as the encoded location, together with CI-Mask
+             defines the surrounding area by marking bits of CIC-Content
              as true in any case concerning the match.  Here the CI of
              Offer and Request are matching, if the location of one is
              in the surrounding area of the other and vice versa.
@@ -210,7 +210,7 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
    Contextinformation Routing (CIR)
              Contextinformation Routing (CIR) takes place in an overlay
              network built normally on top of the TCP/IP layer.  It is
-             organized basically by using CI-Content as index.  It is
+             organized basically by using CIC-Content as index.  It is
              oriented towards known concepts of network routing, peer-
              to-peer and others network principles and B-tree like
              datastructures.
@@ -238,7 +238,7 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 3.  Contextinformation Coding (CIC)
 
    Contextinformation Coding (CIC), i.e. a CIC-Ruleset, defines an
-   injective function between a set of CI-Contents and a set of
+   injective function between a set of CIC-Contents and a set of
    permutations of a bit string with a fixed byte length, i.e. there is
    exactly one bit string for every described content of the CIC-
    Ruleset.  CI-Mask, the second bit string, is not defined individually
@@ -261,8 +261,8 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
    Encoded CI consists of a pair of bit strings with its length rounded
    up to the next byte.  One of these byte pairs is called a CIC-Brick.
-   One byte string is named CI-Content and the other is named CI-Mask.
-   CI-Content stands either for encoded CI or for a CIC-Number.  One
+   One byte string is named CIC-Content and the other is named CI-Mask.
+   CIC-Content stands either for encoded CI or for a CIC-Number.  One
    CIC-Brick can contain more than one items, i.e. encoded CI and CIC-
    Numbers.  The Root-CIC must have a length rounded up to the next byte
    lately.
@@ -286,12 +286,12 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
    0     1     2     3     4     5     6     7     8
    + ----+---- +-----+-----+-----+-----+-----+-----+
-   |                  CI-Content                   |
+   |                  CIC-Content                  |
    + ----+-----+-----+-----+-----+-----+-----+-----+
    |                   CI-Mask                     |
    + ----+-----+-----+-----+-----+-----+-----+-----+
 
-   The calculation of a match between two CI-Bricks uses the following
+   The calculation of a match between two CIC-Bricks uses the following
    function resp. bitwise expression:
 
    match(Offer, Request) = ( NOT ( Offer-Content XOR Request-Content ) )
@@ -409,8 +409,8 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 5.1.2.  Encoded CI as Index
 
-   The structural factor of CIR is the encoded CI itself.  CI-Content is
-   used like an index and CI-Mask marks the branchings.  The lowest
+   The structural factor of CIR is the encoded CI itself.  CIC-Content
+   is used like an index and CI-Mask marks the branchings.  The lowest
    number of branchings of a routing responsibility (CIR-Node)
    corresponds to the permutations of a byte of encoded CI, i.e. 256
    (cf.  CIC-Brick).  Thus CIR structure can be described as a tree data
@@ -465,9 +465,9 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 5.2.1.  Application's CI Match
 
-   This routing is oriented on the CI-Bricks using CI-Content as index.
-   If a bit of CI-Mask is true, the routing will be split to follow both
-   pathes of the indexing.
+   This routing is oriented on the CIC-Bricks using CIC-Content as
+   index.  If a bit of CI-Mask is true, the routing will be split to
+   follow both pathes of the indexing.
 
 5.2.2.  Application's Network Address Updates
 
@@ -493,7 +493,7 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 6.  Limitations
 
-   Contextinformation Packet (CIP) defines a maximum number of CI-
+   Contextinformation Packet (CIP) defines a maximum number of CIC-
    Bricks.  But a CIC can use an unlimited number of CIPs in a row.
    Here, related to one CIP, the end point of the Contextinformation
    Routing (CIR), i.e. the matching communication partner, is the start
@@ -548,12 +548,12 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
 Appendix A.  CRN's Glossary
 
-   content
-                  The content represents an exact information encoded in
-                  a byte.
+   CIC-Brick
+                  One byte of encoded CI consisting of CIC-Content and
+                  CIC-Mask as a pair of bit strings.
 
-   mask
-
+   CIC-Content
+                  The definite part of encoded CI.
 
 
 
@@ -562,11 +562,61 @@ Stefan Hans               Expires July 4, 2016                 [Page 10]
 Internet-Draft     Contextinformation Routing Networks      January 2016
 
 
-                  The mask represents the relevance of the exactness of
-                  the content in a byte.  For that a 1 makes the
-                  corresponding bit of the content irrelevant.  Two bits
-                  are corresponding, if they are at the same place in
-                  the byte.
+   CIC-Mask
+                  The undefining part of encoded CI.
+
+   CIC-Module
+
+
+   CIC-Number
+
+
+   CIC-Padding
+
+
+   CIC-Ruleset
+
+
+   CIC-Spam
+
+
+   CIR-Client
+
+
+   CIR-Node
+
+
+   CIR-Server
+
+
+   CIR-Tree
+
+
+   Contextinformation (CI)
+
+
+   Contextinformation Coding (CIC)
+
+
+   CIP (Contextinformation Packet)
+
+
+   CIR (Contextinformation Routing)
+
+
+   Reserved Zero Value (RZV)
+
+
+   Root-CIC
+
+
+
+
+
+Stefan Hans               Expires July 4, 2016                 [Page 11]
+
+Internet-Draft     Contextinformation Routing Networks      January 2016
+
 
 Appendix B.  CRN's Abbreviations
 
@@ -613,4 +663,10 @@ Author's Address
 
 
 
-Stefan Hans               Expires July 4, 2016                 [Page 11]
+
+
+
+
+
+
+Stefan Hans               Expires July 4, 2016                 [Page 12]
