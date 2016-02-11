@@ -66,33 +66,33 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Motivation  . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   3.  Binary Representations  . . . . . . . . . . . . . . . . . . .   3
+   3.  Binary Representations of Elements  . . . . . . . . . . . . .   3
    4.  Header Data . . . . . . . . . . . . . . . . . . . . . . . . .   4
      4.1.  Fix Sized Header Data Elements  . . . . . . . . . . . . .   5
      4.2.  Enumerations for Fixed Sized Header Data Elements . . . .   6
        4.2.1.  Service Groups  . . . . . . . . . . . . . . . . . . .   6
-       4.2.2.  Channels  . . . . . . . . . . . . . . . . . . . . . .   7
-     4.3.  Dynamically Sized Header Data Elements  . . . . . . . . .   7
+       4.2.2.  Channels  . . . . . . . . . . . . . . . . . . . . . .   6
+     4.3.  Dynamically Sized Header Data Elements  . . . . . . . . .   6
      4.4.  Additional Header Data Types  . . . . . . . . . . . . . .   7
    5.  Contextinformation  . . . . . . . . . . . . . . . . . . . . .   7
-     5.1.  Fixed Sized Contextinformation Elements . . . . . . . . .   8
+     5.1.  Fixed Sized Contextinformation Elements . . . . . . . . .   7
      5.2.  Enumerations for Fixed Sized Contextinformation Elements    8
-       5.2.1.  Types . . . . . . . . . . . . . . . . . . . . . . . .   9
-       5.2.2.  Content and Mask  . . . . . . . . . . . . . . . . . .   9
-     5.3.  Dynamically Sized Contextinformation Elements . . . . . .   9
-   6.  Application Data  . . . . . . . . . . . . . . . . . . . . . .   9
-     6.1.  Fixed Sized Application Data Elements . . . . . . . . . .  10
-     6.2.  Enumerations for Fixed Sized Application Data Elements  .  10
-       6.2.1.  Types . . . . . . . . . . . . . . . . . . . . . . . .  10
-     6.3.  Dynamically Sized Application Data Elements . . . . . . .  10
+       5.2.1.  Types . . . . . . . . . . . . . . . . . . . . . . . .   8
+       5.2.2.  Root-CIC  . . . . . . . . . . . . . . . . . . . . . .   8
+     5.3.  Dynamically Sized Contextinformation  . . . . . . . . . .   8
+   6.  Application Data  . . . . . . . . . . . . . . . . . . . . . .   8
+     6.1.  Fixed Sized Application Data Elements . . . . . . . . . .   9
+     6.2.  Enumerations for Fixed Sized Application Data Elements  .   9
+       6.2.1.  Types . . . . . . . . . . . . . . . . . . . . . . . .   9
+     6.3.  Dynamically Sized Application Data Elements . . . . . . .   9
      6.4.  Additional Application Data Types . . . . . . . . . . . .  10
-       6.4.1.  External Applications . . . . . . . . . . . . . . . .  10
-       6.4.2.  Internal Use  . . . . . . . . . . . . . . . . . . . .  10
+       6.4.1.  For External Applications . . . . . . . . . . . . . .  10
+       6.4.2.  For Internal Use  . . . . . . . . . . . . . . . . . .  10
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
-   8.  Informative References  . . . . . . . . . . . . . . . . . . .  11
-   Appendix A.  CRN's Glossary . . . . . . . . . . . . . . . . . . .  11
+   8.  Informative References  . . . . . . . . . . . . . . . . . . .  10
+   Appendix A.  CRN's Glossary . . . . . . . . . . . . . . . . . . .  10
    Appendix B.  CRN's Abbreviations  . . . . . . . . . . . . . . . .  11
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  11
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  12
 
 1.  Introduction
 
@@ -100,9 +100,9 @@ Table of Contents
    encoded Contextinformation (CI).  A CIP is divided into three parts:
 
    Header Data
-             The header data contains metadata and describes, among
+             The header data contains metadata and specifies, among
              other things, how the data of the following two parts has
-             to be interpreted.  The header data starts with a part with
+             to be interpreted.  The header data starts with a part of
              fixed size and static structure followed by a dynamic part.
              The static part defines also the dynamic part's type and
              its length.
@@ -115,17 +115,17 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 
    Contextinformation
-             The Contextinformation starts with a part with fixed size
-             and static structure followed by a dynamic part.  The
-             static part defines also the dynamic part's type and its
-             length.  The dynamic part consists of CIC-Bricks only.
+             The Contextinformation starts with a part of fixed size and
+             static structure followed by a dynamic part.  The static
+             part defines also the dynamic part's type and its length.
+             The dynamic part consists of CIC-Bricks only.
 
 
 
    Application Data
-             The application data starts with a part with fixed size and
+             The application data starts with a part of fixed size and
              static structure followed by a dynamic part.  The static
-             part only defines the dynamic part's type and its length.
+             part defines only the dynamic part's type and its length.
 
 
 
@@ -141,27 +141,27 @@ Internet-Draft         CIP Specification for CRNs          December 2015
    first step towards a possible formal recognition as an Internet
    Standard in the future.
 
-3.  Binary Representations
+3.  Binary Representations of Elements
 
    Ordered Numbering
-                  Bytes representing an ordered numbering show integers
-                  from 0-255 (see figure 1).
+                  These elements show unsigned integers, e.g. from 0 to
+                  255 (see figure 1).
 
-   Bitwise Flags
-                  These bytes represent a one or more constellation (see
-                  figure 2).
+   Flags
+                  These elements show one flag per bit (see figure 2).
 
-   Combined Numbering
+   Combinations
                   The representations of ordered numbering and bitwise
-                  flags can be combined freely within one or more bytes.
+                  flags can be combined freely within elements.
 
    Well Known Representations
                   These representations are well known as standards like
                   IP address, port number, UUID etc..
 
    Reserved Zero Value (RZV)
-
-
+                  Nearly all of the not well known representations have
+                  the so called Reserved Zero Value.  That means zero as
+                  value is reserved for developing and testing purposes.
 
 
 
@@ -169,10 +169,6 @@ Stefan Hans               Expires June 3, 2016                  [Page 3]
 
 Internet-Draft         CIP Specification for CRNs          December 2015
 
-
-                  Nearly all of the not well known representations have
-                  the so called Reserved Zero Value.  That means zero as
-                  value is reserved for developing and testing purposes.
 
           Figure 1 shows bytes representing an ordered numbering.
 
@@ -201,31 +197,6 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 4.  Header Data
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Stefan Hans               Expires June 3, 2016                  [Page 4]
-
-Internet-Draft         CIP Specification for CRNs          December 2015
-
-
             Figure 3 shows the structure of CIP's header data.
 
    0                   1                   2                   3
@@ -247,6 +218,13 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
    Field sizes, shown in brackets, are given in bytes.  Dots are used to
                      show the dynamically sized part.
+
+
+
+Stefan Hans               Expires June 3, 2016                  [Page 4]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
 
 4.1.  Fix Sized Header Data Elements
 
@@ -274,14 +252,6 @@ Internet-Draft         CIP Specification for CRNs          December 2015
                   The value 0 is reserved for testing and all other
                   values have no meaning so far.
 
-
-
-
-Stefan Hans               Expires June 3, 2016                  [Page 5]
-
-Internet-Draft         CIP Specification for CRNs          December 2015
-
-
    UUID
                   The UUID is the unique identifier for the CIP.
 
@@ -303,6 +273,15 @@ Internet-Draft         CIP Specification for CRNs          December 2015
                   testing and all other values have no meaning so far.
 
    size
+
+
+
+
+Stefan Hans               Expires June 3, 2016                  [Page 5]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
+
                   The size of the following header data of the datagram,
                   i.e. the number of bytes.
 
@@ -327,17 +306,6 @@ Internet-Draft         CIP Specification for CRNs          December 2015
    Thus the integer 1 means 'gateway', 2 means 'router' and 3 means both
                                and so forth.
 
-
-
-
-
-
-
-Stefan Hans               Expires June 3, 2016                  [Page 6]
-
-Internet-Draft         CIP Specification for CRNs          December 2015
-
-
 4.2.2.  Channels
 
    'channel' describes the separated channels in CRNs.
@@ -361,6 +329,15 @@ Internet-Draft         CIP Specification for CRNs          December 2015
                   testing and all other values have no meaning so far.
 
    size
+
+
+
+
+Stefan Hans               Expires June 3, 2016                  [Page 6]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
+
                   The size of the following header data of the datagram,
                   i.e. the number of bytes.
 
@@ -375,32 +352,13 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 5.  Contextinformation
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Stefan Hans               Expires June 3, 2016                  [Page 7]
-
-Internet-Draft         CIP Specification for CRNs          December 2015
-
-
        Figure 2.2.1 shows the context (brick) section of the context
     datagram.  A context brick consists of two bytes: content und mask.
 
    0                   1                   2                   3
    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |   type (1)    |  content (1)  |   mask (1)    |   size (1)    | fix
+   |   type (1)    |         root-CIC (2)          |   size (1)    | fix
    | ............................................................  | |
    | .............. additional data up to 510 bytes .............  | dyn
    | .............. i.e. up to 255 CIC-Bricks  ..................  | |
@@ -419,12 +377,7 @@ Internet-Draft         CIP Specification for CRNs          December 2015
                   The value 0 is reserved for testing and all other
                   values has no meaning so far.
 
-   content (RZV)
-                  The content is the first part of a Context Brick (see
-                  section 2.4).  It is used in the core functionality to
-                  specify the kind of context coding.
-
-   mask (RZV)
+   root-CIC (RZV)
                   The mask is the second part of a Context Brick (see
                   section 2.4).  It is not used in the core
                   functionality so far.
@@ -433,33 +386,30 @@ Internet-Draft         CIP Specification for CRNs          December 2015
                   The number of Context Bricks as additional data (up to
                   255).
 
+
+
+
+Stefan Hans               Expires June 3, 2016                  [Page 7]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
+
    additional data
                   The additional data contains the number of Context
                   Bricks (see section 2.4) as specified in size.
 
 5.2.  Enumerations for Fixed Sized Contextinformation Elements
 
-
-
-
-
-
-
-Stefan Hans               Expires June 3, 2016                  [Page 8]
-
-Internet-Draft         CIP Specification for CRNs          December 2015
-
-
 5.2.1.  Types
 
    'type' describes the very main types of contextinformation in CRNs.
 
-5.2.2.  Content and Mask
+5.2.2.  Root-CIC
 
-   The usage of 'content' and 'mask' depends on 'type' and is not yet
-   finally decided.
+   The usage of Root-CIC, i.e. CIC-Content and CIC-Mask, depends on
+   'type' and is not yet finally decided.
 
-5.3.  Dynamically Sized Contextinformation Elements
+5.3.  Dynamically Sized Contextinformation
 
    A Context Brick is a pair of bytes in particular content and mask.
    It describes a piece of information and the relevance of its
@@ -478,6 +428,27 @@ Internet-Draft         CIP Specification for CRNs          December 2015
                   the byte.
 
 6.  Application Data
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Stefan Hans               Expires June 3, 2016                  [Page 8]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
 
    The following figure shows the data section of the context datagram.
      This section has no meaning for the Context Routing itself.  The
@@ -498,13 +469,6 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
    Field sizes, shown in brackets, are given in bytes.  Dots are used to
                      show the dynamically sized part.
-
-
-
-Stefan Hans               Expires June 3, 2016                  [Page 9]
-
-Internet-Draft         CIP Specification for CRNs          December 2015
-
 
 6.1.  Fixed Sized Application Data Elements
 
@@ -532,18 +496,28 @@ Internet-Draft         CIP Specification for CRNs          December 2015
    nodes of the CRN itself and therefore this data is used, in this
    case, not by applications outside the CRN.
 
+
+
+
+
+
+Stefan Hans               Expires June 3, 2016                  [Page 9]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
+
 6.4.  Additional Application Data Types
 
    Depending on the header data additional application data can be used
    for external applications or for the CRNs internally.
 
-6.4.1.  External Applications
+6.4.1.  For External Applications
 
    If additional application data are related to external applications,
    the type of the data and the data itself are the responsibility of
    the external applications exclusively.
 
-6.4.2.  Internal Use
+6.4.2.  For Internal Use
 
    The types of additional application data for internal use are not yet
    specified.
@@ -552,15 +526,6 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
    The use of packets described in this memo has no direct impact on the
    security of the Internet.
-
-
-
-
-
-Stefan Hans               Expires June 3, 2016                 [Page 10]
-
-Internet-Draft         CIP Specification for CRNs          December 2015
-
 
 8.  Informative References
 
@@ -571,20 +536,67 @@ Internet-Draft         CIP Specification for CRNs          December 2015
 
 Appendix A.  CRN's Glossary
 
-   content
-                  The content represents an exact information encoded in
-                  a byte.
+   CIC-Brick
+                  One byte of encoded CI consisting of CIC-Content and
+                  CIC-Mask as a pair of bit strings.
 
-   content
-                  The content represents an exact information encoded in
-                  a byte.
+   CIC-Content
+                  The definite part of encoded CI.
 
-   mask
-                  The mask represents the relevance of the exactness of
-                  the content in a byte.  For that a 1 makes the
-                  corresponding bit of the content irrelevant.  Two bits
-                  are corresponding, if they are at the same place in
-                  the byte.
+   CIC-Mask
+                  The undefining part of encoded CI.
+
+   CIC-Module
+
+
+   CIC-Number
+
+
+   CIC-Padding
+
+
+
+
+Stefan Hans               Expires June 3, 2016                 [Page 10]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
+
+   CIC-Ruleset
+
+
+   CIC-Spam
+
+
+   CIR-Client
+
+
+   CIR-Node
+
+
+   CIR-Server
+
+
+   CIR-Tree
+
+
+   Contextinformation (CI)
+
+
+   Contextinformation Coding (CIC)
+
+
+   CIP (Contextinformation Packet)
+
+
+   CIR (Contextinformation Routing)
+
+
+   Reserved Zero Value (RZV)
+
+
+   Root-CIC
+
 
 Appendix B.  CRN's Abbreviations
 
@@ -598,6 +610,13 @@ Appendix B.  CRN's Abbreviations
    | CRN          | Contextinformation Routing Network |
    | RZV          | Reserved Zero Value                |
    +--------------+------------------------------------+
+
+
+
+Stefan Hans               Expires June 3, 2016                 [Page 11]
+
+Internet-Draft         CIP Specification for CRNs          December 2015
+
 
 Author's Address
 
@@ -613,4 +632,41 @@ Author's Address
 
 
 
-Stefan Hans               Expires June 3, 2016                 [Page 11]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Stefan Hans               Expires June 3, 2016                 [Page 12]
