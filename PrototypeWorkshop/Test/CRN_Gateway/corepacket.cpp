@@ -470,7 +470,7 @@ void ContextPacket::printPacket(std::string line_start) {
 	std::cout << line_start << "Header UUID:\t" << getUuidString(uuid) << std::endl;
 	std::cout << line_start << "Header IP address:\t" << inet_ntoa(sockAddress.sin_addr) << std::endl;
 	std::cout << line_start << "Header IP Port:\t" << ntohs(sockAddress.sin_port) << std::endl;
-	std::cout << line_start << "Header time:\t" << ctime(getTime()) << std::endl;
+	std::cout << line_start << "Header time:\t" << ctime(getTime()) << std::ends;
 	std::cout << line_start << "Header type:\t" << (uint) additionalHeaderType << std::endl;
 	std::cout << line_start << "Header size:\t" << (uint) additionalHeaderSize << std::endl;
 	for(uint i=0; i<(uint) additionalHeaderSize;i++) {
@@ -487,7 +487,7 @@ void ContextPacket::printPacket(std::string line_start) {
 	 */
 	std::cout << line_start << "Context Type:\t" << (uint) contextType << std::endl;
 	std::cout << line_start << "Context root-CIC->context:\t" << (uint) firstBrick->context << "\t"<< getBitsString(sizeof(byte_t), &(firstBrick->context)) << std::endl;
-	std::cout << line_start << "Context root-CIC->mask:\t" << (uint) firstBrick->mask << "\t"<< getBitsString(sizeof(byte_t), &(firstBrick->mask)) << std::endl;
+	std::cout << line_start << "Context root-CIC->mask:\t\t" << (uint) firstBrick->mask << "\t"<< getBitsString(sizeof(byte_t), &(firstBrick->mask)) << std::endl;
 	std::cout << line_start << "Context AdditionalBricksSize:\t" << (uint) additionalBricksSize << std::endl;
 	for (int i = 0; i < additionalBricksSize; i++) {
 		std::cout << line_start << "Context AdditionalBrick[" << i << "]:\tcontext\t" << (uint) additionalBricks[i].context << "\t"<< getBitsString(sizeof(byte_t), &(additionalBricks[i].context)) << std::endl;

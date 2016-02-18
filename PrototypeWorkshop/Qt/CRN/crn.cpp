@@ -6,20 +6,73 @@
 #include <QtNetwork>
 #include <QTcpSocket>
 
+#define MAXMSG 1064
+
+//extern QString my_global_string;
+
+
 void CRN::tcpError( QAbstractSocket::SocketError error ) {
     return;
 }
 
+void CRN::show() {
+
+//    qDebug() << my_global_string << endl;
+    return;
+
+}
+
+void CRN::showLocal() {
+
+    qDebug() << "CRN::showLocal()" << endl;
+    return;
+
+}
+
 void CRN::getCIP(QByteArray* byteArray, QString type, QByteArray* randValues) {
 
+//    qDebug() << my_global_string << endl;
+
+
+
+    // RZV
     if(type=="rzv") {
         byteArray->append(QByteArray(42, '\0'));
         return;
     }
 
+    // MAX
+    if(type=="max") {
+
+        // Header: fix
+        byteArray->append(QByteArray(34, '\0'));
+
+        // Header: size (1)
+        byteArray->append(QByteArray(QByteArray::fromHex("0xff")));
+        byteArray->append(QByteArray(255, '\0'));
+
+        // Contextinformation: fix
+        byteArray->append(QByteArray(2, '\0'));
+
+        // Contextinformation: size (255)
+        byteArray->append(QByteArray(QByteArray::fromHex("0xff")));
+        byteArray->append(QByteArray(255*2, '\0'));
+
+        // Application Data: fix
+        byteArray->append(QByteArray(0, '\0'));
+
+        // Application Data: size (255)
+        byteArray->append(QByteArray(QByteArray::fromHex("0xff")));
+        byteArray->append(QByteArray(255, '\0'));
+
+        return;
+    }
+
+    // RAND
     if(type=="rand" && randValues != NULL && randValues->size() >= 1064) {
 
         int i = 0;
+        quint8 rand;
 
         // Header: request (1)
         byteArray->append(randValues->at(i++));
@@ -62,8 +115,10 @@ void CRN::getCIP(QByteArray* byteArray, QString type, QByteArray* randValues) {
         // Header: type (1)
         byteArray->append(randValues->at(i++));
 
-        // Header: size (1)
-        byteArray->append(QByteArray::fromHex("0x0"));
+        // Header: size (1) and data
+        rand = randValues->at(i++);
+        byteArray->append(rand);
+        byteArray->append(QByteArray(rand, rand));
 
         // Contextinformation: type (1)
         byteArray->append(randValues->at(i++));
@@ -73,53 +128,24 @@ void CRN::getCIP(QByteArray* byteArray, QString type, QByteArray* randValues) {
         byteArray->append(randValues->at(i++));
 
         // Contextinformation: size (1)
-        byteArray->append(QByteArray::fromHex("0x0"));
+        rand = randValues->at(i++);
+        byteArray->append(rand);
+        byteArray->append(QByteArray(rand*2, rand));
 
         // Application: type (1)
         byteArray->append(randValues->at(i++));
 
         // Application: size (1)
-        byteArray->append(QByteArray::fromHex("0x0"));
+        rand = randValues->at(i++);
+        byteArray->append(rand);
+        byteArray->append(QByteArray(rand, rand));
 
         return;
     }
 
+    // default
     byteArray->append(QByteArray(42, '\0'));
 
-
-
-
-
-
-
-
-
-
-
-
-
-//    // Header: fix
-//    QByteArray byteArray(35, '\0');
-
-//    // Header: size (1)
-//    byteArray[byteArray.length()] = quint8(255);
-//    byteArray.append(QByteArray(255, '\0'));
-
-
-//    // Contextinformation: fix
-//    byteArray.append(QByteArray(3, '\0'));
-
-//    // Contextinformation: size (255)
-//    byteArray[byteArray.length()] = quint8(255);
-//    byteArray.append(QByteArray(255*2, '\0'));
-
-
-//    // Application Data: fix
-//    byteArray.append(QByteArray(1, '\0'));
-
-//    // Application Data: size (255)
-//    byteArray[byteArray.length()] = quint8(255);
-//    byteArray.append(QByteArray(255, '\0'));
     return;
 }
 
@@ -151,10 +177,10 @@ QString CRN::pingTcp(QString type, QByteArray* randValues) {
     qDebug() << out;
 
     int numRead = 0, numReadTotal = 0;
-    char buffer[50];
+    char buffer[MAXMSG];
 
     forever {
-        numRead  = tcpSocket->read(buffer, 50);
+        numRead  = tcpSocket->read(buffer, MAXMSG);
         qDebug() << "read buffer";
 
         qDebug() << buffer;

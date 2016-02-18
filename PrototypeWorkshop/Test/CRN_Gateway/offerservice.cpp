@@ -34,9 +34,9 @@ int OfferService::processTCP(void* receivedPacket) {
 		pthread_exit(NULL);
 	}
 
-//	if (DEBUG) printPackets();
+	if (PRINT_PACKETS_DEBUG) printPackets();
 
-//	if (DEBUG) ((ContextPacket*) receivedPacket)->printPacket();
+	if (PRINT_PACKET_DEBUG) ((ContextPacket*) receivedPacket)->printPacket();
 
 	return 0;
 }

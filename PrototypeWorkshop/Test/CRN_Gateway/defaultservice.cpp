@@ -34,9 +34,9 @@ int DefaultService::processTCP(void* receivedPacket) {
 		pthread_exit(NULL);
 	}
 
-	printPackets();
+	if (PRINT_PACKETS_DEBUG) printPackets();
 
-//	if (DEBUG) ((ContextPacket*) receivedPacket)->printPacket();
+	if (PRINT_PACKET_DEBUG) ((ContextPacket*) receivedPacket)->printPacket();
 
 	return 0;
 }

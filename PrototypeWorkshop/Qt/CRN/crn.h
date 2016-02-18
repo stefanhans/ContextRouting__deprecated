@@ -16,6 +16,9 @@ class CRNSHARED_EXPORT CRN : public QObject
 public:
     CRN() { tcpSocket = new QTcpSocket(); }
 
+    void show();
+    void showLocal();
+
     void getCIP(QByteArray* byteArray, QString type="rzv", QByteArray* randValues=NULL);
 
     QString ping();
