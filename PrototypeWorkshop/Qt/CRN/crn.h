@@ -2,38 +2,15 @@
 #define CRN_H
 
 #include "crn_global.h"
-#include "ping.h"
 
-#include <QTcpSocket>
-#include <QNetworkSession>
-
-#include <QtNetwork>
 #include <QObject>
 
-
-class CRNSHARED_EXPORT CRN : public QObject
+class CRNSHARED_EXPORT CRN
 {
-    Q_OBJECT
 
 public:
-    CRN() { tcpSocket = new QTcpSocket(); }
 
-    void show();
-    void showLocal();
-
-    void getCIP(QByteArray* byteArray, QString type="rzv", QByteArray* randValues=NULL);
-
-    QString ping();
-
-    QString pingTcp(QString type="rzv", QByteArray* randValues=NULL);
-
-    QString pingMax();
-
-public slots:
-    void tcpError( QAbstractSocket::SocketError error );
-
-private:
-    QTcpSocket *tcpSocket;
+    int ping(QStringList command);
 };
 
 #endif // CRN_H

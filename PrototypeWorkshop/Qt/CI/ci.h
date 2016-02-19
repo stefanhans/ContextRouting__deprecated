@@ -3,6 +3,8 @@
 
 #include "ci_global.h"
 
+#include <QObject>
+
 
 /**
  * type definitions
@@ -15,8 +17,9 @@ typedef unsigned char byte_t;
 enum direct_modus_e { DM_INTEGER=0, DM_HEX=1, DM_CHAR=2 };
 
 
-class CISHARED_EXPORT CI
+class CISHARED_EXPORT CI : public QObject
 {
+    Q_OBJECT
 
 public:
     CI();

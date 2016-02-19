@@ -1,7 +1,8 @@
 #include "subshell_crn.h"
 #include "subshell_ci.h"
 #include "subshell_cip.h"
-#include "crn_ping.h"
+
+#include "crn.h"
 
 #include <QDebug>
 
@@ -64,7 +65,7 @@ void Subshell_CRN::runShell() {
 
         if(command.at(0)=="ping") {
 
-            ping(command);
+            crn.ping(command);
 
             outStream << ::prompt << flush;
             continue;
@@ -111,7 +112,7 @@ void Subshell_CRN::executeCommand(QStringList command) {
 
     if(command.at(0)=="ping") {
 
-        ping(command);
+        crn.ping(command);
     }
 
 
