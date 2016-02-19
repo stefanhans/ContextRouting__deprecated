@@ -2,6 +2,8 @@
 #define CRN_H
 
 #include "crn_global.h"
+#include "ping.h"
+
 #include <QTcpSocket>
 #include <QNetworkSession>
 
