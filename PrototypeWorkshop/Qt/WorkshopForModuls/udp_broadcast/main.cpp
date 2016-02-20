@@ -35,9 +35,40 @@ int udp_broadcast(QStringList command) {
      */
     QTextStream errorStream(stderr);
 
-    if(command.size() != 5 || command.at(0)!="broadcast" || command.at(1)!="udp" ) {
+    if(command.size() != 5) {
 
-        errorStream << "Error: udp_broadcast(" << command.join(" ") << ") is no valid call (broadcast udp <ip_address> <port> rzv|max|random|default)" << endl;
+        errorStream << "Error: udp_broadcast(" << command.join(" ") << ") is no valid number of arguments (broadcast udp <ip_address> <port> rzv|max|random|default)" << endl;
+        return 1;
+    }
+
+
+    if(command.at(0)!="broadcast") {
+
+        errorStream << "Error: udp_broadcast(" << command.join(" ") << ") has no valid prototcol (broadcast udp <ip_address> <port> rzv|max|random|default)" << endl;
+        return 1;
+    }
+
+    if(command.at(1)!="udp") {
+
+        errorStream << "Error: udp_broadcast(" << command.join(" ") << ") has no valid prototcol (broadcast udp <ip_address> <port> rzv|max|random|default)" << endl;
+        return 1;
+    }
+
+    if(! command.at(2).contains(QRegExp("^\\d\\d?\\d?.\\d\\d?\\d?.\\d\\d?\\d?.\\d\\d?\\d?$"))) {
+
+        errorStream << "Error: udp_broadcast(" << command.join(" ") << ") has no valid IP address (broadcast udp <ip_address> <port> rzv|max|random|default)" << endl;
+        return 1;
+    }
+
+    if(! command.at(3).contains(QRegExp("^\\d\\d?\\d?\\d?\\d?\\d?$"))) {
+
+        errorStream << "Error: udp_broadcast(" << command.join(" ") << ") has no valid port number (broadcast udp <ip_address> <port> rzv|max|random|default)" << endl;
+        return 1;
+    }
+
+    if(! command.at(4).contains(QRegExp("(rzv|max|random|default)"))) {
+
+        errorStream << "Error: udp_broadcast(" << command.join(" ") << ") has no valid CIP specification (broadcast udp <ip_address> <port> rzv|max|random|default)" << endl;
         return 1;
     }
 
@@ -56,6 +87,15 @@ int udp_broadcast(QStringList command) {
         qDebug() << "rzv" << endl;
 
         byteArray.append(QByteArray(42, '\0'));
+     }
+
+    /**
+     * CIP for "test"
+     */
+    if(command.at(4)=="test") {
+        qDebug() << "test" << endl;
+
+        byteArray = "Broadcast message ";
      }
 
 
@@ -84,9 +124,11 @@ int main(int argc, char *argv[])
         command.append(QString("%1").arg(argv[i]));
     }
 
-//    command.append("broadcast");
-//    command.append("udp");
-//    command.append("rzv");
+    command.append("broadcast");
+    command.append("udp");
+    command.append("0.0.0.0");
+    command.append("22365");
+    command.append("rzv");
 
     qDebug() << "Return: " << udp_broadcast(command) << endl;
 
