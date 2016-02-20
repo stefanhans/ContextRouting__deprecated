@@ -7,6 +7,8 @@
 // .cpp
 #include <QDebug>
 #include <QTextStream>
+#include <QTcpSocket>
+#include <QHostAddress>
 // other includes
 
 // .cpp
@@ -42,6 +44,67 @@ int udp_ping(QStringList command) {
     /**
      * <functionality>
      */
+
+
+    QByteArray byteArray;
+
+    /**
+     * CIP for "rzv"
+     */
+    if(command.at(2)=="rzv") {
+        qDebug() << "rzv" << endl;
+
+        byteArray.append(QByteArray(42, '\0'));
+     }
+
+
+    /**
+     * Sent via TCP
+     */
+    QTcpSocket *tcpSocket;
+    tcpSocket = new QTcpSocket();
+    QTextStream outStream(stdout);
+
+    QString out;
+
+    tcpSocket->abort();
+    tcpSocket->connectToHost(QHostAddress::Broadcast, 22365);
+
+    qDebug() << "waitForConnected!";
+    if (tcpSocket->waitForConnected(5000)) {
+
+        qDebug() << "Connected!";
+    }
+    else {
+        errorStream << "Error: tcp_ping(" << command.join(" ") << ") No connection available!" << endl;
+        return 1;
+    }
+
+    out = QString("BytesWritten: %1").arg(tcpSocket->write(byteArray, byteArray.length()));
+
+    qDebug() << out;
+
+    int numRead = 0, numReadTotal = 0;
+    char buffer[MAXMSG];
+
+    forever {
+        numRead  = tcpSocket->read(buffer, MAXMSG);
+        qDebug() << "read buffer";
+
+        qDebug() << buffer;
+
+        numReadTotal += numRead;
+        if (numRead == 0 && !tcpSocket->waitForReadyRead())
+            break;
+    }
+    qDebug() << numReadTotal << " bytes red";
+
+    tcpSocket->flush();
+    tcpSocket->disconnectFromHost();
+    tcpSocket->close();
+
+    outStream << out << endl;
+
 
     return 0;
 }
