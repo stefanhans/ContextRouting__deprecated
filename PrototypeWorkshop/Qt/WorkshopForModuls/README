@@ -1,11 +1,15 @@
 - Erstellen eines  Befehls einer Subshell als Modul
 	- Idee -> Konzept
 	- Schnittstelle (Usage) -> Modul
-	- Implementierung des Moduls
-	- Implementierung der Schnittstelle 
+	- Implementierung des Moduls (modul_main.template)
+	- Implementierung der Schnittstelle (interface_main.template)
 
 - Testen 
 
 - Einbinden 
 	- Schnittstelle in Shell integrieren
 	- Module in Library integrieren
+
+
+Others:
+	http://doc.qt.io/qtcreator/creator-project-wizards.html (kann meine Template-Config hochstellen)
