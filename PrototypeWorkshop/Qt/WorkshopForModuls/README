@@ -1,0 +1,11 @@
+- Erstellen eines  Befehls einer Subshell als Modul
+	- Idee -> Konzept
+	- Schnittstelle (Usage) -> Modul
+	- Implementierung des Moduls
+	- Implementierung der Schnittstelle 
+
+- Testen 
+
+- Einbinden 
+	- Schnittstelle in Shell integrieren
+	- Module in Library integrieren
