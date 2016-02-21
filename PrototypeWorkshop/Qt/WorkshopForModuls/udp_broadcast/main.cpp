@@ -1,24 +1,32 @@
-// only for dev
-#include <QCoreApplication>
-
-// .h + .cpp
+// .h
 #include <QStringList>
+
+#include <QUdpSocket>
+
+
+// .h
+int udp_broadcast(QStringList command);
+
+QUdpSocket *udpSocket;
+
 
 // .cpp
 #include <QDebug>
+#include <QStringList>
 #include <QTextStream>
+
 #include <QUdpSocket>
 // other includes
+
 
 // .cpp
 #define CRN_RANDOM_DIVISOR (RAND_MAX/255)
 #define MAXMSG 1064
 
-// .h
-int tcp_ping(QStringList command);
+#define LINE_SEP "------------------------------------------------------"
 
-QUdpSocket *udpSocket;
 
+#include "usage.h"
 
 // .cpp
 /**
@@ -30,6 +38,19 @@ QUdpSocket *udpSocket;
 int udp_broadcast(QStringList command) {
     qDebug() << "udp_broadcast(" << command.join(" ") << ")" << endl;
 
+    qDebug() << LINE_SEP << endl;
+    man("usage help");
+    qDebug() << LINE_SEP << endl;
+
+    qDebug() << LINE_SEP << endl;
+    man("desc help");
+    qDebug() << LINE_SEP << endl;
+
+    qDebug() << LINE_SEP << endl;
+    man("help help");
+    qDebug() << LINE_SEP << endl;
+
+
     /**
      * Check input
      */
@@ -37,7 +58,8 @@ int udp_broadcast(QStringList command) {
 
     if(command.size() != 5) {
 
-        errorStream << "Error: udp_broadcast(" << command.join(" ") << ") is no valid number of arguments (broadcast udp <ip_address> <port> rzv|max|random|default)" << endl;
+        errorStream << "Error: udp_broadcast(" << command.join(" ") << ") has no valid number of arguments" << endl;
+        man("usage udp_broadcast");
         return 1;
     }
 
@@ -115,7 +137,6 @@ int udp_broadcast(QStringList command) {
 // only for dev
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
 
     // call
     QStringList command;
