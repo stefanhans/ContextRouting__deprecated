@@ -32,8 +32,8 @@ int man(QString commands) {
         return 0;
     }
 
-    if(arguments.at(0) == "desc" ) {
-        desc(arguments);
+    if(arguments.at(0) == "description" ) {
+        description(arguments);
         return 0;
     }
 
@@ -85,15 +85,15 @@ int usage(QStringList commands) {
 
 
 
-    QFile descFile(filePath);
-    if (!descFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    QFile descriptionFile(filePath);
+    if (!descriptionFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
 
         errorStream << "Error: usage(" << commands.join(" ") << ") can not read usage file " << filePath << endl;
         return 1;
     }
 
-    while (!descFile.atEnd()) {
-        QByteArray line = descFile.readLine();
+    while (!descriptionFile.atEnd()) {
+        QByteArray line = descriptionFile.readLine();
         outStream << line << endl;
     }
 
@@ -105,38 +105,38 @@ int usage(QStringList commands) {
 
 
 /**
- * @brief desc
- * @param commands "desc cmd ..."
+ * @brief description
+ * @param commands "description cmd ..."
  * @return
  */
 
-int desc(QStringList commands) {
-    //qDebug() << "desc(" << commands.join(" ") << ")" << endl;
+int description(QStringList commands) {
+    //qDebug() << "description(" << commands.join(" ") << ")" << endl;
 
     /**
      * Check input
      */
     if(commands.size() < 2 ) {
 
-        errorStream << "Error: desc(" << commands.join(" ") << ") has not enough parameters (desc cmd ...)" << endl;
+        errorStream << "Error: description(" << commands.join(" ") << ") has not enough parameters (description cmd ...)" << endl;
         return 1;
     }
 
-    if(commands.at(0)!="desc") {
+    if(commands.at(0)!="description") {
 
-        errorStream << "Error: desc(" << commands.join(" ") << ") is no valid call (desc cmd ...)" << endl;
+        errorStream << "Error: description(" << commands.join(" ") << ") is no valid call (description cmd ...)" << endl;
         return 1;
     }
 
     QString filePath;
 
     /**
-     * Read desc file
+     * Read description file
      */
 
     filePath = HELP_DIR;
     commands.pop_front();
-    filePath += "/" + commands.join("/") + "/desc";
+    filePath += "/" + commands.join("/") + "/description";
 
     //qDebug() << filePath << endl;
 
@@ -145,7 +145,7 @@ int desc(QStringList commands) {
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
 
-        errorStream << "Error: desc(" << commands.join(" ") << ") can not read desc file " << filePath << endl;
+        errorStream << "Error: description(" << commands.join(" ") << ") can not read description file " << filePath << endl;
         return 1;
     }
 
@@ -187,9 +187,9 @@ int help(QStringList commands) {
     usage(commands);
 
     commands.pop_front();
-    commands.insert(0, "desc");
+    commands.insert(0, "description");
 
-    desc(commands);
+    description(commands);
 
     return 0;
 }

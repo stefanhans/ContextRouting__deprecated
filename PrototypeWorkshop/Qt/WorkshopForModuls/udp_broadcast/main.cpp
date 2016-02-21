@@ -43,7 +43,7 @@ int udp_broadcast(QStringList command) {
     qDebug() << LINE_SEP << endl;
 
     qDebug() << LINE_SEP << endl;
-    man("desc help");
+    man("description help");
     qDebug() << LINE_SEP << endl;
 
     qDebug() << LINE_SEP << endl;

@@ -9,7 +9,7 @@
 USAGESHARED_EXPORT int man(QString commands);
 
 USAGESHARED_EXPORT int usage(QStringList commands);
-USAGESHARED_EXPORT int desc(QStringList commands);
+USAGESHARED_EXPORT int description(QStringList commands);
 USAGESHARED_EXPORT int help(QStringList commands);
 
 #endif // USAGE_H

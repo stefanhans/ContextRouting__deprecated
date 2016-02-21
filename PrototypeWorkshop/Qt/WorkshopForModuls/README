@@ -1,14 +1,26 @@
-- Erstellen eines  Befehls einer Subshell als Modul
+
+- Erstellen eines  Befehls <cmd> einer Subshell als Modul
+
 	- Idee -> Konzept
+
 	- Schnittstelle (Usage) -> Modul
+
+		- Erstellen einer Hilfe bzw. der Dateien texts/<cmd>/usage und texts/<cmd>/desc
+
 	- Implementierung des Moduls (modul_main.template)
+
+		- Erstellen eines Qt Projekts <cmd> als "CRN-Shell Modul Project" im Verzeichnis WorkshopForModuls
+		- Implementierung in main.cpp
+		- Erstellen einer C++ Shared Library <cmd> als "Shared Library for CRN Modul" im Verzeichnis WorkshopForModuls/Lib und übertragen von main.cpp auf <cmd>.h und <cmd>.cpp 
+
 	- Implementierung der Schnittstelle (interface_main.template)
+
+		- Erstellen eines ...
 
 - Testen 
 
 - Einbinden 
 	- Schnittstelle in Shell integrieren
-	- Module in Library integrieren
 
 
 Others:
