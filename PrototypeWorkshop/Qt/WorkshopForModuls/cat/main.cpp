@@ -3,36 +3,59 @@
 // other includes
 
 // .h
-int my_function(QStringList command);
+int cat(QStringList command);
 
 // .cpp
+
+#include <arpa/inet.h>
+
 #include <QDebug>
 #include <QTextStream>
+#include <QFile>
+#include <QUuid>
+#include <QDateTime>
 // other includes
 
 // .cpp
 #define CRN_RANDOM_DIVISOR (RAND_MAX/255)
 #define MAXMSG 1064
+#define CIP_ROOT "/home/stefan/Development/PrototypeWorkshop/QtWorkspace/WorkshopForModuls/cips"
 
+#include "usage.h"
 
 // .cpp
 /**
- * @brief tcp_ping
- * @param command "ping udp rzv|max|rand|default"
+ * @brief cat
+ * @param command "cat <file> binary|integer|hex|cip"
  * @return
  */
 
-int my_function(QStringList command) {
-    qDebug() << "my_function(" << command.join(" ") << ")" << endl;
+int cat(QStringList command) {
+    qDebug() << "cat(" << command.join(" ") << ")" << endl;
 
     /**
      * Check input
      */
     QTextStream errorStream(stderr);
 
-    if(command.size() != 4 || command.at(0)!="function" || command.at(1)!="my" ) {
+    if(command.size() != 3) {
 
-        errorStream << "Error: my_function(" << command.join(" ") << ") is no valid call (function my <arg_2> <arg_4>)" << endl;
+        errorStream << "Error: cat(" << command.join(" ") << "): No valid number of arguments!" << endl;
+        man("usage cat");
+        return 1;
+    }
+
+    if(command.at(0)!="cat") {
+
+        errorStream << "Error: cat(" << command.join(" ") << "): No valid command!" << endl;
+        man("usage cat");
+        return 1;
+    }
+
+    if(! command.at(2).contains(QRegExp("^(binary|integer|hex|cip)$"))) {
+
+        errorStream << "Error: cat(" << command.join(" ") << "): No valid CIP omode!" << endl;
+        man("usage cat");
         return 1;
     }
 
@@ -40,6 +63,197 @@ int my_function(QStringList command) {
     /**
      * <functionality>
      */
+
+    QByteArray byteArray;
+
+    /**
+     * Read file
+     */
+
+    QString filePath;
+
+    filePath = CIP_ROOT;
+    filePath += "/" + command.at(1);
+
+    qDebug() << "filePath: " << filePath << endl;
+
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly)) {
+
+        errorStream << "Error: cat(" << command.join(" ") << ") can not read " << filePath << endl;
+        return 1;
+    }
+    byteArray = file.readAll();
+    file.close();
+
+    qDebug() << "byteArray.size(): " << byteArray.size() << endl;
+
+
+
+
+    /**
+     * CIP as "binary"
+     */
+    if(command.at(2)=="binary") {
+        qDebug() << "binary" << endl;
+
+        quint8 byte;
+        for(int b=0; b<byteArray.size(); b++) {
+            byte = byteArray.at(b);
+            qDebug().noquote().nospace() << QString("%1").arg(b).rightJustified(4) << ": " << QString("%1").arg(byte, 8, 2, QLatin1Char('0'));
+        }
+    }
+
+    /**
+     * CIP as "hex"
+     */
+    if(command.at(2)=="hex") {
+        qDebug() << "hex" << endl;
+
+        quint8 byte;
+        for(int b=0; b<byteArray.size(); b++) {
+            byte = byteArray.at(b);
+            qDebug().noquote().nospace() << QString("%1").arg(b).rightJustified(4) << ": " << QString("%1").arg(byte, 4, 16, QLatin1Char('0'));
+        }
+    }
+
+
+    /**
+     * CIP as "integer"
+     */
+    if(command.at(2)=="integer") {
+        qDebug() << "integer" << endl;
+
+        quint8 byte;
+        for(int b=0; b<byteArray.size(); b++) {
+            byte = byteArray.at(b);
+            qDebug().noquote().nospace() << QString("%1").arg(b).rightJustified(4) << ": " << QString("%1").arg(byte).rightJustified(3);
+        }
+    }
+
+
+    /**
+     * CIP as "cip"
+     */
+    if(command.at(2)=="cip") {
+        qDebug() << "cip" << endl;
+
+        quint8 byte;
+        int b = 0;
+
+        // Header: request (1)
+        byte = byteArray.at(b++);
+        qDebug().noquote().nospace() << "Header: request: " << byte ;
+
+
+        // Header: profile (1)
+        byte = byteArray.at(b++);
+        qDebug().noquote().nospace() << "Header: profile: " << byte;
+
+
+        // Header: version (1)
+        byte = byteArray.at(b++);
+        qDebug().noquote() << QString("Header: version: %1.%2").arg(byte>>4).rightJustified(2).arg(byte%16, 2, 10, QLatin1Char('0')).rightJustified(2);
+
+
+        // Header: channel (1)
+        byte = byteArray.at(b++);
+        qDebug().noquote().nospace() << "Header: channel: " << byte;
+
+        // Header: UUID (16)
+        QByteArray uuid = byteArray.mid(b, 16);
+        b += 16;
+
+        // Show UUID
+//        QString uuidStr;
+//        for(QByteArray::iterator it = uuid.begin(); it != uuid.end(); it++){
+//            byte = (*it);
+//            uuidStr.append(QString("%1").arg(byte, 0, 16));
+//        };
+//        qDebug() << "UUID (C): " << uuidStr;
+
+        QUuid quuid = QUuid::fromRfc4122(uuid);
+        qDebug().noquote().nospace() << "Header: UUID: " << quuid.toString();
+
+        // Header: IP address (4)
+        QByteArray ipAddress = byteArray.mid(b, 4);
+        b += 4;
+        in_addr ip;
+        memcpy(&ip, ipAddress, 4);
+        qDebug().noquote().nospace() << "Header: IP address: "  << inet_ntoa(ip);
+
+        // Header: port number (2)
+        QByteArray ipPort = byteArray.mid(b, 2);
+        b += 2;
+        quint16 portNum;
+        memcpy(&portNum, ipPort, 2);
+        qDebug().noquote().nospace() << "Header: port number: " << ntohs(portNum);
+
+
+        // Header: time
+        QByteArray timeArray = byteArray.mid(b, 8);
+        b += 8;
+        time_t unixTime;
+        memcpy(&unixTime, timeArray, 8);
+
+        QDateTime *dateTime = new QDateTime;
+        dateTime->setTime_t((uint) unixTime);
+
+//        qDebug() << "Header: unixTime: " << unixTime;
+        qDebug() << "Header: dateTime: " << dateTime->toString();
+
+        // Header: type (1)
+        byte = byteArray.at(b++);
+        qDebug().noquote().nospace() << "Header: type: " << byte;
+
+        // Header: size (1) and data
+        byte = byteArray.at(b++);
+        qDebug().noquote().nospace() << "Header: size: " << byte;
+
+        for(int i=0; i<byte; i++) {
+            byte = byteArray.at(b++);
+            qDebug().noquote().nospace() << "Header: additional data[" << QString("%1").arg(i).rightJustified(3) << "]: " << byte;
+        }
+
+        // Contextinformation: type (1)
+        byte = byteArray.at(b++);
+        qDebug().noquote().nospace() << "Contextinformation: type: " << byte;
+
+        // Contextinformation: root-CIC (2)
+        byte = byteArray.at(b++);
+        qDebug().noquote().nospace() << "Contextinformation: root-CIC content: " << byte;
+        byte = byteArray.at(b++);
+        qDebug().noquote().nospace() << "Contextinformation: root-CIC mask: " << byte;
+
+        // Contextinformation: size (1)
+        byte = byteArray.at(b++);
+        qDebug().noquote().nospace() << "Contextinformation: size: " << byte;
+
+        for(int i=0; i<byte; i++) {
+            byte = byteArray.at(b++);
+            qDebug().noquote().nospace() << "Contextinformation: CIC[" << QString("%1").arg(i).rightJustified(3) << "] content: " << byte;
+            byte = byteArray.at(b++);
+            qDebug().noquote().nospace() << "Contextinformation: CIC[" << QString("%1").arg(i).rightJustified(3) << "] mask: " << byte;
+        }
+
+        // Application: type (1)
+        byte = byteArray.at(b++);
+        qDebug().noquote().nospace() << "Application data: type: " << byte;
+
+        // Application: size (1) and data
+        byte = byteArray.at(b++);
+        qDebug().noquote().nospace() << "Application data: size: " << byte;
+
+        for(int i=0; i<byte; i++) {
+            byte = byteArray.at(b++);
+            qDebug().noquote().nospace() << "Application data: additional data[" << QString("%1").arg(i).rightJustified(3) << "]: " << byte;
+        }
+
+
+
+    }
+
+
 
     return 0;
 }
@@ -52,16 +266,15 @@ int main(int argc, char *argv[])
     // call
     QStringList command;
 
-    //    for(int i=1; i<argc; i++) {
-    //        command.append(QString("%1").arg(argv[i]));
-    //    }
+    for(int i=1; i<argc; i++) {
+        command.append(QString("%1").arg(argv[i]));
+    }
 
-    command.append("function");
-    command.append("my");
-    command.append("arg_2");
-    command.append("arg_3");
+//    command.append("cat");
+//    command.append("test.bin");
+//    command.append("binary");
 
-    qDebug() << "Return: " << my_function(command) << endl;
+    qDebug() << "Return: " << cat(command) << endl;
 }
 
 

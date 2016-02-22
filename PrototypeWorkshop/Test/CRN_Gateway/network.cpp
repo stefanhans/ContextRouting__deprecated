@@ -105,7 +105,29 @@ int ContextNetwork::run() {
 
 					receivedContextPacket->processUDP(UDP_sock, (struct sockaddr *) &UDP_addr);
 
+
+
+
+//					if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] receivedContextPacket->getSize(): " << receivedContextPacket->getSize() << std::endl;
+					char sendBuffer[receivedContextPacket->getSize()];
+
+					int nbytes;
+					nbytes = sendto(UDP_sock, sendBuffer,
+							receivedContextPacket->getSize(), 0,
+							(struct sockaddr *) &UDP_addr,
+							sizeof(struct sockaddr));
+					if (nbytes < 0) {
+						perror("sendto(UDP_sock)");
+						exit(EXIT_FAILURE);
+					}
+					if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] sendto(UDP_sock): " << nbytes << std::endl;
+
+
+
+
 					delete receivedContextPacket;
+
+//					close(UDP_sock);
 
 					continue;
 				}
@@ -296,7 +318,7 @@ int ContextNetwork::make_UDP_socket(uint16_t port) {
 	/* Bind a name to the socket. */
 	name.sin_family = AF_INET;
 	name.sin_port = htons(port);
-	name.sin_addr.s_addr = inet_addr("127.0.0.1");
+	name.sin_addr.s_addr = INADDR_ANY; //inet_addr("192.168.178.18");
 
 	if (bind(sock, (struct sockaddr *) &name, sizeof(name)) < 0) {
 		std::cerr << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << " ";

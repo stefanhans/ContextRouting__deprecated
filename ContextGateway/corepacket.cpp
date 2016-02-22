@@ -248,14 +248,14 @@ int ContextPacket::serialize(char *buffer) {
 	if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] additionalHeaderType: " << (int) additionalHeaderType << std::endl;
 	if(additionalHeaderType != 1) {
 		perror("Unknown header type");
-		exit(EXIT_FAILURE);
+//		exit(EXIT_FAILURE);
 	}
 
 	buffer[b++] = additionalHeaderSize;
 	if (! DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] additionalHeaderSize: " << (int) additionalHeaderSize << std::endl;
 	if(additionalHeaderSize == 0) {
 		perror("No service defined");
-		exit(EXIT_FAILURE);
+//		exit(EXIT_FAILURE);
 	}
 
 	memcpy(&buffer[b], &additionalHeaderData, additionalHeaderSize);
@@ -397,7 +397,7 @@ int ContextPacket::deserialize(char *buffer) {
 
 	if(additionalHeaderType != 1) {
 		perror("Unknown header type");
-		exit(EXIT_FAILURE);
+//		exit(EXIT_FAILURE);
 	}
 
 	additionalHeaderSize = buffer[b++];
@@ -405,7 +405,7 @@ int ContextPacket::deserialize(char *buffer) {
 
 	if(additionalHeaderSize == 0) {
 		perror("No service defined");
-		exit(EXIT_FAILURE);
+//		exit(EXIT_FAILURE);
 	}
 
 	memcpy(&additionalHeaderData, &buffer[b], additionalHeaderSize);

@@ -96,6 +96,7 @@ int usage(QStringList commands) {
         QByteArray line = descriptionFile.readLine();
         outStream << line << endl;
     }
+    descriptionFile.close();
 
 
     return 0;

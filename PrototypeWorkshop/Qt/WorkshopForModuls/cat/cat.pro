@@ -1,22 +1,19 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2016-02-21T21:23:52
-#
-#-------------------------------------------------
+QT       += core network
 
 QT       -= gui
 
-TARGET = cat
-TEMPLATE = lib
+CONFIG   += console
+CONFIG   -= app_bundle
 
-DEFINES += CAT_LIBRARY
+TEMPLATE = app
 
-SOURCES += cat.cpp
 
-HEADERS += cat.h\
-        cat_global.h
+SOURCES += main.cpp
 
-unix {
-    target.path = /usr/lib
-    INSTALLS += target
-}
+HEADERS +=
+
+unix:!macx: LIBS += -L$$PWD/../build-usage-Desktop_Qt_5_4_1_GCC_64bit-Debug/ -lusage
+
+INCLUDEPATH += $$PWD/../usage
+DEPENDPATH += $$PWD/../usage
+

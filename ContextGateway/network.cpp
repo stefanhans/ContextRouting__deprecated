@@ -98,12 +98,38 @@ int ContextNetwork::run() {
 							" received" << std::endl;
 
 					ContextPacket *receivedContextPacket = new ContextPacket();
+					if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] new ContextPacket(): " << receivedContextPacket->getSize() << std::endl;
+
 					receivedContextPacket->deserialize(UDP_buffer);
+					if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] deserialize(): " << receivedContextPacket->getSize() << std::endl;
 
 					receivedContextPacket->setIpAddress(inet_addr(inet_ntoa(UDP_addr.sin_addr)));
 					receivedContextPacket->setPortNumber(UDP_addr.sin_port);
+					if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] new ContextPacket(): " << receivedContextPacket->getSize() << std::endl;
 
-					receivedContextPacket->processUDP(UDP_sock, (struct sockaddr *) &UDP_addr);
+//					receivedContextPacket->processUDP(UDP_sock, (struct sockaddr *) &UDP_addr);
+
+
+
+
+					if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] receivedContextPacket->getSize(): " << receivedContextPacket->getSize() << std::endl;
+					char sendBuffer[receivedContextPacket->getSize()];
+
+					int nbytes;
+					nbytes = sendto(UDP_sock, sendBuffer,
+							receivedContextPacket->getSize(), 0,
+							(struct sockaddr *) &UDP_addr,
+							sizeof(struct sockaddr));
+					if (nbytes < 0) {
+						perror("sendto(UDP_sock)");
+						exit(EXIT_FAILURE);
+					}
+					if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] sendto(UDP_sock): " << nbytes << std::endl;
+
+
+
+
+
 
 //					close(UDP_sock);
 
