@@ -1,0 +1,1 @@
+"invalidate" appends or chops <bytes> byte at resp. from the end of <file> for test purposes.

@@ -1,0 +1,1 @@
+Usage: set_ci <file> binary|integer|hex|cip type|content|mask|size|contents|bricks <value>

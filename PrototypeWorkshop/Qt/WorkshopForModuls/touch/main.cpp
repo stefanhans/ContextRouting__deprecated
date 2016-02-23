@@ -54,9 +54,13 @@ int touch(QStringList command) {
     if(! command.at(2).contains(QRegExp("^(rzv|max|random|default)$"))) {
 
         errorStream << "Error: touch(" << command.join(" ") << "): No valid CIP specification!" << endl;
+        man("usage touch");
         return 1;
     }
 
+    /**
+     * Read arguments
+     */
     for(int i=0;i<command.size();i++) {
         qDebug() << "command.at(" << i << ")" << command.at(i) << endl;
     }
