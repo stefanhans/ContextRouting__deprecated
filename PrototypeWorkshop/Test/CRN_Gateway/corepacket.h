@@ -116,12 +116,12 @@ public:
 	/**
 	 * Getter/Setter for service
 	 */
-	byte_t getService() {
-		return service;
-	}
-	void setService(byte_t service) {
-		this->service = service;
-	}
+//	byte_t getService() {
+//		return service;
+//	}
+//	void setService(byte_t service) {
+//		this->service = service;
+//	}
 
 	/**
 	 * Getter/Setter for version
@@ -395,10 +395,10 @@ private:
 	 */
 	byte_t sg_profile;
 
-	/**
-	 * What has to be done respectively to be transfered?
-	 */
-	byte_t service;
+//	/**
+//	 * What has to be done respectively to be transfered?
+//	 */
+//	byte_t service;
 
 	/**
 	 * For future use

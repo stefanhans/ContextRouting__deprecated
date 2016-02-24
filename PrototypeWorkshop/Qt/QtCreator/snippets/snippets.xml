@@ -31,6 +31,12 @@ if(! command.at(2).contains(QRegExp(&quot;^(...|...)$&quot;))) {
 }
 
 </snippet>
+    <snippet group="C++" trigger="cs_dump" id="" complement="binary" removed="false" modified="false">
+quint8 byte;
+for(int b=0; b&lt;byteArray.size(); b++) {
+    byte = byteArray.at(b);
+    qDebug().noquote().nospace() &lt;&lt; QString(&quot;%1&quot;).arg(b).rightJustified(4) &lt;&lt; &quot;: &quot; &lt;&lt; QString(&quot;%1&quot;).arg(byte, 8, 2, QLatin1Char('0'));
+}</snippet>
     <snippet group="C++" trigger="cs_readfile" id="" complement="" removed="false" modified="false">
 
 /**
@@ -57,6 +63,14 @@ file.close();
 
 qDebug() &lt;&lt; &quot;byteArray.size(): &quot; &lt;&lt; byteArray.size() &lt;&lt; endl;
 </snippet>
+    <snippet group="C++" trigger="cs_toUInt" id="" complement="base 10" removed="false" modified="false">
+bool ok;
+
+
+if(!ok) {
+    errorStream &lt;&lt; &quot;Cannot convert &quot;&lt;&lt; command.at(4) &lt;&lt; &quot; to base 10!&quot; &lt;&lt; endl;
+    return 1;
+}</snippet>
     <snippet group="C++" trigger="cs_writefile" id="" complement="" removed="false" modified="false">
 
 /**

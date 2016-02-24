@@ -1,1 +1,1 @@
-Usage: send tcp|udp <ip> <port> <file>
+Usage: send tcp|udp <ip> <port> <sendfile> <receivefile>

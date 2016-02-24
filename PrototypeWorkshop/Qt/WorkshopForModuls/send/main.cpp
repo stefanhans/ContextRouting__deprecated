@@ -12,7 +12,7 @@
 
 /**
  * @brief send
- * @param commands "send tcp|udp <ip> <port> <file>"
+ * @param commands "send tcp|udp <ip> <port> <sendfile> <receivefile>"
  * @return
  */
 
@@ -33,7 +33,7 @@ int send(QStringList command) {
      */
     QTextStream errorStream(stderr);
 
-    if(command.size() != 5) {
+    if(command.size() != 6) {
 
         errorStream << "Error: send(" << command.join(" ") << "): No valid number of arguments!" << endl;
         man("usage send");
@@ -77,17 +77,17 @@ int send(QStringList command) {
      * Read file
      */
 
-    QString filePath;
+    QString sendfilePath;
 
-    filePath = CIP_ROOT;
-    filePath += "/" + command.at(4);
+    sendfilePath = CIP_ROOT;
+    sendfilePath += "/" + command.at(4);
 
-    qDebug() << "filePath: " << filePath << endl;
+    qDebug() << "sendfilePath: " << sendfilePath << endl;
 
-    QFile file(filePath);
+    QFile file(sendfilePath);
     if (!file.open(QIODevice::ReadOnly)) {
 
-        errorStream << "Error: send(" << command.join(" ") << ") can not read " << filePath << endl;
+        errorStream << "Error: send(" << command.join(" ") << ") can not read " << sendfilePath << endl;
         return 1;
     }
 
@@ -98,6 +98,26 @@ int send(QStringList command) {
     qDebug() << "byteArray.size(): " << byteArray.size() << endl;
 
 
+    /**
+     * Prepare send
+     */
+    QHostAddress ip(command.at(2));
+
+    bool ok;
+    quint16 port(command.at(3).toUInt(&ok));
+    if(!ok) {
+        errorStream << "Cannot convert "<< command.at(3) << " to base 2!" << endl;
+        return 1;
+    }
+
+
+    /**
+     * Prepare receipt
+     */
+    int numRead = 0, numReadTotal = 0;
+    char buffer[MAXMSG];
+
+    QByteArray receipt;
 
 
     /**
@@ -109,8 +129,50 @@ int send(QStringList command) {
 
         QTcpSocket *tcpSocket;
         tcpSocket= new QTcpSocket();
-
         tcpSocket->abort();
+        tcpSocket->connectToHost(ip, port);
+
+        qDebug() << "waitForConnected!";
+        if (tcpSocket->waitForConnected(5000)) {
+
+            qDebug() << "Connected!";
+        }
+        else {
+            errorStream << "Error: send(" << command.join(" ") << ") No connection available!" << endl;
+            return 1;
+        }
+
+        qDebug() << QString("BytesWritten: %1").arg(tcpSocket->write(byteArray, byteArray.length()));
+
+        forever {
+            numRead  = tcpSocket->read(buffer, MAXMSG);
+            qDebug() << "read buffer";
+
+            qDebug() << buffer;
+            qDebug() << " sizeof(buffer): " << sizeof(buffer);
+
+            numReadTotal += numRead;
+            if (numRead == 0 && !tcpSocket->waitForReadyRead())
+                break;
+        }
+        qDebug() << numReadTotal << " bytes red";
+        qDebug() << "sizeof(buffer): " << sizeof(buffer);
+
+
+        quint8 byte;
+        for(int b=0; b<byteArray.size(); b++) {
+            byte = byteArray.at(b);
+            qDebug().noquote().nospace() << QString("%1").arg(b).rightJustified(4) << ": " << QString("%1").arg(byte, 8, 2, QLatin1Char('0'));
+        }
+
+        tcpSocket->flush();
+        tcpSocket->disconnectFromHost();
+        tcpSocket->close();
+
+
+
+
+
 
     }
 
@@ -125,78 +187,84 @@ int send(QStringList command) {
 
         QUdpSocket *udpSocket;
         udpSocket= new QUdpSocket();
-
-
-
         udpSocket->abort();
-
-
-
-
-
-
-
-
-
-
-
-        udpSocket->abort();
-        udpSocket->connectToHost("127.0.0.1", 22366);
+        udpSocket->connectToHost(ip, port);
 
         qDebug() << "waitForConnected!";
         if (udpSocket->waitForConnected(5000)) {
             qDebug() << "Connected!";
         }
         else {
-            errorStream << "Error: udp_ping(" << command.join(" ") << "): No connection available!" << endl;
+            errorStream << "Error: send(" << command.join(" ") << "): No connection available!" << endl;
             return 1;
         }
 
         qDebug() << QString("BytesWritten: %1").arg(udpSocket->write(byteArray, byteArray.length()));
-        udpSocket->flush();
-
-        int numRead = 0, numReadTotal = 0;
-        char buffer[MAXMSG];
 
         forever {
             numRead  = udpSocket->read(buffer, MAXMSG);
-            qDebug() << "read buffer: " << numRead;
+            qDebug() << "read buffer";
+
+            qDebug() << buffer;
+            qDebug() << " sizeof(buffer): " << sizeof(buffer);
 
             numReadTotal += numRead;
-            if (numRead <= 0 && !udpSocket->waitForReadyRead(30))
+            if (numRead == 0 && !udpSocket->waitForReadyRead(30))
                 break;
         }
         qDebug() << numReadTotal << " bytes red";
+        qDebug() << "sizeof(buffer): " << sizeof(buffer);
+
 
         if(numReadTotal==-1) {
-            errorStream << "Error: udp_ping(" << command.join(" ") << "): " << udpSocket->errorString() << endl;
+            errorStream << "Error: send(" << command.join(" ") << "): " << udpSocket->errorString() << endl;
             return 1;
-        }
-        else {
-            for(int i=0; i < numReadTotal; i++) {
-                qDebug() << QString("receipt[%1]: %2\n").arg(i).arg(buffer[i], 8, 2, QLatin1Char('0')) << endl;;
-            }
-            QByteArray receipt(buffer);
-
-
-            qDebug() << "receipt.size(): " << receipt.size();
-
-            for(int i = 0; i < receipt.size();++i) {
-               qDebug() << QString("receipt[%1]: %2\n").arg(i).arg(receipt.at(i), 8, 2, QLatin1Char('0')) << endl;;
-            }
-            qDebug() << "buffer: " << buffer;
         }
 
         udpSocket->disconnectFromHost();
         udpSocket->close();
-
-        outStream << out << endl;
 
     }
 
     /**
      * <functionality>
      */
+
+
+    receipt.append(buffer, numReadTotal);
+
+    quint8 byte;
+    for(int b=0; b<receipt.size(); b++) {
+        byte = receipt.at(b);
+        qDebug().noquote().nospace() << QString("%1").arg(b).rightJustified(4) << ": " << QString("%1").arg(byte, 8, 2, QLatin1Char('0'));
+    }
+
+
+
+
+    /**
+     * Write file
+     */
+
+    QString receivefilePath;
+
+    receivefilePath = CIP_ROOT;
+    receivefilePath += "/" + command.at(5);
+
+    qDebug() << "receivefilePath: " << receivefilePath << endl;
+
+    QFile receivefile(receivefilePath);
+
+    if (!receivefile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+
+        errorStream << "Error: CMD(" << command.join(" ") << ") can not write to file " << receivefilePath << endl;
+        return 1;
+    }
+    receivefile.write(receipt);
+    receivefile.close();
+
+    qDebug() << "receivefilePath: " << receivefilePath << endl;
+    qDebug() << "byteArray.size(): " << byteArray.size() << endl;
 
     return 0;
 }

@@ -106,14 +106,19 @@ int ContextNetwork::run() {
 					receivedContextPacket->processUDP(UDP_sock, (struct sockaddr *) &UDP_addr);
 
 
+					ContextPacket *answerContextPacket = new ContextPacket();
+
+					answerContextPacket->printPacket();
 
 
-//					if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] receivedContextPacket->getSize(): " << receivedContextPacket->getSize() << std::endl;
-					char sendBuffer[receivedContextPacket->getSize()];
+					if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] answerContextPacket->getSize(): " << answerContextPacket->getSize() << std::endl;
+					char sendBuffer[answerContextPacket->getSize()];
+
+
 
 					int nbytes;
 					nbytes = sendto(UDP_sock, sendBuffer,
-							receivedContextPacket->getSize(), 0,
+							answerContextPacket->getSize(), 0,
 							(struct sockaddr *) &UDP_addr,
 							sizeof(struct sockaddr));
 					if (nbytes < 0) {

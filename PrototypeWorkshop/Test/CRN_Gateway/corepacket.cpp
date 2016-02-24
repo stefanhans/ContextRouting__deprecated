@@ -65,7 +65,7 @@ ContextPacket::ContextPacket() :
 
 		sg_request(0),
 		sg_profile(0),
-		service(SERVICE_RZV),
+//		service(SERVICE_RZV),
 		version(VERSION),
 		channel(CHANNEL_DEFAULT),
 		sockAddress(),
@@ -98,7 +98,7 @@ ContextPacket::ContextPacket(IpAddress *ipAddress) :
 
 		sg_request(0),
 		sg_profile(0),
-		service(SERVICE_RZV),
+//		service(SERVICE_RZV),
 		version(VERSION),
 		channel(CHANNEL_META),
 		additionalHeaderType(0),
@@ -423,7 +423,7 @@ int ContextPacket::processUDP(int sock, struct sockaddr *addr) {
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	if(UdpContextService == NULL) {
-		UdpContextService = ContextService::create(service);
+		UdpContextService = ContextService::create(sg_request);
 	}
 
 	char sendBuffer[getSize()];
@@ -437,7 +437,7 @@ int ContextPacket::processTCP() {
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	if(TcpContextService == NULL) {
-		TcpContextService = ContextService::create(service);
+		TcpContextService = ContextService::create(sg_request);
 	}
 
 	return TcpContextService->processTCP(this);
