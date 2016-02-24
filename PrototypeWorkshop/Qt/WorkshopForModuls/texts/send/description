@@ -1,0 +1,1 @@
+"send" sends <file>'s CIP via tcp|udp to <ip> over <port> and receives CIP answers.

@@ -43,7 +43,7 @@ int man(QString commands) {
     }
 
     errorStream << "Error: man(" << arguments.join(" ") << ") is no valid call (man cmd ...)" << endl;
-        return 1;
+    return 1;
 }
 
 

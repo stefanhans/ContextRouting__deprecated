@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<snippets>
+    <snippet group="C++" trigger="class" id="cpp_genericclass" complement="" removed="false" modified="true">class $name$
+{
+public:
+    $name$() {}
+};</snippet>
+    <snippet group="C++" trigger="cs_check" id="" complement="ip adress" removed="false" modified="false">
+if(! command.at(2).contains(QRegExp(&quot;^\\d\\d?\\d?.\\d\\d?\\d?.\\d\\d?\\d?.\\d\\d?\\d?$&quot;))) {
+    
+    errorStream &lt;&lt; &quot;Error: CMD(&quot; &lt;&lt; command.join(&quot; &quot;) &lt;&lt; &quot;): No valid IP address!&quot; &lt;&lt; endl;
+    man(&quot;usage CMD&quot;);
+    return 1;
+}
+</snippet>
+    <snippet group="C++" trigger="cs_check" id="" complement="port number" removed="false" modified="false">
+if(! command.at(2).contains(QRegExp(&quot;^\\d\\d?\\d?\\d?\\d?$&quot;))) {
+    
+    errorStream &lt;&lt; &quot;Error: CMD(&quot; &lt;&lt; command.join(&quot; &quot;) &lt;&lt; &quot;): No valid port number!&quot; &lt;&lt; endl;
+    man(&quot;usage CMD&quot;);
+    return 1;
+}
+</snippet>
+    <snippet group="C++" trigger="cs_check" id="" complement="wordlist" removed="false" modified="false">
+
+if(! command.at(2).contains(QRegExp(&quot;^(...|...)$&quot;))) {
+
+    errorStream &lt;&lt; &quot;Error: CMD(&quot; &lt;&lt; command.join(&quot; &quot;) &lt;&lt; &quot;): No valid ...!&quot; &lt;&lt; endl;
+    man(&quot;usage CMD&quot;);
+    return 1;
+}
+
+</snippet>
+    <snippet group="C++" trigger="cs_readfile" id="" complement="" removed="false" modified="false">
+
+/**
+ * Read file
+ */
+
+QString filePath;
+
+filePath = CIP_ROOT;
+filePath += &quot;/&quot; + command.at(1);
+
+qDebug() &lt;&lt; &quot;filePath: &quot; &lt;&lt; filePath &lt;&lt; endl;
+
+QFile file(filePath);
+if (!file.open(QIODevice::ReadOnly)) {
+
+    errorStream &lt;&lt; &quot;Error: CMD(&quot; &lt;&lt; command.join(&quot; &quot;) &lt;&lt; &quot;) can not read &quot; &lt;&lt; filePath &lt;&lt; endl;
+    return 1;
+}
+
+QByteArray byteArray;
+byteArray = file.readAll();
+file.close();
+
+qDebug() &lt;&lt; &quot;byteArray.size(): &quot; &lt;&lt; byteArray.size() &lt;&lt; endl;
+</snippet>
+    <snippet group="C++" trigger="cs_writefile" id="" complement="" removed="false" modified="false">
+
+/**
+ * Write file
+ */
+
+if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+
+    errorStream &lt;&lt; &quot;Error: CMD(&quot; &lt;&lt; command.join(&quot; &quot;) &lt;&lt; &quot;) can not write to file &quot; &lt;&lt; filePath &lt;&lt; endl;
+    return 1;
+}
+file.write(byteArray);
+
+file.close();
+
+qDebug() &lt;&lt; &quot;filePath: &quot; &lt;&lt; filePath &lt;&lt; endl;
+qDebug() &lt;&lt; &quot;byteArray.size(): &quot; &lt;&lt; byteArray.size() &lt;&lt; endl;
+</snippet>
+</snippets>
