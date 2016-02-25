@@ -59,18 +59,12 @@ int cat(QStringList command) {
         return 1;
     }
 
-
-    /**
-     * <functionality>
-     */
-
-    QByteArray byteArray;
-
     /**
      * Read file
      */
 
     QString filePath;
+    QByteArray byteArray;
 
     filePath = CIP_ROOT;
     filePath += "/" + command.at(1);
@@ -81,6 +75,8 @@ int cat(QStringList command) {
     if (!file.open(QIODevice::ReadOnly)) {
 
         errorStream << "Error: cat(" << command.join(" ") << ") can not read " << filePath << endl;
+        errorStream << file.errorString() << endl;
+
         return 1;
     }
     byteArray = file.readAll();
@@ -144,22 +140,22 @@ int cat(QStringList command) {
 
         // Header: request (1)
         byte = byteArray.at(b++);
-        qDebug().noquote().nospace() <<  b-1 << "Header: request: " << byte ;
+        qDebug().noquote().nospace() <<  QString("%1").arg(b-1).rightJustified(4) << " Header: request: " << byte ;
 
 
         // Header: profile (1)
         byte = byteArray.at(b++);
-        qDebug().noquote().nospace() <<  b-1 << "Header: profile: " << byte;
+        qDebug().noquote().nospace() <<  QString("%1").arg(b-1).rightJustified(4) << " Header: profile: " << byte;
 
 
         // Header: version (1)
         byte = byteArray.at(b++);
-        qDebug().noquote() <<  b-1 << QString("Header: version: %1.%2").arg(byte>>4).rightJustified(2).arg(byte%16, 2, 10, QLatin1Char('0')).rightJustified(2);
+        qDebug().noquote() <<  QString("%1").arg(b-1).rightJustified(4) << QString("Header: version: %1.%2").arg(byte>>4).rightJustified(2).arg(byte%16, 2, 10, QLatin1Char('0')).rightJustified(2);
 
 
         // Header: channel (1)
         byte = byteArray.at(b++);
-        qDebug().noquote().nospace() <<  b-1 << "Header: channel: " << byte;
+        qDebug().noquote().nospace() <<  QString("%1").arg(b-1).rightJustified(4) << " Header: channel: " << byte;
 
         // Header: UUID (16)
         QByteArray uuid = byteArray.mid(b, 16);
@@ -174,21 +170,21 @@ int cat(QStringList command) {
 //        qDebug() << "UUID (C): " << uuidStr;
 
         QUuid quuid = QUuid::fromRfc4122(uuid);
-        qDebug().noquote().nospace() <<  b-16 << "Header: UUID: " << quuid.toString();
+        qDebug().noquote().nospace() <<  QString("%1").arg(b-16).rightJustified(4) << " Header: UUID: " << quuid.toString();
 
         // Header: IP address (4)
         QByteArray ipAddress = byteArray.mid(b, 4);
         b += 4;
         in_addr ip;
         memcpy(&ip, ipAddress, 4);
-        qDebug().noquote().nospace() << b-4 << "Header: IP address: "  << inet_ntoa(ip);
+        qDebug().noquote().nospace() << QString("%1").arg(b-4).rightJustified(4) << " Header: IP address: "  << inet_ntoa(ip);
 
         // Header: port number (2)
         QByteArray ipPort = byteArray.mid(b, 2);
         b += 2;
         quint16 portNum;
         memcpy(&portNum, ipPort, 2);
-        qDebug().noquote().nospace() << b-2 <<  "Header: port number: " << ntohs(portNum);
+        qDebug().noquote().nospace() << QString("%1").arg(b-2).rightJustified(4) << " Header: port number: " << ntohs(portNum);
 
 
         // Header: time (8)
@@ -201,61 +197,58 @@ int cat(QStringList command) {
         dateTime->setTime_t((uint) unixTime);
 
 //        qDebug() << "Header: unixTime: " << unixTime;
-        qDebug() << b-8 <<  "Header: dateTime: " << dateTime->toString();
+        qDebug().noquote().nospace() << QString("%1").arg(b-8).rightJustified(4) << " Header: dateTime: " << dateTime->toString();
 
         // Header: type (1)
         byte = byteArray.at(b++);
-        qDebug().noquote().nospace() << b-1 <<  "Header: type: " << byte;
+        qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) <<  " Header: type: " << byte;
 
         // Header: size (1) and data
         byte = byteArray.at(b++);
-        qDebug().noquote().nospace() <<  b-1 << "Header: size: " << byte;
+        qDebug().noquote().nospace() <<  QString("%1").arg(b-1).rightJustified(4) << " Header: size: " << byte;
 
         size = byte;
         for(int i=0; i<size; i++) {
             byte = byteArray.at(b++);
-            qDebug().noquote().nospace() << "Header: additional data[" << QString("%1").arg(i).rightJustified(3) << "]: " << byte;
+            qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) << " Header: additional data[" << QString("%1").arg(i).rightJustified(3) << "]: " << byte;
         }
 
         // Contextinformation: type (1)
         byte = byteArray.at(b++);
-        qDebug().noquote().nospace() << "Contextinformation: type: " << byte;
+        qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) << " Contextinformation: type: " << byte;
 
         // Contextinformation: root-CIC (2)
         byte = byteArray.at(b++);
-        qDebug().noquote().nospace() << "Contextinformation: root-CIC content: " << byte;
+        qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) << " Contextinformation: root-CIC content: " << byte;
         byte = byteArray.at(b++);
-        qDebug().noquote().nospace() << "Contextinformation: root-CIC mask: " << byte;
+        qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) << " Contextinformation: root-CIC mask: " << byte;
 
         // Contextinformation: size (1)
         byte = byteArray.at(b++);
-        qDebug().noquote().nospace() << "Contextinformation: size: " << byte;
+        qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) << " Contextinformation: size: " << byte;
 
         size = byte;
         for(int i=0; i<size; i++) {
             byte = byteArray.at(b++);
-            qDebug().noquote().nospace() << "Contextinformation: CIC[" << QString("%1").arg(i).rightJustified(3) << "] content: " << byte;
+            qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) << " Contextinformation: CIC[" << QString("%1").arg(i).rightJustified(3) << "] content: " << byte;
             byte = byteArray.at(b++);
-            qDebug().noquote().nospace() << "Contextinformation: CIC[" << QString("%1").arg(i).rightJustified(3) << "] mask: " << byte;
+            qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) << " Contextinformation: CIC[" << QString("%1").arg(i).rightJustified(3) << "] mask: " << byte;
         }
 
         // Application: type (1)
         byte = byteArray.at(b++);
-        qDebug().noquote().nospace() << "Application data: type: " << byte;
+        qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) << " Application data: type: " << byte;
 
         // Application: size (1) and data
         byte = byteArray.at(b++);
-        qDebug().noquote().nospace() << "Application data: size: " << byte;
+        qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) << " Application data: size: " << byte;
 
         size = byte;
         for(int i=0; i<size; i++) {
             byte = byteArray.at(b++);
-            qDebug().noquote().nospace() << "Application data: additional data[" << QString("%1").arg(i).rightJustified(3) << "]: " << byte;
+            qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) << " Application data: additional data[" << QString("%1").arg(i).rightJustified(3) << "]: " << byte;
         }
     }
-
-
-
     return 0;
 }
 

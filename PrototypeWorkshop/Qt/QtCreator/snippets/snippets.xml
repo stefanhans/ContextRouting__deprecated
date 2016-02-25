@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <snippets>
-    <snippet group="C++" trigger="class" id="cpp_genericclass" complement="" removed="false" modified="true">class $name$
+    <snippet group="C++" trigger="class" id="cpp_genericclass" complement="Send and receive via TCP" removed="false" modified="true">class $name$
 {
 public:
     $name$() {}
@@ -12,6 +12,7 @@ if(! command.at(2).contains(QRegExp(&quot;^\\d\\d?\\d?.\\d\\d?\\d?.\\d\\d?\\d?.\
     man(&quot;usage CMD&quot;);
     return 1;
 }
+
 </snippet>
     <snippet group="C++" trigger="cs_check" id="" complement="port number" removed="false" modified="false">
 if(! command.at(2).contains(QRegExp(&quot;^\\d\\d?\\d?\\d?\\d?$&quot;))) {
@@ -20,9 +21,9 @@ if(! command.at(2).contains(QRegExp(&quot;^\\d\\d?\\d?\\d?\\d?$&quot;))) {
     man(&quot;usage CMD&quot;);
     return 1;
 }
+
 </snippet>
     <snippet group="C++" trigger="cs_check" id="" complement="wordlist" removed="false" modified="false">
-
 if(! command.at(2).contains(QRegExp(&quot;^(...|...)$&quot;))) {
 
     errorStream &lt;&lt; &quot;Error: CMD(&quot; &lt;&lt; command.join(&quot; &quot;) &lt;&lt; &quot;): No valid ...!&quot; &lt;&lt; endl;
@@ -31,29 +32,54 @@ if(! command.at(2).contains(QRegExp(&quot;^(...|...)$&quot;))) {
 }
 
 </snippet>
-    <snippet group="C++" trigger="cs_dump" id="" complement="binary" removed="false" modified="false">
+    <snippet group="C++" trigger="cs_dump" id="" complement="Show QByteArray bytewise in binary format" removed="false" modified="false">
+//QByteArray byteArray;
+
 quint8 byte;
 for(int b=0; b&lt;byteArray.size(); b++) {
     byte = byteArray.at(b);
     qDebug().noquote().nospace() &lt;&lt; QString(&quot;%1&quot;).arg(b).rightJustified(4) &lt;&lt; &quot;: &quot; &lt;&lt; QString(&quot;%1&quot;).arg(byte, 8, 2, QLatin1Char('0'));
-}</snippet>
-    <snippet group="C++" trigger="cs_readfile" id="" complement="" removed="false" modified="false">
+}
+
+</snippet>
+    <snippet group="C++" trigger="cs_dump" id="" complement="Show QByteArray bytewise in hex format" removed="false" modified="false">
+//QByteArray byteArray;
+
+quint8 byte;
+for(int b=0; b&lt;byteArray.size(); b++) {
+    byte = byteArray.at(b);
+    qDebug().noquote().nospace() &lt;&lt; QString(&quot;%1&quot;).arg(b).rightJustified(4) &lt;&lt; &quot;: &quot; &lt;&lt; QString(&quot;%1&quot;).arg(byte, 4, 16, QLatin1Char('0'));
+}
+
+</snippet>
+    <snippet group="C++" trigger="cs_dump" id="" complement="Show QByteArray bytewise in integer format" removed="false" modified="false">
+//QByteArray byteArray;
+
+quint8 byte;
+for(int b=0; b&lt;byteArray.size(); b++) {
+    byte = byteArray.at(b);
+    qDebug().noquote().nospace() &lt;&lt; QString(&quot;%1&quot;).arg(b).rightJustified(4) &lt;&lt; &quot;: &quot; &lt;&lt; QString(&quot;%1&quot;).arg(byte).rightJustified(4);
+}
+
+</snippet>
+    <snippet group="C++" trigger="cs_readfile" id="" complement="QFile into QByteArray (1.0)" removed="false" modified="false">
 
 /**
  * Read file
  */
 
-QString filePath;
+QString infilePath;
 
-filePath = CIP_ROOT;
-filePath += &quot;/&quot; + command.at(1);
+infilePath = CIP_ROOT;
+infilePath += &quot;/&quot; + command.at(1);
 
-qDebug() &lt;&lt; &quot;filePath: &quot; &lt;&lt; filePath &lt;&lt; endl;
+qDebug() &lt;&lt; &quot;infilePath: &quot; &lt;&lt; infilePath &lt;&lt; endl;
 
-QFile file(filePath);
-if (!file.open(QIODevice::ReadOnly)) {
+QFile infile(infilePath);
+if (!infile.open(QIODevice::ReadOnly)) {
 
-    errorStream &lt;&lt; &quot;Error: CMD(&quot; &lt;&lt; command.join(&quot; &quot;) &lt;&lt; &quot;) can not read &quot; &lt;&lt; filePath &lt;&lt; endl;
+    errorStream &lt;&lt; &quot;Error: CMD(&quot; &lt;&lt; command.join(&quot; &quot;) &lt;&lt; &quot;) can not read &quot; &lt;&lt; infilePath &lt;&lt; endl;
+    errorStream &lt;&lt; infile.errorString() &lt;&lt; endl;
     return 1;
 }
 
@@ -62,31 +88,233 @@ byteArray = file.readAll();
 file.close();
 
 qDebug() &lt;&lt; &quot;byteArray.size(): &quot; &lt;&lt; byteArray.size() &lt;&lt; endl;
-</snippet>
-    <snippet group="C++" trigger="cs_toUInt" id="" complement="base 10" removed="false" modified="false">
-bool ok;
 
+
+</snippet>
+    <snippet group="C++" trigger="cs_send" id="" complement="Send and receive via TCP" removed="false" modified="false">
+
+
+/**
+ * Prepare send
+ */
+QHostAddress ip(command.at(2));
+
+bool ok;
+quint16 port(command.at(3).toUInt(&amp;ok));
+if(!ok) {
+    errorStream &lt;&lt; &quot;Cannot convert &quot;&lt;&lt; command.at(3) &lt;&lt; &quot; to base 2!&quot; &lt;&lt; endl;
+    return 1;
+}
+
+/**
+ * Prepare receipt
+ */
+int numRead = 0, numReadTotal = 0;
+char buffer[MAXMSG];
+
+QByteArray receipt;
+
+
+/**
+ * Send and receive via tcp
+ */
+
+if(command.at(1) == &quot;tcp&quot;) {
+    qDebug() &lt;&lt; &quot;send via tcp&quot; &lt;&lt; endl;
+
+    QTcpSocket *tcpSocket;
+    tcpSocket= new QTcpSocket();
+    tcpSocket-&gt;abort();
+    tcpSocket-&gt;connectToHost(ip, port);
+
+    if (tcpSocket-&gt;waitForConnected(5000)) { // waitForConnected(int msecs = 30000)
+
+        qDebug() &lt;&lt; &quot;Connected!&quot;;
+    }
+    else {
+        errorStream &lt;&lt; &quot;Error: send(&quot; &lt;&lt; command.join(&quot; &quot;) &lt;&lt; &quot;) Not connected!&quot; &lt;&lt; endl;
+        errorStream &lt;&lt; tcpSocket-&gt;errorString() &lt;&lt; endl;
+        return 1;
+    }
+
+    int bytesWritten = tcpSocket-&gt;write(byteArray, byteArray.length());
+    qDebug() &lt;&lt; &quot;BytesWritten: &quot; &lt;&lt; bytesWritten &lt;&lt; endl;
+
+
+    qDebug() &lt;&lt; &quot;receive via tcp&quot; &lt;&lt; endl;
+    forever {
+        numRead  = tcpSocket-&gt;read(buffer, MAXMSG);
+
+        numReadTotal += numRead;
+        if (numRead == 0 &amp;&amp; !tcpSocket-&gt;waitForReadyRead(30)) { // waitForReadyRead(int msecs = 30000)
+            break;
+        }
+    }
+    qDebug() &lt;&lt; numReadTotal &lt;&lt; &quot; bytes red&quot; &lt;&lt; endl;
+
+    tcpSocket-&gt;disconnectFromHost();
+    tcpSocket-&gt;close();
+    
+}
+
+receipt.append(buffer, numReadTotal);
+
+quint8 byte;
+for(int b=0; b&lt;receipt.size(); b++) {
+    byte = receipt.at(b);
+    qDebug().noquote().nospace() &lt;&lt; QString(&quot;%1&quot;).arg(b).rightJustified(4) &lt;&lt; &quot;: &quot; &lt;&lt; QString(&quot;%1&quot;).arg(byte, 8, 2, QLatin1Char('0'));
+}
+qDebug() &lt;&lt; endl;
+
+
+
+</snippet>
+    <snippet group="C++" trigger="cs_send" id="" complement="Send and receive via UDP" removed="false" modified="false">
+
+
+/**
+ * Prepare send
+ */
+QHostAddress ip(command.at(2));
+
+bool ok;
+quint16 port(command.at(3).toUInt(&amp;ok));
+if(!ok) {
+    errorStream &lt;&lt; &quot;Cannot convert &quot;&lt;&lt; command.at(3) &lt;&lt; &quot; to base 2!&quot; &lt;&lt; endl;
+    return 1;
+}
+
+/**
+ * Prepare receipt
+ */
+int numRead = 0, numReadTotal = 0;
+char buffer[MAXMSG];
+
+QByteArray receipt;
+
+
+/**
+ * Send and receive via udp
+ */
+
+if(command.at(1) == &quot;udp&quot;) {
+    qDebug() &lt;&lt; &quot;send via udp&quot; &lt;&lt; endl;
+
+    QUdpSocket *udpSocket;
+    udpSocket= new QUdpSocket();
+    udpSocket-&gt;abort();
+    udpSocket-&gt;connectToHost(ip, port);
+
+    if (udpSocket-&gt;waitForConnected(5000)) { // waitForConnected(int msecs = 30000)
+        qDebug() &lt;&lt; &quot;Connected!&quot;;
+    }
+    else {
+        errorStream &lt;&lt; &quot;Error: send(&quot; &lt;&lt; command.join(&quot; &quot;) &lt;&lt; &quot;): Not connected!&quot; &lt;&lt; endl;
+        errorStream &lt;&lt; udpSocket-&gt;errorString() &lt;&lt; endl;
+        return 1;
+    }
+
+    int bytesWritten = udpSocket-&gt;write(byteArray, byteArray.length());
+    qDebug() &lt;&lt; &quot;BytesWritten: &quot; &lt;&lt; bytesWritten &lt;&lt; endl;
+
+
+    qDebug() &lt;&lt; &quot;receive via udp&quot; &lt;&lt; endl;
+    forever {
+        numRead  = udpSocket-&gt;read(buffer, MAXMSG);
+
+        numReadTotal += numRead;
+        if (numRead == 0 &amp;&amp; !udpSocket-&gt;waitForReadyRead(30)) { // waitForReadyRead(int msecs = 30000)
+            break;
+        }
+    }
+    qDebug() &lt;&lt; numReadTotal &lt;&lt; &quot; bytes red&quot; &lt;&lt; endl;
+
+    if(numReadTotal==-1) {
+        errorStream &lt;&lt; &quot;Error: read(&quot; &lt;&lt; command.join(&quot; &quot;) &lt;&lt; &quot;): Problem while reading!&quot; &lt;&lt; endl;
+        errorStream &lt;&lt; udpSocket-&gt;errorString() &lt;&lt; endl;
+        return 1;
+    }
+
+    udpSocket-&gt;disconnectFromHost();
+    udpSocket-&gt;close();
+
+}
+
+receipt.append(buffer, numReadTotal);
+
+quint8 byte;
+for(int b=0; b&lt;receipt.size(); b++) {
+    byte = receipt.at(b);
+    qDebug().noquote().nospace() &lt;&lt; QString(&quot;%1&quot;).arg(b).rightJustified(4) &lt;&lt; &quot;: &quot; &lt;&lt; QString(&quot;%1&quot;).arg(byte, 8, 2, QLatin1Char('0'));
+}
+qDebug() &lt;&lt; endl;
+
+
+
+</snippet>
+    <snippet group="C++" trigger="cs_toUInt" id="" complement="Convert QString in binary format to UInt" removed="false" modified="false">
+//bool ok;
+
+command.at(4).toUInt(&amp;ok, 2);
+
+if(!ok) {
+    errorStream &lt;&lt; &quot;Cannot convert &quot;&lt;&lt; command.at(4) &lt;&lt; &quot; to base 2!&quot; &lt;&lt; endl;
+    return 1;
+}
+
+
+</snippet>
+    <snippet group="C++" trigger="cs_toUInt" id="" complement="Convert QString in hex format to UInt" removed="false" modified="false">
+//bool ok;
+
+command.at(4).toUInt(&amp;ok, 16);
+
+if(!ok) {
+    errorStream &lt;&lt; &quot;Cannot convert &quot;&lt;&lt; command.at(4) &lt;&lt; &quot; to base 16!&quot; &lt;&lt; endl;
+    return 1;
+}
+
+
+</snippet>
+    <snippet group="C++" trigger="cs_toUInt" id="" complement="Convert QString in integer format to UInt" removed="false" modified="false">
+//bool ok;
+
+command.at(4).toUInt(&amp;ok, 10);
 
 if(!ok) {
     errorStream &lt;&lt; &quot;Cannot convert &quot;&lt;&lt; command.at(4) &lt;&lt; &quot; to base 10!&quot; &lt;&lt; endl;
     return 1;
-}</snippet>
-    <snippet group="C++" trigger="cs_writefile" id="" complement="" removed="false" modified="false">
+}
+
+
+</snippet>
+    <snippet group="C++" trigger="cs_writefile" id="" complement="QByteArray into QFile (1.0)" removed="false" modified="false">
 
 /**
  * Write file
  */
 
-if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+QString outfilePath;
+//QByteArray byteArray;
 
-    errorStream &lt;&lt; &quot;Error: CMD(&quot; &lt;&lt; command.join(&quot; &quot;) &lt;&lt; &quot;) can not write to file &quot; &lt;&lt; filePath &lt;&lt; endl;
+outfilePath = CIP_ROOT;
+outfilePath += &quot;/&quot; + command.at(1);
+
+qDebug() &lt;&lt; &quot;outfilePath: &quot; &lt;&lt; outfilePath &lt;&lt; endl;
+
+QFile outfile(outfilePath);
+if (!outfile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+
+    errorStream &lt;&lt; &quot;Error: CMD(&quot; &lt;&lt; command.join(&quot; &quot;) &lt;&lt; &quot;) can not write to file &quot; &lt;&lt; outfilePath &lt;&lt; endl;
+    errorStream &lt;&lt; outfile.errorString() &lt;&lt; endl;
+
     return 1;
 }
-file.write(byteArray);
+outfile.write(byteArray);
+outfile.close();
 
-file.close();
-
-qDebug() &lt;&lt; &quot;filePath: &quot; &lt;&lt; filePath &lt;&lt; endl;
 qDebug() &lt;&lt; &quot;byteArray.size(): &quot; &lt;&lt; byteArray.size() &lt;&lt; endl;
+
+
 </snippet>
 </snippets>

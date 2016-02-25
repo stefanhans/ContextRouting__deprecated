@@ -88,6 +88,7 @@ int send(QStringList command) {
     if (!file.open(QIODevice::ReadOnly)) {
 
         errorStream << "Error: send(" << command.join(" ") << ") can not read " << sendfilePath << endl;
+        errorStream << file.errorString() << endl;
         return 1;
     }
 
@@ -121,7 +122,7 @@ int send(QStringList command) {
 
 
     /**
-     * Send via tcp
+     * Send and receive via tcp
      */
 
     if(command.at(1) == "tcp") {
@@ -132,38 +133,31 @@ int send(QStringList command) {
         tcpSocket->abort();
         tcpSocket->connectToHost(ip, port);
 
-        qDebug() << "waitForConnected!";
-        if (tcpSocket->waitForConnected(5000)) {
+        if (tcpSocket->waitForConnected(5000)) { // waitForConnected(int msecs = 30000)
 
             qDebug() << "Connected!";
         }
         else {
-            errorStream << "Error: send(" << command.join(" ") << ") No connection available!" << endl;
+            errorStream << "Error: send(" << command.join(" ") << ") Not connected!" << endl;
+            errorStream << tcpSocket->errorString() << endl;
             return 1;
         }
 
-        qDebug() << QString("BytesWritten: %1").arg(tcpSocket->write(byteArray, byteArray.length()));
+        int bytesWritten = tcpSocket->write(byteArray, byteArray.length());
+        qDebug() << "BytesWritten: " << bytesWritten << endl;
 
+
+        qDebug() << "receive via tcp" << endl;
         forever {
             numRead  = tcpSocket->read(buffer, MAXMSG);
-            qDebug() << "read buffer";
-
-            qDebug() << buffer;
-            qDebug() << " sizeof(buffer): " << sizeof(buffer);
 
             numReadTotal += numRead;
-            if (numRead == 0 && !tcpSocket->waitForReadyRead())
+            if (numRead == 0 && !tcpSocket->waitForReadyRead(30)) { // waitForReadyRead(int msecs = 30000)
                 break;
+            }
         }
         qDebug() << numReadTotal << " bytes red";
         qDebug() << "sizeof(buffer): " << sizeof(buffer);
-
-
-        quint8 byte;
-        for(int b=0; b<byteArray.size(); b++) {
-            byte = byteArray.at(b);
-            qDebug().noquote().nospace() << QString("%1").arg(b).rightJustified(4) << ": " << QString("%1").arg(byte, 8, 2, QLatin1Char('0'));
-        }
 
         tcpSocket->flush();
         tcpSocket->disconnectFromHost();
@@ -179,7 +173,7 @@ int send(QStringList command) {
 
 
     /**
-     * Send via udp
+     * Send and receive via udp
      */
 
     if(command.at(1) == "udp") {
@@ -190,34 +184,33 @@ int send(QStringList command) {
         udpSocket->abort();
         udpSocket->connectToHost(ip, port);
 
-        qDebug() << "waitForConnected!";
-        if (udpSocket->waitForConnected(5000)) {
+        if (udpSocket->waitForConnected(5000)) { // waitForConnected(int msecs = 30000)
             qDebug() << "Connected!";
         }
         else {
-            errorStream << "Error: send(" << command.join(" ") << "): No connection available!" << endl;
+            errorStream << "Error: send(" << command.join(" ") << "): Not connected!" << endl;
+            errorStream << udpSocket->errorString() << endl;
             return 1;
         }
 
-        qDebug() << QString("BytesWritten: %1").arg(udpSocket->write(byteArray, byteArray.length()));
+        int bytesWritten = udpSocket->write(byteArray, byteArray.length());
+        qDebug() << "BytesWritten: " << bytesWritten << endl;
 
+
+        qDebug() << "receive via udp" << endl;
         forever {
             numRead  = udpSocket->read(buffer, MAXMSG);
-            qDebug() << "read buffer";
-
-            qDebug() << buffer;
-            qDebug() << " sizeof(buffer): " << sizeof(buffer);
 
             numReadTotal += numRead;
-            if (numRead == 0 && !udpSocket->waitForReadyRead(30))
+            if (numRead == 0 && !udpSocket->waitForReadyRead(30)) { // waitForReadyRead(int msecs = 30000)
                 break;
+            }
         }
-        qDebug() << numReadTotal << " bytes red";
-        qDebug() << "sizeof(buffer): " << sizeof(buffer);
-
+        qDebug() << numReadTotal << " bytes red" << endl;
 
         if(numReadTotal==-1) {
-            errorStream << "Error: send(" << command.join(" ") << "): " << udpSocket->errorString() << endl;
+            errorStream << "Error: read(" << command.join(" ") << "): Problem while reading!" << endl;
+            errorStream << udpSocket->errorString() << endl;
             return 1;
         }
 
@@ -238,8 +231,7 @@ int send(QStringList command) {
         byte = receipt.at(b);
         qDebug().noquote().nospace() << QString("%1").arg(b).rightJustified(4) << ": " << QString("%1").arg(byte, 8, 2, QLatin1Char('0'));
     }
-
-
+    qDebug() << endl;
 
 
     /**
@@ -257,14 +249,12 @@ int send(QStringList command) {
 
     if (!receivefile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 
-        errorStream << "Error: CMD(" << command.join(" ") << ") can not write to file " << receivefilePath << endl;
+        errorStream << "Error: send(" << command.join(" ") << ") can not write to file " << receivefilePath << endl;
+        errorStream << receivefile.errorString() << endl;
         return 1;
     }
     receivefile.write(receipt);
     receivefile.close();
-
-    qDebug() << "receivefilePath: " << receivefilePath << endl;
-    qDebug() << "byteArray.size(): " << byteArray.size() << endl;
 
     return 0;
 }

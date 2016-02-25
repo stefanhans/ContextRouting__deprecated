@@ -14,6 +14,11 @@ int ContextNetwork::run() {
 	TCP_sock = make_TCP_socket(PORT_TCP_CONTEXT);
 
 	/*
+	 * Create CIP for UDP reply
+	 */
+	ContextPacket *replyContextPacket = new ContextPacket();
+
+	/*
 	 * Listen on TCP socket
 	 */
 	if (listen(TCP_sock, LISTEN_BACKLOG) == -1) {
@@ -105,20 +110,23 @@ int ContextNetwork::run() {
 
 					receivedContextPacket->processUDP(UDP_sock, (struct sockaddr *) &UDP_addr);
 
+					replyContextPacket->setIpAddress(inet_addr(inet_ntoa(UDP_addr.sin_addr)));
+					replyContextPacket->setPortNumber(UDP_addr.sin_port);
+					replyContextPacket->setTime();
 
-					ContextPacket *answerContextPacket = new ContextPacket();
-
-					answerContextPacket->printPacket();
+					replyContextPacket->printPacket();
 
 
-					if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] answerContextPacket->getSize(): " << answerContextPacket->getSize() << std::endl;
-					char sendBuffer[answerContextPacket->getSize()];
+					if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] replyContextPacket->getSize(): " << replyContextPacket->getSize() << std::endl;
+					char sendBuffer[replyContextPacket->getSize()];
+
+					replyContextPacket->serialize(sendBuffer);
 
 
 
 					int nbytes;
 					nbytes = sendto(UDP_sock, sendBuffer,
-							answerContextPacket->getSize(), 0,
+							replyContextPacket->getSize(), 0,
 							(struct sockaddr *) &UDP_addr,
 							sizeof(struct sockaddr));
 					if (nbytes < 0) {
@@ -130,7 +138,7 @@ int ContextNetwork::run() {
 
 
 
-					delete receivedContextPacket;
+//					delete receivedContextPacket;
 
 //					close(UDP_sock);
 
