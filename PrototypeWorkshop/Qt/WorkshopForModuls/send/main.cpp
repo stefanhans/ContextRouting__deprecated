@@ -152,21 +152,14 @@ int send(QStringList command) {
             numRead  = tcpSocket->read(buffer, MAXMSG);
 
             numReadTotal += numRead;
-            if (numRead == 0 && !tcpSocket->waitForReadyRead(30)) { // waitForReadyRead(int msecs = 30000)
+            if (numRead == 0 && !tcpSocket->waitForReadyRead(30000)) { // waitForReadyRead(int msecs = 30000)
                 break;
             }
         }
-        qDebug() << numReadTotal << " bytes red";
-        qDebug() << "sizeof(buffer): " << sizeof(buffer);
+        qDebug() << numReadTotal << " bytes red" << endl;
 
-        tcpSocket->flush();
         tcpSocket->disconnectFromHost();
         tcpSocket->close();
-
-
-
-
-
 
     }
 
@@ -202,7 +195,7 @@ int send(QStringList command) {
             numRead  = udpSocket->read(buffer, MAXMSG);
 
             numReadTotal += numRead;
-            if (numRead == 0 && !udpSocket->waitForReadyRead(30)) { // waitForReadyRead(int msecs = 30000)
+            if (numRead == 0 && !udpSocket->waitForReadyRead(300)) { // waitForReadyRead(int msecs = 30000)
                 break;
             }
         }
