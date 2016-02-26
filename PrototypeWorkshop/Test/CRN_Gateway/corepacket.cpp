@@ -434,7 +434,7 @@ int ContextPacket::processUDP(int sock, struct sockaddr *addr) {
 
 
 int ContextPacket::processTCP() {
-	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+	if (THREAD_DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	if(TcpContextService == NULL) {
 		TcpContextService = ContextService::create(sg_request);

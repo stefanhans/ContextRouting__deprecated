@@ -91,6 +91,15 @@ qDebug() &lt;&lt; &quot;byteArray.size(): &quot; &lt;&lt; byteArray.size() &lt;&
 
 
 </snippet>
+    <snippet group="C++" trigger="cs_rzv" id="" complement="Create QByteArray with RZV CIP" removed="false" modified="false">
+QByteArray byteArray;
+
+/**
+ * CIP for &quot;rzv&quot;
+ */
+byteArray.append(QByteArray(42, '\0'));
+
+</snippet>
     <snippet group="C++" trigger="cs_send" id="" complement="Send and receive via TCP" removed="false" modified="false">
 
 

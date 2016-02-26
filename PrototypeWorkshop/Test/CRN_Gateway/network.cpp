@@ -14,11 +14,6 @@ int ContextNetwork::run() {
 	TCP_sock = make_TCP_socket(PORT_TCP_CONTEXT);
 
 	/*
-	 * Create CIP for UDP reply
-	 */
-	ContextPacket *replyContextPacket = new ContextPacket();
-
-	/*
 	 * Listen on TCP socket
 	 */
 	if (listen(TCP_sock, LISTEN_BACKLOG) == -1) {
@@ -100,7 +95,7 @@ int ContextNetwork::run() {
 					std::cout << getUuidString(UDP_uuid) << " : " <<
 							UDP_bytes_received << " bytes" <<
 							" from " << inet_ntoa(UDP_addr.sin_addr) << ":" << ntohs(UDP_addr.sin_port) <<
-							" received" << std::endl;
+							" received via UDP" << std::endl;
 
 					ContextPacket *receivedContextPacket = new ContextPacket();
 					receivedContextPacket->deserialize(UDP_buffer);
@@ -109,34 +104,6 @@ int ContextNetwork::run() {
 					receivedContextPacket->setPortNumber(UDP_addr.sin_port);
 
 					receivedContextPacket->processUDP(UDP_sock, (struct sockaddr *) &UDP_addr);
-
-					replyContextPacket->setIpAddress(inet_addr(inet_ntoa(UDP_addr.sin_addr)));
-					replyContextPacket->setPortNumber(UDP_addr.sin_port);
-					replyContextPacket->setTime();
-
-					replyContextPacket->printPacket();
-
-
-					if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] replyContextPacket->getSize(): " << replyContextPacket->getSize() << std::endl;
-					char sendBuffer[replyContextPacket->getSize()];
-
-					replyContextPacket->serialize(sendBuffer);
-
-
-
-					int nbytes;
-					nbytes = sendto(UDP_sock, sendBuffer,
-							replyContextPacket->getSize(), 0,
-							(struct sockaddr *) &UDP_addr,
-							sizeof(struct sockaddr));
-					if (nbytes < 0) {
-						perror("sendto(UDP_sock)");
-						exit(EXIT_FAILURE);
-					}
-					if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] sendto(UDP_sock): " << nbytes << std::endl;
-
-
-
 
 //					delete receivedContextPacket;
 
@@ -201,7 +168,7 @@ int ContextNetwork::run() {
 						std::cout << getUuidString(acceptUuid) << " : " <<
 								TCP_bytes_received << " bytes" <<
 								" from " << inet_ntoa(TCP_addr.sin_addr) << ":" << ntohs(TCP_addr.sin_port) <<
-								" received" << std::endl;
+								" received via TCP" << std::endl;
 
 						sizeAndContextStruct.first = new IpAddress(acceptUuid, TCP_addr);
 						sizeAndContextStruct.second = TCP_buffer;
@@ -227,10 +194,9 @@ int ContextNetwork::run() {
 
 						int fd_count = select(FD_SETSIZE, NULL, &write_fd_set, NULL, NULL);
 //!!!
-//						if (fd_count == -1) {
-//							perror("select(FD_SETSIZE, NULL, &write_fd_set, NULL, NULL) failed");
-//							exit(EXIT_FAILURE);
-//						}
+						if (fd_count == -1) {
+							perror("select(FD_SETSIZE, NULL, &write_fd_set, NULL, NULL) failed");
+						}
 //!!!
 
 						/* Service all the sockets with output pending. */
