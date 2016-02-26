@@ -32,6 +32,159 @@ if(! command.at(2).contains(QRegExp(&quot;^(...|...)$&quot;))) {
 }
 
 </snippet>
+    <snippet group="C++" trigger="cs_cip" id="" complement="Create QByteArray with default CIP" removed="false" modified="false">
+QByteArray byteArray;
+
+/**
+ * CIP for &quot;default&quot;
+ */
+qDebug() &lt;&lt; &quot;default&quot; &lt;&lt; endl;
+
+// Header: request (1), profile (1), version (1), channel (1)
+byteArray.append(QByteArray(4, '\0'));
+
+// Header: UUID (16)
+QUuid uuid;
+uuid = QUuid::createUuid();
+QByteArray uuid_arr = uuid.toRfc4122();
+
+for(int j=0; j&lt;16;j++) {
+    byteArray.append(uuid_arr.at(j));
+}
+
+// Header: Empty IP address (4), port number (2), time (8), type (1), size (1)
+byteArray.append(QByteArray(16, '\0'));
+
+// Contextinformation: type (1), root-CIC (2), size (1)
+byteArray.append(QByteArray(4, '\0'));
+
+// Application: type (1), size (1)
+byteArray.append(QByteArray(2, '\0'));
+
+</snippet>
+    <snippet group="C++" trigger="cs_cip" id="" complement="Create QByteArray with maximum sized CIP" removed="false" modified="false">
+QByteArray byteArray;
+
+/**
+ * CIP for &quot;max&quot;
+ */
+qDebug() &lt;&lt; &quot;max&quot; &lt;&lt; endl;
+
+// Header: fix
+byteArray.append(QByteArray(34, '\0'));
+
+// Header: size (1)
+byteArray.append(QByteArray(QByteArray::fromHex(&quot;0xff&quot;)));
+byteArray.append(QByteArray(255, '\0'));
+
+// Contextinformation: fix
+byteArray.append(QByteArray(2, '\0'));
+
+// Contextinformation: size (255)
+byteArray.append(QByteArray(QByteArray::fromHex(&quot;0xff&quot;)));
+byteArray.append(QByteArray(255*2, '\0'));
+
+// Application Data: fix
+byteArray.append(QByteArray(0, '\0'));
+
+// Application Data: size (255)
+byteArray.append(QByteArray(QByteArray::fromHex(&quot;0xff&quot;)));
+byteArray.append(QByteArray(255, '\0'));
+
+
+</snippet>
+    <snippet group="C++" trigger="cs_cip" id="" complement="Create QByteArray with random sized CIP" removed="false" modified="false">
+#include &lt;QtMath&gt;
+#define CRN_RANDOM_DIVISOR (RAND_MAX/255)
+
+QByteArray byteArray;
+
+/**
+ * CIP for &quot;random&quot;
+ */
+qDebug() &lt;&lt; &quot;random&quot; &lt;&lt; endl;
+
+QByteArray randValues;
+qsrand(QTime::currentTime().msec());
+for(int i=0; i &lt;= 1064; i++) {
+    randValues.append(qFloor(qrand()/CRN_RANDOM_DIVISOR));
+}
+
+
+int i = 0;
+quint8 rand;
+
+// Header: request (1)
+byteArray.append(randValues.at(i++));
+
+
+// Header: profile (1)
+byteArray.append(randValues.at(i++));
+
+
+// Header: version (1)
+byteArray.append(randValues.at(i++));
+
+
+// Header: channel (1)
+byteArray.append(randValues.at(i++));
+
+// Header: UUID (16)
+QUuid uuid;
+uuid = QUuid::createUuid();
+QByteArray uuid_arr = uuid.toRfc4122();
+
+for(int j=0; j&lt;16;j++) {
+    
+    byteArray.append(uuid_arr.at(j));
+}
+
+// Header: Empty IP address (4) and port number (2)
+byteArray.append(QByteArray(6, '\0'));
+
+// Header: time (8)
+byteArray.append(QByteArray(8, '\0'));
+
+// Header: type (1)
+byteArray.append(randValues.at(i++));
+
+// Header: size (1) and data
+rand = randValues.at(i++);
+byteArray.append(rand);
+byteArray.append(QByteArray(rand, rand));
+
+// Contextinformation: type (1)
+byteArray.append(randValues.at(i++));
+
+// Contextinformation: root-CIC (2)
+byteArray.append(randValues.at(i++));
+byteArray.append(randValues.at(i++));
+
+// Contextinformation: size (1)
+rand = randValues.at(i++);
+byteArray.append(rand);
+byteArray.append(QByteArray(rand*2, rand));
+
+// Application: type (1)
+byteArray.append(randValues.at(i++));
+
+// Application: size (1)
+rand = randValues.at(i++);
+byteArray.append(rand);
+byteArray.append(QByteArray(rand, rand));
+
+
+
+</snippet>
+    <snippet group="C++" trigger="cs_cip" id="" complement="Create QByteArray with RZV CIP" removed="false" modified="false">
+QByteArray byteArray;
+
+/**
+ * CIP for &quot;rzv&quot;
+ */
+byteArray.append(QByteArray(42, '\0'));
+
+</snippet>
     <snippet group="C++" trigger="cs_dump" id="" complement="Show QByteArray bytewise in binary format" removed="false" modified="false">
 //QByteArray byteArray;
 
@@ -89,15 +242,6 @@ file.close();
 
 qDebug() &lt;&lt; &quot;byteArray.size(): &quot; &lt;&lt; byteArray.size() &lt;&lt; endl;
 
-
-</snippet>
-    <snippet group="C++" trigger="cs_rzv" id="" complement="Create QByteArray with RZV CIP" removed="false" modified="false">
-QByteArray byteArray;
-
-/**
- * CIP for &quot;rzv&quot;
- */
-byteArray.append(QByteArray(42, '\0'));
 
 </snippet>
     <snippet group="C++" trigger="cs_send" id="" complement="Send and receive via TCP" removed="false" modified="false">

@@ -18,10 +18,7 @@ class DefaultService : public ContextService {
 
 public:
 
-	int processUDP(void* receivedPacket, int socket, void *buffer, size_t size, struct sockaddr *addr) {
-
-		return 0;
-	}
+	int processUDP(void* receivedPacket, int socket, void *buffer, size_t size, struct sockaddr *addr);
 
 	int processTCP(void* receivedPacket);
 };

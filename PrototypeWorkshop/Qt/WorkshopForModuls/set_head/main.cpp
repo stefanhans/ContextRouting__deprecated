@@ -245,8 +245,9 @@ int set_head(QStringList command) {
     /**
      * Check value for cip and time
      */
-    if(command.at(2)=="cip" && command.at(3)=="time") {
-        errorStream << "Not yet implemented!" << endl;
+    if(command.at(2)=="cip" && command.at(3)=="time" && command.at(4)!="now") {
+        errorStream << "Error: set_head(" << command.join(" ") << "): No valid header value!" << endl;
+        man("usage set_head time");
         return 1;
     }
 
@@ -427,8 +428,19 @@ int set_head(QStringList command) {
             errorStream << "Cannot find key for "<< command.at(3) << "!" << endl;
             return 1;
         }
-        errorStream << "Not yet implemented!" << endl;
-        return 1;
+
+        uint unixTime = QDateTime::currentDateTime().toTime_t();
+        qDebug().noquote().nospace() << "NOW: " << QDateTime::fromTime_t(unixTime).toString() << endl;
+
+        pos = keys[command.at(3)];
+
+        for(int j = 0; j < 8; j++) {
+
+            byteArray[pos++] = unixTime%256;
+            qDebug().noquote().nospace() << "time[" << j << "]: " << QString("%1").arg(unixTime%256, 8, 2, QLatin1Char('0'));
+
+            unixTime = unixTime >> 8;
+        }
     }
 
     /**

@@ -1,10 +1,3 @@
-/*
- * corepacket.h
- *
- *  Created on: Aug 22, 2015
- *      Author: stefan
- */
-
 #ifndef SRC_COREPACKET_H_
 #define SRC_COREPACKET_H_
 
@@ -99,7 +92,7 @@ public:
 
 	ContextPacket();
 	~ContextPacket() {
-		delete firstBrick;
+		delete rootCIC;
 		deleteService();
 	}
 
@@ -114,14 +107,24 @@ public:
 	 */
 
 	/**
-	 * Getter/Setter for service
+	 * Getter/Setter for request
 	 */
-//	byte_t getService() {
-//		return service;
-//	}
-//	void setService(byte_t service) {
-//		this->service = service;
-//	}
+	byte_t getRequest() {
+		return request;
+	}
+	void setRequest(byte_t request) {
+		this->request = request;
+	}
+
+	/**
+	 * Getter/Setter for profile
+	 */
+	byte_t getProfile() {
+		return profile;
+	}
+	void setProfile(byte_t profile) {
+		this->profile = profile;
+	}
 
 	/**
 	 * Getter/Setter for version
@@ -144,13 +147,13 @@ public:
 	}
 
 	/**
-	 * Getter/Setter for optionalHeaderSize
+	 * Getter/Setter for headerSize
 	 */
-	byte_t getOptionalHeaderSize() {
-		return additionalHeaderSize;
+	byte_t getHeaderSize() {
+		return headerSize;
 	}
-	void setOptionalHeaderSize(byte_t optionalHeaderSize) {
-		this->additionalHeaderSize = optionalHeaderSize;
+	void setHeaderSize(byte_t headerSize) {
+		this->headerSize = headerSize;
 	}
 
 	/**
@@ -161,6 +164,9 @@ public:
 	}
 	void setUuid(uuid_t* uuid) {
 		memcpy(this->uuid, uuid, 16);
+	}
+	void setUuid() {
+		memset(this->uuid, 0, 16);
 	}
 
 	struct sockaddr_in getIp() {
@@ -203,50 +209,23 @@ public:
 	/**
 	 * Getter/Setter for additionalHeaderData array
 	 */
-	byte_t* getAdditionalHeaderData() {
-		return additionalHeaderData;
+	byte_t* getHeaderData() {
+		return headerData;
 	}
-	int setAdditionalHeaderData(char* additionalHeaderData) {
-		if(HEADER_ADDITIONAL_SIZE < strlen(additionalHeaderData)) {
-			perror("setAdditionalHeaderData(char*) failed: size of additional header data is to big");
+	int setHeaderData(char* headerData) {
+		if(HEADER_ADDITIONAL_SIZE < strlen(headerData)) {
+			perror("setHeaderData(char*) failed: size of additional header data is to big");
 			return -1;
 		}
-		memcpy(this->additionalHeaderData, additionalHeaderData, strlen(additionalHeaderData));
+		memcpy(this->headerData, headerData, strlen(headerData));
 		return 0;
 	}
-
-	/**
-	 * Append additional data
-	 */
-//	int appendAdditonalHeaderData(byte_t headerData) {
-//		if(HEADER_ADDITIONAL_SIZE <= strlen(additionalHeaderData))  {
-//			perror("appendAdditonalHeaderData(byte_t) failed: additionalHeaderData is full");
-//			return -1;
-//		}
-//		this->additionalHeaderData[strlen(this->additionalHeaderData)] = headerData;
-//		return 0;
-//	}
-//	int appendAdditonalHeaderData(char* additionalHeaderData) {
-//		if(HEADER_ADDITIONAL_SIZE < (strlen(this->additionalHeaderData) + strlen(additionalHeaderData)))  {
-//			perror("appendAdditonalHeaderData(char*) failed: additionalHeaderData is to full");
-//			return -1;
-//		}
-//		memcpy(&(this->additionalHeaderData)[strlen(this->additionalHeaderData)], additionalHeaderData, strlen(additionalHeaderData));
-//		return 0;
-//	}
-//
-//	/**
-//	 * Get size of addiitionalHeaderData
-//	 */
-//	int getAdditonalHeaderDataSize() {
-//		return strlen(this->additionalHeaderData);
-//	}
 
 	/**
 	 * Clear addiitionalHeaderData
 	 */
 	void clearAdditonalHeaderDataSize() {
-		memset(&additionalHeaderData, 0, HEADER_ADDITIONAL_SIZE);
+		memset(&headerData, 0, HEADER_ADDITIONAL_SIZE);
 	}
 
 	/**
@@ -258,33 +237,33 @@ public:
 	 */
 
 	/**
-	 * Getter/Setter for type
+	 * Getter/Setter for Contextinformation type
 	 */
-	byte_t getContextType() {
-		return contextType;
+	byte_t getCiType() {
+		return ciType;
 	}
-	void setContextType(byte_t contextType) {
-		this->contextType = contextType;
+	void setCiType(byte_t ciType) {
+		this->ciType = ciType;
 	}
 
 	/**
-	 * Getter/Setter for firstBrick
+	 * Getter/Setter for root-CIC
 	 */
-	ContextBrick* getFirstBrick() {
-		return firstBrick;
+	ContextBrick* getRootCIC() {
+		return rootCIC;
 	}
-	void setFirstBrick(ContextBrick *contextBrick) {
-		this->firstBrick = contextBrick;
+	void setRootCIC(ContextBrick *contextBrick) {
+		this->rootCIC = contextBrick;
 	}
 
 	/**
-	 * Getter/Setter for optionalBrickListSize
+	 * Getter/Setter for Contextinformation size
 	 */
-	byte_t getOptionalBrickListSize() {
-		return additionalBricksSize;
+	byte_t getCiSize() {
+		return ciSize;
 	}
-	void setOptionalBrickListSize(byte_t optionalBrickListSize) {
-		this->additionalBricksSize = optionalBrickListSize;
+	void setCiSize(byte_t ciSize) {
+		this->ciSize = ciSize;
 	}
 
 	/**
@@ -296,37 +275,37 @@ public:
 	 */
 
 	/**
-	 * Getter/Setter for dataType
+	 * Getter/Setter for application data type
 	 */
-	byte_t getType() {
-		return dataType;
+	byte_t getAppDataType() {
+		return appDataType;
 	}
-	void setDataType(byte_t dataType) {
-		this->dataType = dataType;
+	void setAppDataType(byte_t dataType) {
+		this->appDataType = dataType;
 	}
 
 	/**
-	 * Getter/Setter for optionalDataSize
+	 * Getter/Setter for application data size
 	 */
-	byte_t getOptionalDataSize() {
-		return additionalDataSize;
+	byte_t getAppDataSize() {
+		return appDataSize;
 	}
-	void setOptionalDataSize(byte_t optionalDataSize) {
-		this->additionalDataSize = optionalDataSize;
+	void setAppDataSize(byte_t optionalDataSize) {
+		this->appDataSize = optionalDataSize;
 	}
 
 	/**
-	 * Getter/Setter for additionalData
+	 * Getter/Setter for application data
 	 */
-	byte_t* getAdditionalData() {
-		return additionalData;
+	byte_t* getAppData() {
+		return appData;
 	}
-	int setAdditionalData(char* additionalData) {
-		if(DATA_ADDITIONAL_SIZE < strlen(additionalData)) {
-			perror("setAdditionalData(char*) failed: size of additionalData is to big");
+	int setAppData(char* appData) {
+		if(DATA_ADDITIONAL_SIZE < strlen(appData)) {
+			perror("setAppData(char*) failed: size of application data is to big");
 			return -1;
 		}
-		memcpy(this->additionalData, additionalData, strlen(additionalData));
+		memcpy(this->appData, appData, strlen(appData));
 		return 0;
 	}
 
@@ -381,27 +360,22 @@ public:
 	/**
 	 * Array of 255 context bricks
 	 */
-	ContextBrick additionalBricks[BRICKS_ADDITIONAL_SIZE];
+	ContextBrick ciCICBricks[BRICKS_ADDITIONAL_SIZE];
 
 private:
 
 	/**
 	 * Service Group Request
 	 */
-	byte_t sg_request;
+	byte_t request;
 
 	/**
 	 * Service Group Profile
 	 */
-	byte_t sg_profile;
-
-//	/**
-//	 * What has to be done respectively to be transfered?
-//	 */
-//	byte_t service;
+	byte_t profile;
 
 	/**
-	 * For future use
+	 * Currently 1 (0.1)
 	 */
 	byte_t version;
 
@@ -428,32 +402,32 @@ private:
 	/**
 	 * Type of additional header data
 	 */
-	byte_t additionalHeaderType;
+	byte_t headerType;
 
 	/**
 	 * Number of additional header data in bytes
 	 */
-	byte_t additionalHeaderSize;
+	byte_t headerSize;
 
 	/**
 	 * Array of 255 bytes for additional data
 	 */
-	byte_t additionalHeaderData[HEADER_ADDITIONAL_SIZE];
+	byte_t headerData[HEADER_ADDITIONAL_SIZE];
 
 	/**
 	 * What type of context is described
 	 */
-	byte_t contextType;
+	byte_t ciType;
 
 	/**
 	 * Mandatory first context brick
 	 */
-	ContextBrick *firstBrick;
+	ContextBrick *rootCIC;
 
 	/**
 	 * Number of additional bricks in bytes
 	 */
-	byte_t additionalBricksSize;
+	byte_t ciSize;
 
 	/**
 	 * Array of 255 context bricks
@@ -463,17 +437,17 @@ private:
 	/**
 	 * What type of data is described
 	 */
-	byte_t dataType;
+	byte_t appDataType;
 
 	/**
 	 * Number of additional data in bytes
 	 */
-	byte_t additionalDataSize;
+	byte_t appDataSize;
 
 	/**
 	 * Array of 255 bytes for additional data
 	 */
-	byte_t additionalData[DATA_ADDITIONAL_SIZE];
+	byte_t appData[DATA_ADDITIONAL_SIZE];
 };
 
 #endif /* SRC_COREPACKET_H_ */

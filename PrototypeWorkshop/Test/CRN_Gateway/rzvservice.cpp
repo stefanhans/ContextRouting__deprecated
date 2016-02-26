@@ -59,12 +59,12 @@ int RZVService::processTCP(void* receivedPacket) {
 	}
 
 	std::vector<ContextPacket*>* store_vector;
-	store_vector = getContextPackets(((ContextPacket*) receivedPacket)->getFirstBrick()->context);
+	store_vector = getContextPackets(((ContextPacket*) receivedPacket)->getRootCIC()->context);
 
 	store_vector->push_back((ContextPacket*) receivedPacket);
 
 	if (THREAD_DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] :"
-			" push_back at index " << (uint) ((ContextPacket*) receivedPacket)->getFirstBrick()->context << std::endl;
+			" push_back at index " << (uint) ((ContextPacket*) receivedPacket)->getRootCIC()->context << std::endl;
 
 	/* unlock mutex */
 	rc = pthread_mutex_unlock(&storageMutex);
