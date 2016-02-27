@@ -6,7 +6,6 @@
 
 QT       -= gui
 
-TARGET = usage
 TEMPLATE = lib
 
 DEFINES += USAGE_LIBRARY

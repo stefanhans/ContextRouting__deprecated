@@ -60,6 +60,14 @@ protected:
 	bool matchContextPackets(void* contextPacket_1, void* contextPacket_2);
 
 	void printPackets();
+
+private:
+
+	/*
+	 * Prepare UDP error reply
+	 */
+	char errorHeader[3];
+	ContextPacket *errorContextPacket;
 };
 
 #endif /* SRC_ABSTRACTSERVICE_H_ */

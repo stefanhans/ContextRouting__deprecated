@@ -77,7 +77,7 @@ ContextPacket::ContextPacket() :
 
 	memset (&sockAddress, 0, sizeof(sockAddress));
 	sockAddress.sin_family = AF_INET;
-	sockAddress.sin_addr.s_addr = INADDR_LOOPBACK;
+	sockAddress.sin_addr.s_addr = INADDR_ANY;
 
 	setTime();
 
@@ -85,6 +85,10 @@ ContextPacket::ContextPacket() :
 
 	memset(&headerData, 0, HEADER_ADDITIONAL_SIZE);
 	memset(&appData, 0, DATA_ADDITIONAL_SIZE);
+
+	if (PRINT_PACKET_DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] ContextPacket::ContextPacket()" << std::endl;
+	if (PRINT_PACKET_DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] ------------ " << std::endl;
+	if (PRINT_PACKET_DEBUG) this->printPacket();
 }
 
 
@@ -139,7 +143,7 @@ ContextPacket::ContextPacket(IpAddress *ipAddress) :
 /**
  * Get needed size in bytes
  */
-int ContextPacket::getSize() {
+size_t ContextPacket::getSize() {
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	// Fix bytes for request(1),  profile(1),  version(1),  channel(1), uuid(16), ipAddress(4), portNumber(2), time(8), type(1), size(1)
@@ -379,7 +383,7 @@ int ContextPacket::deserialize(char *buffer) {
 	return 0;
 }
 
-int ContextPacket::processUDP(int sock, struct sockaddr *addr) {
+int ContextPacket::processUDP(int sock, struct sockaddr *addr, int UDP_bytes_received) {
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	if(UdpContextService == NULL) {
@@ -389,7 +393,7 @@ int ContextPacket::processUDP(int sock, struct sockaddr *addr) {
 	char sendBuffer[getSize()];
 	serialize(sendBuffer);
 
-	int validated = UdpContextService->validateUDP(this, sock, sendBuffer, getSize(), addr);
+	int validated = UdpContextService->validateUDP(this, sock, sendBuffer, UDP_bytes_received, addr);
 
 	if(validated == 0) {
 		return UdpContextService->processUDP(this, sock, sendBuffer, getSize(), addr);

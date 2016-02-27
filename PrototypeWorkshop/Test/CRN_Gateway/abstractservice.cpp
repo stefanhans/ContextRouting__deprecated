@@ -108,47 +108,100 @@ pthread_mutex_t ContextService::getContextPacketsMutex() {
 int ContextService::validateUDP(void* receivedPacket, int socket, void *buffer, size_t size, struct sockaddr *addr) {
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
-	int packetSize = ((ContextPacket*) receivedPacket)->getSize();
-	std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] packetSize " << packetSize << std::endl;
 	if(size < 42 || size > 1062) {
+		std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] size: " << size <<  std::endl;
 
-		std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] ERROR: packetSize " << size << std::endl;
+		errorContextPacket = new ContextPacket();
+
+		/**
+		 * Create header data for error
+		 */
+		errorHeader[0] = (byte_t) CIP_FORMAT_ERROR;
+		errorHeader[1] = (byte_t) ERROR_PRIORITY_NOTICE;
+		errorHeader[2] = (byte_t) CIP_FORMAT_ERROR_OUT_OF_RANGE;
+
+		/*
+		 * Create CIP for UDP reply with error
+		 */
+		errorContextPacket->setHeaderType(HEADER_TYPE_ERROR);
+		errorContextPacket->setHeaderSize(3);
+		errorContextPacket->setHeaderData(errorHeader);
+
+		if (PRINT_PACKET_DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] CIP_FORMAT_ERROR_OUT_OF_RANGE" << std::endl;
+		if (PRINT_PACKET_DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] ------------ " << std::endl;
+		if (PRINT_PACKET_DEBUG) errorContextPacket->printPacket();
+
+		char sendBuffer[errorContextPacket->getSize()];
+		errorContextPacket->serialize(sendBuffer);
+
+		int nbytes;
+		nbytes = sendto(socket, sendBuffer,
+				errorContextPacket->getSize(), 0,
+				( struct sockaddr *) addr,
+				sizeof(struct sockaddr));
+
+
+		if (nbytes < 0) {
+			perror("sendto(UDP_sock) failed");
+		}
+		else {
+			if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] sendto(UDP_sock): " << nbytes << std::endl;
+
+		}
+
+		std::cout << "XXXXXXXX : " << "Reply error: CIP_FORMAT_ERROR_OUT_OF_RANGE" << std::endl;
 
 		return 1;
 	}
-//
-//	/*
-//	 * Create CIP for UDP reply with error message
-//	 */
-//	ContextPacket *replyContextPacket = new ContextPacket();
-//
-//	replyContextPacket->setIpAddress(inet_addr(inet_ntoa(((struct sockaddr_in *)addr)->sin_addr)));
-//	replyContextPacket->setPortNumber(((struct sockaddr_in *)addr)->sin_port);
-//	replyContextPacket->setTime();
-////	replyContextPacket->set
-//
-//	if (DEBUG) replyContextPacket->printPacket();
-//
-//	char sendBuffer[replyContextPacket->getSize()];
-//	replyContextPacket->serialize(sendBuffer);
-//
-//	int nbytes;
-//	nbytes = sendto(socket, sendBuffer,
-//			replyContextPacket->getSize(), 0,
-//			(struct sockaddr *) addr,
-//			sizeof(struct sockaddr));
-//	if (nbytes < 0) {
-//		perror("sendto(socket) failed");
-//	}
-//	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] sendto(UDP_sock): " << nbytes << std::endl;
-//
-//	std::cout << getUuidString(*((ContextPacket*) receivedPacket)->getUuid()) << " : " << "Service RZV provided: RZV CIP with client's ip:port and current timestamp." << std::endl;
 
 
 
-//	if (PRINT_PACKETS_DEBUG) printPackets();
+	if( ((ContextPacket*) receivedPacket)->getSize() != size) {
+		std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] ((ContextPacket*) receivedPacket)->getSize() " << ((ContextPacket*) receivedPacket)->getSize() << " != size " << size <<  std::endl;
 
-//	if (PRINT_PACKET_DEBUG) ((ContextPacket*) receivedPacket)->printPacket();
+		errorContextPacket = new ContextPacket();
+
+		/**
+		 * Create header data for error
+		 */
+		errorHeader[0] = (byte_t) CIP_FORMAT_ERROR;
+		errorHeader[1] = (byte_t) ERROR_PRIORITY_NOTICE;
+		errorHeader[2] = (byte_t) CIP_FORMAT_ERROR_INCONSISTENT;
+
+		/*
+		 * Create CIP for UDP reply with error
+		 */
+		errorContextPacket->setHeaderType(HEADER_TYPE_ERROR);
+		errorContextPacket->setHeaderSize(3);
+		errorContextPacket->setHeaderData(errorHeader);
+
+
+		if (PRINT_PACKET_DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] CIP_FORMAT_ERROR_INCONSISTENT" << std::endl;
+		if (PRINT_PACKET_DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] ------------ " << std::endl;
+		if (PRINT_PACKET_DEBUG) errorContextPacket->printPacket();
+
+		char sendBuffer[errorContextPacket->getSize()];
+		errorContextPacket->serialize(sendBuffer);
+
+		int nbytes;
+		nbytes = sendto(socket, sendBuffer,
+				errorContextPacket->getSize(), 0,
+				( struct sockaddr *) addr,
+				sizeof(struct sockaddr));
+
+
+		if (nbytes < 0) {
+			perror("sendto(UDP_sock) failed");
+		}
+		else {
+			if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] sendto(UDP_sock): " << nbytes << std::endl;
+
+		}
+
+		std::cout << "XXXXXXXX : " << "Reply error: CIP_FORMAT_ERROR_INCONSISTENT" << std::endl;
+
+		return 1;
+	}
 
 	return 0;
 }

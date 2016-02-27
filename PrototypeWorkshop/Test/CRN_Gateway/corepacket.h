@@ -324,7 +324,7 @@ public:
 	/**
 	 * Get needed size in bytes
 	 */
-	int getSize();
+	size_t getSize();
 
 	/**
 	 * Serialize outgoing data
@@ -347,7 +347,7 @@ public:
 	/**
 	 * Process received UDP packet by service object according to packet's service
 	 */
-	int processUDP(int socket, struct sockaddr *addr);
+	int processUDP(int socket, struct sockaddr *addr, int UDP_bytes_received);
 
 	/**
 	 * Process received TCP packet by service object according to packet's service

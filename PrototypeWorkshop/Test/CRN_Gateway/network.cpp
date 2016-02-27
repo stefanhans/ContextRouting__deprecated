@@ -7,14 +7,6 @@ int ContextNetwork::run() {
 
 //	localAddress.s_addr = inet_addr("127.0.0.1");
 
-
-
-	/*
-	 * Prepare UDP errorreply
-	 */
-	char errorHeader[3];
-	ContextPacket *errorContextPacket = new ContextPacket();
-
 	/*
 	 * Create one socket each for TCP and for UDP
 	 */
@@ -94,72 +86,26 @@ int ContextNetwork::run() {
 						exit(EXIT_FAILURE);
 					}
 
-					if(UDP_bytes_received < 42 || UDP_bytes_received > 1062) {
-						perror("ERROR: Invalid CIP arrived ( <42 | >1062 )");
+					/*
+					 * Process data from buffer
+					 */
+					uuid_t UDP_uuid;
+					memcpy(UDP_uuid, (UDP_buffer+4), 16);
+
+					std::cout << getUuidString(UDP_uuid) << " : " <<
+							UDP_bytes_received << " bytes" <<
+							" from " << inet_ntoa(UDP_addr.sin_addr) << ":" << ntohs(UDP_addr.sin_port) <<
+							" received via UDP" << std::endl;
+
+					ContextPacket *receivedContextPacket = new ContextPacket();
+					receivedContextPacket->deserialize(UDP_buffer);
+
+					receivedContextPacket->setIpAddress(inet_addr(inet_ntoa(UDP_addr.sin_addr)));
+					receivedContextPacket->setPortNumber(UDP_addr.sin_port);
+
+					receivedContextPacket->processUDP(UDP_sock, (struct sockaddr *) &UDP_addr, UDP_bytes_received);
 
 
-
-
-						errorHeader[0] = (byte_t) CIP_FORMAT_ERROR;
-						errorHeader[1] = (byte_t) ERROR_PRIORITY_NOTICE;
-						errorHeader[2] = (byte_t) CIP_FORMAT_ERROR_OUT_OF_RANGE;
-
-						/*
-						 * Create CIP for UDP reply with error message
-						 */
-						errorContextPacket->setHeaderType(HEADER_TYPE_ERROR);
-						errorContextPacket->setHeaderSize(3);
-
-						errorContextPacket->setHeaderData(errorHeader);
-
-						if (DEBUG) errorContextPacket->printPacket();
-
-						char sendBuffer[errorContextPacket->getSize()];
-						errorContextPacket->serialize(sendBuffer);
-
-						int nbytes;
-						nbytes = sendto(UDP_sock, sendBuffer,
-								errorContextPacket->getSize(), 0,
-								( struct sockaddr *) & UDP_addr,
-								sizeof(struct sockaddr));
-
-
-						if (nbytes < 0) {
-							perror("sendto(UDP_sock) failed");
-						}
-						if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] sendto(UDP_sock): " << nbytes << std::endl;
-
-						std::cout << "XXXXXXXX : " << "CIP with invalid length cause error reply." << std::endl;
-
-
-
-
-
-
-
-					}
-					else {
-
-						/*
-						 * Process data from buffer
-						 */
-						uuid_t UDP_uuid;
-						memcpy(UDP_uuid, (UDP_buffer+4), 16);
-
-						std::cout << getUuidString(UDP_uuid) << " : " <<
-								UDP_bytes_received << " bytes" <<
-								" from " << inet_ntoa(UDP_addr.sin_addr) << ":" << ntohs(UDP_addr.sin_port) <<
-								" received via UDP" << std::endl;
-
-						ContextPacket *receivedContextPacket = new ContextPacket();
-						receivedContextPacket->deserialize(UDP_buffer);
-
-						receivedContextPacket->setIpAddress(inet_addr(inet_ntoa(UDP_addr.sin_addr)));
-						receivedContextPacket->setPortNumber(UDP_addr.sin_port);
-
-						receivedContextPacket->processUDP(UDP_sock, (struct sockaddr *) &UDP_addr);
-
-					}
 //					delete receivedContextPacket;
 
 //					close(UDP_sock);

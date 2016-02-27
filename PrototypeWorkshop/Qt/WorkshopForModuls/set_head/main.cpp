@@ -307,7 +307,7 @@ int set_head(QStringList command) {
      * One byte keys (without size)
      */
 
-    if(command.at(3).contains(QRegExp("^(request|profile|version|channel|type)$"))) {
+    if(command.at(3).contains(QRegExp("^(request|profile|version|channel|type|size)$"))) {
 
 
         if (keys.contains(command.at(3))) {
@@ -454,8 +454,11 @@ int set_head(QStringList command) {
             errorStream << "Cannot find key for "<< command.at(3) << "!" << endl;
             return 1;
         }
-        errorStream << "Not yet implemented!" << endl;
-        return 1;
+
+        pos = keys[command.at(3)];
+
+        qDebug() << "byteArray.replace(" << pos << ", 1, " << value << ")" << endl;
+        byteArray.replace(pos, 1, value);
     }
 
     /**

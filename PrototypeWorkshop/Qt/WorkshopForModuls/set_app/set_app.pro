@@ -1,16 +1,11 @@
-QT       += core network
-
 QT       -= gui
+
+TEMPLATE = app
 
 CONFIG   += console
 CONFIG   -= app_bundle
 
-TEMPLATE = app
-
-
 SOURCES += main.cpp
-
-HEADERS +=
 
 unix:!macx: LIBS += -L$$PWD/../build-usage-Desktop_Qt_5_5_1_GCC_64bit-Release -lusage
 
