@@ -41,29 +41,21 @@ static pthread_mutex_t a_mutex = PTHREAD_MUTEX_INITIALIZER;
 /*
  * Factory like static creator
  */
-ContextService* ContextService::create(byte_t service) {
-	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] " << (uint) service << std::endl;
+ContextService* ContextService::create(byte_t channel, byte_t request) {
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] channel " << (uint) channel << ", request " << (uint) request << std::endl;
 
 	/*
-	 * Reserved Zero Value (RZV) service constructor call (CIP request 0)
+	 * Heartbeat service constructor call
 	 */
-	if(service == SERVICE_RZV) {
-		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] new RZVService()" << std::endl;
-		return new RZVService();
-	}
-
-	/*
-	 * Heartbeat service constructor call (CIP request 1)
-	 */
-	if(service == SERVICE_HEARTBEAT) {
+	if(channel == CHANNEL_CI_MATCHING && request == SERVICE_HEARTBEAT) {
 		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] new HeartbeatService()" << std::endl;
 		return new HeartbeatService();
 	}
 
 	/*
-	 * Offer (TCP) resp. Request (UDP) service constructor call (CIP request 2)
+	 * OfferRequest service (offer (TCP) resp. request (UDP)) constructor call
 	 */
-	if(service == SERVICE_OFFER_REQUEST) {
+	if(channel == CHANNEL_CI_MATCHING && request == SERVICE_OFFER_REQUEST) {
 		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] new OfferRequestService()" << std::endl;
 		return new OfferRequestService();
 	}
@@ -73,10 +65,20 @@ ContextService* ContextService::create(byte_t service) {
 	 */
 	// Add line with <new> service constructor call here
 
+
+
 	/*
-	 * Default service  (CIP request -255)
+	 * RZV (Reserved Zero Value) service constructor call
 	 */
-	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] No known service with id " << (int) service << " - use default service instead" << std::endl;
+	if(request == SERVICE_RZV) {
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] new RZVService()" << std::endl;
+		return new RZVService();
+	}
+
+	/*
+	 * Default service constructor call
+	 */
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] No known request with id " << (int) request << " - use default service instead" << std::endl;
 	return new DefaultService();
 }
 
@@ -97,6 +99,63 @@ pthread_mutex_t ContextService::getContextPacketsMutex() {
 
 	return a_mutex;
 }
+
+
+
+
+
+
+int ContextService::validateUDP(void* receivedPacket, int socket, void *buffer, size_t size, struct sockaddr *addr) {
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+
+	int packetSize = ((ContextPacket*) receivedPacket)->getSize();
+	std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] packetSize " << packetSize << std::endl;
+	if(size < 42 || size > 1062) {
+
+		std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] ERROR: packetSize " << size << std::endl;
+
+		return 1;
+	}
+//
+//	/*
+//	 * Create CIP for UDP reply with error message
+//	 */
+//	ContextPacket *replyContextPacket = new ContextPacket();
+//
+//	replyContextPacket->setIpAddress(inet_addr(inet_ntoa(((struct sockaddr_in *)addr)->sin_addr)));
+//	replyContextPacket->setPortNumber(((struct sockaddr_in *)addr)->sin_port);
+//	replyContextPacket->setTime();
+////	replyContextPacket->set
+//
+//	if (DEBUG) replyContextPacket->printPacket();
+//
+//	char sendBuffer[replyContextPacket->getSize()];
+//	replyContextPacket->serialize(sendBuffer);
+//
+//	int nbytes;
+//	nbytes = sendto(socket, sendBuffer,
+//			replyContextPacket->getSize(), 0,
+//			(struct sockaddr *) addr,
+//			sizeof(struct sockaddr));
+//	if (nbytes < 0) {
+//		perror("sendto(socket) failed");
+//	}
+//	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] sendto(UDP_sock): " << nbytes << std::endl;
+//
+//	std::cout << getUuidString(*((ContextPacket*) receivedPacket)->getUuid()) << " : " << "Service RZV provided: RZV CIP with client's ip:port and current timestamp." << std::endl;
+
+
+
+//	if (PRINT_PACKETS_DEBUG) printPackets();
+
+//	if (PRINT_PACKET_DEBUG) ((ContextPacket*) receivedPacket)->printPacket();
+
+	return 0;
+}
+
+
+
+
 
 bool ContextService::matchContextBricks(void* contextBrick_1, void* contextBrick_2) {
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;

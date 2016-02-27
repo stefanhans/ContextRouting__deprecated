@@ -35,13 +35,20 @@ public:
 	virtual int processTCP(void* receivedPacket) = 0;
 
 
-	static ContextService* create(byte_t service);
+	static ContextService* create(byte_t channel, byte_t request);
 
 	std::vector<ContextPacket*>* getContextPackets(byte_t index);
 
 	pthread_mutex_t getContextPacketsMutex();
 
+	/*
+	 * UDP method
+	 */
+	int validateUDP(void* packet, int socket, void *buffer, size_t size, struct sockaddr *addr);
+
+
 protected:
+
 	/*
 	 * Do two ContextBricks match?
 	 */

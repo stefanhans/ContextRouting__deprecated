@@ -383,13 +383,18 @@ int ContextPacket::processUDP(int sock, struct sockaddr *addr) {
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	if(UdpContextService == NULL) {
-		UdpContextService = ContextService::create(request);
+		UdpContextService = ContextService::create(request, channel);
 	}
 
 	char sendBuffer[getSize()];
 	serialize(sendBuffer);
 
-	return UdpContextService->processUDP(this, sock, sendBuffer, getSize(), addr);
+	int validated = UdpContextService->validateUDP(this, sock, sendBuffer, getSize(), addr);
+
+	if(validated == 0) {
+		return UdpContextService->processUDP(this, sock, sendBuffer, getSize(), addr);
+	}
+	return 1;
 }
 
 
@@ -397,7 +402,7 @@ int ContextPacket::processTCP() {
 	if (THREAD_DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	if(TcpContextService == NULL) {
-		TcpContextService = ContextService::create(request);
+		TcpContextService = ContextService::create(request, channel);
 	}
 
 	return TcpContextService->processTCP(this);

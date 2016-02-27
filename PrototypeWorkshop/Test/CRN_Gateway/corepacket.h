@@ -147,16 +147,6 @@ public:
 	}
 
 	/**
-	 * Getter/Setter for headerSize
-	 */
-	byte_t getHeaderSize() {
-		return headerSize;
-	}
-	void setHeaderSize(byte_t headerSize) {
-		this->headerSize = headerSize;
-	}
-
-	/**
 	 * Getter/Setter for uuid
 	 */
 	uuid_t* getUuid() {
@@ -207,8 +197,22 @@ public:
 	}
 
 	/**
-	 * Getter/Setter for additionalHeaderData array
+	 * Getter/Setter for headerData array
 	 */
+	byte_t getHeaderType() {
+		return headerType;
+	}
+	void setHeaderType(byte_t headerType) {
+		this->headerType = headerType;
+	}
+
+	byte_t getHeaderSize() {
+		return headerSize;
+	}
+	void setHeaderSize(byte_t headerSize) {
+		this->headerSize = headerSize;
+	}
+
 	byte_t* getHeaderData() {
 		return headerData;
 	}
