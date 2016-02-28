@@ -7,7 +7,61 @@
  * - edit this file i.e. add #include directive and new line with service constructor call
  *
  * - edit this file i.e. add static storage, if needed
- *
+
+
+
+                           UDP Services
+
+   +-----------------------+---------------------+---------------------+
+   | Service Enum          | Channel Enum        | Service             |
+   | (request)             | (channel)           |                     |
+   +-----------------------+---------------------+---------------------+
+   | SERVICE_RZV (0)       | CHANNEL_RZV (0)     | RZVService          |
+   |                       |                     |                     |
+   | "not yet defined"     | CHANNEL_RZV (0)     | DefaultService      |
+   | (1-255)               |                     |                     |
+   |                       |                     |                     |
+   | SERVICE_RZV (0)       | CHANNEL_CI_MATCHING | RZVService          |
+   |                       | (1)                 |                     |
+   |                       |                     |                     |
+   | SERVICE_HEARTBEAT (1) | CHANNEL_CI_MATCHING | HeartbeatService    |
+   |                       | (1)                 |                     |
+   |                       |                     |                     |
+   | SERVICE_OFFER_REQUEST | CHANNEL_CI_MATCHING | OfferRequestService |
+   | (2)                   | (1)                 |                     |
+   |                       |                     |                     |
+   | SERVICE_REPLY (3)     | CHANNEL_CI_MATCHING | ReplyService        |
+   |                       | (1)                 |                     |
+   |                       |                     |                     |
+   | "not yet defined"     | CHANNEL_CI_MATCHING | DefaultService      |
+   | (4-255)               | (1)                 |                     |
+   +-----------------------+---------------------+---------------------+
+
+
+                           TCP Services
+
+   +-----------------------+---------------------+---------------------+
+   | Service Enum          | Channel Enum        | Service             |
+   | (request)             | (channel)           |                     |
+   +-----------------------+---------------------+---------------------+
+   | SERVICE_RZV (0)       | CHANNEL_RZV (0)     | RZVService          |
+   |                       |                     |                     |
+   | "not yet defined"     | CHANNEL_RZV (0)     | DefaultService      |
+   | (1-255)               |                     |                     |
+   |                       |                     |                     |
+   | SERVICE_RZV (0)       | CHANNEL_CI_MATCHING | RZVService          |
+   |                       | (1)                 |                     |
+   |                       |                     |                     |
+   | SERVICE_OFFER_REQUEST | CHANNEL_CI_MATCHING | OfferRequestService |
+   | (2)                   | (1)                 |                     |
+   |                       |                     |                     |
+   | SERVICE_REPLY (3)     | CHANNEL_CI_MATCHING | ReplyService        |
+   |                       | (1)                 |                     |
+   |                       |                     |                     |
+   | "not yet defined"     | CHANNEL_CI_MATCHING | DefaultService      |
+   | (4-255)               | (1)                 |                     |
+   +-----------------------+---------------------+---------------------+
+
  */
 
 #include "abstractservice.h"
@@ -99,10 +153,6 @@ pthread_mutex_t ContextService::getContextPacketsMutex() {
 
 	return a_mutex;
 }
-
-
-
-
 
 
 int ContextService::validateUDP(void* receivedPacket, int socket, void *buffer, size_t size, struct sockaddr *addr) {

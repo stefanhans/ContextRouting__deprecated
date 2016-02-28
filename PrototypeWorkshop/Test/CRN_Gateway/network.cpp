@@ -10,8 +10,8 @@ int ContextNetwork::run() {
 	/*
 	 * Create one socket each for TCP and for UDP
 	 */
-	UDP_sock = make_UDP_socket(PORT_UDP_CONTEXT);
-	TCP_sock = make_TCP_socket(PORT_TCP_CONTEXT);
+	UDP_sock = make_UDP_socket(PORT_UDP_DEFAULT);
+	TCP_sock = make_TCP_socket(PORT_TCP_DEFAULT);
 
 	/*
 	 * Listen on TCP socket

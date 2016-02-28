@@ -1,60 +1,82 @@
 /*
- *
- *      Excerpts from RFC draft:
- *
- *      The following figure shows the header of the Context Datagram
- *
- *     0                   1                   2                   3 3
- *     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
- *     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- *     |  service (1)  |  version (1)  |  channel (1)  | opt. size (1) |
- *     +-------------------------------+-------------------------------+
- *     |                                                               |
- *     |                            UUID (16)                          |
- *     |                                                               |
- *     |                                                               |
- *     +---------------------------------------------------------------+
- *     |                         IP address (4)                        |
- *     +---------------------------------------------------------------+
- *     |       port number (2)         | optional (1)  | optional (1)  |
- *     |  ......... optional additional data up to 255 bytes .......  |
- *     +---------------------------------------------------------------+
- *
- *     It will be part of any kind of context structure.
- *
- *
- *     The following figure shows the list of Context Bricks of the Context
- *     Datagram.  A Context Brick consists of two bytes: content und mask.
- *
- *     0                   1                   2                   3 3
- *     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
- *     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- *     |   type (1)    |  content (1)  |   mask (1)    | list size (1) |
- *     +-------------------------------+-------------------------------+
- *     |  content (1)  |   mask (1)    |  content (1)  |   mask (1)    |
- *     |  ......... optional additional data up to 512 bytes ........  |
- *     +---------------------------------------------------------------+
- *
- *     It will be part of the context structures Offer and Request.
- *
- *
- *     The following figure shows the data part of the Context Datagram
- *
- *     0                   1                   2                   3 3
- *     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
- *     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- *     |   type (1)    |  data (140) ................................  |
- *     |  ...........................................................  |
- *     |  ...........................................................  |
- *     |  ...........................................................  |
- *     |  ...........................................................  |
- *     +---------------------------------------------------------------+
- *     | opt. size (1) | optional (1)  | optional (1)  | optional (1)  |
- *     |  ......... optional additional data upt to 255 bytes .......  |
- *     +---------------------------------------------------------------+
- *
- *     It will be part of the context structures Offer and Answer.
- *
+
+      Excerpts from RFC draft:
+
+
+    Figure shows the structure of CIP's header data.
+
+   0                   1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |   request (1) |  profile (1)  |  version (1)  |  channel (1)  | |
+   |                                                               | |
+   |                            UUID (16)                          | |
+   |                                                               | |
+   |                                                               | fix
+   |                          IP address (4)                       | |
+   |            IP port (2)        |                               | |
+   |                            time (8)                           | |
+   |                               |   type (1)   |    size (1)    |---
+   | ............................................................  | |
+   | .............. additional data up to 255 bytes .............  | dyn
+   | ............................................................  | |
+   +---------------------------------------------------------------+
+
+
+    Figure shows the structure of CIP's contextinformation.
+
+   0                   1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |   type (1)    |         root-CIC (2)          |   size (1)    | fix
+   | ............................................................  | |
+   | .............. additional data up to 510 bytes .............  | dyn
+   | .............. i.e. up to 255 CIC-Bricks  ..................  | |
+   | ............................................................  | |
+   +---------------------------------------------------------------+
+
+
+    Figure shows the structure of CIP's application data.
+
+   0                   1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |   type (1)    |   size (1)    | ............................  | fix
+   | ............................................................  | |
+   | .......... additional data up to 255 bytes (size) ..........  | dyn
+   | ............................................................  | |
+   +---------------------------------------------------------------+
+
+
+                          General Errors
+
+    +------------------+----------+-----------------------------------+
+    | Category         | Priority | Error Enumeration (Error Number)  |
+    +------------------+----------+-----------------------------------+
+    | CIP_FORMAT_ERROR | NOTICE   | CIP_FORMAT_ERROR_OUT_OF_RANGE (1) |
+    |                  |          |                                   |
+    | CIP_FORMAT_ERROR | NOTICE   | CIP_FORMAT_ERROR_INCONSISTENT (2) |
+    +------------------+----------+-----------------------------------+
+
+
+                           UDP Errors
+
+        +----------+----------+----------------------------------+
+        | Category | Priority | Error Enumeration (Error Number) |
+        +----------+----------+----------------------------------+
+        |          |          |                                  |
+        +----------+----------+----------------------------------+
+
+
+                           TCP Errors
+
+   +------------------+----------+-------------------------------------+
+   | Category         | Priority | Error Enumeration (Error Number)    |
+   +------------------+----------+-------------------------------------+
+   | CIP_FORMAT_ERROR | NOTICE   | CIP_FORMAT_ERROR_WRONG_PROTOCOL (3) |
+   +------------------+----------+-------------------------------------+
+
+
  */
 
 #ifndef SRC_PROTOCOL_H_
@@ -71,18 +93,18 @@
 /**
  * enumeration definitions
  */
-enum service_e { SERVICE_RZV=0, SERVICE_HEARTBEAT=1, SERVICE_OFFER_REQUEST=2, SERVICE_REPLY=3 };
-enum channel_e { CHANNEL_DEFAULT=0, CHANNEL_CI_MATCHING=1 };
-enum header_type_e { HEADER_TYPE_DEFAULT=0, HEADER_TYPE_ERROR=1 };
+enum SERVICE { SERVICE_RZV=0, SERVICE_HEARTBEAT=1, SERVICE_OFFER_REQUEST=2, SERVICE_REPLY=3 };
+enum CHANNEL { CHANNEL_RZV=0, CHANNEL_CI_MATCHING=1 };
+enum HEADER_TYPE { HEADER_TYPE_RZV=0, HEADER_TYPE_ERROR=1 };
+enum CI_TYPE { CI_TYPE_RZV=0, CI_TYPE_SIMPLE_MATCH=1 };
+enum APP_TYPE { APP_TYPE_RZV=0, APP_TYPE_TEXT=0, APP_TYPE_URL=2 };
 
-enum port_e { PORT_DEFAULT=22365, PORT_TCP_CONTEXT=22365, PORT_UDP_CONTEXT=22366, PORT_TCP_META=22367, PORT_UDP_META=22368 };
+enum PORT { PORT_TCP_DEFAULT=22365, PORT_UDP_DEFAULT=22366 };
 
-enum context_type_e { CONTEXT_TYPE_DEFAULT=0, CONTEXT_TYPE_TEST=UCHAR_MAX-1 };
-enum data_type_e { DATA_TYPE_DEFAULT=0, DATA_TYPE_TEXT=0, DATA_TYPE_URL=8, DATA_TYPE_TEST=UCHAR_MAX-1 };
 
-enum ERROR_CATEGORY { ERROR_CATEGORY_DEFAULT=0, CIP_FORMAT_ERROR=1 };
-enum ERROR_PRIORITY { ERROR_PRIORITY_DEFAULT=0, ERROR_PRIORITY_DEBUG=1, ERROR_PRIORITY_INFO=2, ERROR_PRIORITY_NOTICE=3, ERROR_PRIORITY_CRITICAL=4, ERROR_PRIORITY_ALERT=5, ERROR_PRIORITY_EMERGENCY=6 };
-enum CIP_FORMAT_ERROR_ENUM { CIP_FORMAT_ERROR_DEFAULT=0, CIP_FORMAT_ERROR_OUT_OF_RANGE=1, CIP_FORMAT_ERROR_INCONSISTENT=2 };
+enum ERROR_CATEGORY { ERROR_CATEGORY_NONE=0, CIP_FORMAT_ERROR=1 };
+enum ERROR_PRIORITY { ERROR_PRIORITY_NONE=0, ERROR_PRIORITY_DEBUG=1, ERROR_PRIORITY_INFO=2, ERROR_PRIORITY_NOTICE=3, ERROR_PRIORITY_CRITICAL=4, ERROR_PRIORITY_ALERT=5, ERROR_PRIORITY_EMERGENCY=6 };
+enum CIP_FORMAT_ERROR_ENUM { CIP_FORMAT_ERROR_NONE=0, CIP_FORMAT_ERROR_OUT_OF_RANGE=1, CIP_FORMAT_ERROR_INCONSISTENT=2, CIP_FORMAT_ERROR_WRONG_PROTOCOL=3 };
 
 
 #endif /* SRC_PROTOCOL_H_ */

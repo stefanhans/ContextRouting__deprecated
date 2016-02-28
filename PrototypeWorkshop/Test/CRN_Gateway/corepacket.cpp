@@ -62,13 +62,13 @@ ContextPacket::ContextPacket() :
 		request(0),
 		profile(0),
 		version(VERSION),
-		channel(CHANNEL_DEFAULT),
+		channel(CHANNEL_RZV),
 		sockAddress(),
 		headerType(0),
 		headerSize(0),
-		ciType(CONTEXT_TYPE_DEFAULT),
+		ciType(CI_TYPE_RZV),
 		ciSize(0),
-		appDataType(DATA_TYPE_DEFAULT),
+		appDataType(APP_TYPE_RZV),
 		appDataSize(0) {
 
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]  Constructor()" << std::endl;
@@ -97,12 +97,12 @@ ContextPacket::ContextPacket(IpAddress *ipAddress) :
 		request(0),
 		profile(0),
 		version(VERSION),
-		channel(CHANNEL_DEFAULT),
+		channel(CHANNEL_RZV),
 		headerType(0),
 		headerSize(0),
-		ciType(CONTEXT_TYPE_DEFAULT),
+		ciType(CI_TYPE_RZV),
 		ciSize(4),
-		appDataType(DATA_TYPE_DEFAULT),
+		appDataType(APP_TYPE_RZV),
 		appDataSize(8) {
 
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]  Constructor(IpAddress: "
