@@ -21,6 +21,7 @@
 #include <pthread.h>
 
 #include "corepacket.h"
+#include "protocol.h"
 
 /**
  * thread functions
@@ -96,7 +97,7 @@ private:
 
 //	struct in_addr localAddress;
 
-	int TCP_bytes_received;
+	size_t TCP_bytes_received;
 	int TCP_bytes_to_send;
 
 	pthread_t p_thread;
@@ -109,6 +110,16 @@ private:
 
 	int make_TCP_socket(uint16_t port);
 	int make_UDP_socket(uint16_t port);
+
+
+	int createTcpReply(ContextPacket* receivedContextPacket, char* reply_buffer, size_t& size);
+
+
+	/*
+	 * Prepare TCP error reply
+	 */
+	char errorHeader[3];
+	ContextPacket *errorContextPacket;
 };
 
 #endif /* SRC_NETWORK_H_ */

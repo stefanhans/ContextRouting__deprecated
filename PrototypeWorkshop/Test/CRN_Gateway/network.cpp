@@ -108,8 +108,6 @@ int ContextNetwork::run() {
 
 //					delete receivedContextPacket;
 
-//					close(UDP_sock);
-
 					continue;
 				}
 
@@ -153,83 +151,156 @@ int ContextNetwork::run() {
 					if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : " << TCP_bytes_received << " bytes received" << std::endl;
 
 					if (TCP_bytes_received < 0) {
-						perror("read");
-						exit(EXIT_FAILURE);
+						perror("TCP_bytes_received < 0");
+
 					} else if (TCP_bytes_received == 0)
 						/* End-of-file. */
 						return -1;
 					else {
 
 						/*
-						 * Process data from buffer
+						 * Check CIP_FORMAT_ERROR_OUT_OF_RANGE and reply on read_fd accordingly
 						 */
-						uuid_t acceptUuid;
-						memcpy(acceptUuid, (TCP_buffer+4), 16);
+						if(TCP_bytes_received < 42 || TCP_bytes_received > 1062) {
+							std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] TCP_bytes_received: " << TCP_bytes_received <<  std::endl;
 
-						std::cout << getUuidString(acceptUuid) << " : " <<
-								TCP_bytes_received << " bytes" <<
-								" from " << inet_ntoa(TCP_addr.sin_addr) << ":" << ntohs(TCP_addr.sin_port) <<
-								" received via TCP" << std::endl;
+							errorContextPacket = new ContextPacket();
 
-						sizeAndContextStruct.first = new IpAddress(acceptUuid, TCP_addr);
-						sizeAndContextStruct.second = TCP_buffer;
+							/**
+							 * Create header data for error
+							 */
+							errorHeader[0] = (byte_t) CIP_FORMAT_ERROR;
+							errorHeader[1] = (byte_t) ERROR_PRIORITY_NOTICE;
+							errorHeader[2] = (byte_t) CIP_FORMAT_ERROR_OUT_OF_RANGE;
 
-						if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : " << "close(acceptSocket " << acceptSocket << ")" << std::endl;
-						close(acceptSocket);
+							/*
+							 * Create CIP for TCP reply with error
+							 */
+							errorContextPacket->setHeaderType(HEADER_TYPE_ERROR);
+							errorContextPacket->setHeaderSize(3);
+							errorContextPacket->setHeaderData(errorHeader);
 
-						/*
-						 * Store IP Address
-						 */
-						senderAddressArray[read_fd] = new IpAddress(acceptUuid, TCP_addr);
+							if (PRINT_PACKET_DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] CIP_FORMAT_ERROR_OUT_OF_RANGE" << std::endl;
+							if (PRINT_PACKET_DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] ------------ " << std::endl;
+							if (PRINT_PACKET_DEBUG) errorContextPacket->printPacket();
 
-						/* create a new thread that will execute 'receiveTcpThread()' */
-						if (pthread_create(&p_thread, NULL, receiveTcpThread, (void*) &sizeAndContextStruct) != 0) {
-							perror("pthread_create(receiveTcpThread) failed");
-							return 4;
+							char errorBuffer[errorContextPacket->getSize()];
+							errorContextPacket->serialize(errorBuffer);
+
+							TCP_bytes_to_send = write(read_fd, errorBuffer, errorContextPacket->getSize());
+
+							if (TCP_bytes_to_send < 0) {
+								perror("write(read_fd, errorBuffer, errorContextPacket->getSize()) failed");
+							}
+							else {
+								if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] write(read_fd, errorBuffer, errorContextPacket->getSize()): " << TCP_bytes_to_send << std::endl;
+
+							}
+
+							std::cout << "XXXXXXXX : " << "Reply error: CIP_FORMAT_ERROR_OUT_OF_RANGE" << std::endl;
+
+							if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : " << "close(read_fd " << read_fd << ")" << std::endl;
+							close(read_fd);
+
+							FD_CLR(read_fd, &active_fd_set);
 						}
-						FD_CLR(read_fd, &active_fd_set);
 
-						/* ######################### */
+						else {
 
-						FD_SET(read_fd, &write_fd_set);
 
-						int fd_count = select(FD_SETSIZE, NULL, &write_fd_set, NULL, NULL);
-//!!!
-						if (fd_count == -1) {
-							perror("select(FD_SETSIZE, NULL, &write_fd_set, NULL, NULL) failed");
-						}
-//!!!
 
-						/* Service all the sockets with output pending. */
-						for (write_fd = 0; write_fd < FD_SETSIZE; ++write_fd) {
 
-							if (FD_ISSET(write_fd, &write_fd_set)) {
+							/*
+							 * Process data from buffer
+							 */
+							uuid_t acceptUuid;
+							memcpy(acceptUuid, (TCP_buffer+4), 16);
 
-								ContextPacket *receipt = new ContextPacket(senderAddressArray[write_fd]);
-								receipt->deserialize(TCP_buffer);
+							std::cout << getUuidString(acceptUuid) << " : " <<
+									TCP_bytes_received << " bytes" <<
+									" from " << inet_ntoa(TCP_addr.sin_addr) << ":" << ntohs(TCP_addr.sin_port) <<
+									" received via TCP" << std::endl;
 
-//								receipt->answerTCP();
+							sizeAndContextStruct.first = new IpAddress(acceptUuid, TCP_addr);
+							sizeAndContextStruct.second = TCP_buffer;
 
-								char answerBuffer[receipt->getSize()];
-								receipt->serialize(answerBuffer);
+							if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : " << "close(acceptSocket " << acceptSocket << ")" << std::endl;
+							close(acceptSocket);
 
-								TCP_bytes_to_send = write(write_fd, answerBuffer, receipt->getSize());
+							/*
+							 * Store IP Address
+							 */
+							senderAddressArray[read_fd] = new IpAddress(acceptUuid, TCP_addr);
 
-								if (TCP_bytes_to_send < 0) {
-									perror("ERROR writing to socket");
-								} else {
-//									printf("Answer sent: \"I got your message\"\n");
-									break;
+							FD_CLR(read_fd, &active_fd_set);
+							FD_SET(read_fd, &write_fd_set);
+
+							int fd_count = select(FD_SETSIZE, NULL, &write_fd_set, NULL, NULL);
+
+							if (fd_count == -1) {
+								perror("select(FD_SETSIZE, NULL, &write_fd_set, NULL, NULL) failed");
+							}
+
+							/* Service all the sockets with output pending. */
+							for (write_fd = 0; write_fd < FD_SETSIZE; ++write_fd) {
+
+								if (FD_ISSET(write_fd, &write_fd_set)) {
+
+									ContextPacket *receipt = new ContextPacket(); //senderAddressArray[write_fd]
+									receipt->deserialize(TCP_buffer);
+
+									receipt->setIpAddress(inet_addr(inet_ntoa(senderAddressArray[write_fd]->getSockAddress().sin_addr)));
+									receipt->setPortNumber(senderAddressArray[write_fd]->getSockAddress().sin_port);
+
+									if (PRINT_PACKETS_DEBUG) receipt->printPacket();
+
+
+									char replyBuffer[MAXMSG];
+									size_t sizeInout = TCP_bytes_received;
+
+									int tcpValidation = createTcpReply(receipt, replyBuffer, sizeInout);
+									if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] tcpValidation: " << (int) tcpValidation << std::endl;
+
+
+									int size = receipt->getSize();
+									if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] " << "size: " << size << std::endl;
+
+
+									char answerBuffer[size];
+									receipt->serialize(answerBuffer);
+
+//									TCP_bytes_to_send = write(write_fd, answerBuffer, size);
+
+									TCP_bytes_to_send = write(write_fd, replyBuffer, sizeInout);
+
+									if (TCP_bytes_to_send < 0) {
+										perror("ERROR writing to socket");
+									} else {
+										if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] " << "TCP_bytes_to_send: " << TCP_bytes_to_send << std::endl;
+										break;
+									}
+
+
+									if(tcpValidation == 0) {
+										if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : " << "tcpValidation == 0" << std::endl;
+
+										/* create a new thread that will execute 'receiveTcpThread()' */
+										if (pthread_create(&p_thread, NULL, receiveTcpThread, (void*) &sizeAndContextStruct) != 0) {
+											perror("pthread_create(receiveTcpThread) failed");
+
+										}
+									}
 								}
 							}
+
+							if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : " << "close(read_fd " << read_fd << ")" << std::endl;
+							close(read_fd);
+
+							FD_CLR(write_fd, &active_fd_set);
+
+							/* ######################### */
+
 						}
-
-						if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : " << "close(read_fd " << read_fd << ")" << std::endl;
-						close(read_fd);
-
-						FD_CLR(write_fd, &active_fd_set);
-
-						/* ######################### */
 
 					}
 				}
@@ -247,6 +318,222 @@ int ContextNetwork::run() {
 
 	return EXIT_SUCCESS;
 }
+
+
+//
+//							ContextPacket *receivedContextPacket = new ContextPacket();
+//							receivedContextPacket->deserialize(TCP_buffer);
+//
+//
+//							char replyBuffer[MAXMSG];
+//							size_t size = receivedContextPacket->getSize();
+//
+//							int tcpValidation = createTcpReply(receivedContextPacket, replyBuffer, size);
+//
+//
+//							TCP_bytes_to_send = write(read_fd, replyBuffer, size);
+//
+//
+//							if (TCP_bytes_to_send < 0) {
+//								perror("write(read_fd, errorBuffer, errorContextPacket->getSize()) failed");
+//							}
+//							else {
+//								if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] write(read_fd, errorBuffer, errorContextPacket->getSize()): " << TCP_bytes_to_send << std::endl;
+//
+//							}
+//
+//
+//							/* continue if tcpValidation successful */
+//							if (tcpValidation == 0) {
+//								if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] tcpValidation == 0" << std::endl;
+//
+//
+//
+//
+//
+////
+////
+////
+////								/*
+////								 * Process data from buffer
+////								 */
+////								uuid_t acceptUuid;
+////								memcpy(acceptUuid, (TCP_buffer+4), 16);
+////
+////								std::cout << getUuidString(acceptUuid) << " : " <<
+////										TCP_bytes_received << " bytes" <<
+////										" from " << inet_ntoa(TCP_addr.sin_addr) << ":" << ntohs(TCP_addr.sin_port) <<
+////										" received via TCP" << std::endl;
+////
+////								sizeAndContextStruct.first = new IpAddress(acceptUuid, TCP_addr);
+////								sizeAndContextStruct.second = TCP_buffer;
+////
+////								if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : " << "close(acceptSocket " << acceptSocket << ")" << std::endl;
+////								close(acceptSocket);
+////
+////								/*
+////								 * Store IP Address
+////								 */
+////								senderAddressArray[read_fd] = new IpAddress(acceptUuid, TCP_addr);
+////
+////								/* create a new thread that will execute 'receiveTcpThread()' */
+////								if (pthread_create(&p_thread, NULL, receiveTcpThread, (void*) &sizeAndContextStruct) != 0) {
+////									perror("pthread_create(receiveTcpThread) failed");
+////									return 4;
+////								}
+////
+//
+//
+//
+//
+//							}
+//							if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] tcpValidation != 0" << std::endl;
+//
+////
+////							/*
+////							 * Check CIP_FORMAT_ERROR_INCONSISTENT and reply on read_fd accordingly
+////							 */
+////							if(receivedContextPacket->getSize() != TCP_bytes_received) {
+////								if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] receivedContextPacket->getSize() != TCP_bytes_received" << std::endl;
+////
+////
+////
+////								errorContextPacket = new ContextPacket();
+////
+////								/**
+////								 * Create header data for error
+////								 */
+////								errorHeader[0] = (byte_t) CIP_FORMAT_ERROR;
+////								errorHeader[1] = (byte_t) ERROR_PRIORITY_NOTICE;
+////								errorHeader[2] = (byte_t) CIP_FORMAT_ERROR_INCONSISTENT;
+////
+////								/*
+////								 * Create CIP for UDP reply with error
+////								 */
+////								errorContextPacket->setHeaderType(HEADER_TYPE_ERROR);
+////								errorContextPacket->setHeaderSize(3);
+////								errorContextPacket->setHeaderData(errorHeader);
+////
+////
+////								if (PRINT_PACKET_DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] CIP_FORMAT_ERROR_INCONSISTENT" << std::endl;
+////								if (PRINT_PACKET_DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] ------------ " << std::endl;
+////								if (PRINT_PACKET_DEBUG) errorContextPacket->printPacket();
+////
+////								char errorBuffer[errorContextPacket->getSize()];
+////								errorContextPacket->serialize(errorBuffer);
+////
+////
+////
+////								TCP_bytes_to_send = write(read_fd, errorBuffer, errorContextPacket->getSize());
+////
+////
+////
+////
+////								if (TCP_bytes_to_send < 0) {
+////									perror("write(read_fd, errorBuffer, errorContextPacket->getSize()) failed");
+////								}
+////								else {
+////									if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] write(read_fd, errorBuffer, errorContextPacket->getSize()): " << TCP_bytes_to_send << std::endl;
+////
+////								}
+////
+////								std::cout << "XXXXXXXX : " << "Reply error: CIP_FORMAT_ERROR_INCONSISTENT" << std::endl;
+////
+////							}
+//
+//
+//							else {
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//								FD_CLR(read_fd, &active_fd_set);
+//
+//								/* ######################### */
+//
+//								FD_SET(read_fd, &write_fd_set);
+//
+//								int fd_count = select(FD_SETSIZE, NULL, &write_fd_set, NULL, NULL);
+//		//!!!
+//								if (fd_count == -1) {
+//									perror("select(FD_SETSIZE, NULL, &write_fd_set, NULL, NULL) failed");
+//								}
+//		//!!!
+//
+//								/* Service all the sockets with output pending. */
+//								for (write_fd = 0; write_fd < FD_SETSIZE; ++write_fd) {
+//
+//									if (FD_ISSET(write_fd, &write_fd_set)) {
+//
+//										ContextPacket *receipt = new ContextPacket(senderAddressArray[write_fd]);
+//										receipt->deserialize(TCP_buffer);
+//
+//		//								receipt->answerTCP();
+//
+//										char answerBuffer[receipt->getSize()];
+//										receipt->serialize(answerBuffer);
+//
+//										TCP_bytes_to_send = write(write_fd, answerBuffer, receipt->getSize());
+//
+//										if (TCP_bytes_to_send < 0) {
+//											perror("ERROR writing to socket");
+//										} else {
+//		//									printf("Answer sent: \"I got your message\"\n");
+//											break;
+//										}
+//									}
+//								}
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//							}
+//
+//
+//
+//
+//						}
+//
+//
+//						if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : " << "close(acceptSocket " << acceptSocket << ")" << std::endl;
+//						close(acceptSocket);
+//
+//
+//						FD_CLR(read_fd, &active_fd_set);
+//
+//						/* ######################### */
+//
+//						FD_SET(read_fd, &write_fd_set);
+//
+//						int fd_count = select(FD_SETSIZE, NULL, &write_fd_set, NULL, NULL);
+////!!!
+//						if (fd_count == -1) {
+//							perror("select(FD_SETSIZE, NULL, &write_fd_set, NULL, NULL) failed");
+//						}
+////!!!
+//
+//						if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : " << "close(read_fd " << read_fd << ")" << std::endl;
+//						close(read_fd);
+//
+//						FD_CLR(write_fd, &active_fd_set);
+//
+//						/* ######################### */
 
 void ContextNetwork::stop() {
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
@@ -306,6 +593,96 @@ int ContextNetwork::make_UDP_socket(uint16_t port) {
 		exit(EXIT_FAILURE);
 	}
 	return sock;
+}
+
+int ContextNetwork::createTcpReply(ContextPacket* receivedContextPacket, char* reply_buffer, size_t& size) {
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+
+
+
+	/*
+	 * Check CIP_FORMAT_ERROR_INCONSISTENT
+	 */
+	if(receivedContextPacket->getSize() != (size_t) size) {
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] receivedContextPacket->getSize() != (size_t*) size" << std::endl;
+
+		errorContextPacket = new ContextPacket();
+
+		errorContextPacket->setUuid(receivedContextPacket->getUuid());
+
+		/**
+		 * Create header data for error
+		 */
+		errorHeader[0] = (byte_t) CIP_FORMAT_ERROR;
+		errorHeader[1] = (byte_t) ERROR_PRIORITY_NOTICE;
+		errorHeader[2] = (byte_t) CIP_FORMAT_ERROR_INCONSISTENT;
+
+		/*
+		 * Create CIP for UDP reply with error
+		 */
+		errorContextPacket->setHeaderType(HEADER_TYPE_ERROR);
+		errorContextPacket->setHeaderSize(3);
+		errorContextPacket->setHeaderData(errorHeader);
+
+
+		if (PRINT_PACKET_DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] CIP_FORMAT_ERROR_INCONSISTENT" << std::endl;
+		if (PRINT_PACKET_DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] ------------ " << std::endl;
+		if (PRINT_PACKET_DEBUG) errorContextPacket->printPacket();
+
+		size = (size_t) errorContextPacket->getSize();
+		errorContextPacket->serialize(reply_buffer);
+
+		return 1;
+	}
+
+
+	/*
+	 * Check CIP_FORMAT_ERROR_WRONG_PROTOCOL
+	 */
+	if(receivedContextPacket->getChannel() == CHANNEL_CI_MATCHING && receivedContextPacket->getRequest() == SERVICE_HEARTBEAT) {
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] CHANNEL_CI_MATCHING && SERVICE_HEARTBEAT" << std::endl;
+
+		errorContextPacket = new ContextPacket();
+
+		errorContextPacket->setUuid(receivedContextPacket->getUuid());
+		errorContextPacket->setRequest(receivedContextPacket->getRequest());
+		errorContextPacket->setChannel(receivedContextPacket->getChannel());
+
+		/**
+		 * Create header data for error
+		 */
+		errorHeader[0] = (byte_t) CIP_FORMAT_ERROR;
+		errorHeader[1] = (byte_t) ERROR_PRIORITY_NOTICE;
+		errorHeader[2] = (byte_t) CIP_FORMAT_ERROR_WRONG_PROTOCOL;
+
+		/*
+		 * Create CIP for UDP reply with error
+		 */
+		errorContextPacket->setHeaderType(HEADER_TYPE_ERROR);
+		errorContextPacket->setHeaderSize(3);
+		errorContextPacket->setHeaderData(errorHeader);
+
+
+		if (PRINT_PACKET_DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] CIP_FORMAT_ERROR_WRONG_PROTOCOL" << std::endl;
+		if (PRINT_PACKET_DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] ------------ " << std::endl;
+		if (PRINT_PACKET_DEBUG) errorContextPacket->printPacket();
+
+		size = (size_t) errorContextPacket->getSize();
+		errorContextPacket->serialize(reply_buffer);
+
+		return 1;
+	}
+
+	/*
+	 * Default echo like reply
+	 */
+	receivedContextPacket->setRequest(SERVICE_REPLY);
+	receivedContextPacket->setHeaderType(HEADER_TYPE_OK);
+
+	size = (size_t) receivedContextPacket->getSize();
+	receivedContextPacket->serialize(reply_buffer);
+
+	return 0;
 }
 
 void* receiveTcpThread(void* data) {

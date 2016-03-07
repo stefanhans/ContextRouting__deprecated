@@ -185,10 +185,10 @@ int ContextPacket::serialize(char *buffer) {
 
 
 	buffer[b++] = request;
-	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] request: " << request << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] request: " << (int) request << std::endl;
 
 	buffer[b++] = profile;
-	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] profile: " << profile << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] profile: " << (int) profile << std::endl;
 
 	buffer[b++] = version;
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] version: " << (int) version << std::endl;
@@ -260,13 +260,11 @@ int ContextPacket::serialize(char *buffer) {
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] DATA: "  << std::endl;
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] ------------"  << std::endl;
 
-
-	buffer[b++] = appDataSize;
-	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] additionalDataSize: " << (int) appDataSize << std::endl;
-
 	buffer[b++] = appDataType;
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] dataType: " << (int) appDataType << std::endl;
 
+	buffer[b++] = appDataSize;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] additionalDataSize: " << (int) appDataSize << std::endl;
 	memcpy(&buffer[b], &appData, appDataSize);
 	b += appDataSize;
 
