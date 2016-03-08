@@ -14,7 +14,7 @@ int RZVService::processUDP(void* receivedPacket, int socket, void *buffer, size_
 	replyContextPacket->setPortNumber(((struct sockaddr_in *)addr)->sin_port);
 	replyContextPacket->setTime();
 
-	if (DEBUG) replyContextPacket->printPacket();
+	if (PRINT_PACKET_DEBUG) replyContextPacket->printPacket();
 
 	char sendBuffer[replyContextPacket->getSize()];
 	replyContextPacket->serialize(sendBuffer);

@@ -69,7 +69,7 @@ inline void printUuid(uuid_t uuid, std::string header="") {
 	std::cout << header << std::flush;
 
 	size_t i;
-	for (i = 0; i < sizeof(uuid)*2; i++) {
+	for (i = 0; i < 16; i++) {
 		printf("%02x", *(uuid + i));
 		std::flush(std::cout);
 	}
@@ -82,10 +82,10 @@ inline std::string getUuidString(uuid_t uuid) {
 
 	std::string out;
 
-	char buffer [sizeof(uuid)*2];
+	char buffer [16];
 
 	size_t i;
-	for (i = 0; i < sizeof(uuid)*2; i++) {
+	for (i = 0; i < 16; i++) {
 		sprintf(buffer, "%02x", *(uuid + i));
 		std::string tmp(buffer);
 		out += tmp;

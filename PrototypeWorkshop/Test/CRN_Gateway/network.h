@@ -52,7 +52,8 @@ public:
 		UDP_bytes_received(0),
 		TCP_bytes_received(0),
 		TCP_bytes_to_send(0),
-		p_thread() {
+		p_thread(),
+		errorContextPacket(){
 
 	}
 
@@ -94,8 +95,6 @@ private:
 
 	socklen_t UDP_address_size;
 	int UDP_bytes_received;
-
-//	struct in_addr localAddress;
 
 	size_t TCP_bytes_received;
 	int TCP_bytes_to_send;

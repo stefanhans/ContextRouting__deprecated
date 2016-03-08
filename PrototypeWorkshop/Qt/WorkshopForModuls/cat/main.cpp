@@ -137,10 +137,29 @@ int cat(QStringList command) {
         quint8 byte;
         int b = 0;
         int size;
+        QString cipString;
 
         // Header: request (1)
         byte = byteArray.at(b++);
-        qDebug().noquote().nospace() <<  QString("%1").arg(b-1).rightJustified(4) << " Header: request: " << byte ;
+
+        switch (byte) {
+        case 0:
+            cipString = "SERVICE_RZV";
+            break;
+        case 1:
+            cipString = "SERVICE_HEARTBEAT";
+            break;
+        case 2:
+            cipString = "SERVICE_OFFER_REQUEST";
+            break;
+        case 3:
+            cipString = "SERVICE_REPLY";
+            break;
+        default:
+            cipString = "undefined";
+            break;
+        }
+        qDebug().noquote().nospace() <<  QString("%1").arg(b-1).rightJustified(4) << " Header: request: " << byte << " : " <<  cipString;
 
 
         // Header: profile (1)
@@ -155,7 +174,19 @@ int cat(QStringList command) {
 
         // Header: channel (1)
         byte = byteArray.at(b++);
-        qDebug().noquote().nospace() <<  QString("%1").arg(b-1).rightJustified(4) << " Header: channel: " << byte;
+
+        switch (byte) {
+        case 0:
+            cipString = "CHANNEL_RZV";
+            break;
+        case 1:
+            cipString = "CHANNEL_CI_MATCHING";
+            break;
+        default:
+            cipString = "undefined";
+            break;
+        }
+        qDebug().noquote().nospace() <<  QString("%1").arg(b-1).rightJustified(4) << " Header: channel: " << byte << " : " <<  cipString;
 
         // Header: UUID (16)
         QByteArray uuid = byteArray.mid(b, 16);
@@ -201,21 +232,131 @@ int cat(QStringList command) {
 
         // Header: type (1)
         byte = byteArray.at(b++);
-        qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) <<  " Header: type: " << byte;
+
+        switch (byte) {
+        case 0:
+            cipString = "HEADER_TYPE_OK (HEADER_TYPE_RZV)";
+            break;
+        case 1:
+            cipString = "HEADER_TYPE_ERROR";
+            break;
+        default:
+            cipString = "undefined";
+            break;
+        }
+        qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) <<  " Header: type: " << byte << " : " <<  cipString;
 
         // Header: size (1) and data
         byte = byteArray.at(b++);
         qDebug().noquote().nospace() <<  QString("%1").arg(b-1).rightJustified(4) << " Header: size: " << byte;
 
-        size = byte;
-        for(int i=0; i<size; i++) {
+        if(cipString == "HEADER_TYPE_ERROR" && byte == 3) {
+
+            QString errorCategory = "";
+
+            // ERROR_CATEGORY
             byte = byteArray.at(b++);
-            qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) << " Header: additional data[" << QString("%1").arg(i).rightJustified(3) << "]: " << byte;
+
+            switch (byte) {
+            case 0:
+                cipString = "ERROR_CATEGORY_NONE (unexpected)";
+                break;
+            case 1:
+                cipString = "CIP_FORMAT_ERROR";
+                errorCategory = "CIP_FORMAT_ERROR";
+                break;
+            default:
+                cipString = "undefined";
+                break;
+            }
+            qDebug().noquote().nospace() <<  QString("%1").arg(b-1).rightJustified(4) << " Header: ERROR_CATEGORY: " << byte << " : " <<  cipString;
+
+            // ERROR_PRIORITY
+            byte = byteArray.at(b++);
+
+            switch (byte) {
+            case 0:
+                cipString = "ERROR_PRIORITY_NONE (unexpected)";
+                break;
+            case 1:
+                cipString = "ERROR_PRIORITY_DEBUG";
+                break;
+            case 2:
+                cipString = "ERROR_PRIORITY_INFO";
+                break;
+            case 3:
+                cipString = "ERROR_PRIORITY_NOTICE";
+                break;
+            case 4:
+                cipString = "ERROR_PRIORITY_CRITICAL";
+                break;
+            case 5:
+                cipString = "ERROR_PRIORITY_ALERT";
+                break;
+            case 6:
+                cipString = "ERROR_PRIORITY_EMERGENCY";
+                break;
+            default:
+                cipString = "undefined";
+                break;
+            }
+            qDebug().noquote().nospace() <<  QString("%1").arg(b-1).rightJustified(4) << " Header: ERROR_PRIORITY: " << byte << " : " <<  cipString;
+
+            if(errorCategory == "CIP_FORMAT_ERROR") {
+
+                // CIP_FORMAT_ERROR_ENUM
+                byte = byteArray.at(b++);
+
+                switch (byte) {
+                case 0:
+                    cipString = "CIP_FORMAT_ERROR_NONE (unexpected)";
+                    break;
+                case 1:
+                    cipString = "CIP_FORMAT_ERROR_OUT_OF_RANGE";
+                    break;
+                case 2:
+                    cipString = "CIP_FORMAT_ERROR_INCONSISTENT";
+                    break;
+                case 3:
+                    cipString = "CIP_FORMAT_ERROR_WRONG_PROTOCOL";
+                    break;
+                default:
+                    cipString = "undefined";
+                    break;
+                }
+                qDebug().noquote().nospace() <<  QString("%1").arg(b-1).rightJustified(4) << " Header: CIP_FORMAT_ERROR: " << byte << " : " <<  cipString;
+
+            }
+            else {
+                qDebug().noquote().nospace() <<  QString("%1").arg(b-1).rightJustified(4) << " Header: CIP_FORMAT_ERROR: " << byte << " : unexpected";
+
+            }
+
+
+        }
+        else {
+            size = byte;
+            for(int i=0; i<size; i++) {
+                byte = byteArray.at(b++);
+                qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) << " Header: additional data[" << QString("%1").arg(i).rightJustified(3) << "]: " << byte;
+            }
         }
 
         // Contextinformation: type (1)
         byte = byteArray.at(b++);
-        qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) << " Contextinformation: type: " << byte;
+
+        switch (byte) {
+        case 0:
+            cipString = "CI_TYPE_RZV";
+            break;
+        case 1:
+            cipString = "CI_TYPE_SIMPLE_MATCH";
+            break;
+        default:
+            cipString = "undefined";
+            break;
+        }
+        qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) << " Contextinformation: type: " << byte << " : " <<  cipString;
 
         // Contextinformation: root-CIC (2)
         byte = byteArray.at(b++);
@@ -237,7 +378,22 @@ int cat(QStringList command) {
 
         // Application: type (1)
         byte = byteArray.at(b++);
-        qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) << " Application data: type: " << byte;
+
+        switch (byte) {
+        case 0:
+            cipString = "APP_TYPE_RZV";
+            break;
+        case 1:
+            cipString = "APP_TYPE_TEXT";
+            break;
+        case 2:
+            cipString = "APP_TYPE_URL";
+            break;
+        default:
+            cipString = "undefined";
+            break;
+        }
+        qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) << " Application data: type: " << byte << " : " <<  cipString;
 
         // Application: size (1) and data
         byte = byteArray.at(b++);

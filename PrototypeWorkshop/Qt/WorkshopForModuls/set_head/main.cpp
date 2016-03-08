@@ -32,6 +32,13 @@ int set_head(QStringList command) {
     qDebug() << "set_head(" << command.join(" ") << ")" << endl;
 
     /**
+     * Debug
+     */
+    for(int i=0;i<command.size();i++) {
+        qDebug() << "command.at(" << i << ")" << command.at(i) << endl;
+    }
+
+    /**
      * Check input
      */
     QTextStream errorStream(stderr);
@@ -63,13 +70,6 @@ int set_head(QStringList command) {
         errorStream << "Error: set_head(" << command.join(" ") << "): No valid header key!" << endl;
         man("usage set_head");
         return 1;
-    }
-
-    /**
-     * Debug
-     */
-    for(int i=0;i<command.size();i++) {
-        qDebug() << "command.at(" << i << ")" << command.at(i) << endl;
     }
 
     /**

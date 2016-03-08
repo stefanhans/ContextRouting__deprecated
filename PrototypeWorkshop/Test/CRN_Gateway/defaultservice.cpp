@@ -15,7 +15,7 @@ int DefaultService::processUDP(void* receivedPacket, int socket, void *buffer, s
 	replyContextPacket->setTime();
 //	replyContextPacket->set
 
-	if (DEBUG) replyContextPacket->printPacket();
+	if (PRINT_PACKET_DEBUG) replyContextPacket->printPacket();
 
 	char sendBuffer[replyContextPacket->getSize()];
 	replyContextPacket->serialize(sendBuffer);
@@ -72,7 +72,7 @@ int DefaultService::processTCP(void* receivedPacket) {
 //	replyContextPacket->setPortNumber(((struct sockaddr_in *)addr)->sin_port);
 //	replyContextPacket->setTime();
 
-	if (DEBUG) ((ContextPacket*) receivedPacket)->printPacket();
+	if (PRINT_PACKET_DEBUG) ((ContextPacket*) receivedPacket)->printPacket();
 
 	char sendBuffer[((ContextPacket*) receivedPacket)->getSize()];
 	((ContextPacket*) receivedPacket)->serialize(sendBuffer);

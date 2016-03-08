@@ -98,6 +98,16 @@ static pthread_mutex_t a_mutex = PTHREAD_MUTEX_INITIALIZER;
 ContextService* ContextService::create(byte_t channel, byte_t request) {
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] channel " << (uint) channel << ", request " << (uint) request << std::endl;
 
+
+
+	/*
+	 * RZV (Reserved Zero Value) service constructor call
+	 */
+	if(request == SERVICE_RZV || channel == CHANNEL_RZV) {
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] new RZVService()" << std::endl;
+		return new RZVService();
+	}
+
 	/*
 	 * Heartbeat service constructor call
 	 */
@@ -119,16 +129,6 @@ ContextService* ContextService::create(byte_t channel, byte_t request) {
 	 */
 	// Add line with <new> service constructor call here
 
-
-
-	/*
-	 * RZV (Reserved Zero Value) service constructor call
-	 */
-	if(request == SERVICE_RZV) {
-		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] new RZVService()" << std::endl;
-		return new RZVService();
-	}
-
 	/*
 	 * Default service constructor call
 	 */
@@ -140,6 +140,7 @@ ContextService* ContextService::create(byte_t channel, byte_t request) {
 ContextService::ContextService() {
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] Constructor()" << std::endl;
 
+	errorContextPacket = new ContextPacket();
 }
 
 std::vector<ContextPacket*>* ContextService::getContextPackets(byte_t index) {
@@ -160,8 +161,6 @@ int ContextService::validateUDP(void* receivedPacket, int socket, void *buffer, 
 
 	if(size < 42 || size > 1062) {
 		std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] size: " << size <<  std::endl;
-
-		errorContextPacket = new ContextPacket();
 
 		/**
 		 * Create header data for error
@@ -208,8 +207,6 @@ int ContextService::validateUDP(void* receivedPacket, int socket, void *buffer, 
 
 	if( ((ContextPacket*) receivedPacket)->getSize() != size) {
 		std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] ((ContextPacket*) receivedPacket)->getSize() " << ((ContextPacket*) receivedPacket)->getSize() << " != size " << size <<  std::endl;
-
-		errorContextPacket = new ContextPacket();
 
 		/**
 		 * Create header data for error
