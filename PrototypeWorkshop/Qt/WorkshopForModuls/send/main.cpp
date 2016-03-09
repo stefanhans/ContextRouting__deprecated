@@ -195,7 +195,7 @@ int send(QStringList command) {
             numRead  = udpSocket->read(buffer, MAXMSG);
 
             numReadTotal += numRead;
-            if (numRead == 0 && !udpSocket->waitForReadyRead(3000)) { // waitForReadyRead(int msecs = 30000)
+            if (numReadTotal >= 42) { // waitForReadyRead(int msecs = 30000)
                 break;
             }
         }

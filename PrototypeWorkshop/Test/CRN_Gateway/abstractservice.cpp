@@ -104,7 +104,8 @@ ContextService* ContextService::create(byte_t channel, byte_t request) {
 	 * RZV (Reserved Zero Value) service constructor call
 	 */
 	if(request == SERVICE_RZV || channel == CHANNEL_RZV) {
-		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] new RZVService()" << std::endl;
+//		if (DEBUG)
+			std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] new RZVService()" << std::endl;
 		return new RZVService();
 	}
 
@@ -132,7 +133,8 @@ ContextService* ContextService::create(byte_t channel, byte_t request) {
 	/*
 	 * Default service constructor call
 	 */
-	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] No known request with id " << (int) request << " - use default service instead" << std::endl;
+//	if (DEBUG)
+		std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] No known request with id " << (int) request << " - use default service instead" << std::endl;
 	return new DefaultService();
 }
 
@@ -160,7 +162,7 @@ int ContextService::validateUDP(void* receivedPacket, int socket, void *buffer, 
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	if(size < 42 || size > 1062) {
-		std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] size: " << size <<  std::endl;
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] size: " << size <<  std::endl;
 
 		/**
 		 * Create header data for error
@@ -198,7 +200,7 @@ int ContextService::validateUDP(void* receivedPacket, int socket, void *buffer, 
 
 		}
 
-		std::cout << "XXXXXXXX : " << "Reply error: CIP_FORMAT_ERROR_OUT_OF_RANGE" << std::endl;
+		std::cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX : " << "UDP reply error: CIP_FORMAT_ERROR_OUT_OF_RANGE" << std::endl;
 
 		return 1;
 	}
@@ -206,7 +208,7 @@ int ContextService::validateUDP(void* receivedPacket, int socket, void *buffer, 
 
 
 	if( ((ContextPacket*) receivedPacket)->getSize() != size) {
-		std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] ((ContextPacket*) receivedPacket)->getSize() " << ((ContextPacket*) receivedPacket)->getSize() << " != size " << size <<  std::endl;
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] ((ContextPacket*) receivedPacket)->getSize() " << ((ContextPacket*) receivedPacket)->getSize() << " != size " << size <<  std::endl;
 
 		/**
 		 * Create header data for error
@@ -245,7 +247,7 @@ int ContextService::validateUDP(void* receivedPacket, int socket, void *buffer, 
 
 		}
 
-		std::cout << "XXXXXXXX : " << "Reply error: CIP_FORMAT_ERROR_INCONSISTENT" << std::endl;
+		std::cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX : " << "UDP reply error: CIP_FORMAT_ERROR_INCONSISTENT" << std::endl;
 
 		return 1;
 	}

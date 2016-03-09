@@ -95,10 +95,9 @@ int ContextNetwork::run() {
 					uuid_t UDP_uuid;
 					memcpy(UDP_uuid, (UDP_buffer+4), 16);
 
-					std::cout << getUuidString(UDP_uuid) << " : " <<
+					std::cout << getUuidString(UDP_uuid) << " : UDP received " <<
 							UDP_bytes_received << " bytes" <<
-							" from " << inet_ntoa(UDP_addr.sin_addr) << ":" << ntohs(UDP_addr.sin_port) <<
-							" received via UDP" << std::endl;
+							" from " << inet_ntoa(UDP_addr.sin_addr) << ":" << ntohs(UDP_addr.sin_port) << std::endl;
 
 					ContextPacket *receivedContextPacket = new ContextPacket();
 					receivedContextPacket->deserialize(UDP_buffer);
@@ -172,11 +171,17 @@ int ContextNetwork::run() {
 					 */
 					else {
 
+
 						/*
 						 * Check CIP_FORMAT_ERROR_OUT_OF_RANGE and reply on read_fd accordingly
 						 */
 						if(TCP_bytes_received < 42 || TCP_bytes_received > 1062) {
-							std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] TCP_bytes_received: " << TCP_bytes_received <<  std::endl;
+							if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] TCP_bytes_received: " << TCP_bytes_received <<  std::endl;
+
+
+							std::cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX : TCP received " <<
+									TCP_bytes_received << " bytes" <<
+									" from " << inet_ntoa(TCP_addr.sin_addr) << ":" << ntohs(TCP_addr.sin_port) << std::endl;
 
 							errorContextPacket = new ContextPacket();
 
@@ -211,7 +216,7 @@ int ContextNetwork::run() {
 
 							}
 
-							std::cout << "XXXXXXXX : " << "Reply error: CIP_FORMAT_ERROR_OUT_OF_RANGE" << std::endl;
+							std::cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX : " << "TCP reply error: CIP_FORMAT_ERROR_OUT_OF_RANGE" << std::endl;
 
 							if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : " << "close(read_fd " << read_fd << ")" << std::endl;
 							close(read_fd);
@@ -231,10 +236,9 @@ int ContextNetwork::run() {
 							uuid_t acceptUuid;
 							memcpy(acceptUuid, (TCP_buffer+4), 16);
 
-							std::cout << getUuidString(acceptUuid) << " : " <<
+							std::cout << getUuidString(acceptUuid) << " : TCP received " <<
 									TCP_bytes_received << " bytes" <<
-									" from " << inet_ntoa(TCP_addr.sin_addr) << ":" << ntohs(TCP_addr.sin_port) <<
-									" received via TCP" << std::endl;
+									" from " << inet_ntoa(TCP_addr.sin_addr) << ":" << ntohs(TCP_addr.sin_port) << std::endl;
 
 							memcpy (Thread_buffer, TCP_buffer, TCP_bytes_received);
 
@@ -452,6 +456,8 @@ int ContextNetwork::createTcpReply(ContextPacket* receivedContextPacket, char* r
 		size = (size_t) errorContextPacket->getSize();
 		errorContextPacket->serialize(reply_buffer);
 
+		std::cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX : " << "TCP reply error: CIP_FORMAT_ERROR_INCONSISTENT" << std::endl;
+
 		return 1;
 	}
 
@@ -489,6 +495,8 @@ int ContextNetwork::createTcpReply(ContextPacket* receivedContextPacket, char* r
 
 		size = (size_t) errorContextPacket->getSize();
 		errorContextPacket->serialize(reply_buffer);
+
+		std::cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX : " << "TCP reply error: CIP_FORMAT_ERROR_WRONG_PROTOCOL" << std::endl;
 
 		return 1;
 	}

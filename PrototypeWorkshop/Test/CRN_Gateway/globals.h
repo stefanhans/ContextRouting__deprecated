@@ -1,10 +1,10 @@
 #ifndef SRC_GLOBALS_H_
 #define SRC_GLOBALS_H_
 
-#define DEBUG 1
-#define THREAD_DEBUG 1
+#define DEBUG 0
+#define THREAD_DEBUG 0
 #define PRINT_PACKET_DEBUG 0
-#define PRINT_PACKETS_DEBUG 1
+#define PRINT_PACKETS_DEBUG 0
 
 #define LINE_SEPARATOR "----------------------------------------------------------------------"
 

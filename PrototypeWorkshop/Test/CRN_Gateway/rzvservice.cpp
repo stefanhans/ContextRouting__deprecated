@@ -29,7 +29,7 @@ int RZVService::processUDP(void* receivedPacket, int socket, void *buffer, size_
 	}
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")" << "["	<< __FUNCTION__ << "] sendto(UDP_sock): " << nbytes << std::endl;
 
-	std::cout << getUuidString(*((ContextPacket*) receivedPacket)->getUuid()) << " : " << "Service RZV provided: RZV CIP with client's ip:port and current timestamp." << std::endl;
+	std::cout << getUuidString(*((ContextPacket*) receivedPacket)->getUuid()) << " : " << "UDP RZV Service provides CIP with client's ip:port and current timestamp." << std::endl;
 
 
 
@@ -44,39 +44,39 @@ int RZVService::processTCP(void* receivedPacket) {
 //	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] " << (uint) ((ContextPacket*) receivedPacket)->getService()<< std::endl;
 	if (THREAD_DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] RZV SERVICE" << std::endl;
 	if (THREAD_DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] ------------ " << std::endl;
-
-	pthread_mutex_t storageMutex = getContextPacketsMutex();
-
-	int rc;	/* contain mutex lock/unlock results */
-
-	/* lock the mutex, to assure exclusive access to 'a' and 'b'. */
-	rc = pthread_mutex_lock(&storageMutex);
-
-	/* an error has occurred */
-	if (rc) {
-		perror("pthread_mutex_lock");
-		pthread_exit(NULL);
-	}
-
-	std::vector<ContextPacket*>* store_vector;
-	store_vector = getContextPackets(((ContextPacket*) receivedPacket)->getRootCIC()->context);
-
-	store_vector->push_back((ContextPacket*) receivedPacket);
-
-	if (THREAD_DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] :"
-			" push_back at index " << (uint) ((ContextPacket*) receivedPacket)->getRootCIC()->context << std::endl;
-
-	/* unlock mutex */
-	rc = pthread_mutex_unlock(&storageMutex);
-
-	if (rc) {
-		perror("pthread_mutex_unlock");
-		pthread_exit(NULL);
-	}
-
-	if (PRINT_PACKETS_DEBUG) printPackets();
-
-	if (PRINT_PACKET_DEBUG) ((ContextPacket*) receivedPacket)->printPacket();
+//
+//	pthread_mutex_t storageMutex = getContextPacketsMutex();
+//
+//	int rc;	/* contain mutex lock/unlock results */
+//
+//	/* lock the mutex, to assure exclusive access to 'a' and 'b'. */
+//	rc = pthread_mutex_lock(&storageMutex);
+//
+//	/* an error has occurred */
+//	if (rc) {
+//		perror("pthread_mutex_lock");
+//		pthread_exit(NULL);
+//	}
+//
+//	std::vector<ContextPacket*>* store_vector;
+//	store_vector = getContextPackets(((ContextPacket*) receivedPacket)->getRootCIC()->context);
+//
+//	store_vector->push_back((ContextPacket*) receivedPacket);
+//
+//	if (THREAD_DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] :"
+//			" push_back at index " << (uint) ((ContextPacket*) receivedPacket)->getRootCIC()->context << std::endl;
+//
+//	/* unlock mutex */
+//	rc = pthread_mutex_unlock(&storageMutex);
+//
+//	if (rc) {
+//		perror("pthread_mutex_unlock");
+//		pthread_exit(NULL);
+//	}
+//
+//	if (PRINT_PACKETS_DEBUG) printPackets();
+//
+//	if (PRINT_PACKET_DEBUG) ((ContextPacket*) receivedPacket)->printPacket();
 
 	return 0;
 }
