@@ -102,6 +102,31 @@ int set_ci(QStringList command) {
     }
 
     /**
+     * Check value for binary and contents
+     */
+    if(command.at(2)=="binary" && command.at(3)=="contents") {
+        errorStream << "Not yet implemented!" << endl;
+        return 1;
+    }
+
+    /**
+     * Check value for integer and contents
+     */
+    if(command.at(2)=="integer" && command.at(3)=="contents") {
+        errorStream << "Not yet implemented!" << endl;
+        return 1;
+    }
+
+    /**
+     * Check value for hex and contents
+     */
+    if(command.at(2)=="hex" && command.at(3)=="contents") {
+        errorStream << "Not yet implemented!" << endl;
+        return 1;
+    }
+
+
+    /**
      * Read file
      */
 
@@ -140,6 +165,7 @@ int set_ci(QStringList command) {
     keys["content"] = ++i;
     keys["mask"] = ++i;
     keys["size"] = ++i;
+    keys["contents"] = ++i;
 
 
     QByteArray value;
@@ -197,8 +223,59 @@ int set_ci(QStringList command) {
             errorStream << "Cannot find key for "<< command.at(3) << "!" << endl;
             return 1;
         }
+    }
+
+
+    /**
+     * contents
+     */
+    if(command.at(3)=="contents") {
+        if (keys.contains(command.at(3))) {
+            qDebug() << "keys.contains(" << command.at(3) << ")" << endl;
+        }
+        else {
+            errorStream << "Cannot find key for "<< command.at(3) << "!" << endl;
+            return 1;
+        }
+
+        // Remove old contents
+        qDebug().noquote().nospace() << "Remove " << (int) byteArray.at(keys["size"]) << " byte(s) of old CIC-bricks" << endl;
+
+        pos = keys["size"];
+        int oldContentsSize = byteArray.at(keys["size"]);
+
+        for (int i=0; i < oldContentsSize; i++) {
+            byteArray.remove(pos, 2);
+        }
+
+
+        // Set size
+        QString size = QString("%1").arg(command.at(4).size());
+
+        value.append(size.toUInt(&ok, 10));
+
+        if(!ok) {
+            errorStream << "Cannot convert "<< command.at(4) << " to base 10!" << endl;
+            return 1;
+        }
+
+        byteArray.replace(keys["size"], 1, value);
+        qDebug().noquote().nospace() << "Set size to " << size << endl;
+
+
+        // Set contents
+        pos = keys[command.at(3)];
+
+        const QChar *data = command.at(4).data();
+        while (!data->isNull()) {
+            qDebug() << data->toLatin1() << " (" << data->unicode() << ")";
+            byteArray.insert(pos++, data->toLatin1());
+            byteArray.insert(pos++, '\0');
+            ++data;
+        }
 
     }
+
 
 
     /**

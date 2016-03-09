@@ -103,6 +103,7 @@ private:
 
 	char UDP_buffer[MAXMSG];
 	char TCP_buffer[MAXMSG];
+	char Thread_buffer[MAXMSG];
 
 	std::pair<IpAddress*, char*> sizeAndContextStruct;
 	IpAddress* senderAddressArray[FD_SETSIZE];

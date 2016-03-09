@@ -13,7 +13,7 @@
 
 /**
  * @brief set_app
- * @param commands "set_app <file> binary|integer|hex|cip type|root-CIC|size|CIC-Bricks <value>"
+ * @param commands "set_app <file> binary|integer|hex|cip type|size|data <value>"
  * @return
  */
 
@@ -49,17 +49,227 @@ int set_app(QStringList command) {
         return 1;
     }
 
-    if(! command.at(2).contains(QRegExp("^(...|...)$"))) {
+    if(! command.at(2).contains(QRegExp("^(binary|integer|hex|cip)$"))) {
 
-        errorStream << "Error: set_app(" << command.join(" ") << "): No valid ...!" << endl;
+        errorStream << "Error: set_app(" << command.join(" ") << "): No valid CIP mode!" << endl;
+        man("usage set_app");
+        return 1;
+    }
+
+
+    if(! command.at(3).contains(QRegExp("^(type|size|data)$"))) {
+
+        errorStream << "Error: set_app(" << command.join(" ") << "): No valid key!" << endl;
         man("usage set_app");
         return 1;
     }
 
 
     /**
-     * <functionality>
+     * Check value for integer and single value
      */
+    if(command.at(2)=="integer" && command.at(3).contains(QRegExp("^(type|size)$"))
+            && // not uint8 (0-255)
+            ((! command.at(4).contains(QRegExp("^\\d\\d?\\d?$")))
+            || command.at(4).toInt() < 0
+            || command.at(4).toInt() > 255)) {
+
+        errorStream << "Error: set_ci(" << command.join(" ") << "): No valid value!" << endl;
+        man("usage set_ci");
+        return 1;
+    }
+
+    /**
+     * Check value for binary and single value
+     */
+    if(command.at(2)=="binary" && command.at(3).contains(QRegExp("^(type|size)$"))
+            && // not uint8 (00000000-11111111)
+            ((! command.at(4).contains(QRegExp("^(0|1){8}$"))))) {
+
+        errorStream << "Error: set_ci(" << command.join(" ") << "): No valid value!" << endl;
+        man("usage set_ci");
+        return 1;
+    }
+
+    /**
+     * Check value for hex and single value
+     */
+    if(command.at(2)=="hex" && command.at(3).contains(QRegExp("^(type|size)$"))
+            && // not uint8 (00-ff)
+            ((! command.at(4).contains(QRegExp("^(\\d|a|b|c|d|e|f){2}$"))))) {
+
+        errorStream << "Error: set_ci(" << command.join(" ") << "): No valid value!" << endl;
+        man("usage set_ci");
+        return 1;
+    }
+
+
+    /**
+     * Read file
+     */
+
+    QString filePath;
+
+    filePath = CIP_ROOT;
+    filePath += "/" + command.at(1);
+
+    qDebug() << "filePath: " << filePath << endl;
+
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly)) {
+
+        errorStream << "Error: set_ci(" << command.join(" ") << ") can not read " << filePath << endl;
+        return 1;
+    }
+
+    QByteArray byteArray;
+    byteArray = file.readAll();
+    file.close();
+
+    qDebug() << "byteArray.size(): " << byteArray.size() << endl;
+
+
+
+    /**
+     * Define map with start position
+     */
+
+    QMap<QString, int> keys;
+    int pos;
+
+    int i = byteArray.at(35) + 39;
+    i += byteArray.at(i)*2;
+
+    keys["type"] = ++i;
+    keys["size"] = ++i;
+    keys["data"] = ++i;
+
+    QByteArray value;
+    bool ok;
+
+
+    /**
+     * One byte keys (without size)
+     */
+
+    if(command.at(3).contains(QRegExp("^(type|size)$"))) {
+
+
+        if (keys.contains(command.at(3))) {
+            qDebug() << "keys.contains(" << command.at(3) << ")" << endl;
+
+            if(command.at(2)=="binary") {
+                value.append(command.at(4).toUInt(&ok, 2));
+
+                if(!ok) {
+                    errorStream << "Cannot convert "<< command.at(4) << " to base 2!" << endl;
+                    return 1;
+                }
+            }
+
+            if(command.at(2)=="integer") {
+                value.append(command.at(4).toUInt(&ok, 10));
+
+                if(!ok) {
+                    errorStream << "Cannot convert "<< command.at(4) << " to base 10!" << endl;
+                    return 1;
+                }
+            }
+
+            if(command.at(2)=="hex") {
+                value.append(command.at(4).toUInt(&ok, 16));
+
+                if(!ok) {
+                    errorStream << "Cannot convert "<< command.at(4) << " to base 16!" << endl;
+                    return 1;
+                }
+            }
+
+            if(command.at(2)=="cip") {
+                errorStream << "Not yet specified!" << endl;
+                return 1;
+            }
+
+            pos = keys[command.at(3)];
+
+            qDebug() << "byteArray.replace(" << pos << ", 1, " << value << ")" << endl;
+            byteArray.replace(pos, 1, value);
+        }
+        else {
+            errorStream << "Cannot find key for "<< command.at(3) << "!" << endl;
+            return 1;
+        }
+    }
+
+
+    /**
+     * data
+     */
+    if(command.at(3)=="data") {
+        if (keys.contains(command.at(3))) {
+            qDebug() << "keys.contains(" << command.at(3) << ")" << endl;
+        }
+        else {
+            errorStream << "Cannot find key for "<< command.at(3) << "!" << endl;
+            return 1;
+        }
+
+        // Remove old contents
+        qDebug().noquote().nospace() << "Remove " << (int) byteArray.at(keys["size"]) << " byte(s) of data" << endl;
+
+        pos = keys["size"];
+        int oldContentsSize = byteArray.at(keys["size"]);
+
+        for (int i=0; i < oldContentsSize; i++) {
+            byteArray.remove(pos, 1);
+            qDebug().noquote().nospace() << "Remove " << pos << endl;
+        }
+
+
+        // Set size
+        QString size = QString("%1").arg(command.at(4).size());
+
+        value.append(size.toUInt(&ok, 10));
+
+        if(!ok) {
+            errorStream << "Cannot convert "<< command.at(4) << " to base 10!" << endl;
+            return 1;
+        }
+
+        byteArray.replace(keys["size"], 1, value);
+        qDebug().noquote().nospace() << "Set size to " << size << endl;
+
+
+        // Set contents
+        pos = keys[command.at(3)];
+
+        const QChar *data = command.at(4).data();
+        while (!data->isNull()) {
+            qDebug() << data->toLatin1() << " (" << data->unicode() << ")";
+            byteArray.insert(pos++, data->toLatin1());
+            ++data;
+        }
+
+    }
+
+
+    /**
+     * Write file
+     */
+
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+
+        errorStream << "Error: set_ci(" << command.join(" ") << ") can not write to file " << filePath << endl;
+        return 1;
+    }
+    file.write(byteArray);
+
+    file.close();
+
+    qDebug() << "filePath: " << filePath << endl;
+
+
+
 
     return 0;
 }

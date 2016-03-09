@@ -385,7 +385,7 @@ int ContextPacket::processUDP(int sock, struct sockaddr *addr, int UDP_bytes_rec
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	if(UdpContextService == NULL) {
-		UdpContextService = ContextService::create(request, channel);
+		UdpContextService = ContextService::create(channel, request);
 	}
 
 	char sendBuffer[getSize()];
@@ -404,7 +404,7 @@ int ContextPacket::processTCP() {
 	if (THREAD_DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
 	if(TcpContextService == NULL) {
-		TcpContextService = ContextService::create(request, channel);
+		TcpContextService = ContextService::create(channel, request);
 	}
 
 	return TcpContextService->processTCP(this);

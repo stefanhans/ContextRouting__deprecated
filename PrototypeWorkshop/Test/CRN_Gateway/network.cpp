@@ -236,8 +236,13 @@ int ContextNetwork::run() {
 									" from " << inet_ntoa(TCP_addr.sin_addr) << ":" << ntohs(TCP_addr.sin_port) <<
 									" received via TCP" << std::endl;
 
+							memcpy (Thread_buffer, TCP_buffer, TCP_bytes_received);
+
 							sizeAndContextStruct.first = new IpAddress(acceptUuid, TCP_addr);
-							sizeAndContextStruct.second = TCP_buffer;
+							sizeAndContextStruct.second = Thread_buffer;
+
+
+
 
 							if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : " << "close(acceptSocket " << acceptSocket << ")" << std::endl;
 							close(acceptSocket);
@@ -269,7 +274,7 @@ int ContextNetwork::run() {
 									receipt->setIpAddress(inet_addr(inet_ntoa(senderAddressArray[write_fd]->getSockAddress().sin_addr)));
 									receipt->setPortNumber(senderAddressArray[write_fd]->getSockAddress().sin_port);
 
-									if (PRINT_PACKETS_DEBUG) receipt->printPacket();
+									if (PRINT_PACKET_DEBUG) receipt->printPacket();
 
 
 									char replyBuffer[MAXMSG];
@@ -277,14 +282,14 @@ int ContextNetwork::run() {
 
 									int tcpValidation = createTcpReply(receipt, replyBuffer, sizeInout);
 									if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] tcpValidation: " << (int) tcpValidation << std::endl;
-
-
-									int size = receipt->getSize();
-									if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] " << "size: " << size << std::endl;
-
-
-									char answerBuffer[size];
-									receipt->serialize(answerBuffer);
+//
+//
+//									int size = receipt->getSize();
+//									if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] " << "size: " << size << std::endl;
+//
+//
+//									char answerBuffer[size];
+//									receipt->serialize(answerBuffer);
 
 									TCP_bytes_to_send = write(write_fd, replyBuffer, sizeInout);
 
@@ -293,20 +298,25 @@ int ContextNetwork::run() {
 									}
 									else {
 										if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] " << "TCP_bytes_to_send: " << TCP_bytes_to_send << std::endl;
-										break;
-									}
 
 
-									if(tcpValidation == 0) {
-										if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : " << "tcpValidation == 0" << std::endl;
 
-										/*
-										 * Create a new thread that will execute 'receiveTcpThread()'
-										 */
-										if (pthread_create(&p_thread, NULL, receiveTcpThread, (void*) &sizeAndContextStruct) != 0) {
-											perror("pthread_create(receiveTcpThread) failed");
 
+
+										if(tcpValidation == 0) {
+											if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : " << "tcpValidation == 0" << std::endl;
+
+											/*
+											 * Create a new thread that will execute 'receiveTcpThread()'
+											 */
+											if (pthread_create(&p_thread, NULL, receiveTcpThread, (void*) &sizeAndContextStruct) != 0) {
+												perror("pthread_create(receiveTcpThread) failed");
+
+											}
 										}
+
+
+										break;
 									}
 
 								} // FD_ISSET

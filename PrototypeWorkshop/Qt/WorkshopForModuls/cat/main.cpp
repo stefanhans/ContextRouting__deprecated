@@ -371,9 +371,9 @@ int cat(QStringList command) {
         size = byte;
         for(int i=0; i<size; i++) {
             byte = byteArray.at(b++);
-            qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) << " Contextinformation: CIC[" << QString("%1").arg(i).rightJustified(3) << "] content: " << byte;
+            qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) << " Contextinformation: CIC[" << QString("%1").arg(i).rightJustified(3) << "] content: " << QString("%1").arg(byte).rightJustified(3);
             byte = byteArray.at(b++);
-            qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) << " Contextinformation: CIC[" << QString("%1").arg(i).rightJustified(3) << "] mask: " << byte;
+            qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) << " Contextinformation: CIC[" << QString("%1").arg(i).rightJustified(3) << "] mask:    " << QString("%1").arg(byte).rightJustified(3);
         }
 
         // Application: type (1)
@@ -399,10 +399,19 @@ int cat(QStringList command) {
         byte = byteArray.at(b++);
         qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) << " Application data: size: " << byte;
 
-        size = byte;
-        for(int i=0; i<size; i++) {
-            byte = byteArray.at(b++);
-            qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) << " Application data: additional data[" << QString("%1").arg(i).rightJustified(3) << "]: " << byte;
+        if(cipString == "APP_TYPE_TEXT" || cipString == "APP_TYPE_URL") {
+            size = byte;
+            for(int i=0; i<size; i++) {
+                byte = byteArray.at(b++);
+                qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) << " Application data: additional data[" << QString("%1").arg(i).rightJustified(3) << "]: " << QString("%1").arg(byte).rightJustified(3) << " : " <<  QChar(byte);
+            }
+        }
+        else {
+            size = byte;
+            for(int i=0; i<size; i++) {
+                byte = byteArray.at(b++);
+                qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) << " Application data: additional data[" << QString("%1").arg(i).rightJustified(3) << "]: " << QString("%1").arg(byte).rightJustified(3);
+            }
         }
     }
     return 0;
