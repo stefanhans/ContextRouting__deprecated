@@ -91,10 +91,10 @@ class ContextPacket {
 public:
 
 	ContextPacket();
-	~ContextPacket() {
-		delete rootCIC;
-		deleteService();
-	}
+//	~ContextPacket() {
+//		delete rootCIC;
+//		deleteService();
+//	}
 
 	ContextPacket(IpAddress *ipAddress);
 
@@ -349,12 +349,14 @@ public:
 	 */
 	int processUDP(int socket, struct sockaddr *addr, int UDP_bytes_received);
 
+	int resetUDPService();
+
 	/**
 	 * Process received TCP packet by service object according to packet's service
 	 */
 	int processTCP();
 
-	int deleteService();
+	int resetTCPService();
 
 	/**
 	 * Print data for debugging

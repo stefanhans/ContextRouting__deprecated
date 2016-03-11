@@ -21,12 +21,27 @@ int OfferRequestService::processTCP(void* receivedPacket) {
 	std::vector<ContextPacket*>* store_vector;
 	store_vector = getContextPackets(((ContextPacket*) receivedPacket)->getRootCIC()->context);
 
-	store_vector->push_back((ContextPacket*) receivedPacket);
-
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] :"
 			" push_back at index " << (uint) ((ContextPacket*) receivedPacket)->getRootCIC()->context << std::endl;
 
-	std::cout << getUuidString(*((ContextPacket*) receivedPacket)->getUuid()) << " : " << "TCP Offer Service merges CIP accordingly." << std::endl;
+	if(store_vector->size() > 0) {
+
+		if(matchContextPackets((ContextPacket*) receivedPacket, (ContextPacket*) store_vector->front())) {
+
+			store_vector->clear();
+			store_vector->push_back((ContextPacket*) receivedPacket);
+
+			std::cout << getUuidString(*((ContextPacket*) receivedPacket)->getUuid()) << " : " << "TCP Offer Service updates CIP accordingly : " << ctime(((ContextPacket*) receivedPacket)->getTime()) << std::ends;
+
+
+		}
+	}
+	else {
+
+		store_vector->push_back((ContextPacket*) receivedPacket);
+
+		std::cout << getUuidString(*((ContextPacket*) receivedPacket)->getUuid()) << " : " << "TCP Offer Service stores CIP accordingly." << std::endl;
+	}
 
 	/* unlock mutex */
 	rc = pthread_mutex_unlock(&storageMutex);
@@ -45,10 +60,8 @@ int OfferRequestService::processTCP(void* receivedPacket) {
 
 
 int OfferRequestService::processUDP(void* receivedPacket, int socket, void *buffer, size_t size, struct sockaddr *addr) {
-//	if (DEBUG)
-		std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] REQUEST SERVICE" << std::endl;
-//	if (DEBUG)
-		std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] ------------ " << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] REQUEST SERVICE" << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] ------------ " << std::endl;
 
 	std::vector<ContextPacket*>* store_vector;
 	store_vector = getContextPackets(((ContextPacket*) receivedPacket)->getRootCIC()->context);
@@ -66,8 +79,6 @@ int OfferRequestService::processUDP(void* receivedPacket, int socket, void *buff
 	for (std::vector<ContextPacket*>::iterator iter = store_vector->begin(); iter != store_vector->end(); ++iter) {
 
 		if(matchContextPackets((*iter), (ContextPacket*) receivedPacket)) {
-
-			//(*iter)->printPacket("FOUND: ");
 
 			if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : FOUND " << getUuidString(*(*iter)->getUuid()) << std::endl;
 

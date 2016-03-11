@@ -384,9 +384,7 @@ int ContextPacket::deserialize(char *buffer) {
 int ContextPacket::processUDP(int sock, struct sockaddr *addr, int UDP_bytes_received) {
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
-//	if(UdpContextService != NULL) {
-//			deleteService();
-//	}
+	resetUDPService();
 
 	if(UdpContextService == NULL) {
 		UdpContextService = ContextService::create(channel, request);
@@ -403,6 +401,15 @@ int ContextPacket::processUDP(int sock, struct sockaddr *addr, int UDP_bytes_rec
 	return 1;
 }
 
+int ContextPacket::resetUDPService() {
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+
+	UdpContextService = NULL;
+
+	return 0;
+}
+
+
 
 int ContextPacket::processTCP() {
 	if (THREAD_DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
@@ -416,13 +423,14 @@ int ContextPacket::processTCP() {
 	return 0;
 }
 
-int ContextPacket::deleteService() {
+int ContextPacket::resetTCPService() {
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
 
-//	delete UdpContextService;
-//	delete TcpContextService;
+	TcpContextService = NULL;
+
 	return 0;
 }
+
 
 
 /**

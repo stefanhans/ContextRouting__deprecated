@@ -510,6 +510,8 @@ int ContextNetwork::createTcpReply(ContextPacket* receivedContextPacket, char* r
 	size = (size_t) receivedContextPacket->getSize();
 	receivedContextPacket->serialize(reply_buffer);
 
+	std::cout << getUuidString(*receivedContextPacket->getUuid()) << " : " << "TCP replies CIP echo before calling Service thread." << std::endl;
+
 	return 0;
 }
 
@@ -527,6 +529,8 @@ void* receiveTcpThread(void* data) {
 	receivedContextPacket->setPortNumber(incoming.first->getSockAddress().sin_port);
 
 	receivedContextPacket->processTCP();
+
+	receivedContextPacket->resetTCPService();
 
 	/* terminate the thread */
 	pthread_exit(NULL);

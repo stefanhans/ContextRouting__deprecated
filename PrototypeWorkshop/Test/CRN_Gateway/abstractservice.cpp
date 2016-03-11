@@ -104,8 +104,7 @@ ContextService* ContextService::create(byte_t channel, byte_t request) {
 	 * RZV (Reserved Zero Value) service constructor call
 	 */
 	if(request == SERVICE_RZV || channel == CHANNEL_RZV) {
-//		if (DEBUG)
-			std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] new RZVService()" << std::endl;
+		if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] new RZVService()" << std::endl;
 		return new RZVService();
 	}
 
@@ -133,8 +132,7 @@ ContextService* ContextService::create(byte_t channel, byte_t request) {
 	/*
 	 * Default service constructor call
 	 */
-//	if (DEBUG)
-		std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] No known request with id " << (int) request << " - use default service instead" << std::endl;
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] No known request with id " << (int) request << " - use default service instead" << std::endl;
 	return new DefaultService();
 }
 
