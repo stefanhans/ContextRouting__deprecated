@@ -59,6 +59,16 @@ protected:
 	 */
 	bool matchContextPackets(void* contextPacket_1, void* contextPacket_2);
 
+	/*
+	 * Do two ContextBricks have equal content?
+	 */
+	bool equalContextBricksContent(void* contextBrick_1, void* contextBrick_2);
+
+	/**
+	 * Do two ContextPackets have equal CIC-Bricks' content?
+	 */
+	bool equalContextPacketContents(void* contextPacket_1, void* contextPacket_2);
+
 	void printPackets();
 
 private:

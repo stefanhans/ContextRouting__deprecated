@@ -31,10 +31,6 @@ int HeartbeatService::processUDP(void* receivedPacket, int socket, void *buffer,
 
 	std::cout << getUuidString(*((ContextPacket*) receivedPacket)->getUuid()) << " : " << "UDP Heartbeat Service provides CIP with client's ip:port and current timestamp." << std::endl;
 
-
-
-	if (PRINT_PACKETS_DEBUG) printPackets();
-
 	if (PRINT_PACKET_DEBUG) ((ContextPacket*) receivedPacket)->printPacket();
 
 	return 0;

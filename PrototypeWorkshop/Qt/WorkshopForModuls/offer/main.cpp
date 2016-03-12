@@ -1,35 +1,24 @@
-// .h + .cpp
-#include <QStringList>
-
-// .cpp
 #include <QDebug>
 #include <QTextStream>
 #include <QFile>
 #include <QUuid>
 #include <QTime>
 #include <QtMath>
-// other includes
 
-// .cpp
 #define CRN_RANDOM_DIVISOR (RAND_MAX/255)
 #define MAXMSG 1064
 #define CIP_ROOT "/home/stefan/Development/PrototypeWorkshop/QtWorkspace/WorkshopForModuls/cips"
 
 #include "usage.h"
 
-// .h
-int touch(QStringList command);
-
-
-// .cpp
 /**
- * @brief touch
- * @param command "touch <file> rzv|max|random|default"
+ * @brief offer
+ * @param commands "offer <file> random"
  * @return
  */
 
-int touch(QStringList command) {
-    qDebug() << "touch(" << command.join(" ") << ")" << endl;
+int offer(QStringList command) {
+    qDebug() << "offer(" << command.join(" ") << ")" << endl;
 
 
     /**
@@ -39,6 +28,7 @@ int touch(QStringList command) {
         qDebug() << "command.at(" << i << ")" << command.at(i) << endl;
     }
 
+
     /**
      * Check input
      */
@@ -46,102 +36,39 @@ int touch(QStringList command) {
 
     if(command.size() != 3) {
 
-        errorStream << "Error: touch(" << command.join(" ") << "): No valid number of arguments!" << endl;
-        man("usage touch");
+        errorStream << "Error: offer(" << command.join(" ") << "): No valid number of arguments!" << endl;
+        man("usage offer");
         return 1;
     }
 
 
-    if(command.at(0)!="touch") {
+    if(command.at(0)!="offer") {
 
-        errorStream << "Error: touch(" << command.join(" ") << "): No valid command!" << endl;
-        man("usage touch");
+        errorStream << "Error: offer(" << command.join(" ") << "): No valid command!" << endl;
+        man("usage offer");
         return 1;
     }
 
-    if(! command.at(2).contains(QRegExp("^(rzv|max|random|default)$"))) {
+    if(! command.at(2).contains(QRegExp("^(random)$"))) {
 
-        errorStream << "Error: touch(" << command.join(" ") << "): No valid CIP specification!" << endl;
-        man("usage touch");
+        errorStream << "Error: offer(" << command.join(" ") << "): No valid mode!" << endl;
+        man("usage offer");
         return 1;
     }
+
 
     QByteArray byteArray;
 
     /**
-     * CIP for "rzv"
-     */
-    if(command.at(2)=="rzv") {
-        qDebug() << "rzv" << endl;
-
-        byteArray.append(QByteArray(42, '\0'));
-     }
-
-
-    /**
-     * CIP for "default"
-     */
-    if(command.at(2)=="default") {
-        qDebug() << "default" << endl;
-
-        // Header: request (1), profile (1), version (1), channel (1)
-        byteArray.append(QByteArray(4, '\0'));
-
-        // Header: UUID (16)
-        QUuid uuid;
-        uuid = QUuid::createUuid();
-        QByteArray uuid_arr = uuid.toRfc4122();
-
-        for(int j=0; j<16;j++) {
-
-            byteArray.append(uuid_arr.at(j));
-        }
-
-        // Header: Empty IP address (4), port number (2), time (8), type (1), size (1)
-        byteArray.append(QByteArray(16, '\0'));
-
-        // Contextinformation: type (1), root-CIC (2), size (1)
-        byteArray.append(QByteArray(4, '\0'));
-
-        // Application: type (1), size (1)
-        byteArray.append(QByteArray(2, '\0'));
-     }
-
-    /**
-     * CIP for "max"
-     */
-    if(command.at(2)=="max") {
-        qDebug() << "max" << endl;
-
-        // Header: fix
-        byteArray.append(QByteArray(34, '\0'));
-
-        // Header: size (1)
-        byteArray.append(QByteArray(QByteArray::fromHex("0xff")));
-        byteArray.append(QByteArray(255, '\0'));
-
-        // Contextinformation: fix
-        byteArray.append(QByteArray(2, '\0'));
-
-        // Contextinformation: size (255)
-        byteArray.append(QByteArray(QByteArray::fromHex("0xff")));
-        byteArray.append(QByteArray(255*2, '\0'));
-
-        // Application Data: fix
-        byteArray.append(QByteArray(0, '\0'));
-
-        // Application Data: size (255)
-        byteArray.append(QByteArray(QByteArray::fromHex("0xff")));
-        byteArray.append(QByteArray(255, '\0'));
-
-
-     }
-
-    /**
-     * CIP for "random"
+     * Offer CIP for "random"
      */
     if(command.at(2)=="random") {
         qDebug() << "random" << endl;
+
+
+        /*
+         * Create random CIP
+         */
 
         QByteArray randValues;
         qsrand(QTime::currentTime().msec());
@@ -212,6 +139,98 @@ int touch(QStringList command) {
         byteArray.append(rand);
         byteArray.append(QByteArray(rand, rand));
 
+
+
+        /**
+         * Define map with start position
+         */
+
+        QMap<QString, int> keys;
+        int pos;
+
+        keys["request"] = 0;
+        keys["profile"] = 1;
+        keys["version"] = 2;
+        keys["channel"] = 3;
+        keys["uuid"] = 4;
+        keys["ip"] = 20;
+        keys["port"] = 24;
+        keys["time"] = 26;
+        keys["head_type"] = 34;
+        keys["head_size"] = 35;
+
+        i = byteArray.at(35) + 35;
+
+        keys["ci_type"] = ++i;
+        keys["content"] = ++i;
+        keys["mask"] = ++i;
+        keys["ci_size"] = ++i;
+        keys["contents"] = ++i;
+
+
+
+        QByteArray value;
+
+
+        /*
+         * Transform to Offer
+         */
+
+        // Header request -> 2
+        pos = keys["request"];
+        value.clear();
+        value.append((uint) 2);
+
+        qDebug() << "byteArray.replace(" << pos << ", 1, " << value << ")" << endl;
+        byteArray.replace(pos, 1, value);
+
+
+        // Header channel -> 1
+        pos = keys["channel"];
+        value.clear();
+        value.append((uint) 1);
+
+        qDebug() << "byteArray.replace(" << pos << ", 1, " << value << ")" << endl;
+        byteArray.replace(pos, 1, value);
+
+
+        // Header version -> 1
+        pos = keys["version"];
+        value.clear();
+        value.append((uint) 1);
+
+        qDebug() << "byteArray.replace(" << pos << ", 1, " << value << ")" << endl;
+        byteArray.replace(pos, 1, value);
+
+
+        // CI type -> 1
+        pos = keys["ci_type"];
+        value.clear();
+        value.append((uint) 1);
+
+        qDebug() << "byteArray.replace(" << pos << ", 1, " << value << ")" << endl;
+        byteArray.replace(pos, 1, value);
+
+
+        // CI root-CIC->content -> 1
+        pos = keys["content"];
+        value.clear();
+        value.append((uint) 1);
+
+        qDebug() << "byteArray.replace(" << pos << ", 1, " << value << ")" << endl;
+        byteArray.replace(pos, 1, value);
+
+
+        // CI root-CIC->mask -> 0
+        pos = keys["mask"];
+        value.clear();
+        value.append('\0');
+
+        qDebug() << "byteArray.replace(" << pos << ", 1, " << value << ")" << endl;
+        byteArray.replace(pos, 1, value);
+
+
+
     } // rand
 
 
@@ -254,13 +273,13 @@ int main(int argc, char *argv[])
         command.append(QString("%1").arg(argv[i]));
     }
 
-//    command.append("touch");
-//    command.append("myfile");
-//    command.append("rzv");
+    //    command.append("function");
+    //    command.append("my");
+    //    command.append("arg_2");
+    //    command.append("arg_3");
 
-    qDebug() << "Return: " << touch(command) << endl;
+    qDebug() << "Return: " << offer(command) << endl;
 
     return 0;
 }
-
 

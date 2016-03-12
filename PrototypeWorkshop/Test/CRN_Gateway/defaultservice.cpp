@@ -32,11 +32,7 @@ int DefaultService::processUDP(void* receivedPacket, int socket, void *buffer, s
 
 	std::cout << getUuidString(*((ContextPacket*) receivedPacket)->getUuid()) << " : " << "UDP Default Service provides CIP with client's ip:port and current timestamp." << std::endl;
 
-
-
-//	if (PRINT_PACKETS_DEBUG) printPackets();
-
-//	if (PRINT_PACKET_DEBUG) ((ContextPacket*) receivedPacket)->printPacket();
+	if (PRINT_PACKET_DEBUG) ((ContextPacket*) receivedPacket)->printPacket();
 
 	return 0;
 }

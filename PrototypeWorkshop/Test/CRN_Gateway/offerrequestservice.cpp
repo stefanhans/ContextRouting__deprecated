@@ -24,23 +24,32 @@ int OfferRequestService::processTCP(void* receivedPacket) {
 	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] :"
 			" push_back at index " << (uint) ((ContextPacket*) receivedPacket)->getRootCIC()->context << std::endl;
 
+	int update = 0;
 	if(store_vector->size() > 0) {
 
-		if(matchContextPackets((ContextPacket*) receivedPacket, (ContextPacket*) store_vector->front())) {
 
-			store_vector->clear();
-			store_vector->push_back((ContextPacket*) receivedPacket);
+		for (std::vector<ContextPacket*>::iterator iter = store_vector->begin(); iter != store_vector->end(); ++iter) {
 
-			std::cout << getUuidString(*((ContextPacket*) receivedPacket)->getUuid()) << " : " << "TCP Offer Service updates CIP accordingly : " << ctime(((ContextPacket*) receivedPacket)->getTime()) << std::ends;
+			if(equalContextPacketContents((*iter), (ContextPacket*) receivedPacket)) {
 
+				if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "] : Erase CIP with equal CIC-Bricks' content from storage." << getUuidString(*(*iter)->getUuid()) << std::endl;
 
+				store_vector->erase(iter);
+
+				update = 1;
+
+				break;
+			}
 		}
 	}
+
+	store_vector->push_back((ContextPacket*) receivedPacket);
+
+	if(update) {
+		std::cout << getUuidString(*((ContextPacket*) receivedPacket)->getUuid()) << " : " << "TCP Offer Service updates CIP : " << ctime(((ContextPacket*) receivedPacket)->getTime()) << std::ends;
+	}
 	else {
-
-		store_vector->push_back((ContextPacket*) receivedPacket);
-
-		std::cout << getUuidString(*((ContextPacket*) receivedPacket)->getUuid()) << " : " << "TCP Offer Service stores CIP accordingly." << std::endl;
+		std::cout << getUuidString(*((ContextPacket*) receivedPacket)->getUuid()) << " : " << "TCP Offer Service stores CIP : " << ctime(((ContextPacket*) receivedPacket)->getTime()) << std::ends;
 	}
 
 	/* unlock mutex */
@@ -98,6 +107,8 @@ int OfferRequestService::processUDP(void* receivedPacket, int socket, void *buff
 
 		}
 	}
+
+	if (PRINT_PACKET_DEBUG) ((ContextPacket*) receivedPacket)->printPacket();
 
 	return 0;
 }

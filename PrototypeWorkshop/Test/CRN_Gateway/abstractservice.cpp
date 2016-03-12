@@ -301,6 +301,38 @@ bool ContextService::matchContextPackets(void* contextPacket_1, void* contextPac
 }
 
 
+bool ContextService::equalContextBricksContent(void* contextBrick_1, void* contextBrick_2) {
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+
+	byte_t notEqual = ((ContextBrick*) contextBrick_1)->context ^ ((ContextBrick*) contextBrick_2)->context;
+	if (notEqual == 0) {
+		return true;
+	}
+
+	return false;
+}
+
+bool ContextService::equalContextPacketContents(void* contextPacket_1, void* contextPacket_2) {
+	if (DEBUG) std::cout << __FILE__ << "(" << __LINE__ << ")"  << "[" << __FUNCTION__<< "]" << std::endl;
+
+	if (!equalContextBricksContent(((ContextPacket*) contextPacket_1)->getRootCIC(), ((ContextPacket*) contextPacket_2)->getRootCIC())) {
+		return false;
+	}
+	if (((ContextPacket*) contextPacket_1)->getCiSize() != ((ContextPacket*) contextPacket_2)->getCiSize()) {
+		return false;
+	}
+
+	unsigned int i;
+	for (i = 0; i < ((ContextPacket*) contextPacket_1)->getCiSize(); i++) {
+		if ( ! equalContextBricksContent(&(((ContextPacket*) contextPacket_1)->ciCICBricks[i]), &(((ContextPacket*) contextPacket_2)->ciCICBricks[i])) ) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+
 /**
  * Debugging method to print whole static packet storage
  */
