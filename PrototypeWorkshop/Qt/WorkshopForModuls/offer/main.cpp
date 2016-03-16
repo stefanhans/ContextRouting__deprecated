@@ -70,14 +70,17 @@ int offer(QStringList command) {
          * Create random CIP
          */
 
+
+
         QByteArray randValues;
         qsrand(QTime::currentTime().msec());
+
         for(int i=0; i <= 1064; i++) {
-            randValues.append(qFloor(qrand()/CRN_RANDOM_DIVISOR));
+            randValues.append((quint8) qFloor(qrand()/CRN_RANDOM_DIVISOR));
         }
 
 
-        int i = 0;
+        quint8 i = 0;
         quint8 rand;
 
         // Header: request (1)
@@ -115,7 +118,10 @@ int offer(QStringList command) {
         byteArray.append(randValues.at(i++));
 
         // Header: size (1) and data
+        qDebug() << "xxxxxxxxxxxxxxx: " << i;
         rand = randValues.at(i++);
+        qDebug() << "xxxxxxxxxxxxxxx: " << i;
+        qDebug() << "xxxxxxxxxxxxxxx: " << rand;
         byteArray.append(rand);
         byteArray.append(QByteArray(rand, rand));
 
@@ -145,8 +151,8 @@ int offer(QStringList command) {
          * Define map with start position
          */
 
-        QMap<QString, int> keys;
-        int pos;
+        QMap<QString, quint8> keys;
+        quint8 pos;
 
         keys["request"] = 0;
         keys["profile"] = 1;
@@ -160,6 +166,7 @@ int offer(QStringList command) {
         keys["head_size"] = 35;
 
         i = byteArray.at(35) + 35;
+        qDebug() << "XXXXXXXXXXXX: " << i;
 
         keys["ci_type"] = ++i;
         keys["content"] = ++i;
@@ -179,7 +186,7 @@ int offer(QStringList command) {
         // Header request -> 2
         pos = keys["request"];
         value.clear();
-        value.append((uint) 2);
+        value.append((quint8) 2);
 
         qDebug() << "byteArray.replace(" << pos << ", 1, " << value << ")" << endl;
         byteArray.replace(pos, 1, value);
@@ -188,7 +195,7 @@ int offer(QStringList command) {
         // Header channel -> 1
         pos = keys["channel"];
         value.clear();
-        value.append((uint) 1);
+        value.append((quint8) 1);
 
         qDebug() << "byteArray.replace(" << pos << ", 1, " << value << ")" << endl;
         byteArray.replace(pos, 1, value);
@@ -197,7 +204,7 @@ int offer(QStringList command) {
         // Header version -> 1
         pos = keys["version"];
         value.clear();
-        value.append((uint) 1);
+        value.append((quint8) 1);
 
         qDebug() << "byteArray.replace(" << pos << ", 1, " << value << ")" << endl;
         byteArray.replace(pos, 1, value);
@@ -206,7 +213,7 @@ int offer(QStringList command) {
         // CI type -> 1
         pos = keys["ci_type"];
         value.clear();
-        value.append((uint) 1);
+        value.append((quint8) 1);
 
         qDebug() << "byteArray.replace(" << pos << ", 1, " << value << ")" << endl;
         byteArray.replace(pos, 1, value);
@@ -215,7 +222,7 @@ int offer(QStringList command) {
         // CI root-CIC->content -> 1
         pos = keys["content"];
         value.clear();
-        value.append((uint) 1);
+        value.append((quint8) 1);
 
         qDebug() << "byteArray.replace(" << pos << ", 1, " << value << ")" << endl;
         byteArray.replace(pos, 1, value);
