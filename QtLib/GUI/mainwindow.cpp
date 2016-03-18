@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
     // Data Fix Layout
     dataLayout = new QGridLayout;
 
+
     // Interaction
     interactionLayout = new QVBoxLayout;
 
@@ -36,13 +37,16 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Factory - Service
     factoryServiceLbl = new QLabel(tr("Service"));
-    factoryServiceCBx = new QComboBox();
-    factoryServiceCBx->addItem("PORT_TCP_CONTEXT", 1);
-    factoryServiceCBx->addItem("PORT_UDP_CONTEXT", 2);
+    factoryServiceCmbBx = new QComboBox();
+    factoryServiceCmbBx->addItem("Heartbeat", 1);
+    factoryServiceCmbBx->addItem("Offer", 2);
+    factoryServiceCmbBx->addItem("Request", 3);
+    factoryServiceCmbBx->addItem("TcpReply", 4);
+    factoryServiceCmbBx->addItem("UdpReply", 5);
     factoryServiceLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    factoryServiceLbl->setBuddy(factoryServiceCBx);
+    factoryServiceLbl->setBuddy(factoryServiceCmbBx);
 
-    newBtn = new QPushButton(tr("New"), this);
+    createBtn = new QPushButton(tr("New"), this);
 
 
     // Files
@@ -59,8 +63,8 @@ MainWindow::MainWindow(QWidget *parent)
     factoryLayout->setColumnMinimumWidth(0, 50);
 
     factoryLayout->addWidget(factoryServiceLbl, 0, 0);
-    factoryLayout->addWidget(factoryServiceCBx, 0, 1);
-    factoryLayout->addWidget(newBtn, 0, 2);
+    factoryLayout->addWidget(factoryServiceCmbBx, 0, 1);
+    factoryLayout->addWidget(createBtn, 0, 2);
 
 
     filesLayout->addWidget(openBtn, 0, 0);
@@ -82,7 +86,22 @@ MainWindow::MainWindow(QWidget *parent)
     dataGBox->setLayout(dataLayout);
     mainLayout->addWidget(dataGBox);
 
-    mainLayout->addStretch();
+
+
+    // Raw CIP Layout
+    rawCIPLayout = new QGridLayout;
+    rawCIPGBox = new QGroupBox("Raw CIP Data");
+    rawCIPGBox->setLayout(rawCIPLayout);
+    mainLayout->addWidget(rawCIPGBox);
+
+    rawCIPTxtEdt = new QTextEdit(rawCIPGBox);
+    rawCIPTxtEdt->setReadOnly(true);
+    rawCIPTxtEdt->setPlainText("No CIP loaded yet");
+
+    rawCIPLayout->addWidget(rawCIPTxtEdt, 0, 0);
+
+
+//    mainLayout->addStretch();
 
     interactionGBox = new QGroupBox(tr("Interaction"));
     interactionGBox->setLayout(interactionLayout);
@@ -103,9 +122,42 @@ MainWindow::MainWindow(QWidget *parent)
     setCentralWidget(guiScrollArea);
     showMaximized();
 
+
+    connect(createBtn, SIGNAL(clicked(bool)), this, SLOT(createCIP()));
+
 }
 
 MainWindow::~MainWindow()
 {
 
+}
+
+void MainWindow::createCIP() {
+    qDebug() << "createCIP()";
+
+    int service = factoryServiceCmbBx->currentData().toInt();
+    qDebug() << service;
+
+    switch (service) {
+    case CIP::Heartbeat:
+        currentCIP = new CIP(CIP::Heartbeat);
+        break;
+    case CIP::Offer:
+        currentCIP = new CIP(CIP::Offer);
+        break;
+    case CIP::Request:
+        currentCIP = new CIP(CIP::Request);
+        break;
+    case CIP::TcpReply:
+        currentCIP = new CIP(CIP::TcpReply);
+        break;
+    case CIP::UdpReply
+    :
+        currentCIP = new CIP(CIP::UdpReply);
+        break;
+    default:
+        break;
+    }
+
+    rawCIPTxtEdt->setPlainText(currentCIP->toString());
 }

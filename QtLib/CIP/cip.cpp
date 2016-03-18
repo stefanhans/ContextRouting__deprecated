@@ -181,6 +181,23 @@ void CIP::setAppData(const QVector<quint8> &value)
     appData = value;
 }
 
+
+
+QString CIP::toString(QString mode) {
+    QString out;
+
+    out = "... from CIP::toString(QString mode)";
+
+    return out;
+}
+
+
+
+
+
+
+
+
 quint8 CICBrick::getContent() const
 {
     return content;

@@ -229,6 +229,9 @@ public:
     QVector<quint8> getAppData() const;
     void setAppData(const QVector<quint8> &value);
 
+
+    QString toString(QString mode="all");
+
 private:
 
     /*

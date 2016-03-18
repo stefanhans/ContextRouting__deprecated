@@ -35,6 +35,15 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+
+public slots:
+
+    void createCIP();
+
+private:
+
+    CIP *currentCIP;
+
     QWidget *guiWidget;
     QScrollArea *guiScrollArea;
 
@@ -46,8 +55,8 @@ public:
     QGridLayout *factoryLayout;
 
     QLabel *factoryServiceLbl;
-    QComboBox *factoryServiceCBx;
-    QPushButton *newBtn;
+    QComboBox *factoryServiceCmbBx;
+    QPushButton *createBtn;
 
 
 
@@ -63,6 +72,9 @@ public:
     QGroupBox *headerGBox;
     QGridLayout *headerLayout;
 
+    QLabel *requestLbl;
+    QComboBox *request;
+
     // Context
     QGroupBox *contextGBox;
     QGridLayout *contextLayout;
@@ -70,6 +82,11 @@ public:
     // Data
     QGridLayout *dataLayout;
     QGroupBox *dataGBox;
+
+    // Raw CIP
+    QGridLayout *rawCIPLayout;
+    QGroupBox *rawCIPGBox;
+    QTextEdit *rawCIPTxtEdt;
 
 
     // GuiInteraction
