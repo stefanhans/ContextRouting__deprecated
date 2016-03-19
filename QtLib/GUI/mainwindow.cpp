@@ -13,9 +13,6 @@ MainWindow::MainWindow(QWidget *parent)
     // Factory - Fix Layout
     factoryLayout = new QGridLayout;
 
-    // Header - Fix Layout
-    headerLayout = new QGridLayout;
-
     // Fix Context Layout
     contextLayout = new QGridLayout;
 
@@ -74,9 +71,23 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
+
+    // Header - Fix Layout
+    headerLayout = new QGridLayout;
     headerGBox = new QGroupBox("Header Data");
     headerGBox->setLayout(headerLayout);
     mainLayout->addWidget(headerGBox);
+
+
+    requestLbl = new QLabel(tr("Request: "));
+    requestLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+    requestTxtEdt = new QTextEdit(headerGBox);
+    requestTxtEdt->setReadOnly(true);
+    requestLbl->setBuddy(requestTxtEdt);
+
+    headerLayout->addWidget(requestLbl, 0, 0);
+    headerLayout->addWidget(requestTxtEdt, 0, 1);
 
     contextGBox = new QGroupBox("Contextinformation");
     contextGBox->setLayout(contextLayout);
@@ -95,6 +106,7 @@ MainWindow::MainWindow(QWidget *parent)
     mainLayout->addWidget(rawCIPGBox);
 
     rawCIPTxtEdt = new QTextEdit(rawCIPGBox);
+    rawCIPTxtEdt->setStyleSheet ("font: 9pt; Monospace;");
     rawCIPTxtEdt->setReadOnly(true);
     rawCIPTxtEdt->setPlainText("No CIP loaded yet");
 
@@ -140,6 +152,7 @@ void MainWindow::createCIP() {
 
     switch (service) {
     case CIP::Heartbeat:
+        qDebug() << "new CIP(CIP::Heartbeat)";
         currentCIP = new CIP(CIP::Heartbeat);
         break;
     case CIP::Offer:
@@ -158,6 +171,8 @@ void MainWindow::createCIP() {
     default:
         break;
     }
+
+    requestTxtEdt->setPlainText(QString("%1").arg(currentCIP->getRequest(), 8, 2, QLatin1Char('0')));
 
     rawCIPTxtEdt->setPlainText(currentCIP->toString());
 }

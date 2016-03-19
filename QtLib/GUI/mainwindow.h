@@ -73,7 +73,7 @@ private:
     QGridLayout *headerLayout;
 
     QLabel *requestLbl;
-    QComboBox *request;
+    QTextEdit *requestTxtEdt;
 
     // Context
     QGroupBox *contextGBox;

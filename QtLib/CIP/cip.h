@@ -80,17 +80,17 @@ public:
 
     enum Service
     {
-        Heartbeat=1, Offer=2, Request=3, TcpReply=4, UdpReply=5
+        RZV=0, Heartbeat=1, Offer=2, Request=3, TcpReply=4, UdpReply=5
     };
 
     enum Request
     {
-        RequestHeartbeat=1, RequestOffer=2, RequestRequest=2, RequestReply=3
+        RequestRZV=0, RequestHeartbeat=1, RequestOffer=2, RequestRequest=2, RequestReply=3
     };
 
     enum Channel
     {
-        CI_MATCHING=1
+        CI_Matching=1
     };
 
     enum Ports
@@ -99,7 +99,9 @@ public:
     };
 
     CIP() :
-        request(0),
+        byteArray(),
+        service(RZV),
+        request(RZV),
         profile(0),
         version(1),
         channel(0),
@@ -118,16 +120,18 @@ public:
         appSize(0),
         appData()
     {
-
+        initialize();
     }
 
     CIP(Service service) :
-        request(0),
+        byteArray(),
+        service(service),
+        request(RZV),
         profile(0),
         version(1),
         channel(0),
         uuid(QUuid::createUuid()),
-        ipAddress("127.0.0.1"),
+        ipAddress("127.64.32.1"),
         ipPort(TCP),
         time(QDateTime::currentDateTime()),
         headType(0),
@@ -139,62 +143,42 @@ public:
         CICBricks(),
         appType(0),
         appSize(0),
-        appData() {
-
-        switch (service) {
-
-        case Heartbeat:
-            setRequest(RequestHeartbeat);
-            setIpPort(UDP);
-            break;
-
-        case Offer:
-            setRequest(RequestOffer);
-            setIpPort(TCP);
-            break;
-
-        case Request:
-            setRequest(RequestRequest);
-            setIpPort(UDP);
-            break;
-
-        case TcpReply:
-            setRequest(RequestReply);
-            setIpPort(TCP);
-            break;
-
-        case UdpReply:
-            setRequest(RequestReply);
-            setIpPort(UDP);
-            break;
-
-        default:
-            setRequest(0);
-            break;
-        }
-
+        appData()
+    {
+        initialize();
+        pack();
     }
+
+    QString getService() const;
+    void setService(const Service &value);
 
     quint8 getRequest() const;
     void setRequest(const quint8 &value);
+    QString requestToString(quint8 byte) const;
 
     quint8 getProfile() const;
     void setProfile(const quint8 &value);
+    QString profileToString(quint8 byte) const;
 
     quint8 getVersion() const;
     void setVersion(const quint8 &value);
+    QString versionToString(quint8 byte) const;
 
     quint8 getChannel() const;
     void setChannel(const quint8 &value);
+    QString channelToString(quint8 byte) const;
 
     QUuid getUuid() const;
     void setUuid(const QUuid &value);
+    QString uuidToString(QByteArray *bytes) const;
 
     QHostAddress getIpAddress() const;
     void setIpAddress(const QHostAddress &value);
+    QString ipAddressToString(QByteArray *bytes) const;
 
     quint16 getIpPort() const;
     void setIpPort(const quint16 &value);
+    QString ipPortToString(QByteArray *bytes) const;
 
     QDateTime getTime() const;
     void setTime(const QDateTime &value);
@@ -229,10 +213,18 @@ public:
     QVector<quint8> getAppData() const;
     void setAppData(const QVector<quint8> &value);
 
+    void pack();
+    void unpack();
+
 
     QString toString(QString mode="all");
 
 private:
+    void initialize();
+
+    QByteArray byteArray;
+
+    Service service;
 
     /*
      * Header Data
