@@ -147,6 +147,8 @@ public:
     {
         initialize();
         pack();
+            qDebug().noquote().nospace() << " Header: dateTime: " << time.toString();
+
     }
 
     QString getService() const;
@@ -182,6 +184,7 @@ public:
 
     QDateTime getTime() const;
     void setTime(const QDateTime &value);
+    QString timeToString(QByteArray *bytes) const;
 
     quint8 getHeadType() const;
     void setHeadType(const quint8 &value);

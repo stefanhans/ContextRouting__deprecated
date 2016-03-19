@@ -293,14 +293,49 @@ QString CIP::ipPortToString(QByteArray *bytes) const {
     return QString("%1").arg(ipPortNumber);
 }
 
+
+/*
+ *
+ * TIME
+ *
+ */
 QDateTime CIP::getTime() const
 {
     return time;
 }
-
 void CIP::setTime(const QDateTime &value)
 {
     time = value;
+}
+QString CIP::timeToString(QByteArray *bytes) const {
+
+
+//    time_t unixTime;
+//    memcpy(&unixTime, bytes, 8);
+
+    bool ok;
+    uint unixTime = bytes->toUInt(&ok);
+
+    QDateTime *dateTime = new QDateTime;
+    dateTime->setTime_t((uint) unixTime);
+
+
+
+    //    // Header: time (8)
+    //    QByteArray timeArray = byteArray.mid(b, 8);
+    //    b += 8;
+    //    time_t unixTime;
+    //    memcpy(&unixTime, timeArray, 8);
+
+    //    QDateTime *dateTime = new QDateTime;
+    //    dateTime->setTime_t((uint) unixTime);
+
+    qDebug().noquote().nospace() << " timeToString: dateTime: " << dateTime->toString();
+
+
+
+
+    return dateTime->toString();
 }
 
 quint8 CIP::getHeadType() const
@@ -407,13 +442,11 @@ void CIP::setAppData(const QVector<quint8> &value)
 void CIP::pack() {
 
     byteArray.append(getRequest());
-    qDebug() << "getRequest: " << getRequest();
     byteArray.append(getProfile());
     byteArray.append(getVersion());
     byteArray.append(getChannel());
 
     QByteArray uuid_arr = uuid.toRfc4122();
-
     for(int j=0; j<16;j++) {
 
         byteArray.append(uuid_arr.at(j));
@@ -444,6 +477,27 @@ void CIP::pack() {
     portSub = ipPort;
     qDebug() << "portSub: " << portSub;
     byteArray.append(portSub);
+
+    QByteArray seconds;
+    seconds.setNum(time.toTime_t());
+    byteArray.append(seconds);
+
+    qDebug().noquote().nospace() << "pack(): dateTime: " << time.toString();
+
+
+
+    // Header: time (8)
+    QByteArray timeArray = seconds;
+
+    time_t unixTime;
+    memcpy(&unixTime, seconds, 8);
+
+    QDateTime *dateTime = new QDateTime;
+    dateTime->setTime_t((uint) unixTime);
+
+    qDebug().noquote().nospace() << "pack(): dateTime: " << dateTime->toString();
+
+
 
 //    byteArray.append(get());
 //    byteArray.append(get());
@@ -507,7 +561,7 @@ QString CIP::toString(QString mode) {
     out += "\t";
     out += "Section: Header\tParameter: request";
     out += "\t";
-    out += QString("Meaning: %1").arg(requestToString(byte));
+    out += QString("%1").arg(requestToString(byte));
     out += "\n";
 
 
@@ -527,7 +581,7 @@ QString CIP::toString(QString mode) {
     out += "\t";
     out += "Section: Header\tParameter: profile";
     out += "\t";
-    out += QString("Meaning: %1").arg(profileToString(byte));
+    out += QString("%1").arg(profileToString(byte));
     out += "\n";
 
 
@@ -547,7 +601,7 @@ QString CIP::toString(QString mode) {
     out += "\t";
     out += "Section: Header\tParameter: version";
     out += "\t";
-    out += QString("Meaning: %1").arg(versionToString(byte));
+    out += QString("%1").arg(versionToString(byte));
     out += "\n";
 
 
@@ -569,7 +623,7 @@ QString CIP::toString(QString mode) {
     out +=  "\t";
     out +=  "Section: Header\tParameter: channel";
     out +=  "\t";
-    out +=  QString("Meaning: %1").arg(channelToString(byte));
+    out +=  QString("%1").arg(channelToString(byte));
     out +=  "\n";
 
 
@@ -608,7 +662,7 @@ QString CIP::toString(QString mode) {
     out +=  "\t";
     out +=  "Section: Header\tParameter: UUID[ 15]";
     out +=  "\t";
-    out +=  QString("Meaning: %1").arg(uuidToString(&uuidBytes));
+    out +=  QString("%1").arg(uuidToString(&uuidBytes));
     out +=  "\n";
 
 
@@ -646,7 +700,7 @@ QString CIP::toString(QString mode) {
     out +=  "\t";
     out +=  "Section: Header\tParameter: IP address[  3]";
     out +=  "\t";
-    out +=  QString("Meaning: %1").arg(ipAddressToString(&ipBytes));
+    out +=  QString("%1").arg(ipAddressToString(&ipBytes));
     out +=  "\n";
 
 
@@ -686,7 +740,44 @@ QString CIP::toString(QString mode) {
     out +=  "\t";
     out +=  "Section: Header\tParameter: IP port[1]";
     out +=  "\t";
-    out +=  QString("Meaning: %1").arg(ipPortToString(&portBytes));
+    out +=  QString("%1").arg(ipPortToString(&portBytes));
+    out +=  "\n";
+
+
+    /*
+     *
+     * TIME
+     *
+     */
+
+    QByteArray timeArray = byteArray.mid(b, 8);
+
+    for(int i=0;i<7;i++) {
+
+        byte = byteArray.at(b++);
+        out +=  "Line: " + QString("%1").arg(b-1).rightJustified(4);
+        out +=  "\t";
+        out +=  "Integer: " + QString("%1").arg(byte).rightJustified(3);
+        out +=  "\t";
+        out += QString("Hexadecimal: %1").arg(byte, 4, 16, QLatin1Char('0'));
+        out +=  "\t";
+        out += QString("Binary: %1").arg(byte, 8, 2, QLatin1Char('0'));
+        out +=  "\t";
+        out += "Section: Header\tParameter: time[" + QString("%1").arg(i).rightJustified(3) + "]";
+        out +=  "\n";
+    }
+    byte = byteArray.at(b++);
+    out += "Line: " +  QString("%1").arg(b-1).rightJustified(4);
+    out +=  "\t";
+    out +=  "Integer: " + QString("%1").arg(byte).rightJustified(3);
+    out +=  "\t";
+    out += QString("Hexadecimal: %1").arg(byte, 4, 16, QLatin1Char('0'));
+    out +=  "\t";
+    out += QString("Binary: %1").arg(byte, 8, 2, QLatin1Char('0'));
+    out +=  "\t";
+    out +=  "Section: Header\tParameter: IP address[  3]";
+    out +=  "\t";
+    out +=  QString("%1").arg(timeToString(&timeArray));
     out +=  "\n";
 
 
