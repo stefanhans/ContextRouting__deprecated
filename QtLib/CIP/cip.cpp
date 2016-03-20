@@ -12,34 +12,72 @@ void CIP::initialize() {
         setRequest(RequestHeartbeat);
         qDebug() << "request: " << request;
         setIpPort(UDP);
+        setHeaderType(HeaderTypeOk);
         break;
 
     case Offer:
         setChannel(CI_Matching);
         setRequest(RequestOffer);
         setIpPort(TCP);
+        setHeaderType(HeaderTypeOk);
         break;
 
     case Request:
         setChannel(CI_Matching);
         setRequest(RequestRequest);
         setIpPort(UDP);
+        setHeaderType(HeaderTypeOk);
         break;
 
     case TcpReply:
         setChannel(CI_Matching);
         setRequest(RequestReply);
         setIpPort(TCP);
+        setHeaderType(HeaderTypeError);
         break;
 
     case UdpReply:
         setChannel(CI_Matching);
         setRequest(RequestReply);
         setIpPort(UDP);
+        setHeaderType(HeaderTypeError);
         break;
 
     default:
         qDebug() << "Error: Initialize with undefined service " << service;
+        break;
+    }
+
+    qDebug() << "initialize() headerType: " << headerType;
+    qDebug() << getHeaderType();
+
+    QString testMessage = "Hello World";
+    QVector<quint8> testVector;
+
+    switch(headerType) {
+
+    case HeaderTypeOk:
+
+        setHeadSize(testMessage.size());
+
+        for (int i=0; i<testMessage.size();i++) {
+            testVector.append(testMessage.at(i).toLatin1());
+        }
+        setHeadData(testVector);
+        break;
+
+    case HeaderTypeError:
+
+        setHeadSize(3);
+
+        testVector.append(1);
+        testVector.append(1);
+        testVector.append(1);
+        setHeadData(testVector);
+        break;
+
+    default:
+        qDebug() << "Error: Initialize with undefined headerType " << headerType;
         break;
     }
 
@@ -119,6 +157,32 @@ void CIP::setService(const Service &value)
 }
 
 
+QString CIP::getHeaderType() const
+{
+
+
+    switch (headerType) {
+
+    case HeaderTypeOk:
+        return QString("HeaderType::HeaderTypeOk");
+        break;
+
+    case HeaderTypeError:
+        return QString("HeaderType::HeaderTypeError");
+        break;
+
+    default:
+        return QString("Error: Undefined enum HeaderType: %1").arg(headerType);
+        break;
+    }
+}
+
+void CIP::setHeaderType(const HeaderType &value)
+{
+    headerType = value;
+}
+
+
 /*
  *
  * REQUEST
@@ -142,13 +206,13 @@ QString CIP::requestToString(quint8 byte) const {
         return "Request RZV by convention";
         break;
     case 1:
-        return "RequestHeartbeat";
+        return "Request::RequestHeartbeat";
         break;
     case 2:
-        return "RequestOffer (TCP) || RequestRequest (UDP)";
+        return "Request::RequestOffer (TCP) || Request::RequestRequest (UDP)";
         break;
     case 3:
-        return "RequestReply";
+        return "Request::RequestReply";
         break;
     default:
         return "undefined";
@@ -212,7 +276,6 @@ void CIP::setChannel(const quint8 &value)
     channel = value;
 }
 
-
 QString CIP::channelToString(quint8 byte) const {
 
     qDebug() << "channelToString: " << byte;
@@ -222,7 +285,7 @@ QString CIP::channelToString(quint8 byte) const {
         return "Channel RZV by convention";
         break;
     case 1:
-        return "CI_Matching";
+        return "Channel::CI_Matching";
         break;
     default:
         return "undefined";
@@ -292,6 +355,39 @@ QString CIP::ipPortToString(QByteArray *bytes) const {
     quint16 ipPortNumber = (bytes->at(0)<<8) + bytes->at(1);
     return QString("%1").arg(ipPortNumber);
 }
+QString CIP::interpreteIpPort(QByteArray *bytes) const {
+
+    quint16 ipPortNumber = (bytes->at(0)<<8) + bytes->at(1);
+
+
+    switch (ipPortNumber) {
+    case 22365:
+        return "Ports::TCP";
+        break;
+    case 22366:
+        return "Ports::UDP";
+        break;
+    default:
+        return "undefined";
+        break;
+    }
+}
+QString CIP::interpreteIpPort() const {
+
+    qDebug() << "interpreteIpPort: " << ipPort;
+
+    switch (ipPort) {
+    case 22365:
+        return "Ports::TCP";
+        break;
+    case 22366:
+        return "Ports::UDP";
+        break;
+    default:
+        return "undefined";
+        break;
+    }
+}
 
 
 /*
@@ -309,35 +405,20 @@ void CIP::setTime(const QDateTime &value)
 }
 QString CIP::timeToString(QByteArray *bytes) const {
 
-
-//    time_t unixTime;
-//    memcpy(&unixTime, bytes, 8);
-
-    bool ok;
-    uint unixTime = bytes->toUInt(&ok);
-
     QDateTime *dateTime = new QDateTime;
-    dateTime->setTime_t((uint) unixTime);
-
-
-
-    //    // Header: time (8)
-    //    QByteArray timeArray = byteArray.mid(b, 8);
-    //    b += 8;
-    //    time_t unixTime;
-    //    memcpy(&unixTime, timeArray, 8);
-
-    //    QDateTime *dateTime = new QDateTime;
-    //    dateTime->setTime_t((uint) unixTime);
-
-    qDebug().noquote().nospace() << " timeToString: dateTime: " << dateTime->toString();
-
-
-
+    time_t unixTime;
+    memcpy(&unixTime, (*bytes), 8);
+    dateTime->setTime_t(unixTime);
 
     return dateTime->toString();
 }
 
+
+/*
+ *
+ * HEAD TYPE
+ *
+ */
 quint8 CIP::getHeadType() const
 {
     return headType;
@@ -348,6 +429,30 @@ void CIP::setHeadType(const quint8 &value)
     headType = value;
 }
 
+QString CIP::headTypeToString(quint8 byte) const {
+
+    qDebug() << "headTypeToString: " << byte;
+
+    switch (byte) {
+    case 0:
+        return "HeaderType::HeaderTypeOk";
+        break;
+    case 1:
+        return "HeaderType::HeaderTypeError";
+        break;
+    default:
+        return "undefined";
+        break;
+    }
+}
+
+
+
+/*
+ *
+ * HEAD SIZE
+ *
+ */
 quint8 CIP::getHeadSize() const
 {
     return headSize;
@@ -358,6 +463,12 @@ void CIP::setHeadSize(const quint8 &value)
     headSize = value;
 }
 
+
+/*
+ *
+ * HEAD DATA
+ *
+ */
 QVector<quint8> CIP::getHeadData() const
 {
     return headData;
@@ -367,6 +478,91 @@ void CIP::setHeadData(const QVector<quint8> &value)
 {
     headData = value;
 }
+QString CIP::headDataToString(QByteArray *bytes) const {
+
+    QString out;
+    out = '"';
+    for ( int i=0; i<bytes->size(); i++) {
+        out += (bytes->at(i));
+    }
+    out += '"';
+
+    qDebug() << out;
+    return out;
+}
+QString CIP::interpreteHeadData() const {
+
+    if(headerType==HeaderTypeError) {
+        QString out;
+
+
+        switch (headData.at(1)) {
+        case ErrorPriorityNone:
+            out += "ErrorPriorityNone ";
+            break;
+        case ErrorPriorityDebug:
+            out += "ErrorPriorityDebug ";
+            break;
+        case ErrorPriorityInfo:
+            out += "ErrorPriorityInfo ";
+            break;
+        case ErrorPriorityCritical:
+            out += "ErrorPriorityCritical ";
+            break;
+        case ErrorPriorityAlert:
+            out += "ErrorPriorityAlert ";
+            break;
+        case ErrorPriorityEmergency:
+            out += "ErrorPriorityEmergency ";
+            break;
+        default:
+            out += "ErrorPriority undefined";
+            return out;
+        }
+
+        switch (headData.at(0)) {
+        case CipFormatError:
+            out += "CipFormatError ";
+
+
+
+            switch (headData.at(2)) {
+            case CipFormatErrorOutOfRange:
+                out += "CipFormatErrorOutOfRange ";
+                break;
+            case CipFormatErrorInconsistent:
+                out += "CipFormatErrorInconsistent ";
+                break;
+            case CipFormatErrorWrongProtocol:
+                out += "CipFormatErrorWrongProtocol ";
+                break;
+            default:
+                out += "CipFormatError undefined";
+                return out;
+            }
+
+            break;
+        default:
+            out += "ErrorCategory undefined";
+            return out;
+        }
+        return out;
+    }
+    else {
+        QByteArray headDataArray;
+        for (int i = 0; i < headData.size(); ++i) {
+            headDataArray.append(headData.at(i));
+        }
+        return headDataToString(&headDataArray);
+    }
+}
+
+
+/*
+ *
+ * CI TYPE
+ *
+ */
 
 quint8 CIP::getCiType() const
 {
@@ -446,56 +642,57 @@ void CIP::pack() {
     byteArray.append(getVersion());
     byteArray.append(getChannel());
 
+    // UUID
     QByteArray uuid_arr = uuid.toRfc4122();
     for(int j=0; j<16;j++) {
 
         byteArray.append(uuid_arr.at(j));
     }
 
+    // IP ADDRESS
     quint32 ip = ipAddress.toIPv4Address();
     quint8 ipSub;
 
     ipSub = ip>>24;
     byteArray.append(ipSub);
-
     ipSub = ip>>16;
     byteArray.append(ipSub);
-
     ipSub = ip>>8;
     byteArray.append(ipSub);
-
     ipSub = ip;
     byteArray.append(ipSub);
 
-    qDebug() << "ipPort: " << ipPort;
+    // IP PORT
     quint8 portSub;
 
     portSub = ipPort>>8;
-    qDebug() << "portSub: " << portSub;
     byteArray.append(portSub);
-
     portSub = ipPort;
-    qDebug() << "portSub: " << portSub;
     byteArray.append(portSub);
 
+    // TIME
+    uint unixTime = time.toTime_t();
     QByteArray seconds;
-    seconds.setNum(time.toTime_t());
+    int pos = 0;
+
+    for(int j = 0; j < 8; j++) {
+
+        seconds[pos++] = unixTime%256;
+        unixTime = unixTime >> 8;
+    }
     byteArray.append(seconds);
 
-    qDebug().noquote().nospace() << "pack(): dateTime: " << time.toString();
+
+    // HEADER TYPE
+    byteArray.append(getHeadType());
 
 
-
-    // Header: time (8)
-    QByteArray timeArray = seconds;
-
-    time_t unixTime;
-    memcpy(&unixTime, seconds, 8);
-
-    QDateTime *dateTime = new QDateTime;
-    dateTime->setTime_t((uint) unixTime);
-
-    qDebug().noquote().nospace() << "pack(): dateTime: " << dateTime->toString();
+    // HEADER DATA
+    quint8 headerSize = getHeadSize();
+    byteArray.append(headerSize);
+    for (int i=0; i<headerSize; i++) {
+        byteArray.append(headData.at(i));
+    }
 
 
 
@@ -648,7 +845,7 @@ QString CIP::toString(QString mode) {
         out +=  "\t";
         out += QString("Binary: %1").arg(byte, 8, 2, QLatin1Char('0'));
         out +=  "\t";
-        out += "Section: Header\tParameter: UUID[" + QString("%1").arg(i).rightJustified(3) + "]";
+        out += "Section: Header\tParameter: UUID[" + QString("%1").arg(i).rightJustified(2) + "]";
         out +=  "\n";
     }
     byte = byteArray.at(b++);
@@ -660,7 +857,7 @@ QString CIP::toString(QString mode) {
     out +=  "\t";
     out += QString("Binary: %1").arg(byte, 8, 2, QLatin1Char('0'));
     out +=  "\t";
-    out +=  "Section: Header\tParameter: UUID[ 15]";
+    out +=  "Section: Header\tParameter: UUID[15]";
     out +=  "\t";
     out +=  QString("%1").arg(uuidToString(&uuidBytes));
     out +=  "\n";
@@ -686,7 +883,7 @@ QString CIP::toString(QString mode) {
         out +=  "\t";
         out += QString("Binary: %1").arg(byte, 8, 2, QLatin1Char('0'));
         out +=  "\t";
-        out += "Section: Header\tParameter: IP address[" + QString("%1").arg(i).rightJustified(3) + "]";
+        out += "Section: Header\tParameter: IP address[" + QString("%1").arg(i) + "]";
         out +=  "\n";
     }
     byte = byteArray.at(b++);
@@ -698,7 +895,7 @@ QString CIP::toString(QString mode) {
     out +=  "\t";
     out += QString("Binary: %1").arg(byte, 8, 2, QLatin1Char('0'));
     out +=  "\t";
-    out +=  "Section: Header\tParameter: IP address[  3]";
+    out +=  "Section: Header\tParameter: IP address[3]";
     out +=  "\t";
     out +=  QString("%1").arg(ipAddressToString(&ipBytes));
     out +=  "\n";
@@ -740,7 +937,8 @@ QString CIP::toString(QString mode) {
     out +=  "\t";
     out +=  "Section: Header\tParameter: IP port[1]";
     out +=  "\t";
-    out +=  QString("%1").arg(ipPortToString(&portBytes));
+    out +=  QString("%1 ").arg(interpreteIpPort(&portBytes));
+    out +=  QString("(%1)").arg(ipPortToString(&portBytes));
     out +=  "\n";
 
 
@@ -763,7 +961,7 @@ QString CIP::toString(QString mode) {
         out +=  "\t";
         out += QString("Binary: %1").arg(byte, 8, 2, QLatin1Char('0'));
         out +=  "\t";
-        out += "Section: Header\tParameter: time[" + QString("%1").arg(i).rightJustified(3) + "]";
+        out += "Section: Header\tParameter: time[" + QString("%1").arg(i) + "]";
         out +=  "\n";
     }
     byte = byteArray.at(b++);
@@ -775,48 +973,93 @@ QString CIP::toString(QString mode) {
     out +=  "\t";
     out += QString("Binary: %1").arg(byte, 8, 2, QLatin1Char('0'));
     out +=  "\t";
-    out +=  "Section: Header\tParameter: IP address[  3]";
+    out +=  "Section: Header\tParameter: time[7]";
     out +=  "\t";
     out +=  QString("%1").arg(timeToString(&timeArray));
     out +=  "\n";
 
 
 
-//    // Header: port number (2)
-//    QByteArray ipPort = byteArray.mid(b, 2);
-//    b += 2;
-//    quint16 portNum;
-//    memcpy(&portNum, ipPort, 2);
-//    qDebug().noquote().nospace() << QString("%1").arg(b-2).rightJustified(4) << " Header: port number: " << ntohs(portNum);
+    /*
+     *
+     * HEAD TYPE
+     *
+     */
+    byte = byteArray.at(b++);
+    out += "Line: " + QString("%1").arg(b-1).rightJustified(4);
+    out += "\t";
+    out += "Integer: " + QString("%1").arg(byte).rightJustified(3);
+    out += "\t";
+    out += QString("Hexadecimal: %1").arg(byte, 4, 16, QLatin1Char('0'));
+    out +=  "\t";
+    out += QString("Binary: %1").arg(byte, 8, 2, QLatin1Char('0'));
+    out +=  "\t";
+    out +=  "Section: Header\tParameter: type";
+    out +=  "\t";
+    out +=  QString("%1").arg(headTypeToString(byte));
+    out +=  "\n";
 
 
-//    // Header: time (8)
-//    QByteArray timeArray = byteArray.mid(b, 8);
-//    b += 8;
-//    time_t unixTime;
-//    memcpy(&unixTime, timeArray, 8);
 
-//    QDateTime *dateTime = new QDateTime;
-//    dateTime->setTime_t((uint) unixTime);
 
-////        qDebug() << "Header: unixTime: " << unixTime;
-//    qDebug().noquote().nospace() << QString("%1").arg(b-8).rightJustified(4) << " Header: dateTime: " << dateTime->toString();
+    /*
+     *
+     * HEAD SIZE
+     *
+     */
+    byte = byteArray.at(b++);
+    out += "Line: " + QString("%1").arg(b-1).rightJustified(4);
+    out += "\t";
+    out += "Integer: " + QString("%1").arg(byte).rightJustified(3);
+    out += "\t";
+    out += QString("Hexadecimal: %1").arg(byte, 4, 16, QLatin1Char('0'));
+    out +=  "\t";
+    out += QString("Binary: %1").arg(byte, 8, 2, QLatin1Char('0'));
+    out +=  "\t";
+    out +=  "Section: Header\tParameter: size";
+    out +=  "\t";
+    out +=  QString("%1").arg(byte);
+    out +=  "\n";
 
-//    // Header: type (1)
-//    byte = byteArray.at(b++);
+    size = byte;
 
-//    switch (byte) {
-//    case 0:
-//        cipString = "HEADER_TYPE_OK (HEADER_TYPE_RZV)";
-//        break;
-//    case 1:
-//        cipString = "HEADER_TYPE_ERROR";
-//        break;
-//    default:
-//        cipString = "undefined";
-//        break;
-//    }
-//    qDebug().noquote().nospace() << QString("%1").arg(b-1).rightJustified(4) <<  " Header: type: " << byte << " : " <<  cipString;
+
+    /*
+     *
+     * HEAD DATA
+     *
+     */
+
+    QByteArray headDataArray = byteArray.mid(b, size);
+
+    for(int i=0;i<(size-1);i++) {
+
+        byte = byteArray.at(b++);
+        out +=  "Line: " + QString("%1").arg(b-1).rightJustified(4);
+        out +=  "\t";
+        out +=  "Integer: " + QString("%1").arg(byte).rightJustified(3);
+        out +=  "\t";
+        out += QString("Hexadecimal: %1").arg(byte, 4, 16, QLatin1Char('0'));
+        out +=  "\t";
+        out += QString("Binary: %1").arg(byte, 8, 2, QLatin1Char('0'));
+        out +=  "\t";
+        out +=  QString("Section: Header\tParameter: data[%1]").arg((i)).rightJustified(3);
+        out +=  "\n";
+    }
+    byte = byteArray.at(b++);
+    out += "Line: " +  QString("%1").arg(b-1).rightJustified(4);
+    out +=  "\t";
+    out +=  "Integer: " + QString("%1").arg(byte).rightJustified(3);
+    out +=  "\t";
+    out += QString("Hexadecimal: %1").arg(byte, 4, 16, QLatin1Char('0'));
+    out +=  "\t";
+    out += QString("Binary: %1").arg(byte, 8, 2, QLatin1Char('0'));
+    out +=  "\t";
+    out +=  QString("Section: Header\tParameter: data[%1]").arg((size-1)).rightJustified(3);
+    out +=  "\t";
+    out +=  QString("%1").arg(interpreteHeadData());
+    out +=  "\n";
+
 
 //    // Header: size (1) and data
 //    byte = byteArray.at(b++);

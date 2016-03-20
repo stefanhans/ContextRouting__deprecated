@@ -98,6 +98,40 @@ public:
         TCP=22365, UDP=22366
     };
 
+    enum HeaderType
+    {
+        HeaderTypeOk=0, HeaderTypeError=1
+    };
+
+    enum ErrorCategory
+    {
+        ErrorCategoryNone=0, CipFormatError=1
+    };
+
+    enum ErrorPriority
+    {
+        ErrorPriorityNone=0, ErrorPriorityDebug=1, ErrorPriorityInfo=2, ErrorPriorityNotice=3, ErrorPriorityCritical=4, ErrorPriorityAlert=5, ErrorPriorityEmergency=6
+    };
+
+    enum CipFormatErrorEnum
+    {
+        CipFormatErrorNone=0, CipFormatErrorOutOfRange=1, CipFormatErrorInconsistent=2, CipFormatErrorWrongProtocol=3
+    };
+
+
+
+//    enum CI_TYPE { CI_TYPE_RZV=0, CI_TYPE_SIMPLE_MATCH=1, CI_TYPE_DEFAULT_MIN=2 };
+//    enum APP_TYPE { APP_TYPE_RZV=0, APP_TYPE_TEXT=1, APP_TYPE_URL=2, APP_TYPE_DEFAULT_MIN=3 };
+
+//    enum PORT { PORT_TCP_DEFAULT=22365, PORT_UDP_DEFAULT=22366 };
+
+
+//    enum ERROR_CATEGORY { ERROR_CATEGORY_NONE=0, CIP_FORMAT_ERROR=1 };
+//    enum ERROR_PRIORITY { ERROR_PRIORITY_NONE=0, ERROR_PRIORITY_DEBUG=1, ERROR_PRIORITY_INFO=2, ERROR_PRIORITY_NOTICE=3, ERROR_PRIORITY_CRITICAL=4, ERROR_PRIORITY_ALERT=5, ERROR_PRIORITY_EMERGENCY=6 };
+//    enum CIP_FORMAT_ERROR_ENUM { CIP_FORMAT_ERROR_NONE=0, CIP_FORMAT_ERROR_OUT_OF_RANGE=1, CIP_FORMAT_ERROR_INCONSISTENT=2, CIP_FORMAT_ERROR_WRONG_PROTOCOL=3 };
+
+
+
     CIP() :
         byteArray(),
         service(RZV),
@@ -147,8 +181,6 @@ public:
     {
         initialize();
         pack();
-            qDebug().noquote().nospace() << " Header: dateTime: " << time.toString();
-
     }
 
     QString getService() const;
@@ -181,6 +213,8 @@ public:
     quint16 getIpPort() const;
     void setIpPort(const quint16 &value);
     QString ipPortToString(QByteArray *bytes) const;
+    QString interpreteIpPort(QByteArray *bytes) const;
+    QString interpreteIpPort() const;
 
     QDateTime getTime() const;
     void setTime(const QDateTime &value);
@@ -188,12 +222,15 @@ public:
 
     quint8 getHeadType() const;
     void setHeadType(const quint8 &value);
+    QString headTypeToString(quint8 byte) const;
 
     quint8 getHeadSize() const;
     void setHeadSize(const quint8 &value);
 
     QVector<quint8> getHeadData() const;
     void setHeadData(const QVector<quint8> &value);
+    QString headDataToString(QByteArray *bytes) const;
+    QString interpreteHeadData() const;
 
     quint8 getCiType() const;
     void setCiType(const quint8 &value);
@@ -222,12 +259,16 @@ public:
 
     QString toString(QString mode="all");
 
+    QString getHeaderType() const;
+    void setHeaderType(const HeaderType &value);
+
 private:
     void initialize();
 
     QByteArray byteArray;
 
     Service service;
+    HeaderType headerType;
 
     /*
      * Header Data
