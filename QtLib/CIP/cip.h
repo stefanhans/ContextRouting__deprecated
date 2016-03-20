@@ -60,6 +60,12 @@ public:
 
     }
 
+    CICBrick(quint8 content, quint8 mask) :
+    content(content),
+    mask(mask) {
+
+    }
+
     quint8 getContent() const;
     void setContent(const quint8 &value);
 
@@ -118,17 +124,21 @@ public:
         CipFormatErrorNone=0, CipFormatErrorOutOfRange=1, CipFormatErrorInconsistent=2, CipFormatErrorWrongProtocol=3
     };
 
+    enum CiType
+    {
+        CiTypeRZV=0, CiTypeSimpleMatch=1
+    };
 
+    enum RootCIC_SimpleMatch
+    {
+        RootCIC_RZV=0, RootCIC_LatinText=1
+    };
 
-//    enum CI_TYPE { CI_TYPE_RZV=0, CI_TYPE_SIMPLE_MATCH=1, CI_TYPE_DEFAULT_MIN=2 };
-//    enum APP_TYPE { APP_TYPE_RZV=0, APP_TYPE_TEXT=1, APP_TYPE_URL=2, APP_TYPE_DEFAULT_MIN=3 };
+    enum AppType
+    {
+        AppTypeRZV=0, AppTypeText=1, AppTypeUrl=2
+    };
 
-//    enum PORT { PORT_TCP_DEFAULT=22365, PORT_UDP_DEFAULT=22366 };
-
-
-//    enum ERROR_CATEGORY { ERROR_CATEGORY_NONE=0, CIP_FORMAT_ERROR=1 };
-//    enum ERROR_PRIORITY { ERROR_PRIORITY_NONE=0, ERROR_PRIORITY_DEBUG=1, ERROR_PRIORITY_INFO=2, ERROR_PRIORITY_NOTICE=3, ERROR_PRIORITY_CRITICAL=4, ERROR_PRIORITY_ALERT=5, ERROR_PRIORITY_EMERGENCY=6 };
-//    enum CIP_FORMAT_ERROR_ENUM { CIP_FORMAT_ERROR_NONE=0, CIP_FORMAT_ERROR_OUT_OF_RANGE=1, CIP_FORMAT_ERROR_INCONSISTENT=2, CIP_FORMAT_ERROR_WRONG_PROTOCOL=3 };
 
 
 
@@ -171,11 +181,11 @@ public:
         headType(0),
         headSize(0),
         headData(),
-        ciType(0),
-        rootCIC(),
+        ciType(1),
+        rootCIC(1, 0),
         ciSize(0),
         CICBricks(),
-        appType(0),
+        appType(1),
         appSize(0),
         appData()
     {
@@ -212,7 +222,7 @@ public:
 
     quint16 getIpPort() const;
     void setIpPort(const quint16 &value);
-    QString ipPortToString(QByteArray *bytes) const;
+    quint16 ipPortToNumber(QByteArray *bytes) const;
     QString interpreteIpPort(QByteArray *bytes) const;
     QString interpreteIpPort() const;
 
@@ -229,35 +239,42 @@ public:
 
     QVector<quint8> getHeadData() const;
     void setHeadData(const QVector<quint8> &value);
-    QString headDataToString(QByteArray *bytes) const;
+    QString interpreteHeadData(QByteArray *bytes) const;
     QString interpreteHeadData() const;
 
     quint8 getCiType() const;
     void setCiType(const quint8 &value);
+    QString ciTypeToString(quint8 byte) const;
 
     CICBrick getRootCIC() const;
     void setRootCIC(const CICBrick &value);
+    QString rootCicToString(quint8 byte) const;
 
     quint8 getCiSize() const;
     void setCiSize(const quint8 &value);
 
     QVector<CICBrick> getCICBricks() const;
     void setCICBricks(const QVector<CICBrick> &value);
+    QString interpreteCICBricks(QByteArray *bytes) const;
+    QString interpreteCICBricks() const;
 
     quint8 getAppType() const;
     void setAppType(const quint8 &value);
+    QString appTypeToString(quint8 byte) const;
 
     quint8 getAppSize() const;
     void setAppSize(const quint8 &value);
 
     QVector<quint8> getAppData() const;
     void setAppData(const QVector<quint8> &value);
+    QString interpreteAppData(QByteArray *bytes) const;
+    QString interpreteAppData() const;
 
     void pack();
     void unpack();
 
 
-    QString toString(QString mode="all");
+    QString bytesToString();
 
     QString getHeaderType() const;
     void setHeaderType(const HeaderType &value);

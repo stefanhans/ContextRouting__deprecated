@@ -174,5 +174,5 @@ void MainWindow::createCIP() {
 
     requestTxtEdt->setPlainText(QString("%1").arg(currentCIP->getRequest(), 8, 2, QLatin1Char('0')));
 
-    rawCIPTxtEdt->setPlainText(currentCIP->toString());
+    rawCIPTxtEdt->setPlainText(currentCIP->bytesToString());
 }
