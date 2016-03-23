@@ -48,6 +48,14 @@
    | ............................................................  | |
    +---------------------------------------------------------------+
 
+
+   NAME         TYPE        SIZE    interprete()    to<type>
+   ----------------------------------------------------------
+   request      enum        1       y               n
+   profile      special     1       y               n
+   version      special     1       y               toReal() / toMajor() / toMinor()
+   channel      enum        1       y               n
+
 */
 
 class CIPSHARED_EXPORT CICBrick
@@ -206,6 +214,7 @@ public:
 
     quint8 getVersion() const;
     void setVersion(const quint8 &value);
+    qreal versionToReal();
     QString versionToString(quint8 byte) const;
 
     quint8 getChannel() const;
@@ -273,11 +282,16 @@ public:
     void pack();
     void unpack();
 
+    bool validateByteArray();
+
 
     QString bytesToString();
 
     QString getHeaderType() const;
     void setHeaderType(const HeaderType &value);
+
+    QByteArray getByteArray() const;
+    void setByteArray(const QByteArray &value);
 
 private:
     void initialize();

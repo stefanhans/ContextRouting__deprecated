@@ -51,8 +51,8 @@ MainWindow::MainWindow(QWidget *parent)
     filesGBox->setLayout(filesLayout);
     mainLayout->addWidget(filesGBox);
 
-    openBtn = new QPushButton(tr("Open"), this);;
-    saveBtn = new QPushButton(tr("Save"), this);;
+    openBtn = new QPushButton(tr("Open"), this);
+    saveBtn = new QPushButton(tr("Save"), this);
 
 
 
@@ -135,7 +135,9 @@ MainWindow::MainWindow(QWidget *parent)
     showMaximized();
 
 
-    connect(createBtn, SIGNAL(clicked(bool)), this, SLOT(createCIP()));
+    connect(createBtn, &QAbstractButton::clicked, this, &MainWindow::createCIP);
+    connect(openBtn, &QAbstractButton::clicked, this, &MainWindow::openCIP);
+    connect(saveBtn, &QAbstractButton::clicked, this, &MainWindow::saveCIP);
 
 }
 
@@ -174,5 +176,78 @@ void MainWindow::createCIP() {
 
     requestTxtEdt->setPlainText(QString("%1").arg(currentCIP->getRequest(), 8, 2, QLatin1Char('0')));
 
-    rawCIPTxtEdt->setPlainText(currentCIP->bytesToString());
+
+    rawCIPTxtEdt->setPlainText(QString("New CIP created with argument %1\n%2")
+                               .arg(currentCIP->getService())
+                               .arg(currentCIP->bytesToString()));
+
+}
+
+
+void MainWindow::openCIP() {
+    qDebug() << "openCIP()";
+
+
+    QString infilePath = QFileDialog::getOpenFileName(this,
+        tr("Open CIP"), "/home/stefan/Development/CRN_QtLib/CIPs", tr("CIP Files (*.cip);;All files (*)"));
+
+
+    QFile infile(infilePath);
+    if (!infile.open(QIODevice::ReadOnly)) {
+
+        qDebug() << "Error: openCIP() can not read " << infilePath << endl;
+        qDebug() << infile.errorString() << endl;
+
+        return;
+    }
+
+
+    if(currentCIP == NULL) {
+        currentCIP = new CIP();
+    }
+
+    qDebug() << "setByteArray()";
+    currentCIP->setByteArray(infile.readAll());
+    qDebug() << "infile.close()";
+
+    if ( ! currentCIP->validateByteArray()) {
+        qDebug() << "Not a valid CIP!";
+        infile.close();
+        return;
+    }
+
+    currentCIP->unpack();
+    infile.close();
+
+
+
+    currentCIP->unpack();
+
+    qDebug() << "setPlainText()";
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded from file %1\n%2")
+                               .arg(infilePath)
+                               .arg(currentCIP->bytesToString()));
+}
+
+void MainWindow::saveCIP() {
+    qDebug() << "saveCIP()";
+
+    QString outfilePath = QFileDialog::getSaveFileName(this,
+        tr("Save CIP"), "/home/stefan/Development/CRN_QtLib/CIPs", tr("CIP Files (*.cip);;All files (*)"));
+
+
+    qDebug() << "outfilePath: " << outfilePath;
+
+
+    QFile outfile(outfilePath);
+    if (!outfile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+
+//        errorStream << "Error: CMD(" << command.join(" ") << ") can not write to file " << outfilePath << endl;
+//        errorStream << outfile.errorString() << endl;
+
+        return;
+    }
+    outfile.write(currentCIP->getByteArray());
+    outfile.close();
+
 }

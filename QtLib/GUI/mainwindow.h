@@ -21,6 +21,8 @@
 #include <QScrollArea>
 #include <QNetworkSession>
 #include <QUuid>
+#include <QFileDialog>
+#include <QFile>
 
 #include <QtNetwork>
 
@@ -39,6 +41,9 @@ public:
 public slots:
 
     void createCIP();
+
+    void openCIP();
+    void saveCIP();
 
 private:
 

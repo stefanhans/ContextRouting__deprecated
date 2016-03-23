@@ -116,6 +116,16 @@ void CIP::initialize() {
 
 }
 
+QByteArray CIP::getByteArray() const
+{
+    return byteArray;
+}
+
+void CIP::setByteArray(const QByteArray &value)
+{
+    byteArray = value;
+}
+
 
 /*
  *
@@ -125,9 +135,9 @@ void CIP::initialize() {
 
 QString CIP::getService() const
 {
-
+    
     switch (service) {
-
+    
     case Heartbeat:
         return QString("Service::Heartbeat");
         break;
@@ -238,13 +248,13 @@ void CIP::setRequest(const quint8 &value)
 QString CIP::requestToString(quint8 byte) const {
 
     switch (byte) {
-    case 0:
+    case RequestRZV:
         return "Request RZV by convention";
-    case 1:
+    case RequestHeartbeat:
         return "Request::RequestHeartbeat";
     case 2:
         return "Request::RequestOffer (TCP) || Request::RequestRequest (UDP)";
-    case 3:
+    case RequestReply:
         return "Request::RequestReply";
     default:
         return "undefined";
@@ -269,7 +279,7 @@ void CIP::setProfile(const quint8 &value)
 }
 QString CIP::profileToString(quint8 byte) const {
 
-    return QString("undefined").arg(byte);
+    return QString("undefined %1").arg(byte);
 }
 
 
@@ -288,6 +298,11 @@ void CIP::setVersion(const quint8 &value)
 {
     version = value;
 }
+
+qreal CIP::versionToReal() {
+    return ((version>>4) + (version%16)/10);
+}
+
 QString CIP::versionToString(quint8 byte) const {
 
     return QString("%1.%2").arg(byte>>4).rightJustified(2).arg(byte%16, 2, 10, QLatin1Char('0')).rightJustified(2);
@@ -923,11 +938,77 @@ void CIP::unpack() {
 
 /*
  *
+ * VALIDATE CIP
+ *
+ */
+
+bool CIP::validateByteArray() {
+
+    qDebug() << "byteArray.size(): " << byteArray.size();
+
+    if(byteArray.size() < 42 || byteArray.size() > 1062) {
+        return false;
+    }
+
+
+
+
+    int size;
+    int additionalBytes;
+    bool ok;
+
+    // Header: size
+    size = 35;
+    additionalBytes = QString("%1").arg((quint8) byteArray.at(size)).toInt(&ok);
+    if(!ok) {
+        qDebug() << "Header: size: Cannot convert "<< (quint8) byteArray.at(size) << " to integer!" << endl;
+        return false;
+    }
+    qDebug() << "Header: size: " << additionalBytes << endl;
+    size += additionalBytes;
+
+    // CI: size
+    size += 4;
+    additionalBytes = QString("%1").arg((quint8) byteArray.at(size)).toInt(&ok);
+    if(!ok) {
+        qDebug() << "CI: size: Cannot convert "<< (quint8) byteArray.at(size) << " to integer!" << endl;
+        return false;
+    }
+    qDebug() << "CI: size: " << additionalBytes << endl;
+    size += additionalBytes*2;
+
+    // Application: size
+    size += 2;
+    additionalBytes = QString("%1").arg((quint8) byteArray.at(size)).toInt(&ok);
+    if(!ok) {
+        qDebug() << "Application: size: Cannot convert "<< (quint8) byteArray.at(size) << " to integer!" << endl;
+        return false;
+    }
+    qDebug() << "Application: size: " << additionalBytes << endl;
+    size += additionalBytes;
+
+
+    qDebug() << "byteArray.size(): " << byteArray.size() << endl;
+    qDebug() << "size: " << size+1 << endl;
+    if (byteArray.size() != size+1) {
+
+        qDebug() << "INVALID: CIP size is not consistent!" << endl;
+        return false;
+    }
+
+
+    return true;
+}
+
+
+/*
+ *
  * BYTES TO STRING
  *
  */
 
 QString CIP::bytesToString() {
+    qDebug() << "CIP::bytesToString()" << endl;
 
     QString out;
 
@@ -938,12 +1019,11 @@ QString CIP::bytesToString() {
 
     /*
      *
-     * HEADLINE
+     * START
      *
      */
 
-    out  = getService()+"\n";
-    out += QString(300, '-')+"\n";
+    out = QString(300, '-')+"\n";
 
 
     /*
@@ -965,6 +1045,7 @@ QString CIP::bytesToString() {
     out += "\t";
     out += QString("%1").arg(requestToString(byte));
     out += "\n";
+    qDebug() << "REQUEST";
 
 
     /*
@@ -972,6 +1053,7 @@ QString CIP::bytesToString() {
      * PROFILE
      *
      */
+    qDebug() << "PROFILE";
 
     byte = byteArray.at(b++);
     out += "Line: " + QString("%1").arg(b-1).rightJustified(4);
@@ -993,6 +1075,7 @@ QString CIP::bytesToString() {
      * VERSION
      *
      */
+    qDebug() << "VERSION";
 
     byte = byteArray.at(b++);
     out += "Line: " + QString("%1").arg(b-1).rightJustified(4);
@@ -1014,6 +1097,7 @@ QString CIP::bytesToString() {
      * CHANNEL
      *
      */
+    qDebug() << "CHANNEL";
 
     byte = byteArray.at(b++);
     out += "Line: " + QString("%1").arg(b-1).rightJustified(4);
@@ -1490,6 +1574,17 @@ QString CIP::bytesToString() {
             out +=  "\n";
         }
     }
+
+
+
+    /*
+     *
+     * END
+     *
+     */
+
+    out += QString(300, '-')+"\n";
+
     return out;
 }
 
