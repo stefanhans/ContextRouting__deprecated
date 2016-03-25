@@ -133,7 +133,12 @@ void CIP::setByteArray(const QByteArray &value)
  *
  */
 
-QString CIP::getService() const
+quint8 CIP::getService() const
+{
+    return (quint8) service;
+}
+
+QString CIP::serviceToString() const
 {
     
     switch (service) {
@@ -261,6 +266,22 @@ QString CIP::requestToString(quint8 byte) const {
     }
 }
 
+QString CIP::requestToString() const {
+
+    switch (request) {
+    case RequestRZV:
+        return "Request RZV by convention";
+    case RequestHeartbeat:
+        return "Request::RequestHeartbeat";
+    case 2:
+        return "Request::RequestOffer (TCP) || Request::RequestRequest (UDP)";
+    case RequestReply:
+        return "Request::RequestReply";
+    default:
+        return "undefined";
+    }
+}
+
 
 /*
  *
@@ -281,6 +302,10 @@ QString CIP::profileToString(quint8 byte) const {
 
     return QString("undefined %1").arg(byte);
 }
+QString CIP::profileToString() const {
+
+    return QString("undefined %1").arg(profile);
+}
 
 
 /*
@@ -299,8 +324,25 @@ void CIP::setVersion(const quint8 &value)
     version = value;
 }
 
-qreal CIP::versionToReal() {
-    return ((version>>4) + (version%16)/10);
+quint8 CIP::versionToMajorNumber() const {
+    return version>>4;
+}
+
+quint8 CIP::versionToMajorNumber(quint8 byte) const {
+    return byte>>4;
+}
+
+quint8 CIP::versionToMinorNumber() const {
+    return version%16;
+}
+
+quint8 CIP::versionToMinorNumber(quint8 byte) const {
+    return byte%16;
+}
+
+QString CIP::versionToString() const {
+
+    return QString("%1.%2").arg(version>>4).rightJustified(2).arg(version%16, 2, 10, QLatin1Char('0')).rightJustified(2);
 }
 
 QString CIP::versionToString(quint8 byte) const {
@@ -407,7 +449,7 @@ quint16 CIP::ipPortToNumber(QByteArray *bytes) const {
     return (bytes->at(0)<<8) + bytes->at(1);
 }
 
-QString CIP::interpreteIpPort(QByteArray *bytes) const {
+QString CIP::ipPortToString(QByteArray *bytes) const {
 
     switch ((bytes->at(0)<<8) + bytes->at(1)) {
     case TCP:
@@ -419,7 +461,7 @@ QString CIP::interpreteIpPort(QByteArray *bytes) const {
     }
 }
 
-QString CIP::interpreteIpPort() const {
+QString CIP::ipPortToString() const {
 
     switch (ipPort) {
     case TCP:
@@ -521,17 +563,31 @@ void CIP::setHeadData(const QVector<quint8> &value)
     headData = value;
 }
 
-QString CIP::interpreteHeadData(QByteArray *bytes) const {
+QString CIP::interpreteHeadData(QByteArray *bytes, quint8 size, quint8 type, quint8 channel) const {
 
     QString out;
-    out = '"';
-    for ( int i=0; i<bytes->size(); i++) {
-        out += (bytes->at(i));
-    }
-    out += '"';
 
-    qDebug() << out;
-    return out;
+    switch (channel) {
+    case 1:
+        switch (type) {
+        case 1:
+
+            out = '"';
+            for ( int i=0; i<size; i++) {
+                out += (bytes->at(i));
+            }
+            out += '"';
+
+            qDebug() << out;
+            return out;
+
+        default:
+            return "undefined type";
+        }
+        break;
+    default:
+        return "undefined channel";
+    }
 }
 
 QString CIP::interpreteHeadData() const {
@@ -596,7 +652,7 @@ QString CIP::interpreteHeadData() const {
         for (int i = 0; i < headData.size(); ++i) {
             headDataArray.append(headData.at(i));
         }
-        return interpreteHeadData(&headDataArray);
+        return interpreteHeadData(&headDataArray, headData.size());
     }
 }
 
@@ -1089,6 +1145,8 @@ QString CIP::bytesToString() {
     out += "Section: Header\tParameter: version";
     out += "\t";
     out += QString("%1").arg(versionToString(byte));
+    out += QString(" (Major: %1").arg(versionToMajorNumber(byte));
+    out += QString(" Minor: %1)").arg(versionToMinorNumber(byte));
     out += "\n";
 
 
@@ -1218,7 +1276,7 @@ QString CIP::bytesToString() {
     out +=  "\t";
     out +=  "Section: Header\tParameter: IP port[1]";
     out +=  "\t";
-    out +=  QString("%1 ").arg(interpreteIpPort(&portBytes));
+    out +=  QString("%1 ").arg(ipPortToString(&portBytes));
     out +=  QString("(%1)").arg(ipPortToNumber(&portBytes));
     out +=  "\n";
 
@@ -1343,7 +1401,7 @@ QString CIP::bytesToString() {
             out +=  "\t";
             out +=  QString("Section: Header\tParameter: data[%1]").arg((size-1)).rightJustified(3);
             out +=  "\t";
-            out +=  QString("%1").arg(interpreteHeadData(&headDataArray));
+            out +=  QString("%1").arg(interpreteHeadData(&headDataArray, size));
             out +=  "\n";
         }
     }

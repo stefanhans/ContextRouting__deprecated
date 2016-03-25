@@ -78,16 +78,56 @@ MainWindow::MainWindow(QWidget *parent)
     headerGBox->setLayout(headerLayout);
     mainLayout->addWidget(headerGBox);
 
+    // SERVICE
+    serviceLbl = new QLabel(tr("Service: "));
+    serviceLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
+    serviceToNumLbl = new QLabel();
+    serviceToNumLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    serviceToStringLbl = new QLabel();
+    serviceToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+    headerLayout->addWidget(serviceLbl, 0, 0);
+    headerLayout->addWidget(serviceToNumLbl, 0, 5);
+    headerLayout->addWidget(serviceToStringLbl, 0, 6);
+
+    // REQUEST
     requestLbl = new QLabel(tr("Request: "));
     requestLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
-    requestTxtEdt = new QTextEdit(headerGBox);
-    requestTxtEdt->setReadOnly(true);
-    requestLbl->setBuddy(requestTxtEdt);
+    requestToNumLbl = new QLabel();
+    requestToNumLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    requestToStringLbl = new QLabel();
+    requestToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
-    headerLayout->addWidget(requestLbl, 0, 0);
-    headerLayout->addWidget(requestTxtEdt, 0, 1);
+    requestSpBox = new QSpinBox(headerGBox);
+    requestSpBox->setFixedSize(180, 30);
+    requestSpBox->setRange(0, 255);
+
+    saveRequestFromNumberBtn = new QPushButton(tr("setRequest()"), this);
+
+    requestCmbBx = new QComboBox(headerGBox);
+    requestCmbBx->setFixedSize(180, 30);
+    requestCmbBx->addItem("RequestRZV (0)", 0);
+    requestCmbBx->addItem("RequestHeartbeat (1)", 1);
+    requestCmbBx->addItem("RequestOffer (2)", 2);
+    requestCmbBx->addItem("RequestRequest (2)", 2);
+    requestCmbBx->addItem("RequestReply (3)", 3);
+    requestCmbBx->addItem("undefined (4-255)", 4);
+
+    saveRequestFromEnumBtn = new QPushButton(tr("setRequest()"), this);
+
+
+    headerLayout->addWidget(requestLbl, 1, 0);
+    headerLayout->addWidget(requestSpBox, 1, 1);
+    headerLayout->addWidget(saveRequestFromNumberBtn, 1, 2);
+    headerLayout->addWidget(requestCmbBx, 1, 3);
+    headerLayout->addWidget(saveRequestFromEnumBtn, 1, 4);
+    headerLayout->addWidget(requestToNumLbl, 1, 5);
+    headerLayout->addWidget(requestToStringLbl, 1, 6);
+
+    headerLayout->setColumnStretch(7, 5);
+
 
     contextGBox = new QGroupBox("Contextinformation");
     contextGBox->setLayout(contextLayout);
@@ -136,8 +176,14 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     connect(createBtn, &QAbstractButton::clicked, this, &MainWindow::createCIP);
+
     connect(openBtn, &QAbstractButton::clicked, this, &MainWindow::openCIP);
     connect(saveBtn, &QAbstractButton::clicked, this, &MainWindow::saveCIP);
+
+
+    connect(saveRequestFromNumberBtn, &QAbstractButton::clicked, this, &MainWindow::setRequestFromNumber);
+    connect(saveRequestFromEnumBtn, &QAbstractButton::clicked, this, &MainWindow::setRequestFromEnum);
+
 
 }
 
@@ -174,9 +220,18 @@ void MainWindow::createCIP() {
         break;
     }
 
-    requestTxtEdt->setPlainText(QString("%1").arg(currentCIP->getRequest(), 8, 2, QLatin1Char('0')));
+    // SERVICE
+    serviceToNumLbl->setText(QString("%1").arg(currentCIP->getService()));
+    serviceToStringLbl->setText(currentCIP->serviceToString());
+
+    // REQUEST
+    requestToNumLbl->setText(QString("%1").arg(currentCIP->getRequest()));
+    requestToStringLbl->setText(currentCIP->requestToString());
+    requestSpBox->setValue(currentCIP->getRequest());
+    requestCmbBx->setCurrentIndex(getIndexForRequestCmbBx());
 
 
+    // RAW CIP
     rawCIPTxtEdt->setPlainText(QString("New CIP created with argument %1\n%2")
                                .arg(currentCIP->getService())
                                .arg(currentCIP->bytesToString()));
@@ -249,5 +304,46 @@ void MainWindow::saveCIP() {
     }
     outfile.write(currentCIP->getByteArray());
     outfile.close();
+
+}
+
+int MainWindow::getIndexForRequestCmbBx() {
+
+    switch (requestSpBox->value()) {
+
+    case 0:
+        return 0;
+
+    case 1:
+        return 1;
+    case 2:
+        if(currentCIP->getIpPort() == CIP::TCP) {
+            return 2;
+        }
+
+        if(currentCIP->getIpPort() == CIP::UDP) {
+            return 3;
+        }
+
+    default:
+        return 4;
+    }
+}
+
+void MainWindow::setRequestFromNumber() {
+    qDebug() << "setRequestFromNumber()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    currentCIP->setRequest(requestSpBox->value());
+
+    requestCmbBx->setCurrentIndex(getIndexForRequestCmbBx());
+}
+
+void MainWindow::setRequestFromEnum() {
+    qDebug() << "setRequestFromEnum()";
 
 }

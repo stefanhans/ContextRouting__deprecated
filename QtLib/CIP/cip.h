@@ -49,12 +49,15 @@
    +---------------------------------------------------------------+
 
 
-   NAME         TYPE        SIZE    interprete()    to<type>
+   NAME         TYPE        SIZE    toString()    to<type>
    ----------------------------------------------------------
-   request      enum        1       y               n
-   profile      special     1       y               n
-   version      special     1       y               toReal() / toMajor() / toMinor()
-   channel      enum        1       y               n
+   request      enum        1       y              n
+   profile      special     1       y              n
+   version      special     1       y              toMajor(), toMinor()
+   channel      enum        1       y              n
+   UUID         special     16      y              toByteArray(), toRfc4122()
+
+   channel      enum        1       y              n
 
 */
 
@@ -201,83 +204,175 @@ public:
         pack();
     }
 
-    QString getService() const;
-    void setService(const Service &value);
 
+    /*
+     * SERVICE
+     */
+    quint8 getService() const;
+    void setService(const Service &value);
+    QString serviceToString() const;
+
+
+    /*
+     * CIP REQUEST
+     */
     quint8 getRequest() const;
     void setRequest(const quint8 &value);
-    QString requestToString(quint8 byte) const;
 
+    QString requestToString(quint8 byte) const;
+    QString requestToString() const;
+
+
+    /*
+     * CIP PROFILE
+     */
     quint8 getProfile() const;
     void setProfile(const quint8 &value);
-    QString profileToString(quint8 byte) const;
 
+    QString profileToString(quint8 byte) const;
+    QString profileToString() const;
+
+
+    /*
+     * CIP VERSION
+     */
     quint8 getVersion() const;
     void setVersion(const quint8 &value);
-    qreal versionToReal();
-    QString versionToString(quint8 byte) const;
 
+    QString versionToString(quint8 byte) const;
+    QString versionToString() const;
+
+    quint8 versionToMajorNumber(quint8 byte) const;
+    quint8 versionToMajorNumber() const;
+
+    quint8 versionToMinorNumber(quint8 byte) const;
+    quint8 versionToMinorNumber() const;
+
+
+    /*
+     * CIP CHANNEL
+     */
     quint8 getChannel() const;
     void setChannel(const quint8 &value);
     QString channelToString(quint8 byte) const;
 
+
+    /*
+     * CIP XXX
+     */
     QUuid getUuid() const;
     void setUuid(const QUuid &value);
     QString uuidToString(QByteArray *bytes) const;
 
+
+    /*
+     * CIP XXX
+     */
     QHostAddress getIpAddress() const;
     void setIpAddress(const QHostAddress &value);
     QString ipAddressToString(QByteArray *bytes) const;
 
+
+    /*
+     * CIP XXX
+     */
     quint16 getIpPort() const;
     void setIpPort(const quint16 &value);
     quint16 ipPortToNumber(QByteArray *bytes) const;
-    QString interpreteIpPort(QByteArray *bytes) const;
-    QString interpreteIpPort() const;
+    QString ipPortToString(QByteArray *bytes) const;
+    QString ipPortToString() const;
 
+
+    /*
+     * CIP XXX
+     */
     QDateTime getTime() const;
     void setTime(const QDateTime &value);
     QString timeToString(QByteArray *bytes) const;
 
+
+    /*
+     * CIP XXX
+     */
     quint8 getHeadType() const;
     void setHeadType(const quint8 &value);
     QString headTypeToString(quint8 byte) const;
 
+
+    /*
+     * CIP XXX
+     */
     quint8 getHeadSize() const;
     void setHeadSize(const quint8 &value);
 
+
+    /*
+     * CIP XXX
+     */
     QVector<quint8> getHeadData() const;
     void setHeadData(const QVector<quint8> &value);
-    QString interpreteHeadData(QByteArray *bytes) const;
+    QString interpreteHeadData(QByteArray *bytes, quint8 size, quint8 type=1, quint8 channel=1) const;
     QString interpreteHeadData() const;
 
+
+    /*
+     * CIP XXX
+     */
     quint8 getCiType() const;
     void setCiType(const quint8 &value);
     QString ciTypeToString(quint8 byte) const;
 
+
+    /*
+     * CIP XXX
+     */
     CICBrick getRootCIC() const;
     void setRootCIC(const CICBrick &value);
     QString rootCicToString(quint8 byte) const;
 
+
+    /*
+     * CIP XXX
+     */
     quint8 getCiSize() const;
     void setCiSize(const quint8 &value);
 
+
+    /*
+     * CIP XXX
+     */
     QVector<CICBrick> getCICBricks() const;
     void setCICBricks(const QVector<CICBrick> &value);
     QString interpreteCICBricks(QByteArray *bytes) const;
     QString interpreteCICBricks() const;
 
+
+    /*
+     * CIP XXX
+     */
     quint8 getAppType() const;
     void setAppType(const quint8 &value);
     QString appTypeToString(quint8 byte) const;
 
+
+    /*
+     * CIP XXX
+     */
     quint8 getAppSize() const;
     void setAppSize(const quint8 &value);
 
+
+    /*
+     * CIP XXX
+     */
     QVector<quint8> getAppData() const;
     void setAppData(const QVector<quint8> &value);
     QString interpreteAppData(QByteArray *bytes) const;
     QString interpreteAppData() const;
+
+
+
+
 
     void pack();
     void unpack();

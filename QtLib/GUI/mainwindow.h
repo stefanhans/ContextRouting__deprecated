@@ -45,9 +45,12 @@ public slots:
     void openCIP();
     void saveCIP();
 
+    void setRequestFromNumber();
+    void setRequestFromEnum();
+
 private:
 
-    CIP *currentCIP;
+    CIP *currentCIP = NULL;
 
     QWidget *guiWidget;
     QScrollArea *guiScrollArea;
@@ -77,8 +80,18 @@ private:
     QGroupBox *headerGBox;
     QGridLayout *headerLayout;
 
+    QLabel *serviceLbl;
+    QLabel *serviceToNumLbl;
+    QLabel *serviceToStringLbl;
+
     QLabel *requestLbl;
-    QTextEdit *requestTxtEdt;
+    QLabel *requestToNumLbl;
+    QLabel *requestToStringLbl;
+    QSpinBox *requestSpBox;
+    QPushButton *saveRequestFromNumberBtn;
+    QPushButton *saveRequestFromEnumBtn;
+    QComboBox *requestCmbBx;
+    int getIndexForRequestCmbBx();
 
     // Context
     QGroupBox *contextGBox;
