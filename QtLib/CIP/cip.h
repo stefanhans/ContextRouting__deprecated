@@ -3,6 +3,8 @@
 
 #include "cip_global.h"
 
+#include <arpa/inet.h>
+
 #include <QUuid>
 #include <QHostAddress>
 #include <QDateTime>
@@ -270,19 +272,22 @@ public:
 
 
     /*
-     * CIP XXX
+     * CIP UUID
      */
     QUuid getUuid() const;
     void setUuid(const QUuid &value);
+    QByteArray uuidToByteArray();
     QString uuidToString(QByteArray *bytes) const;
+    QString uuidToString() const;
 
 
     /*
-     * CIP XXX
+     * CIP IP ADDRESS
      */
     QHostAddress getIpAddress() const;
     void setIpAddress(const QHostAddress &value);
     QString ipAddressToString(QByteArray *bytes) const;
+    QString ipAddressToString() const;
 
 
     /*

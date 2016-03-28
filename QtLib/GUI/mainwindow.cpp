@@ -241,6 +241,48 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
+    // UUID
+    uuidLbl = new QLabel(tr("UUID: "));
+    uuidLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    uuidCommentLbl = new QLabel(tr("Read Only"));
+    uuidCommentLbl->setAlignment(Qt::AlignCenter);
+    uuidToStringLbl = new QLabel();
+    uuidToStringLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+    headerLayout->addWidget(uuidLbl, 7, 0);
+    headerLayout->addWidget(uuidCommentLbl, 7, 1, 1, 8);
+    headerLayout->addWidget(uuidToStringLbl, 7, 8);
+
+
+    // IP ADDRESS
+    ipAddressLbl = new QLabel(tr("IP Address: "));
+    ipAddressLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    ipAddressASpBox = new QSpinBox(headerGBox);
+    ipAddressASpBox->setFixedSize(180, 30);
+    ipAddressASpBox->setRange(0, 255);
+    ipAddressBSpBox = new QSpinBox(headerGBox);
+    ipAddressBSpBox->setFixedSize(180, 30);
+    ipAddressBSpBox->setRange(0, 255);
+    ipAddressCSpBox = new QSpinBox(headerGBox);
+    ipAddressCSpBox->setFixedSize(180, 30);
+    ipAddressCSpBox->setRange(0, 255);
+    ipAddressDSpBox = new QSpinBox(headerGBox);
+    ipAddressDSpBox->setFixedSize(180, 30);
+    ipAddressDSpBox->setRange(0, 255);
+    saveIpAddressBtn = new QPushButton(tr("setIpAddress()"), this);
+    ipAddressToStringLbl = new QLabel();
+    ipAddressToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+
+    headerLayout->addWidget(ipAddressLbl, 8, 0);
+    headerLayout->addWidget(ipAddressASpBox, 8, 1);
+    headerLayout->addWidget(ipAddressBSpBox, 8, 2);
+    headerLayout->addWidget(ipAddressCSpBox, 8, 3);
+    headerLayout->addWidget(ipAddressDSpBox, 8, 4);
+    headerLayout->addWidget(saveIpAddressBtn, 8, 5, 1, 2);
+    headerLayout->addWidget(ipAddressToStringLbl, 8, 8);
+
+
 
 
 
@@ -309,6 +351,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(saveChannelFromNumberBtn, &QAbstractButton::clicked, this, &MainWindow::setChannelFromNumber);
     connect(saveChannelFromEnumBtn, &QAbstractButton::clicked, this, &MainWindow::setChannelFromEnum);
 
+    connect(saveIpAddressBtn, &QAbstractButton::clicked, this, &MainWindow::setIpAddress);
+
 
 }
 
@@ -374,6 +418,11 @@ void MainWindow::createCIP() {
     channelSpBox->setValue(currentCIP->getChannel());
     channelCmbBx->setCurrentIndex(getIndexForChannelCmbBx());
 
+    // UUID
+    refreshUuidDisplay();
+
+    refreshIpAddressDisplay();
+
 
     // RAW CIP
     rawCIPTxtEdt->setPlainText(QString("New CIP created with argument %1 (%2)\n%3")
@@ -426,6 +475,8 @@ void MainWindow::openCIP() {
     refreshProfileDisplay();
     refreshVersionDisplay();
     refreshChannelDisplay();
+    refreshUuidDisplay();
+    refreshIpAddressDisplay();
 
 
     qDebug() << "setPlainText()";
@@ -736,5 +787,50 @@ void MainWindow::setChannelFromEnum() {
     refreshChannelDisplay();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setChannelFromEnum() to %1\n%2")
                                .arg(channelCmbBx->currentText())
+                               .arg(currentCIP->bytesToString()));
+}
+
+// UUID
+void MainWindow::refreshUuidDisplay() {
+    qDebug() << "refreshUuidDisplay()";
+
+    uuidToStringLbl->setText(currentCIP->uuidToString());
+}
+
+// IP ADDRESS
+void MainWindow::refreshIpAddressDisplay() {
+    qDebug() << "refreshIpAddressDisplay()";
+
+    ipAddressToStringLbl->setText(currentCIP->ipAddressToString());
+
+    QStringList ipList = currentCIP->getIpAddress().toString().split('.');
+    ipAddressASpBox->setValue(QString(ipList.at(0)).toInt());
+    ipAddressBSpBox->setValue(QString(ipList.at(1)).toInt());
+    ipAddressCSpBox->setValue(QString(ipList.at(2)).toInt());
+    ipAddressDSpBox->setValue(QString(ipList.at(3)).toInt());
+}
+
+void MainWindow::setIpAddress() {
+    qDebug() << "setIpAddress()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    currentCIP->setIpAddress(QHostAddress(QString("%1.%2.%3.%4")
+                                          .arg(ipAddressASpBox->value())
+                                          .arg(ipAddressBSpBox->value())
+                                          .arg(ipAddressCSpBox->value())
+                                          .arg(ipAddressDSpBox->value())));
+    currentCIP->pack();
+
+    refreshIpAddressDisplay();
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setIpAddress() to %1\n%2")
+                               .arg(QString("%1.%2.%3.%4")
+                                    .arg(ipAddressASpBox->value())
+                                    .arg(ipAddressBSpBox->value())
+                                    .arg(ipAddressCSpBox->value())
+                                    .arg(ipAddressDSpBox->value()))
                                .arg(currentCIP->bytesToString()));
 }

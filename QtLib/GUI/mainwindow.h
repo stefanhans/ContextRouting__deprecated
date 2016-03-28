@@ -58,6 +58,8 @@ public slots:
     void setChannelFromNumber();
     void setChannelFromEnum();
 
+    void setIpAddress();
+
 private:
 
     CIP *currentCIP = NULL;
@@ -150,6 +152,26 @@ private:
 
     int getIndexForChannelCmbBx();
     void refreshChannelDisplay();
+
+
+    // UUID
+    QLabel *uuidLbl;
+    QLabel *uuidCommentLbl;
+    QLabel *uuidToStringLbl;
+
+    void refreshUuidDisplay();
+
+
+    // IP ADDRESS
+    QLabel *ipAddressLbl;
+    QSpinBox *ipAddressASpBox;
+    QSpinBox *ipAddressBSpBox;
+    QSpinBox *ipAddressCSpBox;
+    QSpinBox *ipAddressDSpBox;
+    QPushButton *saveIpAddressBtn;
+    QLabel *ipAddressToStringLbl;
+
+    void refreshIpAddressDisplay();
 
 
     // Context

@@ -482,10 +482,14 @@ QUuid CIP::getUuid() const
 {
     return uuid;
 }
-
 void CIP::setUuid(const QUuid &value)
 {
     uuid = value;
+}
+
+QByteArray CIP::uuidToByteArray()
+{
+    return uuid.toByteArray();
 }
 
 QString CIP::uuidToString(QByteArray *bytes) const {
@@ -497,6 +501,10 @@ QString CIP::uuidToString(QByteArray *bytes) const {
         uuidStr.append(QString("%1").arg(byte, 0, 16));
     };
     return uuidStr;
+}
+
+QString CIP::uuidToString() const {
+    return uuid.toString();
 }
 
 
@@ -519,6 +527,11 @@ void CIP::setIpAddress(const QHostAddress &value)
 QString CIP::ipAddressToString(QByteArray *bytes) const {
 
     return QString("%1.%2.%3.%4").arg((quint8)bytes->at(0)).arg((quint8)bytes->at(1)).arg((quint8)bytes->at(2)).arg((quint8)bytes->at(3));
+}
+
+QString CIP::ipAddressToString() const {
+
+    return ipAddress.toString();
 }
 
 
@@ -1104,6 +1117,19 @@ void CIP::unpack() {
     // Header: channel (1)
     byte = byteArray.at(b++);
     setChannel(byte);
+
+    // Header: UUID (16)
+    QByteArray uuid = byteArray.mid(b, 16);
+    b += 16;
+    setUuid(QUuid::fromRfc4122(uuid));
+
+    // Header: IP address (4)
+    QByteArray ipAddress = byteArray.mid(b, 4);
+    b += 4;
+    in_addr ip;
+    memcpy(&ip, ipAddress, 4);
+
+    setIpAddress(QHostAddress(inet_ntoa(ip)));
 
 
 
