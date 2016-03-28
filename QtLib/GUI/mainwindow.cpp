@@ -78,9 +78,13 @@ MainWindow::MainWindow(QWidget *parent)
     headerGBox->setLayout(headerLayout);
     mainLayout->addWidget(headerGBox);
 
+    headerLayout->setColumnStretch(9, 1);
+
     // SERVICE
     serviceLbl = new QLabel(tr("Service: "));
     serviceLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    serviceSeparatorLbl = new QLabel(QString('-', 60));
+    serviceSeparatorLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
     serviceToNumLbl = new QLabel();
     serviceToNumLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
@@ -88,8 +92,14 @@ MainWindow::MainWindow(QWidget *parent)
     serviceToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     headerLayout->addWidget(serviceLbl, 0, 0);
-    headerLayout->addWidget(serviceToNumLbl, 0, 5);
-    headerLayout->addWidget(serviceToStringLbl, 0, 6);
+    headerLayout->addWidget(serviceToNumLbl, 0, 7);
+    headerLayout->addWidget(serviceToStringLbl, 0, 8);
+
+    serviceSeparatorLbl = new QLabel(QString(300, '-'));
+    serviceSeparatorLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+    headerLayout->addWidget(serviceSeparatorLbl, 1, 0, 1, 9);
+
 
     // REQUEST
     requestLbl = new QLabel(tr("Request: "));
@@ -102,7 +112,7 @@ MainWindow::MainWindow(QWidget *parent)
     saveRequestFromNumberBtn = new QPushButton(tr("setRequest()"), this);
 
     requestCmbBx = new QComboBox(headerGBox);
-    requestCmbBx->setFixedSize(180, 30);
+    requestCmbBx->setFixedSize(180*2, 30);
     requestCmbBx->addItem("RequestRZV (0)", 0);
     requestCmbBx->addItem("RequestHeartbeat (1)", 1);
     requestCmbBx->addItem("RequestOffer (2)", 2);
@@ -117,15 +127,121 @@ MainWindow::MainWindow(QWidget *parent)
     requestToStringLbl = new QLabel();
     requestToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
-    headerLayout->addWidget(requestLbl, 1, 0);
-    headerLayout->addWidget(requestSpBox, 1, 1);
-    headerLayout->addWidget(saveRequestFromNumberBtn, 1, 2);
-    headerLayout->addWidget(requestCmbBx, 1, 3);
-    headerLayout->addWidget(saveRequestFromEnumBtn, 1, 4);
-    headerLayout->addWidget(requestToNumLbl, 1, 5);
-    headerLayout->addWidget(requestToStringLbl, 1, 6);
+    headerLayout->addWidget(requestLbl, 3, 0);
+    headerLayout->addWidget(requestSpBox, 3, 1);
+    headerLayout->addWidget(saveRequestFromNumberBtn, 3, 2);
+    headerLayout->addWidget(requestCmbBx, 3, 3, 1, 2);
+    headerLayout->addWidget(saveRequestFromEnumBtn, 3, 5, 1, 2);
+    headerLayout->addWidget(requestToNumLbl, 3, 7);
+    headerLayout->addWidget(requestToStringLbl, 3, 8);
 
-    headerLayout->setColumnStretch(7, 5);
+
+
+    // PROFILE
+    profileLbl = new QLabel(tr("Profile: "));
+    profileLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+    profileSpBox = new QSpinBox(headerGBox);
+    profileSpBox->setFixedSize(180, 30);
+    profileSpBox->setRange(0, 255);
+
+    saveProfileFromNumberBtn = new QPushButton(tr("setProfile()"), this);
+
+    profileCmbBx = new QComboBox(headerGBox);
+    profileCmbBx->setFixedSize(180*2, 30);
+    profileCmbBx->addItem("ProfileRZV (0)", 0);
+    profileCmbBx->addItem("undefined (1-255)", 1);
+
+    saveProfileFromEnumBtn = new QPushButton(tr("setProfile()"), this);
+
+    profileToNumLbl = new QLabel();
+    profileToNumLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    profileToStringLbl = new QLabel();
+    profileToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+    headerLayout->addWidget(profileLbl, 4, 0);
+    headerLayout->addWidget(profileSpBox, 4, 1);
+    headerLayout->addWidget(saveProfileFromNumberBtn, 4, 2);
+    headerLayout->addWidget(profileCmbBx, 4, 3, 1, 2);
+    headerLayout->addWidget(saveProfileFromEnumBtn, 4, 5, 1, 2);
+    headerLayout->addWidget(profileToNumLbl, 4, 7);
+    headerLayout->addWidget(profileToStringLbl, 4, 8);
+
+
+
+    // VERSION
+    versionLbl = new QLabel(tr("Version: "));
+    versionLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+    versionSpBox = new QSpinBox(headerGBox);
+    versionSpBox->setFixedSize(180, 30);
+    versionSpBox->setRange(0, 255);
+
+    saveVersionFromNumberBtn = new QPushButton(tr("setVersion()"), this);
+
+    versionMajorSpBox = new QSpinBox(headerGBox);
+    versionMajorSpBox->setFixedSize(180, 30);
+    versionMajorSpBox->setRange(0, 15);
+
+    saveVersionFromMajorBtn = new QPushButton(tr("setMajorVersion()"), this);
+
+    versionMinorSpBox = new QSpinBox(headerGBox);
+    versionMinorSpBox->setFixedSize(180, 30);
+    versionMinorSpBox->setRange(0, 15);
+
+    saveVersionFromMinorBtn = new QPushButton(tr("setMinorVersion()"), this);
+
+    versionToNumLbl = new QLabel();
+    versionToNumLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    versionToStringLbl = new QLabel();
+    versionToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+    headerLayout->addWidget(versionLbl, 5, 0);
+    headerLayout->addWidget(versionSpBox, 5, 1);
+    headerLayout->addWidget(saveVersionFromNumberBtn, 5, 2);
+
+    headerLayout->addWidget(versionMajorSpBox, 5, 3);
+    headerLayout->addWidget(saveVersionFromMajorBtn, 5, 4);
+    headerLayout->addWidget(versionMinorSpBox, 5, 5);
+    headerLayout->addWidget(saveVersionFromMinorBtn, 5, 6);
+    headerLayout->addWidget(versionToNumLbl, 5, 7);
+    headerLayout->addWidget(versionToStringLbl, 5, 8);
+
+
+    // CHANNEL
+    channelLbl = new QLabel(tr("Channel: "));
+    channelLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+    channelSpBox = new QSpinBox(headerGBox);
+    channelSpBox->setFixedSize(180, 30);
+    channelSpBox->setRange(0, 255);
+
+    saveChannelFromNumberBtn = new QPushButton(tr("setChannel()"), this);
+
+    channelCmbBx = new QComboBox(headerGBox);
+    channelCmbBx->setFixedSize(180*2, 30);
+    channelCmbBx->addItem("ChannelRZV (0)", 0);
+    channelCmbBx->addItem("ChannelSimpleMatching (1)", 1);
+    channelCmbBx->addItem("undefined (2-255)", 2);
+
+    saveChannelFromEnumBtn = new QPushButton(tr("setChannel()"), this);
+
+    channelToNumLbl = new QLabel();
+    channelToNumLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    channelToStringLbl = new QLabel();
+    channelToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+    headerLayout->addWidget(channelLbl, 6, 0);
+    headerLayout->addWidget(channelSpBox, 6, 1);
+    headerLayout->addWidget(saveChannelFromNumberBtn, 6, 2);
+    headerLayout->addWidget(channelCmbBx, 6, 3, 1, 2);
+    headerLayout->addWidget(saveChannelFromEnumBtn, 6, 5, 1, 2);
+    headerLayout->addWidget(channelToNumLbl, 6, 7);
+    headerLayout->addWidget(channelToStringLbl, 6, 8);
+
+
+
+
 
 
     contextGBox = new QGroupBox("Contextinformation");
@@ -183,6 +299,16 @@ MainWindow::MainWindow(QWidget *parent)
     connect(saveRequestFromNumberBtn, &QAbstractButton::clicked, this, &MainWindow::setRequestFromNumber);
     connect(saveRequestFromEnumBtn, &QAbstractButton::clicked, this, &MainWindow::setRequestFromEnum);
 
+    connect(saveProfileFromNumberBtn, &QAbstractButton::clicked, this, &MainWindow::setProfileFromNumber);
+    connect(saveProfileFromEnumBtn, &QAbstractButton::clicked, this, &MainWindow::setProfileFromEnum);
+
+    connect(saveVersionFromNumberBtn, &QAbstractButton::clicked, this, &MainWindow::setVersionFromNumber);
+    connect(saveVersionFromMajorBtn, &QAbstractButton::clicked, this, &MainWindow::setVersionFromMajor);
+    connect(saveVersionFromMinorBtn, &QAbstractButton::clicked, this, &MainWindow::setVersionFromMinor);
+
+    connect(saveChannelFromNumberBtn, &QAbstractButton::clicked, this, &MainWindow::setChannelFromNumber);
+    connect(saveChannelFromEnumBtn, &QAbstractButton::clicked, this, &MainWindow::setChannelFromEnum);
+
 
 }
 
@@ -228,6 +354,25 @@ void MainWindow::createCIP() {
     requestToStringLbl->setText(currentCIP->requestToString());
     requestSpBox->setValue(currentCIP->getRequest());
     requestCmbBx->setCurrentIndex(getIndexForRequestCmbBx());
+
+    // PROFILE
+    profileToNumLbl->setText(QString("%1").arg(currentCIP->getProfile()));
+    profileToStringLbl->setText(currentCIP->profileToString());
+    profileSpBox->setValue(currentCIP->getProfile());
+    profileCmbBx->setCurrentIndex(getIndexForProfileCmbBx());
+
+    // VERSION
+    versionToNumLbl->setText(QString("%1").arg(currentCIP->getVersion()));
+    versionToStringLbl->setText(currentCIP->versionToString());
+    versionSpBox->setValue(currentCIP->getVersion());
+    versionMajorSpBox->setValue(currentCIP->versionToMajorNumber());
+    versionMinorSpBox->setValue(currentCIP->versionToMinorNumber());
+
+    // CHANNEL
+    channelToNumLbl->setText(QString("%1").arg(currentCIP->getChannel()));
+    channelToStringLbl->setText(currentCIP->channelToString());
+    channelSpBox->setValue(currentCIP->getChannel());
+    channelCmbBx->setCurrentIndex(getIndexForChannelCmbBx());
 
 
     // RAW CIP
@@ -278,6 +423,10 @@ void MainWindow::openCIP() {
 
     refreshServiceDisplay();
     refreshRequestDisplay();
+    refreshProfileDisplay();
+    refreshVersionDisplay();
+    refreshChannelDisplay();
+
 
     qDebug() << "setPlainText()";
     rawCIPTxtEdt->setPlainText(QString("CIP loaded from file %1\n%2")
@@ -377,6 +526,11 @@ void MainWindow::setRequestFromNumber() {
 void MainWindow::setRequestFromEnum() {
     qDebug() << "setRequestFromEnum()";
 
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
     currentCIP->setRequest(requestCmbBx->currentData().toInt());
     if(requestCmbBx->currentText() == "RequestOffer (2)") {
         currentCIP->setIpPort(CIP::TCP);
@@ -391,5 +545,196 @@ void MainWindow::setRequestFromEnum() {
     refreshRequestDisplay();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setRequestFromEnum() to %1\n%2")
                                .arg(requestCmbBx->currentText())
+                               .arg(currentCIP->bytesToString()));
+}
+
+// PROFILE FUNCTIONS
+int MainWindow::getIndexForProfileCmbBx() {
+    qDebug() << "MainWindow::getIndexForProfileCmbBx()";
+
+    switch (currentCIP->getProfile()) {
+
+    case CIP::ProfileRZV:
+        return 0;
+
+    case CIP::ProfileUndefined:
+        return 1;
+
+    default:
+        return 1;
+    }
+}
+
+void MainWindow::refreshProfileDisplay() {
+    qDebug() << "refreshProfileDisplay()";
+
+    profileSpBox->setValue(currentCIP->getProfile());
+    profileCmbBx->setCurrentIndex(getIndexForProfileCmbBx());
+    profileToNumLbl->setText(QString("%1").arg(currentCIP->getProfile()));
+    profileToStringLbl->setText(currentCIP->profileToString());
+}
+
+void MainWindow::setProfileFromNumber() {
+    qDebug() << "setProfileFromNumber()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    currentCIP->setProfile(profileSpBox->value());
+    currentCIP->pack();
+
+    refreshProfileDisplay();
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setProfileFromNumber() to %1\n%2")
+                               .arg(profileCmbBx->currentText())
+                               .arg(currentCIP->bytesToString()));
+
+}
+
+void MainWindow::setProfileFromEnum() {
+    qDebug() << "setProfileFromEnum()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    currentCIP->setProfile(profileCmbBx->currentData().toInt());
+    currentCIP->pack();
+
+    refreshProfileDisplay();
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setProfileFromEnum() to %1\n%2")
+                               .arg(profileCmbBx->currentText())
+                               .arg(currentCIP->bytesToString()));
+}
+
+
+// VERSION FUNCTIONS
+void MainWindow::refreshVersionDisplay() {
+    qDebug() << "refreshVersionDisplay()";
+
+    versionSpBox->setValue(currentCIP->getVersion());
+    versionMajorSpBox->setValue(currentCIP->versionToMajorNumber());
+    versionMinorSpBox->setValue(currentCIP->versionToMinorNumber());
+    versionToNumLbl->setText(QString("%1").arg(currentCIP->getVersion()));
+    versionToStringLbl->setText(currentCIP->versionToString());
+}
+
+void MainWindow::setVersionFromNumber() {
+    qDebug() << "setVersionFromNumber()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    currentCIP->setVersion(versionSpBox->value());
+    currentCIP->pack();
+
+    refreshVersionDisplay();
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setVersionFromNumber() to %1\n%2")
+                               .arg(versionSpBox->value())
+                               .arg(currentCIP->bytesToString()));
+
+}
+
+void MainWindow::setVersionFromMajor() {
+    qDebug() << "setVersionFromMajor()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    currentCIP->setMajorVersion(versionMajorSpBox->value());
+    currentCIP->pack();
+
+    refreshVersionDisplay();
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setVersionFromMajor() to %1\n%2")
+                               .arg(versionMajorSpBox->value())
+                               .arg(currentCIP->bytesToString()));
+}
+
+
+void MainWindow::setVersionFromMinor() {
+    qDebug() << "setVersionFromMinor()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    currentCIP->setMinorVersion(versionMinorSpBox->value());
+    currentCIP->pack();
+
+    refreshVersionDisplay();
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setVersionFromMinor() to %1\n%2")
+                               .arg(versionMajorSpBox->value())
+                               .arg(currentCIP->bytesToString()));
+}
+
+
+// CHANNEL FUNCTIONS
+int MainWindow::getIndexForChannelCmbBx() {
+    qDebug() << "MainWindow::getIndexForChannelCmbBx()";
+
+    switch (currentCIP->getChannel()) {
+
+    case CIP::ChannelRZV:
+        return 0;
+
+    case CIP::ChannelSimpleMatching:
+        return 1;
+
+    case CIP::ChannelUndefined:
+        return 2;
+
+    default:
+        return 2;
+    }
+}
+
+void MainWindow::refreshChannelDisplay() {
+    qDebug() << "refreshChannelDisplay()";
+
+    channelSpBox->setValue(currentCIP->getChannel());
+    channelCmbBx->setCurrentIndex(getIndexForChannelCmbBx());
+    channelToNumLbl->setText(QString("%1").arg(currentCIP->getChannel()));
+    channelToStringLbl->setText(currentCIP->channelToString());
+}
+
+void MainWindow::setChannelFromNumber() {
+    qDebug() << "setChannelFromNumber()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    currentCIP->setChannel(channelSpBox->value());
+    currentCIP->pack();
+
+    refreshChannelDisplay();
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setChannelFromNumber() to %1\n%2")
+                               .arg(channelCmbBx->currentText())
+                               .arg(currentCIP->bytesToString()));
+
+}
+
+void MainWindow::setChannelFromEnum() {
+    qDebug() << "setChannelFromEnum()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    currentCIP->setChannel(channelCmbBx->currentData().toInt());
+    currentCIP->pack();
+
+    refreshChannelDisplay();
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setChannelFromEnum() to %1\n%2")
+                               .arg(channelCmbBx->currentText())
                                .arg(currentCIP->bytesToString()));
 }

@@ -48,6 +48,16 @@ public slots:
     void setRequestFromNumber();
     void setRequestFromEnum();
 
+    void setProfileFromNumber();
+    void setProfileFromEnum();
+
+    void setVersionFromNumber();
+    void setVersionFromMajor();
+    void setVersionFromMinor();
+
+    void setChannelFromNumber();
+    void setChannelFromEnum();
+
 private:
 
     CIP *currentCIP = NULL;
@@ -85,6 +95,8 @@ private:
     QLabel *serviceLbl;
     QLabel *serviceToNumLbl;
     QLabel *serviceToStringLbl;
+    QLabel *serviceSeparatorLbl;
+
     void refreshServiceDisplay();
 
 
@@ -99,6 +111,46 @@ private:
 
     int getIndexForRequestCmbBx();
     void refreshRequestDisplay();
+
+
+    // PROFILE
+    QLabel *profileLbl;
+    QSpinBox *profileSpBox;
+    QPushButton *saveProfileFromNumberBtn;
+    QComboBox *profileCmbBx;
+    QPushButton *saveProfileFromEnumBtn;
+    QLabel *profileToNumLbl;
+    QLabel *profileToStringLbl;
+
+    int getIndexForProfileCmbBx();
+    void refreshProfileDisplay();
+
+    // VERSION
+    QLabel *versionLbl;
+    QSpinBox *versionSpBox;
+    QPushButton *saveVersionFromNumberBtn;
+    QSpinBox *versionMajorSpBox;
+    QPushButton *saveVersionFromMajorBtn;
+    QSpinBox *versionMinorSpBox;
+    QPushButton *saveVersionFromMinorBtn;
+    QLabel *versionToNumLbl;
+    QLabel *versionToStringLbl;
+
+    void refreshVersionDisplay();
+
+
+    // CHANNEL
+    QLabel *channelLbl;
+    QSpinBox *channelSpBox;
+    QPushButton *saveChannelFromNumberBtn;
+    QComboBox *channelCmbBx;
+    QPushButton *saveChannelFromEnumBtn;
+    QLabel *channelToNumLbl;
+    QLabel *channelToStringLbl;
+
+    int getIndexForChannelCmbBx();
+    void refreshChannelDisplay();
+
 
     // Context
     QGroupBox *contextGBox;

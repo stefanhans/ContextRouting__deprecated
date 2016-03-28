@@ -105,9 +105,14 @@ public:
         RequestRZV=0, RequestHeartbeat=1, RequestOffer=2, RequestRequest=2, RequestReply=3, RequestUndefined
     };
 
+    enum Profile
+    {
+        ProfileRZV=0, ProfileUndefined
+    };
+
     enum Channel
     {
-        CI_Matching=1
+        ChannelRZV=0, ChannelSimpleMatching=1, ChannelUndefined
     };
 
     enum Ports
@@ -241,6 +246,9 @@ public:
     quint8 getVersion() const;
     void setVersion(const quint8 &value);
 
+    void setMajorVersion(const quint8 &value);
+    void setMinorVersion(const quint8 &value);
+
     QString versionToString(quint8 byte) const;
     QString versionToString() const;
 
@@ -256,7 +264,9 @@ public:
      */
     quint8 getChannel() const;
     void setChannel(const quint8 &value);
+
     QString channelToString(quint8 byte) const;
+    QString channelToString() const;
 
 
     /*

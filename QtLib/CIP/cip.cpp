@@ -7,35 +7,35 @@ void CIP::initialize() {
     switch (service) {
 
     case Heartbeat:
-        setChannel(CI_Matching);
+        setChannel(ChannelSimpleMatching);
         setRequest(RequestHeartbeat);
         setIpPort(UDP);
         setHeaderType(HeaderTypeOk);
         break;
 
     case Offer:
-        setChannel(CI_Matching);
+        setChannel(ChannelSimpleMatching);
         setRequest(RequestOffer);
         setIpPort(TCP);
         setHeaderType(HeaderTypeOk);
         break;
 
     case Request:
-        setChannel(CI_Matching);
+        setChannel(ChannelSimpleMatching);
         setRequest(RequestRequest);
         setIpPort(UDP);
         setHeaderType(HeaderTypeOk);
         break;
 
     case TcpReply:
-        setChannel(CI_Matching);
+        setChannel(ChannelSimpleMatching);
         setRequest(RequestReply);
         setIpPort(TCP);
         setHeaderType(HeaderTypeError);
         break;
 
     case UdpReply:
-        setChannel(CI_Matching);
+        setChannel(ChannelSimpleMatching);
         setRequest(RequestReply);
         setIpPort(UDP);
         setHeaderType(HeaderTypeError);
@@ -362,11 +362,21 @@ void CIP::setProfile(const quint8 &value)
 }
 QString CIP::profileToString(quint8 byte) const {
 
-    return QString("undefined %1").arg(byte);
+    switch (byte) {
+    case ProfileRZV:
+        return "Profile::RZV (by convention)";
+    default:
+        return "Profile::ChannelUndefined";
+    }
 }
 QString CIP::profileToString() const {
 
-    return QString("undefined %1").arg(profile);
+    switch (profile) {
+    case ProfileRZV:
+        return "Profile::RZV (by convention)";
+    default:
+        return "Profile::ChannelUndefined";
+    }
 }
 
 
@@ -384,6 +394,15 @@ quint8 CIP::getVersion() const
 void CIP::setVersion(const quint8 &value)
 {
     version = value;
+}
+
+void CIP::setMajorVersion(const quint8 &value) {
+    version = (value<<4) + versionToMinorNumber();
+}
+
+void CIP::setMinorVersion(const quint8 &value) {
+
+    version = (versionToMajorNumber()<<4) + value;
 }
 
 quint8 CIP::versionToMajorNumber() const {
@@ -431,12 +450,24 @@ void CIP::setChannel(const quint8 &value)
 QString CIP::channelToString(quint8 byte) const {
 
     switch (byte) {
-    case 0:
-        return "Channel RZV by convention";
-    case CI_Matching:
-        return "Channel::CI_Matching";
+    case ChannelRZV:
+        return "Channel::RZV (by convention)";
+    case ChannelSimpleMatching:
+        return "Channel::ChannelSimpleMatching";
     default:
-        return "undefined";
+        return "Channel::ChannelUndefined";
+    }
+}
+
+QString CIP::channelToString() const {
+
+    switch (channel) {
+    case ChannelRZV:
+        return "Channel::RZV (by convention)";
+    case ChannelSimpleMatching:
+        return "Channel::ChannelSimpleMatching";
+    default:
+        return "Channel::ChannelUndefined";
     }
 }
 
@@ -1055,7 +1086,7 @@ void CIP::unpack() {
 
     quint8 byte;
     int b = 0;
-    int size;
+//    int size;
     QString cipString;
 
     // Header: request (1)
