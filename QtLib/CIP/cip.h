@@ -124,7 +124,7 @@ public:
 
     enum HeaderType
     {
-        HeaderTypeOk=0, HeaderTypeError=1
+        HeaderTypeOk=0, HeaderTypeError=1, HeaderTypeUndefined
     };
 
     enum ErrorCategory
@@ -171,9 +171,9 @@ public:
         ipAddress("127.0.0.1"),
         ipPort(TCP),
         time(QDateTime::currentDateTime()),
-        headType(0),
-        headSize(0),
-        headData(),
+        headerType(0),
+        headerSize(0),
+        headerData(),
         ciType(0),
         rootCIC(),
         ciSize(0),
@@ -196,9 +196,9 @@ public:
         ipAddress("127.64.32.1"),
         ipPort(TCP),
         time(QDateTime::currentDateTime()),
-        headType(0),
-        headSize(0),
-        headData(),
+        headerType(0),
+        headerSize(0),
+        headerData(),
         ciType(1),
         rootCIC(1, 0),
         ciSize(0),
@@ -291,7 +291,7 @@ public:
 
 
     /*
-     * CIP XXX
+     * CIP IP PORT
      */
     quint16 getIpPort() const;
     void setIpPort(const quint16 &value);
@@ -301,26 +301,28 @@ public:
 
 
     /*
-     * CIP XXX
+     * CIP TIME
      */
     QDateTime getTime() const;
     void setTime(const QDateTime &value);
     QString timeToString(QByteArray *bytes) const;
+    QString timeToString() const;
 
 
     /*
-     * CIP XXX
+     * CIP HEADER TYPE
      */
-    quint8 getHeadType() const;
-    void setHeadType(const quint8 &value);
-    QString headTypeToString(quint8 byte) const;
+    quint8 getHeaderType() const;
+    void setHeaderType(const quint8 &value);
+    QString headerTypeToString(quint8 byte) const;
+    QString headerTypeToString() const;
 
 
     /*
-     * CIP XXX
+     * CIP HEADER SIZE
      */
-    quint8 getHeadSize() const;
-    void setHeadSize(const quint8 &value);
+    quint8 getHeaderSize() const;
+    void setHeaderSize(const quint8 &value);
 
 
     /*
@@ -399,7 +401,7 @@ public:
 
     QString bytesToString();
 
-    QString getHeaderType() const;
+//    QString getHeaderType() const;
     void setHeaderType(const HeaderType &value);
 
     QByteArray getByteArray() const;
@@ -411,7 +413,7 @@ private:
     QByteArray byteArray;
 
     Service service;
-    HeaderType headerType;
+//    HeaderType headerType;
 
     /*
      * Header Data
@@ -429,9 +431,9 @@ private:
 
     QDateTime time;
 
-    quint8 headType;
-    quint8 headSize;
-    QVector<quint8> headData;
+    quint8 headerType;
+    quint8 headerSize;
+    QVector<quint8> headerData;
 
 
     /*

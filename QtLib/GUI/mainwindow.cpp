@@ -95,14 +95,14 @@ MainWindow::MainWindow(QWidget *parent)
     headerLayout->addWidget(serviceToNumLbl, 0, 7);
     headerLayout->addWidget(serviceToStringLbl, 0, 8);
 
-    serviceSeparatorLbl = new QLabel(QString(300, '-'));
+    serviceSeparatorLbl = new QLabel(QString(340, '-'));
     serviceSeparatorLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
     headerLayout->addWidget(serviceSeparatorLbl, 1, 0, 1, 9);
 
 
     // REQUEST
-    requestLbl = new QLabel(tr("Request: "));
+    requestLbl = new QLabel(tr("Request (1): "));
     requestLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
     requestSpBox = new QSpinBox(headerGBox);
@@ -138,7 +138,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     // PROFILE
-    profileLbl = new QLabel(tr("Profile: "));
+    profileLbl = new QLabel(tr("Profile (1): "));
     profileLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
     profileSpBox = new QSpinBox(headerGBox);
@@ -170,7 +170,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     // VERSION
-    versionLbl = new QLabel(tr("Version: "));
+    versionLbl = new QLabel(tr("Version (1): "));
     versionLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
     versionSpBox = new QSpinBox(headerGBox);
@@ -209,7 +209,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     // CHANNEL
-    channelLbl = new QLabel(tr("Channel: "));
+    channelLbl = new QLabel(tr("Channel (1): "));
     channelLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
     channelSpBox = new QSpinBox(headerGBox);
@@ -242,7 +242,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     // UUID
-    uuidLbl = new QLabel(tr("UUID: "));
+    uuidLbl = new QLabel(tr("UUID (16): "));
     uuidLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     uuidCommentLbl = new QLabel(tr("Read Only"));
     uuidCommentLbl->setAlignment(Qt::AlignCenter);
@@ -255,7 +255,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     // IP ADDRESS
-    ipAddressLbl = new QLabel(tr("IP Address: "));
+    ipAddressLbl = new QLabel(tr("IP Address (4): "));
     ipAddressLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     ipAddressASpBox = new QSpinBox(headerGBox);
     ipAddressASpBox->setFixedSize(180, 30);
@@ -281,6 +281,81 @@ MainWindow::MainWindow(QWidget *parent)
     headerLayout->addWidget(ipAddressDSpBox, 8, 4);
     headerLayout->addWidget(saveIpAddressBtn, 8, 5, 1, 2);
     headerLayout->addWidget(ipAddressToStringLbl, 8, 8);
+
+
+    // IP PORT
+    ipPortLbl = new QLabel(tr("IP Port (2): "));
+    ipPortLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    ipPortSpBox = new QSpinBox(headerGBox);
+    ipPortSpBox->setFixedSize(180, 30);
+    ipPortSpBox->setRange(0, 65535);
+    saveIpPortFromNumberBtn = new QPushButton(tr("setIpPort()"), this);
+
+    ipPortCmbBx = new QComboBox(headerGBox);
+    ipPortCmbBx->setFixedSize(180*2, 30);
+    ipPortCmbBx->addItem("TCP (0)", 0);
+    ipPortCmbBx->addItem("UDP (1)", 1);
+    ipPortCmbBx->addItem("undefined", 2);
+    saveIpPortFromEnumBtn = new QPushButton(tr("setIpPort()"), this);
+    ipPortToStringLbl = new QLabel();
+    ipPortToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+
+    headerLayout->addWidget(ipPortLbl, 9, 0);
+    headerLayout->addWidget(ipPortSpBox, 9, 1);
+    headerLayout->addWidget(saveIpPortFromNumberBtn, 9, 2);
+    headerLayout->addWidget(ipPortCmbBx, 9, 3, 1, 2);
+    headerLayout->addWidget(saveIpPortFromEnumBtn, 9, 5, 1, 2);
+    headerLayout->addWidget(ipPortToStringLbl, 9, 8);
+
+
+    // TIME
+    timeLbl = new QLabel(tr("Time (8): "));
+    timeLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    setCurrentTimeBtn = new QPushButton(tr("setCurrentTime()"), this);
+    timeToNumLbl = new QLabel();
+    timeToNumLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    timeToStringLbl = new QLabel();
+    timeToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+
+    headerLayout->addWidget(timeLbl, 10, 0);
+    headerLayout->addWidget(setCurrentTimeBtn, 10, 1);
+    headerLayout->addWidget(timeToNumLbl, 10, 4, 1, 2);
+    headerLayout->addWidget(timeToStringLbl, 10, 8);
+
+
+    // HEADER TYPE
+    headerTypeLbl = new QLabel(tr("HeaderType (1): "));
+    headerTypeLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+    headerTypeSpBox = new QSpinBox(headerGBox);
+    headerTypeSpBox->setFixedSize(180, 30);
+    headerTypeSpBox->setRange(0, 255);
+
+    saveHeaderTypeFromNumberBtn = new QPushButton(tr("setHeaderType()"), this);
+
+    headerTypeCmbBx = new QComboBox(headerGBox);
+    headerTypeCmbBx->setFixedSize(180*2, 30);
+    headerTypeCmbBx->addItem("HeaderTypeOk (0)", 0);
+    headerTypeCmbBx->addItem("HeaderTypeError (1)", 1);
+    headerTypeCmbBx->addItem("undefined (2-255)", 2);
+
+    saveHeaderTypeFromEnumBtn = new QPushButton(tr("setHeaderType()"), this);
+
+    headerTypeToNumLbl = new QLabel();
+    headerTypeToNumLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    headerTypeToStringLbl = new QLabel();
+    headerTypeToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+    headerLayout->addWidget(headerTypeLbl, 11, 0);
+    headerLayout->addWidget(headerTypeSpBox, 11, 1);
+    headerLayout->addWidget(saveHeaderTypeFromNumberBtn, 11, 2);
+    headerLayout->addWidget(headerTypeCmbBx, 11, 3, 1, 2);
+    headerLayout->addWidget(saveHeaderTypeFromEnumBtn, 11, 5, 1, 2);
+    headerLayout->addWidget(headerTypeToNumLbl, 11, 7);
+    headerLayout->addWidget(headerTypeToStringLbl, 11, 8);
+
 
 
 
@@ -332,6 +407,7 @@ MainWindow::MainWindow(QWidget *parent)
     showMaximized();
 
 
+    // CONNECTS
     connect(createBtn, &QAbstractButton::clicked, this, &MainWindow::createCIP);
 
     connect(openBtn, &QAbstractButton::clicked, this, &MainWindow::openCIP);
@@ -352,6 +428,11 @@ MainWindow::MainWindow(QWidget *parent)
     connect(saveChannelFromEnumBtn, &QAbstractButton::clicked, this, &MainWindow::setChannelFromEnum);
 
     connect(saveIpAddressBtn, &QAbstractButton::clicked, this, &MainWindow::setIpAddress);
+
+    connect(setCurrentTimeBtn, &QAbstractButton::clicked, this, &MainWindow::setCurrentTime);
+
+    connect(saveHeaderTypeFromNumberBtn, &QAbstractButton::clicked, this, &MainWindow::setHeaderTypeFromNumber);
+    connect(saveHeaderTypeFromEnumBtn, &QAbstractButton::clicked, this, &MainWindow::setHeaderTypeFromEnum);
 
 
 }
@@ -422,6 +503,10 @@ void MainWindow::createCIP() {
     refreshUuidDisplay();
 
     refreshIpAddressDisplay();
+    refreshIpPortDisplay();
+    refreshTimeDisplay();
+    refreshHeaderTypeDisplay();
+
 
 
     // RAW CIP
@@ -477,6 +562,9 @@ void MainWindow::openCIP() {
     refreshChannelDisplay();
     refreshUuidDisplay();
     refreshIpAddressDisplay();
+    refreshIpPortDisplay();
+    refreshTimeDisplay();
+    refreshHeaderTypeDisplay();
 
 
     qDebug() << "setPlainText()";
@@ -832,5 +920,167 @@ void MainWindow::setIpAddress() {
                                     .arg(ipAddressBSpBox->value())
                                     .arg(ipAddressCSpBox->value())
                                     .arg(ipAddressDSpBox->value()))
+                               .arg(currentCIP->bytesToString()));
+}
+
+// IP PORT FUNCTIONS
+int MainWindow::getIndexForIpPortCmbBx() {
+    qDebug() << "MainWindow::getIndexForIpPortCmbBx()";
+
+    switch (currentCIP->getIpPort()) {
+
+    case CIP::TCP:
+        return 0;
+    case CIP::UDP:
+        return 1;
+    default:
+        return 2;
+    }
+}
+
+void MainWindow::refreshIpPortDisplay() {
+    qDebug() << "refreshIpPortDisplay()";
+
+    ipPortSpBox->setValue(currentCIP->getIpPort());
+    ipPortCmbBx->setCurrentIndex(getIndexForIpPortCmbBx());
+
+    ipPortToStringLbl->setText(currentCIP->ipPortToString());
+}
+
+void MainWindow::setIpPortFromNumber() {
+    qDebug() << "setIpPortFromNumber()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    currentCIP->setIpPort(ipPortSpBox->value());
+    currentCIP->pack();
+
+    refreshIpPortDisplay();
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setIpPortFromNumber() to %1\n%2")
+                               .arg(ipPortCmbBx->currentText())
+                               .arg(currentCIP->bytesToString()));
+
+}
+
+void MainWindow::setIpPortFromEnum() {
+    qDebug() << "setIpPortFromEnum()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    currentCIP->setIpPort(ipPortCmbBx->currentData().toInt());
+    currentCIP->pack();
+
+    refreshIpPortDisplay();
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setIpPortFromEnum() to %1\n%2")
+                               .arg(ipPortCmbBx->currentText())
+                               .arg(currentCIP->bytesToString()));
+}
+
+
+// TIME FUNCTIONS
+void MainWindow::setCurrentTime() {
+    qDebug() << "setCurrentTime()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    currentCIP->setTime(QDateTime::currentDateTime());
+    currentCIP->pack();
+
+    refreshTimeDisplay();
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setCurrentTime() to %1\n%2")
+                               .arg(currentCIP->getTime().toString())
+                               .arg(currentCIP->bytesToString()));
+
+}
+
+
+void MainWindow::refreshTimeDisplay() {
+    qDebug() << "refreshTimeDisplay()";
+
+    timeToNumLbl->setText(QString("Unix Epoch: %1 seconds").arg(currentCIP->getTime().toMSecsSinceEpoch()));
+    timeToStringLbl->setText(currentCIP->timeToString());
+}
+
+
+
+int getIndexForHeaderTypeCmbBx();
+void refreshHeaderTypeDisplay();
+
+
+
+
+
+// HEADER TYPE FUNCTIONS
+int MainWindow::getIndexForHeaderTypeCmbBx() {
+    qDebug() << "MainWindow::getIndexForHeaderTypeCmbBx()";
+
+    switch (currentCIP->getHeaderType()) {
+
+    case CIP::HeaderTypeOk:
+        return 0;
+
+    case CIP::HeaderTypeError:
+        return 1;
+
+    case CIP::HeaderTypeUndefined:
+        return 2;
+
+    default:
+        return 2;
+    }
+}
+
+void MainWindow::refreshHeaderTypeDisplay() {
+    qDebug() << "refreshHeaderTypeDisplay()";
+
+    headerTypeSpBox->setValue(currentCIP->getHeaderType());
+    headerTypeCmbBx->setCurrentIndex(getIndexForHeaderTypeCmbBx());
+    headerTypeToNumLbl->setText(QString("%1").arg(currentCIP->getHeaderType()));
+    headerTypeToStringLbl->setText(currentCIP->headerTypeToString());
+
+    qDebug() << "currentCIP->headerTypeToString()" << currentCIP->headerTypeToString();
+}
+
+void MainWindow::setHeaderTypeFromNumber() {
+    qDebug() << "setHeaderTypeFromNumber()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    currentCIP->setHeaderType(headerTypeSpBox->value());
+    currentCIP->pack();
+
+    refreshHeaderTypeDisplay();
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderTypeFromNumber() to %1\n%2")
+                               .arg(headerTypeCmbBx->currentText())
+                               .arg(currentCIP->bytesToString()));
+
+}
+
+void MainWindow::setHeaderTypeFromEnum() {
+    qDebug() << "setHeaderTypeFromEnum()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    currentCIP->setHeaderType(headerTypeCmbBx->currentData().toInt());
+    currentCIP->pack();
+
+    refreshHeaderTypeDisplay();
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderTypeFromEnum() to %1\n%2")
+                               .arg(headerTypeCmbBx->currentText())
                                .arg(currentCIP->bytesToString()));
 }

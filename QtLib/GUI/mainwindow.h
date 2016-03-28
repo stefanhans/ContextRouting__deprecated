@@ -60,6 +60,14 @@ public slots:
 
     void setIpAddress();
 
+    void setIpPortFromNumber();
+    void setIpPortFromEnum();
+
+    void setCurrentTime();
+
+    void setHeaderTypeFromNumber();
+    void setHeaderTypeFromEnum();
+
 private:
 
     CIP *currentCIP = NULL;
@@ -172,6 +180,38 @@ private:
     QLabel *ipAddressToStringLbl;
 
     void refreshIpAddressDisplay();
+
+
+    // IP PORT
+    QLabel *ipPortLbl;
+    QSpinBox *ipPortSpBox;
+    QPushButton *saveIpPortFromNumberBtn;
+    QComboBox *ipPortCmbBx;
+    QPushButton *saveIpPortFromEnumBtn;
+    QLabel *ipPortToStringLbl;
+
+    int getIndexForIpPortCmbBx();
+    void refreshIpPortDisplay();
+
+    // TIME
+    QLabel *timeLbl;
+    QPushButton *setCurrentTimeBtn;
+    QLabel *timeToNumLbl;
+    QLabel *timeToStringLbl;
+
+    void refreshTimeDisplay();
+
+    // HEADER TYPE
+    QLabel *headerTypeLbl;
+    QSpinBox *headerTypeSpBox;
+    QPushButton *saveHeaderTypeFromNumberBtn;
+    QComboBox *headerTypeCmbBx;
+    QPushButton *saveHeaderTypeFromEnumBtn;
+    QLabel *headerTypeToNumLbl;
+    QLabel *headerTypeToStringLbl;
+
+    int getIndexForHeaderTypeCmbBx();
+    void refreshHeaderTypeDisplay();
 
 
     // Context
