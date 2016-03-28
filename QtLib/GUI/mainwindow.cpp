@@ -95,11 +95,6 @@ MainWindow::MainWindow(QWidget *parent)
     requestLbl = new QLabel(tr("Request: "));
     requestLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
-    requestToNumLbl = new QLabel();
-    requestToNumLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    requestToStringLbl = new QLabel();
-    requestToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-
     requestSpBox = new QSpinBox(headerGBox);
     requestSpBox->setFixedSize(180, 30);
     requestSpBox->setRange(0, 255);
@@ -117,6 +112,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     saveRequestFromEnumBtn = new QPushButton(tr("setRequest()"), this);
 
+    requestToNumLbl = new QLabel();
+    requestToNumLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    requestToStringLbl = new QLabel();
+    requestToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     headerLayout->addWidget(requestLbl, 1, 0);
     headerLayout->addWidget(requestSpBox, 1, 1);
@@ -232,7 +231,8 @@ void MainWindow::createCIP() {
 
 
     // RAW CIP
-    rawCIPTxtEdt->setPlainText(QString("New CIP created with argument %1\n%2")
+    rawCIPTxtEdt->setPlainText(QString("New CIP created with argument %1 (%2)\n%3")
+                               .arg(currentCIP->serviceToString())
                                .arg(currentCIP->getService())
                                .arg(currentCIP->bytesToString()));
 
@@ -274,9 +274,10 @@ void MainWindow::openCIP() {
     currentCIP->unpack();
     infile.close();
 
+    currentCIP->updateService();
 
-
-    currentCIP->unpack();
+    refreshServiceDisplay();
+    refreshRequestDisplay();
 
     qDebug() << "setPlainText()";
     rawCIPTxtEdt->setPlainText(QString("CIP loaded from file %1\n%2")
@@ -307,9 +308,20 @@ void MainWindow::saveCIP() {
 
 }
 
-int MainWindow::getIndexForRequestCmbBx() {
 
-    switch (requestSpBox->value()) {
+void MainWindow::refreshServiceDisplay() {
+    qDebug() << "MainWindow::getIndexForRequestCmbBx()";
+
+        serviceToNumLbl->setText(QString("%1").arg(currentCIP->getService()));
+        serviceToStringLbl->setText(currentCIP->serviceToString());
+
+//        serviceToStringLbl->setText(currentCIP->ipPortToString());
+}
+
+int MainWindow::getIndexForRequestCmbBx() {
+    qDebug() << "MainWindow::getIndexForRequestCmbBx()";
+
+    switch (currentCIP->getRequest()) {
 
     case 0:
         return 0;
@@ -325,9 +337,21 @@ int MainWindow::getIndexForRequestCmbBx() {
             return 3;
         }
 
-    default:
+    case 3:
         return 4;
+
+    default:
+        return 5;
     }
+}
+
+void MainWindow::refreshRequestDisplay() {
+    qDebug() << "refreshRequestDisplay()";
+
+    requestSpBox->setValue(currentCIP->getRequest());
+    requestCmbBx->setCurrentIndex(getIndexForRequestCmbBx());
+    requestToNumLbl->setText(QString("%1").arg(currentCIP->getRequest()));
+    requestToStringLbl->setText(currentCIP->requestToString());
 }
 
 void MainWindow::setRequestFromNumber() {
@@ -339,11 +363,33 @@ void MainWindow::setRequestFromNumber() {
     }
 
     currentCIP->setRequest(requestSpBox->value());
+    currentCIP->updateService();
+    currentCIP->pack();
 
-    requestCmbBx->setCurrentIndex(getIndexForRequestCmbBx());
+    refreshServiceDisplay();
+    refreshRequestDisplay();
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setRequestFromNumber() to %1\n%2")
+                               .arg(requestCmbBx->currentText())
+                               .arg(currentCIP->bytesToString()));
+
 }
 
 void MainWindow::setRequestFromEnum() {
     qDebug() << "setRequestFromEnum()";
 
+    currentCIP->setRequest(requestCmbBx->currentData().toInt());
+    if(requestCmbBx->currentText() == "RequestOffer (2)") {
+        currentCIP->setIpPort(CIP::TCP);
+    }
+    if(requestCmbBx->currentText() == "RequestRequest (2)") {
+        currentCIP->setIpPort(CIP::UDP);
+    }
+    currentCIP->updateService();
+    currentCIP->pack();
+
+    refreshServiceDisplay();
+    refreshRequestDisplay();
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setRequestFromEnum() to %1\n%2")
+                               .arg(requestCmbBx->currentText())
+                               .arg(currentCIP->bytesToString()));
 }

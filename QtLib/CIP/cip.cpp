@@ -142,30 +142,21 @@ QString CIP::serviceToString() const
 {
     
     switch (service) {
-    
+
+    case RZV:
+        return QString("Service::RZV");
     case Heartbeat:
         return QString("Service::Heartbeat");
-        break;
-
     case Offer:
         return QString("Service::Offer");
-        break;
-
     case Request:
         return QString("Service::Request");
-        break;
-
     case TcpReply:
         return QString("Service::TcpReply");
-        break;
-
     case UdpReply:
         return QString("Service::UdpReply");
-        break;
-
     default:
-        return QString("Error: Undefined enum Service: %1").arg(service);
-        break;
+        return QString("Service::Undefined");
     }
 }
 
@@ -174,6 +165,10 @@ void CIP::setService(const Service &value)
     service = value;
 
     switch (service) {
+
+    case RZV:
+        setRequest(RequestRZV);
+        break;
 
     case Heartbeat:
         qDebug() << "case Heartbeat:";
@@ -202,10 +197,65 @@ void CIP::setService(const Service &value)
         setIpPort(UDP);
         break;
 
-    default:
-        setRequest(0);
+    case Undefined:
         break;
     }
+}
+
+void CIP::updateService() {
+    qDebug() << "CIP::updateService()";
+
+    switch (request) {
+
+    case RequestRZV:
+        qDebug() << "RequestRZV";
+        setService(RZV);
+
+        return;
+    }
+
+    if(ipPort == UDP) {
+        qDebug() << "UDP";
+
+        switch (request) {
+
+        case RequestHeartbeat:
+            qDebug() << "RequestHeartbeat";
+            setService(Heartbeat);
+
+            return;
+        case RequestRequest:
+            qDebug() << "RequestRequest";
+            setService(Request);
+
+            return;
+        case RequestReply:
+            qDebug() << "RequestReply";
+            setService(UdpReply);
+
+            return;
+        }
+    }
+
+    if(ipPort == TCP) {
+        qDebug() << "TCP";
+
+        switch (request) {
+
+        case RequestOffer:
+            qDebug() << "RequestOffer";
+            setService(Offer);
+
+            return;
+        case RequestReply:
+            qDebug() << "RequestReply";
+            setService(TcpReply);
+
+            return;
+        }
+    }
+    setService(Undefined);
+    qDebug() << "setService(Undefined)";
 }
 
 
@@ -245,16 +295,22 @@ quint8 CIP::getRequest() const
     return request;
 }
 
-void CIP::setRequest(const quint8 &value)
-{
+void CIP::setRequest(const quint8 &value) {
+    qDebug() << QString("CIP::setRequest(%1)").arg(value);
+
     request = value;
+
+    switch (request) {
+    case RequestHeartbeat:
+        setIpPort(UDP);
+    }
 }
 
 QString CIP::requestToString(quint8 byte) const {
 
     switch (byte) {
     case RequestRZV:
-        return "Request RZV by convention";
+        return "Request::RZV (by convention)";
     case RequestHeartbeat:
         return "Request::RequestHeartbeat";
     case 2:
@@ -270,11 +326,17 @@ QString CIP::requestToString() const {
 
     switch (request) {
     case RequestRZV:
-        return "Request RZV by convention";
+        return "Request::RZV (by convention)";
     case RequestHeartbeat:
         return "Request::RequestHeartbeat";
     case 2:
-        return "Request::RequestOffer (TCP) || Request::RequestRequest (UDP)";
+        if(ipPort == TCP) {
+            return "Request::RequestOffer (TCP)";
+        }
+        if(ipPort == UDP) {
+            return "Request::RequestRequest (UDP)";
+        }
+        return "undefined";
     case RequestReply:
         return "Request::RequestReply";
     default:
@@ -892,6 +954,8 @@ QString CIP::interpreteAppData() const {
 
 void CIP::pack() {
 
+    byteArray.clear();
+
     // START HEADER
     byteArray.append(getRequest());
     byteArray.append(getProfile());
@@ -988,6 +1052,29 @@ void CIP::pack() {
  */
 
 void CIP::unpack() {
+
+    quint8 byte;
+    int b = 0;
+    int size;
+    QString cipString;
+
+    // Header: request (1)
+    byte = byteArray.at(b++);
+    setRequest(byte);
+
+    // Header: profile (1)
+    byte = byteArray.at(b++);
+    setProfile(byte);
+
+    // Header: verion (1)
+    byte = byteArray.at(b++);
+    setVersion(byte);
+
+    // Header: channel (1)
+    byte = byteArray.at(b++);
+    setChannel(byte);
+
+
 
 }
 

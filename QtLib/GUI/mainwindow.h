@@ -80,18 +80,25 @@ private:
     QGroupBox *headerGBox;
     QGridLayout *headerLayout;
 
+
+    // SERVICE
     QLabel *serviceLbl;
     QLabel *serviceToNumLbl;
     QLabel *serviceToStringLbl;
+    void refreshServiceDisplay();
 
+
+    // REQUEST
     QLabel *requestLbl;
-    QLabel *requestToNumLbl;
-    QLabel *requestToStringLbl;
     QSpinBox *requestSpBox;
     QPushButton *saveRequestFromNumberBtn;
-    QPushButton *saveRequestFromEnumBtn;
     QComboBox *requestCmbBx;
+    QPushButton *saveRequestFromEnumBtn;
+    QLabel *requestToNumLbl;
+    QLabel *requestToStringLbl;
+
     int getIndexForRequestCmbBx();
+    void refreshRequestDisplay();
 
     // Context
     QGroupBox *contextGBox;

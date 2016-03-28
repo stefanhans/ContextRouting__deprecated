@@ -97,12 +97,12 @@ public:
 
     enum Service
     {
-        RZV=0, Heartbeat=1, Offer=2, Request=3, TcpReply=4, UdpReply=5
+        RZV=0, Heartbeat=1, Offer=2, Request=3, TcpReply=4, UdpReply=5, Undefined
     };
 
     enum Request
     {
-        RequestRZV=0, RequestHeartbeat=1, RequestOffer=2, RequestRequest=2, RequestReply=3
+        RequestRZV=0, RequestHeartbeat=1, RequestOffer=2, RequestRequest=2, RequestReply=3, RequestUndefined
     };
 
     enum Channel
@@ -211,6 +211,8 @@ public:
     quint8 getService() const;
     void setService(const Service &value);
     QString serviceToString() const;
+
+    void updateService();
 
 
     /*
