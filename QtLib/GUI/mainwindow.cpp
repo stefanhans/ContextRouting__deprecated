@@ -357,7 +357,50 @@ MainWindow::MainWindow(QWidget *parent)
     headerLayout->addWidget(headerTypeToStringLbl, 11, 8);
 
 
+    // HEADER SIZE
+    headerSizeLbl = new QLabel(tr("HeaderSize (1): "));
+    headerSizeLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
+    headerSizeSpBox = new QSpinBox(headerGBox);
+    headerSizeSpBox->setFixedSize(180, 30);
+    headerSizeSpBox->setRange(0, 255);
+
+    saveHeaderSizeBtn = new QPushButton(tr("setHeaderSize()"), this);
+
+    headerUpdateLbl = new QLabel(tr("HeaderData (0-255): "));
+    headerUpdateLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+    updateHeaderSizeBtn = new QPushButton(tr("updateHeaderSize()"), this);
+
+    headerSizeToNumLbl = new QLabel();
+    headerSizeToNumLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+    headerLayout->addWidget(headerSizeLbl, 12, 0);
+    headerLayout->addWidget(headerSizeSpBox, 12, 1);
+    headerLayout->addWidget(saveHeaderSizeBtn, 12, 2);
+    headerLayout->addWidget(headerUpdateLbl, 12, 3, 1, 2);
+    headerLayout->addWidget(updateHeaderSizeBtn, 12, 5, 1, 2);
+    headerLayout->addWidget(headerSizeToNumLbl, 12, 7);
+
+
+    // HEADER DATA
+    headerDataLbl = new QLabel(tr("HeaderData (1): "));
+    headerDataLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+    saveHeaderDataBtn = new QPushButton(tr("setHeaderData()"), this);
+
+    headerDataTxtEdt = new QTextEdit(headerGBox);
+    headerDataTxtEdt->setReadOnly(false);
+
+    headerDataToStringLbl = new QLabel();
+    headerDataToStringLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+    headerLayout->addWidget(headerDataLbl, 13, 0);
+    headerLayout->addWidget(saveHeaderDataBtn, 13, 1);
+
+    headerLayout->addWidget(headerDataTxtEdt, 14, 0, 1, 7);
+
+    headerLayout->addWidget(headerDataToStringLbl, 15, 0, 1, 7);
 
 
 
@@ -434,6 +477,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(saveHeaderTypeFromNumberBtn, &QAbstractButton::clicked, this, &MainWindow::setHeaderTypeFromNumber);
     connect(saveHeaderTypeFromEnumBtn, &QAbstractButton::clicked, this, &MainWindow::setHeaderTypeFromEnum);
 
+    connect(saveHeaderSizeBtn, &QAbstractButton::clicked, this, &MainWindow::setHeaderSize);
+    connect(updateHeaderSizeBtn, &QAbstractButton::clicked, this, &MainWindow::updateHeaderSize);
+
 
 }
 
@@ -506,6 +552,7 @@ void MainWindow::createCIP() {
     refreshIpPortDisplay();
     refreshTimeDisplay();
     refreshHeaderTypeDisplay();
+    refreshHeaderSizeDisplay();
 
 
 
@@ -565,6 +612,7 @@ void MainWindow::openCIP() {
     refreshIpPortDisplay();
     refreshTimeDisplay();
     refreshHeaderTypeDisplay();
+    refreshHeaderSizeDisplay();
 
 
     qDebug() << "setPlainText()";
@@ -1083,4 +1131,39 @@ void MainWindow::setHeaderTypeFromEnum() {
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderTypeFromEnum() to %1\n%2")
                                .arg(headerTypeCmbBx->currentText())
                                .arg(currentCIP->bytesToString()));
+}
+
+// HEADER SIZE FUNCTIONS
+void MainWindow::refreshHeaderSizeDisplay() {
+    qDebug() << "refreshHeaderSizeDisplay()";
+
+    headerSizeSpBox->setValue(currentCIP->getHeaderSize());
+    headerSizeToNumLbl->setText(QString("%1").arg(currentCIP->getHeaderSize()));
+}
+
+void MainWindow::setHeaderSize() {
+    qDebug() << "setHeaderSize()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    currentCIP->setHeaderSize(headerSizeSpBox->value());
+    currentCIP->pack();
+
+    refreshHeaderSizeDisplay();
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderSize() to %1\n%2")
+                               .arg(headerSizeSpBox->value())
+                               .arg(currentCIP->bytesToString()));
+
+}
+
+void MainWindow::updateHeaderSize() {
+    qDebug() << "updateHeaderSize()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
 }

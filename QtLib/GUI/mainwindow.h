@@ -68,6 +68,13 @@ public slots:
     void setHeaderTypeFromNumber();
     void setHeaderTypeFromEnum();
 
+    // HEADER SIZE SLOTS
+    void setHeaderSize();
+    void updateHeaderSize();
+
+    // HEADER DATA
+//    void setHeaderData();
+
 private:
 
     CIP *currentCIP = NULL;
@@ -212,6 +219,24 @@ private:
 
     int getIndexForHeaderTypeCmbBx();
     void refreshHeaderTypeDisplay();
+
+    // HEADER SIZE
+    QLabel *headerSizeLbl;
+    QSpinBox *headerSizeSpBox;
+    QPushButton *saveHeaderSizeBtn;
+    QLabel *headerUpdateLbl;
+    QPushButton *updateHeaderSizeBtn;
+    QLabel *headerSizeToNumLbl;
+
+    void refreshHeaderSizeDisplay();
+
+    // HEADER DATA
+    QLabel *headerDataLbl;
+    QPushButton *saveHeaderDataBtn;
+    QTextEdit *headerDataTxtEdt;
+    QLabel *headerDataToStringLbl;
+
+//    void refreshHeaderDataDisplay();
 
 
     // Context

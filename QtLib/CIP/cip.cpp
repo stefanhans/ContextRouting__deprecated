@@ -1175,6 +1175,9 @@ void CIP::unpack() {
     setHeaderType(byte);
 
 
+    // Header: size (1)
+    byte = byteArray.at(b++);
+    setHeaderSize(byte);
 
 
 }
