@@ -326,7 +326,7 @@ public:
 
 
     /*
-     * CIP XXX
+     * CIP HEADER DATA
      */
     QVector<quint8> getHeadData() const;
     void setHeadData(const QVector<quint8> &value);

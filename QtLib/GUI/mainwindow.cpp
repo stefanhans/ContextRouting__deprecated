@@ -389,8 +389,79 @@ MainWindow::MainWindow(QWidget *parent)
 
     saveHeaderDataBtn = new QPushButton(tr("setHeaderData()"), this);
 
-    headerDataTxtEdt = new QTextEdit(headerGBox);
-    headerDataTxtEdt->setReadOnly(false);
+
+    // HEADER DATA TYPE OK
+    headerDataTypeOkLayout = new QGridLayout;
+    headerDataTypeOkGBox = new QGroupBox("Header Data Interpretation of Header Type Ok");
+    headerDataTypeOkGBox->setLayout(headerDataTypeOkLayout);
+    headerDataTypeOkTxtEdt = new QTextEdit(headerDataTypeOkGBox);
+    headerDataTypeOkTxtEdt->setReadOnly(false);
+    headerDataTypeOkGBox->hide();
+
+    // HEADER DATA TYPE ERROR
+    headerDataTypeErrorLayout = new QGridLayout;
+    headerDataTypeErrorGBox = new QGroupBox("Header Data Interpretation of Header Type Error");
+    headerDataTypeErrorGBox->setLayout(headerDataTypeErrorLayout);
+    headerDataTypeErrorGBox->hide();
+
+
+    headerDataTypeErrorLayout->setColumnStretch(0, 5);
+    headerDataTypeErrorLayout->setColumnStretch(5, 5);
+
+    headerDataErrorCategoryLbl = new QLabel(tr("ErrorCategory: "));
+    headerDataErrorCategoryLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+    headerDataErrorCategorySpBox = new QSpinBox(headerDataTypeErrorGBox);
+    headerDataErrorCategorySpBox->setFixedSize(180, 30);
+    headerDataErrorCategorySpBox->setRange(0, 255);
+
+    saveheaderDataErrorCategoryFromNumberBtn = new QPushButton(tr("setErrorCategory()"), this);
+
+    headerDataErrorCategoryCmbBx = new QComboBox(headerDataTypeErrorGBox);
+    headerDataErrorCategoryCmbBx->setFixedSize(180, 30);
+    headerDataErrorCategoryCmbBx->addItem("HeaderTypeOk (0)", 0);
+    headerDataErrorCategoryCmbBx->addItem("HeaderTypeError (1)", 1);
+    headerDataErrorCategoryCmbBx->addItem("undefined (2-255)", 2);
+
+    saveheaderDataErrorCategoryFromEnumBtn = new QPushButton(tr("setErrorCategory()"), this);
+
+    headerDataTypeErrorLayout->addWidget(headerDataErrorCategoryLbl, 0, 0);
+    headerDataTypeErrorLayout->addWidget(headerDataErrorCategorySpBox, 0, 1);
+    headerDataTypeErrorLayout->addWidget(saveheaderDataErrorCategoryFromNumberBtn, 0, 2);
+    headerDataTypeErrorLayout->addWidget(headerDataErrorCategoryCmbBx, 0, 3);
+    headerDataTypeErrorLayout->addWidget(saveheaderDataErrorCategoryFromEnumBtn, 0, 4);
+
+//    QLabel *headerDataErrorPriorityLbl;
+//    QSpinBox *headerDataErrorPrioritySpBox;
+//    QPushButton *saveheaderDataErrorPriorityFromNumberBtn;
+//    QComboBox *headerDataErrorPriorityCmbBx;
+//    QPushButton *saveheaderDataErrorPriorityFromEnumBtn;
+
+//    QLabel *headerDataErrorLbl;
+//    QSpinBox *headerDataErrorSpBox;
+//    QPushButton *saveheaderDataErrorFromNumberBtn;
+//    QComboBox *headerDataErrorCmbBx;
+//    QPushButton *saveheaderDataErrorFromEnumBtn;
+
+    // HEADER DATA TYPE UNDEFINED
+    headerDataTypeUndefinedLayout = new QGridLayout;
+    headerDataTypeUndefinedGBox = new QGroupBox("Undefined Header Data Interpretation");
+    headerDataTypeUndefinedGBox->setLayout(headerDataTypeUndefinedLayout);
+    headerDataTypeUndefinedGBox->hide();
+
+
+
+
+//    headerDataTypeOkTxtEdt = new QTextEdit(headerGBox);
+//    headerDataTypeOkTxtEdt->setReadOnly(false);
+
+//    headerDataTypeErrorTxtEdt = new QTextEdit(headerGBox);
+//    headerDataTypeErrorTxtEdt->setReadOnly(false);
+
+//    headerDataTypeUndefinedTxtEdt = new QTextEdit("No CIP loaded yet", headerGBox);
+//    headerDataTypeUndefinedTxtEdt->setReadOnly(false);
+
+    setDataTypeToUndefined();
 
     headerDataToStringLbl = new QLabel();
     headerDataToStringLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
@@ -398,7 +469,9 @@ MainWindow::MainWindow(QWidget *parent)
     headerLayout->addWidget(headerDataLbl, 13, 0);
     headerLayout->addWidget(saveHeaderDataBtn, 13, 1);
 
-    headerLayout->addWidget(headerDataTxtEdt, 14, 0, 1, 7);
+    headerLayout->addWidget(headerDataTypeOkGBox, 14, 0, 1, 9);
+    headerLayout->addWidget(headerDataTypeErrorGBox, 14, 0, 1, 9);
+    headerLayout->addWidget(headerDataTypeUndefinedGBox, 14, 0, 1, 9);
 
     headerLayout->addWidget(headerDataToStringLbl, 15, 0, 1, 7);
 
@@ -553,6 +626,7 @@ void MainWindow::createCIP() {
     refreshTimeDisplay();
     refreshHeaderTypeDisplay();
     refreshHeaderSizeDisplay();
+    refreshHeaderDataDisplay();
 
 
 
@@ -613,6 +687,7 @@ void MainWindow::openCIP() {
     refreshTimeDisplay();
     refreshHeaderTypeDisplay();
     refreshHeaderSizeDisplay();
+    refreshHeaderDataDisplay();
 
 
     qDebug() << "setPlainText()";
@@ -1110,6 +1185,7 @@ void MainWindow::setHeaderTypeFromNumber() {
     currentCIP->pack();
 
     refreshHeaderTypeDisplay();
+    refreshHeaderDataDisplay();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderTypeFromNumber() to %1\n%2")
                                .arg(headerTypeCmbBx->currentText())
                                .arg(currentCIP->bytesToString()));
@@ -1128,6 +1204,7 @@ void MainWindow::setHeaderTypeFromEnum() {
     currentCIP->pack();
 
     refreshHeaderTypeDisplay();
+    refreshHeaderDataDisplay();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderTypeFromEnum() to %1\n%2")
                                .arg(headerTypeCmbBx->currentText())
                                .arg(currentCIP->bytesToString()));
@@ -1166,4 +1243,66 @@ void MainWindow::updateHeaderSize() {
         qDebug() << "currentCIP == NULL -> return";
         return;
     }
+}
+
+
+
+// HEADER DATA FUNCTIONS
+void MainWindow::refreshHeaderDataDisplay() {
+    qDebug() << "refreshHeaderDataDisplay()";
+
+    switch (currentCIP->getHeaderType()) {
+    case 0:
+        setDataTypeToOk();
+        return;
+    case 1:
+        setDataTypeToError();
+        return;
+    default:
+        setDataTypeToUndefined();
+    }
+}
+
+void MainWindow::clearDataTypes() {
+    qDebug() << "clearDataTypes()";
+
+    headerDataTypeOkGBox->hide();
+    headerDataTypeErrorGBox->hide();
+    headerDataTypeUndefinedGBox->hide();
+}
+
+void MainWindow::setDataTypeToOk() {
+    qDebug() << "setDataTypeToOk()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    clearDataTypes();
+    headerDataTypeOkGBox->show();
+}
+
+void MainWindow::setDataTypeToError() {
+    qDebug() << "setDataTypeToError()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    clearDataTypes();
+    headerDataTypeErrorGBox->show();
+}
+
+void MainWindow::setDataTypeToUndefined() {
+    qDebug() << "setDataTypeToUndefined()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    clearDataTypes();
+    headerDataTypeUndefinedGBox->show();
 }

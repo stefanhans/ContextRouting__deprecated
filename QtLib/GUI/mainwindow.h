@@ -72,7 +72,7 @@ public slots:
     void setHeaderSize();
     void updateHeaderSize();
 
-    // HEADER DATA
+    // HEADER DATA SLOTS
 //    void setHeaderData();
 
 private:
@@ -233,10 +233,49 @@ private:
     // HEADER DATA
     QLabel *headerDataLbl;
     QPushButton *saveHeaderDataBtn;
-    QTextEdit *headerDataTxtEdt;
+
+    // HEADER DATA TYPE OK
+    QGroupBox *headerDataTypeOkGBox;
+    QGridLayout *headerDataTypeOkLayout;
+    QTextEdit *headerDataTypeOkTxtEdt;
+
+    // HEADER DATA TYPE ERROR
+    QGroupBox *headerDataTypeErrorGBox;
+    QGridLayout *headerDataTypeErrorLayout;
+
+    QLabel *headerDataErrorCategoryLbl;
+    QSpinBox *headerDataErrorCategorySpBox;
+    QPushButton *saveheaderDataErrorCategoryFromNumberBtn;
+    QComboBox *headerDataErrorCategoryCmbBx;
+    QPushButton *saveheaderDataErrorCategoryFromEnumBtn;
+
+    QLabel *headerDataErrorPriorityLbl;
+    QSpinBox *headerDataErrorPrioritySpBox;
+    QPushButton *saveheaderDataErrorPriorityFromNumberBtn;
+    QComboBox *headerDataErrorPriorityCmbBx;
+    QPushButton *saveheaderDataErrorPriorityFromEnumBtn;
+
+    QLabel *headerDataErrorLbl;
+    QSpinBox *headerDataErrorSpBox;
+    QPushButton *saveheaderDataErrorFromNumberBtn;
+    QComboBox *headerDataErrorCmbBx;
+    QPushButton *saveheaderDataErrorFromEnumBtn;
+
+
+    // HEADER DATA TYPE UNDEFINED
+    QGroupBox *headerDataTypeUndefinedGBox;
+    QGridLayout *headerDataTypeUndefinedLayout;
+    QTextEdit *headerDataTypeUndefinedTxtEdt;
+
     QLabel *headerDataToStringLbl;
 
-//    void refreshHeaderDataDisplay();
+
+    void clearDataTypes();
+    void setDataTypeToOk();
+    void setDataTypeToError();
+    void setDataTypeToUndefined();
+
+    void refreshHeaderDataDisplay();
 
 
     // Context

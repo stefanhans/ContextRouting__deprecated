@@ -721,6 +721,15 @@ QString CIP::interpreteHeadData() const {
 
     QString out;
 
+    if(headerType==HeaderTypeOk) {
+
+        QByteArray headDataArray;
+        for (int i = 0; i < headerData.size(); ++i) {
+            headDataArray.append(headerData.at(i));
+        }
+        return interpreteHeadData(&headDataArray, headerData.size());
+    }
+
     if(headerType==HeaderTypeError) {
 
         switch (headerData.at(1)) {
@@ -774,13 +783,11 @@ QString CIP::interpreteHeadData() const {
         }
         return out;
     }
-    else {
-        QByteArray headDataArray;
-        for (int i = 0; i < headerData.size(); ++i) {
-            headDataArray.append(headerData.at(i));
-        }
-        return interpreteHeadData(&headDataArray, headerData.size());
+
+    if(headerType==HeaderTypeUndefined) {
+        return "No interpretation defined";
     }
+    return "Undefined";
 }
 
 
