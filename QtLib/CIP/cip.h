@@ -328,10 +328,13 @@ public:
     /*
      * CIP HEADER DATA
      */
-    QVector<quint8> getHeadData() const;
-    void setHeadData(const QVector<quint8> &value);
-    QString interpreteHeadData(QByteArray *bytes, quint8 size, quint8 type=1, quint8 channel=1) const;
-    QString interpreteHeadData() const;
+    QVector<quint8> getHeaderData() const;
+    quint8 getHeaderData(quint8 index) const;
+    void setHeaderData(const QVector<quint8> &value);
+    void setHeaderData(const quint8 &value, quint8 index);
+    QString interpreteHeaderData(QByteArray *bytes, quint8 size, quint8 type=1, quint8 channel=1) const;
+    QString interpreteHeaderData() const;
+
 
 
     /*

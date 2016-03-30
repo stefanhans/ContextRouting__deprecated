@@ -68,12 +68,16 @@ public slots:
     void setHeaderTypeFromNumber();
     void setHeaderTypeFromEnum();
 
-    // HEADER SIZE SLOTS
-    void setHeaderSize();
-    void updateHeaderSize();
-
     // HEADER DATA SLOTS
-//    void setHeaderData();
+    void setHeaderDataError0();
+    void setHeaderDataError1();
+    void setHeaderDataError2();
+
+    void setHeaderDataErrorCategory();
+    void setHeaderDataErrorPriority();
+    void setHeaderDataError();
+
+    void setHeaderData();
 
 private:
 
@@ -222,10 +226,7 @@ private:
 
     // HEADER SIZE
     QLabel *headerSizeLbl;
-    QSpinBox *headerSizeSpBox;
-    QPushButton *saveHeaderSizeBtn;
-    QLabel *headerUpdateLbl;
-    QPushButton *updateHeaderSizeBtn;
+    QLabel *headerSizeCommentLbl;
     QLabel *headerSizeToNumLbl;
 
     void refreshHeaderSizeDisplay();
@@ -243,23 +244,44 @@ private:
     QGroupBox *headerDataTypeErrorGBox;
     QGridLayout *headerDataTypeErrorLayout;
 
+    QLabel *headerDataError0Lbl;
+    QSpinBox *headerDataError0SpBox;
+    QPushButton *saveheaderDataError0Btn;
+
     QLabel *headerDataErrorCategoryLbl;
-    QSpinBox *headerDataErrorCategorySpBox;
-    QPushButton *saveheaderDataErrorCategoryFromNumberBtn;
     QComboBox *headerDataErrorCategoryCmbBx;
     QPushButton *saveheaderDataErrorCategoryFromEnumBtn;
 
+    QLabel *headerDataError0ToNumLbl;
+    QLabel *headerDataErrorCategoryToEnumLbl;
+
+    int getIndexForHeaderDataErrorCategoryCmbBx();
+
+    QLabel *headerDataError1Lbl;
+    QSpinBox *headerDataError1SpBox;
+    QPushButton *saveheaderDataError1Btn;
+
     QLabel *headerDataErrorPriorityLbl;
-    QSpinBox *headerDataErrorPrioritySpBox;
-    QPushButton *saveheaderDataErrorPriorityFromNumberBtn;
     QComboBox *headerDataErrorPriorityCmbBx;
     QPushButton *saveheaderDataErrorPriorityFromEnumBtn;
 
+    QLabel *headerDataError1ToNumLbl;
+    QLabel *headerDataErrorPriorityToEnumLbl;
+
+    int getIndexForHeaderDataErrorPriorityCmbBx();
+
+    QLabel *headerDataError2Lbl;
+    QSpinBox *headerDataError2SpBox;
+    QPushButton *saveheaderDataError2Btn;
+
     QLabel *headerDataErrorLbl;
-    QSpinBox *headerDataErrorSpBox;
-    QPushButton *saveheaderDataErrorFromNumberBtn;
     QComboBox *headerDataErrorCmbBx;
     QPushButton *saveheaderDataErrorFromEnumBtn;
+
+    QLabel *headerDataError2ToNumLbl;
+    QLabel *headerDataErrorToEnumLbl;
+
+    int getIndexForHeaderDataErrorCmbBx();
 
 
     // HEADER DATA TYPE UNDEFINED
