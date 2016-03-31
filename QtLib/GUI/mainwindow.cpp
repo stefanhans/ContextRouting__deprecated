@@ -293,10 +293,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     ipPortCmbBx = new QComboBox(headerGBox);
     ipPortCmbBx->setFixedSize(180*2, 30);
-    ipPortCmbBx->addItem("TCP (0)", 0);
-    ipPortCmbBx->addItem("UDP (1)", 1);
+    ipPortCmbBx->addItem("TCP (22365)", 22365);
+    ipPortCmbBx->addItem("UDP (22366)", 22366);
     ipPortCmbBx->addItem("undefined", 2);
     saveIpPortFromEnumBtn = new QPushButton(tr("setIpPort()"), this);
+    ipPortToNumLbl = new QLabel();
+    ipPortToNumLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     ipPortToStringLbl = new QLabel();
     ipPortToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
@@ -306,6 +308,7 @@ MainWindow::MainWindow(QWidget *parent)
     headerLayout->addWidget(saveIpPortFromNumberBtn, 9, 2);
     headerLayout->addWidget(ipPortCmbBx, 9, 3, 1, 2);
     headerLayout->addWidget(saveIpPortFromEnumBtn, 9, 5, 1, 2);
+    headerLayout->addWidget(ipPortToNumLbl, 9, 7);
     headerLayout->addWidget(ipPortToStringLbl, 9, 8);
 
 
@@ -1131,9 +1134,12 @@ int MainWindow::getIndexForIpPortCmbBx() {
 void MainWindow::refreshIpPortDisplay() {
     qDebug() << "refreshIpPortDisplay()";
 
+    qDebug() << "currentCIP->getIpPort(): " << currentCIP->getIpPort();
+
     ipPortSpBox->setValue(currentCIP->getIpPort());
     ipPortCmbBx->setCurrentIndex(getIndexForIpPortCmbBx());
 
+    ipPortToNumLbl->setText(QString("%1").arg(currentCIP->ipPortToNumber()));
     ipPortToStringLbl->setText(currentCIP->ipPortToString());
 }
 
@@ -1319,16 +1325,19 @@ void MainWindow::setHeaderData() {
     }
 
     QByteArray inByteArray;
+    QString inString;
 
     if(headerDataTypeOkGBox->isVisible()) {
 
-        inByteArray = headerDataTypeOkTxtEdt->toPlainText().toLatin1();
+        inString = headerDataTypeOkTxtEdt->toPlainText();
     }
 
     if(headerDataTypeUndefinedGBox->isVisible()) {
 
-        inByteArray = headerDataTypeUndefinedTxtEdt->toPlainText().toLatin1();
+        inString = headerDataTypeUndefinedTxtEdt->toPlainText();
     }
+
+    inByteArray = inString.toLatin1();
 
     QVector<quint8> inVector;
     for (int i = 0; i < inByteArray.size(); ++i) {
@@ -1337,14 +1346,14 @@ void MainWindow::setHeaderData() {
 
 
     currentCIP->setHeaderData(inVector);
+    currentCIP->truncateHeaderData((quint8) inByteArray.size());
     currentCIP->setHeaderSize((quint8) inByteArray.size());
     refreshHeaderSizeDisplay();
+    refreshHeaderDataDisplay();
 
     currentCIP->pack();
-
-    refreshHeaderDataDisplay();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderData() to \"%1\"\n%2")
-                               .arg(headerDataTypeOkTxtEdt->toPlainText())
+                               .arg(inString)
                                .arg(currentCIP->bytesToString()));
 }
 
@@ -1516,9 +1525,13 @@ void MainWindow::setHeaderDataError0() {
     }
 
     currentCIP->setHeaderData((quint8) headerDataError0SpBox->value(), 0);
-    currentCIP->pack();
+    currentCIP->truncateHeaderData(3);
+    currentCIP->setHeaderSize(3);
 
+    refreshHeaderSizeDisplay();
     refreshHeaderDataDisplay();
+
+    currentCIP->pack();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderDataError0FromNumber() to %1\n%2")
                                .arg(currentCIP->getHeaderData(0))
                                .arg(currentCIP->bytesToString()));
@@ -1533,9 +1546,13 @@ void MainWindow::setHeaderDataError1() {
     }
 
     currentCIP->setHeaderData((quint8) headerDataError1SpBox->value(), 1);
-    currentCIP->pack();
+    currentCIP->truncateHeaderData(3);
+    currentCIP->setHeaderSize(3);
 
+    refreshHeaderSizeDisplay();
     refreshHeaderDataDisplay();
+
+    currentCIP->pack();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderDataError1FromNumber() to %1\n%2")
                                .arg(currentCIP->getHeaderData(1))
                                .arg(currentCIP->bytesToString()));
@@ -1550,9 +1567,13 @@ void MainWindow::setHeaderDataError2() {
     }
 
     currentCIP->setHeaderData((quint8) headerDataError2SpBox->value(), 2);
-    currentCIP->pack();
+    currentCIP->truncateHeaderData(3);
+    currentCIP->setHeaderSize(3);
 
+    refreshHeaderSizeDisplay();
     refreshHeaderDataDisplay();
+
+    currentCIP->pack();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderDataError2FromNumber() to %1\n%2")
                                .arg(currentCIP->getHeaderData(2))
                                .arg(currentCIP->bytesToString()));
@@ -1568,9 +1589,13 @@ void MainWindow::setHeaderDataErrorCategory() {
     }
 
     currentCIP->setHeaderData((quint8) headerDataErrorCategoryCmbBx->currentIndex(), 0);
-    currentCIP->pack();
+    currentCIP->truncateHeaderData(3);
+    currentCIP->setHeaderSize(3);
 
+    refreshHeaderSizeDisplay();
     refreshHeaderDataDisplay();
+
+    currentCIP->pack();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderDataErrorCategory() to %1\n%2")
                                .arg(currentCIP->getHeaderData(0))
                                .arg(currentCIP->bytesToString()));
@@ -1586,9 +1611,13 @@ void MainWindow::setHeaderDataErrorPriority() {
     }
 
     currentCIP->setHeaderData((quint8) headerDataErrorPriorityCmbBx->currentIndex(), 1);
-    currentCIP->pack();
+    currentCIP->truncateHeaderData(3);
+    currentCIP->setHeaderSize(3);
 
+    refreshHeaderSizeDisplay();
     refreshHeaderDataDisplay();
+
+    currentCIP->pack();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderDataErrorPriority() to %1\n%2")
                                .arg(currentCIP->getHeaderData(1))
                                .arg(currentCIP->bytesToString()));
@@ -1603,7 +1632,11 @@ void MainWindow::setHeaderDataError() {
         return;
     }
 
-    currentCIP->setHeaderData((quint8) headerDataErrorPriorityCmbBx->currentIndex(), 2);
+    currentCIP->setHeaderData((quint8) headerDataErrorCmbBx->currentIndex(), 2);
+    currentCIP->truncateHeaderData(3);
+    currentCIP->setHeaderSize(3);
+
+    refreshHeaderSizeDisplay();
     refreshHeaderDataDisplay();
 
     currentCIP->pack();

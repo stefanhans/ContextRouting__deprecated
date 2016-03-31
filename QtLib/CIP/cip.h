@@ -296,6 +296,7 @@ public:
     quint16 getIpPort() const;
     void setIpPort(const quint16 &value);
     quint16 ipPortToNumber(QByteArray *bytes) const;
+    quint16 ipPortToNumber() const;
     QString ipPortToString(QByteArray *bytes) const;
     QString ipPortToString() const;
 
@@ -332,6 +333,7 @@ public:
     quint8 getHeaderData(quint8 index) const;
     void setHeaderData(const QVector<quint8> &value);
     void setHeaderData(const quint8 &value, quint8 index);
+    void truncateHeaderData(quint8 size);
     QString interpreteHeaderData(QByteArray *bytes, quint8 size, quint8 type=1, quint8 channel=1) const;
     QString interpreteHeaderData() const;
 

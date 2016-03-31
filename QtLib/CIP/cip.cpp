@@ -555,6 +555,10 @@ quint16 CIP::ipPortToNumber(QByteArray *bytes) const {
     return (bytes->at(0)<<8) + bytes->at(1);
 }
 
+quint16 CIP::ipPortToNumber() const {
+    return ipPort;
+}
+
 QString CIP::ipPortToString(QByteArray *bytes) const {
 
     switch ((bytes->at(0)<<8) + bytes->at(1)) {
@@ -699,6 +703,10 @@ void CIP::setHeaderData(const QVector<quint8> &value)
 void CIP::setHeaderData(const quint8 &value, quint8 index)
 {
     headerData.replace(index, value);
+}
+
+void CIP::truncateHeaderData(quint8 size) {
+    headerData.resize(size);
 }
 
 QString CIP::interpreteHeaderData(QByteArray *bytes, quint8 size, quint8 type, quint8 channel) const {
@@ -1170,7 +1178,8 @@ void CIP::unpack() {
     tmpArray.clear();
     tmpArray = byteArray.mid(b, 2);
     b += 2;
-    memcpy(&ipPort, tmpArray, 2);
+    ipPort = (tmpArray.at(0)<<8) + tmpArray.at(1);
+//    memcpy(&ipPort, tmpArray, 2);
 
 
     // Header: time (8)

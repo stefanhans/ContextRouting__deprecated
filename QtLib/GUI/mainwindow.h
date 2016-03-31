@@ -199,6 +199,7 @@ private:
     QPushButton *saveIpPortFromNumberBtn;
     QComboBox *ipPortCmbBx;
     QPushButton *saveIpPortFromEnumBtn;
+    QLabel *ipPortToNumLbl;
     QLabel *ipPortToStringLbl;
 
     int getIndexForIpPortCmbBx();
