@@ -13,13 +13,6 @@ MainWindow::MainWindow(QWidget *parent)
     // Factory - Fix Layout
     factoryLayout = new QGridLayout;
 
-    // Fix Context Layout
-    contextLayout = new QGridLayout;
-
-    // Data Fix Layout
-    dataLayout = new QGridLayout;
-
-
     // Interaction
     interactionLayout = new QVBoxLayout;
 
@@ -537,14 +530,130 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
-    contextGBox = new QGroupBox("Contextinformation");
-    contextGBox->setLayout(contextLayout);
-    mainLayout->addWidget(contextGBox);
+    // CI
+    ciLayout = new QGridLayout;
+    ciGBox = new QGroupBox("Contextinformation");
+    ciGBox->setLayout(ciLayout);
+    mainLayout->addWidget(ciGBox);
 
-    dataGBox = new QGroupBox("Application Data");
-    dataGBox->setLayout(dataLayout);
-    mainLayout->addWidget(dataGBox);
+    ciLayout->setColumnStretch(9, 1);
 
+
+    // CI TYPE
+    ciTypeLbl = new QLabel(tr("CiType (1): "));
+    ciTypeLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+    ciTypeSpBox = new QSpinBox(ciGBox);
+    ciTypeSpBox->setFixedSize(180, 30);
+    ciTypeSpBox->setRange(0, 255);
+
+    saveCiTypeFromNumberBtn = new QPushButton(tr("setCiTypeFromNumber()"), this);
+
+    ciTypeCmbBx = new QComboBox(ciGBox);
+    ciTypeCmbBx->setFixedSize(180*2, 30);
+    ciTypeCmbBx->addItem("CiTypeRZV (0)", 0);
+    ciTypeCmbBx->addItem("CiTypeSimpleMatch (1)", 1);
+    ciTypeCmbBx->addItem("undefined (2-255)", 2);
+
+    saveCiTypeFromEnumBtn = new QPushButton(tr("setCiTypeFromEnum()"), this);
+    saveCiTypeFromEnumBtn->setFixedSize(180*2, 30);
+
+    ciTypeToNumLbl = new QLabel();
+    ciTypeToNumLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    ciTypeToStringLbl = new QLabel();
+    ciTypeToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+
+    ciLayout->addWidget(ciTypeLbl, 1, 0);
+    ciLayout->addWidget(ciTypeSpBox, 1, 1);
+    ciLayout->addWidget(saveCiTypeFromNumberBtn, 1, 2);
+    ciLayout->addWidget(ciTypeCmbBx, 1, 3, 1, 2);
+    ciLayout->addWidget(saveCiTypeFromEnumBtn, 1, 5, 1, 2);
+    ciLayout->addWidget(ciTypeToNumLbl, 1, 7);
+    ciLayout->addWidget(ciTypeToStringLbl, 1, 8);
+
+
+    // CI SIZE
+    ciSizeLbl = new QLabel(tr("CiSize (1): "));
+    ciSizeLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+    ciSizeSpBox = new QSpinBox(ciGBox);
+    ciSizeSpBox->setFixedSize(180, 30);
+    ciSizeSpBox->setRange(0, 255);
+
+    saveCiSizeFromNumberBtn = new QPushButton(tr("setCiSizeFromNumber()"), this);
+
+    ciSizeToNumLbl = new QLabel();
+    ciSizeToNumLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+    ciLayout->addWidget(ciSizeLbl, 2, 0);
+    ciLayout->addWidget(ciSizeSpBox, 2, 1);
+    ciLayout->addWidget(saveCiSizeFromNumberBtn, 2, 2);
+    ciLayout->addWidget(ciSizeToNumLbl, 2, 7);
+
+
+
+    // APPDATA
+    appDataLayout = new QGridLayout;
+    appDataGBox = new QGroupBox("Application Data");
+    appDataGBox->setLayout(appDataLayout);
+    mainLayout->addWidget(appDataGBox);
+
+    appDataLayout->setColumnStretch(9, 1);
+
+
+    // APPDATA TYPE
+    appDataTypeLbl = new QLabel(tr("AppDataType (1): "));
+    appDataTypeLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+    appDataTypeSpBox = new QSpinBox(appDataGBox);
+    appDataTypeSpBox->setFixedSize(180, 30);
+    appDataTypeSpBox->setRange(0, 255);
+
+    saveAppDataTypeFromNumberBtn = new QPushButton(tr("setAppDataTypeFromNumber()"), this);
+
+    appDataTypeCmbBx = new QComboBox(appDataGBox);
+    appDataTypeCmbBx->setFixedSize(180*2, 30);
+    appDataTypeCmbBx->addItem("AppDataTypeRZV (0)", 0);
+    appDataTypeCmbBx->addItem("AppDataTypeText (1)", 1);
+    appDataTypeCmbBx->addItem("AppDataTypeUrl (2)", 2);
+    appDataTypeCmbBx->addItem("undefined (3-255)", 3);
+
+    saveAppDataTypeFromEnumBtn = new QPushButton(tr("setAppDataTypeFromEnum()"), this);
+    saveAppDataTypeFromEnumBtn->setFixedSize(180*2, 30);
+
+    appDataTypeToNumLbl = new QLabel();
+    appDataTypeToNumLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    appDataTypeToStringLbl = new QLabel();
+    appDataTypeToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+
+    appDataLayout->addWidget(appDataTypeLbl, 1, 0);
+    appDataLayout->addWidget(appDataTypeSpBox, 1, 1);
+    appDataLayout->addWidget(saveAppDataTypeFromNumberBtn, 1, 2);
+    appDataLayout->addWidget(appDataTypeCmbBx, 1, 3, 1, 2);
+    appDataLayout->addWidget(saveAppDataTypeFromEnumBtn, 1, 5, 1, 2);
+    appDataLayout->addWidget(appDataTypeToNumLbl, 1, 7);
+    appDataLayout->addWidget(appDataTypeToStringLbl, 1, 8);
+
+
+    // APPDATA SIZE
+    appDataSizeLbl = new QLabel(tr("AppDataSize (1): "));
+    appDataSizeLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+    appDataSizeSpBox = new QSpinBox(appDataGBox);
+    appDataSizeSpBox->setFixedSize(180, 30);
+    appDataSizeSpBox->setRange(0, 255);
+
+    saveAppDataSizeFromNumberBtn = new QPushButton(tr("setAppDataSizeFromNumber()"), this);
+
+    appDataSizeToNumLbl = new QLabel();
+    appDataSizeToNumLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+    appDataLayout->addWidget(appDataSizeLbl, 2, 0);
+    appDataLayout->addWidget(appDataSizeSpBox, 2, 1);
+    appDataLayout->addWidget(saveAppDataSizeFromNumberBtn, 2, 2);
+    appDataLayout->addWidget(appDataSizeToNumLbl, 2, 7);
 
 
     // Raw CIP Layout
@@ -555,7 +664,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     rawCIPTxtEdt = new QTextEdit(rawCIPGBox);
     rawCIPTxtEdt->setStyleSheet ("font: 9pt; Monospace;");
-    rawCIPTxtEdt->setReadOnly(true);
+    rawCIPTxtEdt->setReadOnly(true);    
+    rawCIPTxtEdt->setFixedHeight(1000);
     rawCIPTxtEdt->setPlainText("No CIP loaded yet");
 
     rawCIPLayout->addWidget(rawCIPTxtEdt, 0, 0);
@@ -626,6 +736,18 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(saveHeaderDataBtn, &QAbstractButton::clicked, this, &MainWindow::setHeaderData);
 
+    // CI CONNECTS
+    connect(saveCiTypeFromNumberBtn, &QAbstractButton::clicked, this, &MainWindow::setCiTypeFromNumber);
+    connect(saveCiTypeFromEnumBtn, &QAbstractButton::clicked, this, &MainWindow::setCiTypeFromEnum);
+
+    connect(saveCiSizeFromNumberBtn, &QAbstractButton::clicked, this, &MainWindow::setCiSizeFromNumber);
+
+
+    // APPDATA CONNECTS
+    connect(saveAppDataTypeFromNumberBtn, &QAbstractButton::clicked, this, &MainWindow::setAppDataTypeFromNumber);
+    connect(saveAppDataTypeFromEnumBtn, &QAbstractButton::clicked, this, &MainWindow::setAppDataTypeFromEnum);
+
+    connect(saveAppDataSizeFromNumberBtn, &QAbstractButton::clicked, this, &MainWindow::setAppDataSizeFromNumber);
 
 }
 
@@ -700,12 +822,19 @@ void MainWindow::createCIP() {
     refreshHeaderSizeDisplay();
     refreshHeaderDataDisplay();
 
+    // CI DISPLAY
+    refreshCiTypeDisplay();
+    refreshCiSizeDisplay();
+
+    // APPDATE DISPLAY
+    refreshAppDataTypeDisplay();
+    refreshAppDataSizeDisplay();
+
     // RAW CIP
     rawCIPTxtEdt->setPlainText(QString("New CIP created with argument %1 (%2)\n%3")
                                .arg(currentCIP->serviceToString())
                                .arg(currentCIP->getService())
                                .arg(currentCIP->bytesToString()));
-
 }
 
 
@@ -758,6 +887,14 @@ void MainWindow::openCIP() {
     refreshHeaderTypeDisplay();
     refreshHeaderSizeDisplay();
     refreshHeaderDataDisplay();
+
+    // CI DISPLAY
+    refreshCiTypeDisplay();
+    refreshCiSizeDisplay();
+
+    // APPDATE DISPLAY
+    refreshAppDataTypeDisplay();
+    refreshAppDataSizeDisplay();
 
 
     qDebug() << "setPlainText()";
@@ -1644,3 +1781,195 @@ void MainWindow::setHeaderDataError() {
                                .arg(currentCIP->getHeaderData(2))
                                .arg(currentCIP->bytesToString()));
 }
+
+
+
+// CI TYPE FUNCTIONS
+int MainWindow::getIndexForCiTypeCmbBx() {
+    qDebug() << "MainWindow::getIndexForCiTypeCmbBx()";
+
+    switch (currentCIP->getCiType()) {
+
+    case CIP::CiTypeRZV:
+        return 0;
+
+    case CIP::CiTypeSimpleMatch:
+        return 1;
+
+    default:
+        return 2;
+    }
+}
+
+void MainWindow::refreshCiTypeDisplay() {
+    qDebug() << "refreshCiTypeDisplay()";
+
+    ciTypeSpBox->setValue(currentCIP->getCiType());
+    ciTypeCmbBx->setCurrentIndex(getIndexForCiTypeCmbBx());
+    ciTypeToNumLbl->setText(QString("%1").arg(currentCIP->getCiType()));
+    ciTypeToStringLbl->setText(currentCIP->ciTypeToString());
+
+    qDebug() << "currentCIP->ciTypeToString()" << currentCIP->ciTypeToString();
+}
+
+void MainWindow::setCiTypeFromNumber() {
+    qDebug() << "setCiTypeFromNumber()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    currentCIP->setCiType(ciTypeSpBox->value());
+    refreshCiTypeDisplay();
+//    refreshCiDataDisplay();
+
+    currentCIP->pack();
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setCiTypeFromNumber() to %1\n%2")
+                               .arg(ciTypeSpBox->value())
+                               .arg(currentCIP->bytesToString()));
+
+}
+
+void MainWindow::setCiTypeFromEnum() {
+    qDebug() << "setCiTypeFromEnum()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    currentCIP->setCiType(ciTypeCmbBx->currentData().toInt());
+    refreshCiTypeDisplay();
+//    refreshCiDataDisplay();
+
+    currentCIP->pack();
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setCiTypeFromEnum() to %1\n%2")
+                               .arg(ciTypeCmbBx->currentText())
+                               .arg(currentCIP->bytesToString()));
+}
+
+// CI SIZE FUNCTIONS
+void MainWindow::refreshCiSizeDisplay() {
+    qDebug() << "refreshCiSizeDisplay()";
+
+    ciSizeToNumLbl->setText(QString("%1").arg(currentCIP->getCiSize()));
+}
+
+void MainWindow::setCiSizeFromNumber() {
+    qDebug() << "setCiSizeFromNumber()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    currentCIP->setCiSize(ciSizeSpBox->value());
+    refreshCiSizeDisplay();
+//    refreshCiDataDisplay();
+
+    currentCIP->pack();
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setCiSizeFromNumber() to %1\n%2")
+                               .arg(ciSizeSpBox->value())
+                               .arg(currentCIP->bytesToString()));
+
+}
+
+
+
+
+
+// APPDATA TYPE FUNCTIONS
+int MainWindow::getIndexForAppDataTypeCmbBx() {
+    qDebug() << "MainWindow::getIndexForAppDataTypeCmbBx()";
+
+    switch (currentCIP->getAppDataType()) {
+
+    case CIP::AppDataTypeRZV:
+        return 0;
+
+    case CIP::AppDataTypeText:
+        return 1;
+
+    case CIP::AppDataTypeUrl:
+        return 2;
+
+    default:
+        return 3;
+    }
+}
+
+void MainWindow::refreshAppDataTypeDisplay() {
+    qDebug() << "refreshAppDataTypeDisplay()";
+
+    appDataTypeSpBox->setValue(currentCIP->getAppDataType());
+    appDataTypeCmbBx->setCurrentIndex(getIndexForAppDataTypeCmbBx());
+    appDataTypeToNumLbl->setText(QString("%1").arg(currentCIP->getAppDataType()));
+    appDataTypeToStringLbl->setText(currentCIP->appDataTypeToString());
+
+    qDebug() << "currentCIP->appDataTypeToString()" << currentCIP->appDataTypeToString();
+}
+
+void MainWindow::setAppDataTypeFromNumber() {
+    qDebug() << "setAppDataTypeFromNumber()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    currentCIP->setAppDataType(appDataTypeSpBox->value());
+    refreshAppDataTypeDisplay();
+//    refreshAppDataDataDisplay();
+
+    currentCIP->pack();
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setAppDataTypeFromNumber() to %1\n%2")
+                               .arg(appDataTypeSpBox->value())
+                               .arg(currentCIP->bytesToString()));
+
+}
+
+void MainWindow::setAppDataTypeFromEnum() {
+    qDebug() << "setAppDataTypeFromEnum()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    currentCIP->setAppDataType(appDataTypeCmbBx->currentData().toInt());
+    refreshAppDataTypeDisplay();
+//    refreshAppDataDataDisplay();
+
+    currentCIP->pack();
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setAppDataTypeFromEnum() to %1\n%2")
+                               .arg(appDataTypeCmbBx->currentText())
+                               .arg(currentCIP->bytesToString()));
+}
+
+// APPDATA SIZE FUNCTIONS
+void MainWindow::refreshAppDataSizeDisplay() {
+    qDebug() << "refreshAppDataSizeDisplay()";
+
+    appDataSizeToNumLbl->setText(QString("%1").arg(currentCIP->getAppDataSize()));
+}
+
+void MainWindow::setAppDataSizeFromNumber() {
+    qDebug() << "setAppDataSizeFromNumber()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    currentCIP->setAppDataSize(appDataSizeSpBox->value());
+    refreshAppDataSizeDisplay();
+//    refreshAppDataDataDisplay();
+
+    currentCIP->pack();
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setAppDataSizeFromNumber() to %1\n%2")
+                               .arg(appDataSizeSpBox->value())
+                               .arg(currentCIP->bytesToString()));
+
+}
+

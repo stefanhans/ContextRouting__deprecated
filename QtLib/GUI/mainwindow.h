@@ -79,6 +79,24 @@ public slots:
 
     void setHeaderData();
 
+
+    // CI TYPE SLOTS
+    void setCiTypeFromNumber();
+    void setCiTypeFromEnum();
+
+    // CI SIZE SLOTS
+    void setCiSizeFromNumber();
+
+
+    // APPDATA TYPE SLOTS
+    void setAppDataTypeFromNumber();
+    void setAppDataTypeFromEnum();
+
+    // APPDATA SIZE SLOTS
+    void setAppDataSizeFromNumber();
+
+
+
 private:
 
     CIP *currentCIP = NULL;
@@ -301,13 +319,58 @@ private:
     void refreshHeaderDataDisplay();
 
 
-    // Context
-    QGroupBox *contextGBox;
-    QGridLayout *contextLayout;
+    // CI
+    QGroupBox *ciGBox;
+    QGridLayout *ciLayout;
 
-    // Data
-    QGridLayout *dataLayout;
-    QGroupBox *dataGBox;
+
+    // CI TYPE
+    QLabel *ciTypeLbl;
+    QSpinBox *ciTypeSpBox;
+    QPushButton *saveCiTypeFromNumberBtn;
+    QComboBox *ciTypeCmbBx;
+    QPushButton *saveCiTypeFromEnumBtn;
+    QLabel *ciTypeToNumLbl;
+    QLabel *ciTypeToStringLbl;
+
+    int getIndexForCiTypeCmbBx();
+    void refreshCiTypeDisplay();
+
+    // CI SIZE
+    QLabel *ciSizeLbl;
+    QSpinBox *ciSizeSpBox;
+    QPushButton *saveCiSizeFromNumberBtn;
+    QLabel *ciSizeCommentLbl;
+    QLabel *ciSizeToNumLbl;
+
+    void refreshCiSizeDisplay();
+
+
+    // DATA
+    QGridLayout *appDataLayout;
+    QGroupBox *appDataGBox;
+
+    // DATA TYPE
+    QLabel *appDataTypeLbl;
+    QSpinBox *appDataTypeSpBox;
+    QPushButton *saveAppDataTypeFromNumberBtn;
+    QComboBox *appDataTypeCmbBx;
+    QPushButton *saveAppDataTypeFromEnumBtn;
+    QLabel *appDataTypeToNumLbl;
+    QLabel *appDataTypeToStringLbl;
+
+    int getIndexForAppDataTypeCmbBx();
+    void refreshAppDataTypeDisplay();
+
+    // DATA SIZE
+    QLabel *appDataSizeLbl;
+    QSpinBox *appDataSizeSpBox;
+    QPushButton *saveAppDataSizeFromNumberBtn;
+    QLabel *appDataSizeCommentLbl;
+    QLabel *appDataSizeToNumLbl;
+
+    void refreshAppDataSizeDisplay();
+
 
     // Raw CIP
     QGridLayout *rawCIPLayout;

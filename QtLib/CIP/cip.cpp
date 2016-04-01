@@ -103,11 +103,11 @@ void CIP::initialize() {
 
 
     // TEST APPLICATION DATA
-    setAppType(AppTypeText);
+    setAppDataType(AppDataTypeText);
     QString appMessage = "Have a look and drop in";
     QVector<quint8> apppVector;
 
-    setAppSize(appMessage.size());
+    setAppDataSize(appMessage.size());
 
     for (int i=0; i<appMessage.size();i++) {
         apppVector.append(appMessage.at(i).toLatin1());
@@ -834,6 +834,20 @@ QString CIP::ciTypeToString(quint8 byte) const {
     }
 }
 
+QString CIP::ciTypeToString() const {
+
+    switch (ciType) {
+    case CiTypeRZV:
+        return "CiType::CiTypeRZV";
+        break;
+    case CiTypeSimpleMatch:
+        return "CiType::CiTypeSimpleMatch";
+        break;
+    default:
+        return "undefined";
+    }
+}
+
 
 /*
  *
@@ -938,25 +952,39 @@ QString CIP::interpreteCICBricks() const {
  *
  */
 
-quint8 CIP::getAppType() const
+quint8 CIP::getAppDataType() const
 {
-    return appType;
+    return appDataType;
 }
 
-void CIP::setAppType(const quint8 &value)
+void CIP::setAppDataType(const quint8 &value)
 {
-    appType = value;
+    appDataType = value;
 }
 
-QString CIP::appTypeToString(quint8 byte) const {
+QString CIP::appDataTypeToString(quint8 byte) const {
 
     switch (byte) {
-    case AppTypeRZV:
-        return "AppType::AppTypeRZV";
-    case AppTypeText:
-        return "AppType::AppTypeText";
-    case AppTypeUrl:
-        return "AppType::AppTypeUrl";
+    case AppDataTypeRZV:
+        return "AppDataType::AppDataTypeRZV";
+    case AppDataTypeText:
+        return "AppDataType::AppDataTypeText";
+    case AppDataTypeUrl:
+        return "AppDataType::AppDataTypeUrl";
+    default:
+        return "undefined";
+    }
+}
+
+QString CIP::appDataTypeToString() const {
+
+    switch (appDataType) {
+    case AppDataTypeRZV:
+        return "AppDataType::AppDataTypeRZV";
+    case AppDataTypeText:
+        return "AppDataType::AppDataTypeText";
+    case AppDataTypeUrl:
+        return "AppDataType::AppDataTypeUrl";
     default:
         return "undefined";
     }
@@ -969,14 +997,14 @@ QString CIP::appTypeToString(quint8 byte) const {
  *
  */
 
-quint8 CIP::getAppSize() const
+quint8 CIP::getAppDataSize() const
 {
-    return appSize;
+    return appDataSize;
 }
 
-void CIP::setAppSize(const quint8 &value)
+void CIP::setAppDataSize(const quint8 &value)
 {
-    appSize = value;
+    appDataSize = value;
 }
 
 
@@ -1001,8 +1029,8 @@ QString CIP::interpreteAppData(QByteArray *bytes) const {
     QString out;
     out += '"';
 
-    switch (getAppType()) {
-    case AppTypeText:
+    switch (getAppDataType()) {
+    case AppDataTypeText:
         for(int i=0; i<bytes->size();i++) {
             out += QChar(bytes->at(i)).toLatin1();
         }
@@ -1018,9 +1046,9 @@ QString CIP::interpreteAppData() const {
     QString out;
     out += '"';
 
-    switch (getAppType()) {
-    case AppTypeText:
-        for(int i=0; i<getAppSize(); i++) {
+    switch (getAppDataType()) {
+    case AppDataTypeText:
+        for(int i=0; i<getAppDataSize(); i++) {
             out += QChar(appData.at(i)).toLatin1();
         }
         out += '"';
@@ -1117,10 +1145,10 @@ void CIP::pack() {
 
 
     // APPLICATION TYPE
-    byteArray.append(getAppType());
+    byteArray.append(getAppDataType());
 
     // APPLICATION SIZE
-    quint8 appDataSize = getAppSize();
+    quint8 appDataSize = getAppDataSize();
     byteArray.append(appDataSize);
 
     // APPLICATION DATA
@@ -1783,7 +1811,7 @@ QString CIP::bytesToString() {
     out +=  "\t";
     out +=  "Section: Application\tParameter: type";
     out +=  "\t";
-    out +=  QString("%1").arg(appTypeToString(byte));
+    out +=  QString("%1").arg(appDataTypeToString(byte));
     out +=  "\n";
 
 

@@ -152,9 +152,9 @@ public:
         RootCIC_RZV=0, RootCIC_LatinText=1
     };
 
-    enum AppType
+    enum AppDataType
     {
-        AppTypeRZV=0, AppTypeText=1, AppTypeUrl=2
+        AppDataTypeRZV=0, AppDataTypeText=1, AppDataTypeUrl=2
     };
 
 
@@ -178,8 +178,8 @@ public:
         rootCIC(),
         ciSize(0),
         CICBricks(),
-        appType(0),
-        appSize(0),
+        appDataType(0),
+        appDataSize(0),
         appData()
     {
         initialize();
@@ -203,8 +203,8 @@ public:
         rootCIC(1, 0),
         ciSize(0),
         CICBricks(),
-        appType(1),
-        appSize(0),
+        appDataType(1),
+        appDataSize(0),
         appData()
     {
         initialize();
@@ -345,6 +345,7 @@ public:
     quint8 getCiType() const;
     void setCiType(const quint8 &value);
     QString ciTypeToString(quint8 byte) const;
+    QString ciTypeToString() const;
 
 
     /*
@@ -374,16 +375,18 @@ public:
     /*
      * CIP XXX
      */
-    quint8 getAppType() const;
-    void setAppType(const quint8 &value);
-    QString appTypeToString(quint8 byte) const;
+    quint8 getAppDataType() const;
+    void setAppDataType(const quint8 &value);
+    QString appDataTypeToString(quint8 byte) const;
+    QString appDataTypeToString() const;
 
 
     /*
      * CIP XXX
      */
-    quint8 getAppSize() const;
-    void setAppSize(const quint8 &value);
+    quint8 getAppDataSize() const;
+    void setAppDataSize(const quint8 &value);
+    void setAppDataSize();
 
 
     /*
@@ -455,8 +458,8 @@ private:
      * Application Data
      */
 
-    quint8 appType;
-    quint8 appSize;
+    quint8 appDataType;
+    quint8 appDataSize;
     QVector<quint8> appData;
 
 };
