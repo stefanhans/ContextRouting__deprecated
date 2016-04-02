@@ -83,13 +83,6 @@ void CIP::initialize() {
     qDebug() << "rootCIC content" << rootCIC.getContent();
     qDebug() << "rootCIC mask" << rootCIC.getMask();
 
-
-
-
-
-
-
-
     QString ciMessage = "Chill with friends";
     QVector<CICBrick> ciVector;
 
@@ -256,31 +249,6 @@ void CIP::updateService() {
     }
     setService(Undefined);
     qDebug() << "setService(Undefined)";
-}
-
-
-/*
- *
- * HEADER TYPE ENUM
- *
- */
-
-//QString CIP::getHeaderType() const {
-
-//    switch (headerType) {
-
-//    case HeaderTypeOk:
-//        return QString("HeaderType::HeaderTypeOk");
-//    case HeaderTypeError:
-//        return QString("HeaderType::HeaderTypeError");
-//    default:
-//        return QString("Error: Undefined enum HeaderType: %1").arg(headerType);
-//    }
-//}
-
-void CIP::setHeaderType(const HeaderType &value)
-{
-    headerType = value;
 }
 
 
@@ -1207,7 +1175,6 @@ void CIP::unpack() {
     tmpArray = byteArray.mid(b, 2);
     b += 2;
     ipPort = (tmpArray.at(0)<<8) + tmpArray.at(1);
-//    memcpy(&ipPort, tmpArray, 2);
 
 
     // Header: time (8)
@@ -1228,11 +1195,31 @@ void CIP::unpack() {
     setHeaderSize(byte);
     size = byte;
 
-
-    // Header Data (size)
+    // Header: additional data (size)
     tmpArray.clear();
-    tmpArray = byteArray.mid(b, 3);
+    tmpArray = byteArray.mid(b, size);
     b += size;
+//    setHeaderData();
+
+    // CI: type (1)
+    byte = byteArray.at(b++);
+    setCiType(byte);
+
+    // CI root-CIC (2)
+    byte = byteArray.at(b++);
+    quint8 content = byte;
+    byte = byteArray.at(b++);
+    setRootCIC(CICBrick(content, byte));
+
+    // CI: size (1)
+    byte = byteArray.at(b++);
+    setCiSize(byte);
+    size = byte;
+
+    // CI: additional data (size)
+    tmpArray.clear();
+    tmpArray = byteArray.mid(b, size*2);
+    b += size*2;
 }
 
 

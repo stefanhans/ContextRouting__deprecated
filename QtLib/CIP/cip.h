@@ -63,21 +63,17 @@
 
 */
 
-class CIPSHARED_EXPORT CICBrick
-{
+class CIPSHARED_EXPORT CICBrick {
 
 public:
+
     CICBrick() :
     content(0),
-    mask(0) {
-
-    }
+    mask(0) {}
 
     CICBrick(quint8 content, quint8 mask) :
     content(content),
-    mask(mask) {
-
-    }
+    mask(mask) {}
 
     quint8 getContent() const;
     void setContent(const quint8 &value);
@@ -86,9 +82,9 @@ public:
     void setMask(const quint8 &value);
 
 private:
+
     quint8 content;
     quint8 mask;
-
 };
 
 class CIPSHARED_EXPORT CIP
@@ -97,68 +93,30 @@ class CIPSHARED_EXPORT CIP
 
 public:
 
-    enum Service
-    {
-        RZV=0, Heartbeat=1, Offer=2, Request=3, TcpReply=4, UdpReply=5, Undefined
-    };
+    // HEADER ENUMS
+    enum Service { RZV=0, Heartbeat=1, Offer=2, Request=3, TcpReply=4, UdpReply=5, Undefined };
+    enum Request { RequestRZV=0, RequestHeartbeat=1, RequestOffer=2, RequestRequest=2, RequestReply=3, RequestUndefined };
+    enum Profile { ProfileRZV=0, ProfileUndefined };
+    enum Channel { ChannelRZV=0, ChannelSimpleMatching=1, ChannelUndefined };
+    enum Ports { TCP=22365, UDP=22366 };
 
-    enum Request
-    {
-        RequestRZV=0, RequestHeartbeat=1, RequestOffer=2, RequestRequest=2, RequestReply=3, RequestUndefined
-    };
+    // DYNAMIC HEADER ENUMS
+    enum HeaderType { HeaderTypeOk=0, HeaderTypeError=1, HeaderTypeUndefined };
+    enum ErrorCategory { ErrorCategoryNone=0, CipFormatError=1 };
+    enum ErrorPriority { ErrorPriorityNone=0, ErrorPriorityDebug=1, ErrorPriorityInfo=2, ErrorPriorityNotice=3, ErrorPriorityCritical=4, ErrorPriorityAlert=5, ErrorPriorityEmergency=6 };
+    enum CipFormatErrorEnum { CipFormatErrorNone=0, CipFormatErrorOutOfRange=1, CipFormatErrorInconsistent=2, CipFormatErrorWrongProtocol=3 };
 
-    enum Profile
-    {
-        ProfileRZV=0, ProfileUndefined
-    };
+    // CI ENUMS
+    enum CiType { CiTypeRZV=0, CiTypeSimpleMatch=1 };
+    enum RootCIC_SimpleMatch { RootCIC_RZV=0, RootCIC_LatinText=1 };
 
-    enum Channel
-    {
-        ChannelRZV=0, ChannelSimpleMatching=1, ChannelUndefined
-    };
-
-    enum Ports
-    {
-        TCP=22365, UDP=22366
-    };
-
-    enum HeaderType
-    {
-        HeaderTypeOk=0, HeaderTypeError=1, HeaderTypeUndefined
-    };
-
-    enum ErrorCategory
-    {
-        ErrorCategoryNone=0, CipFormatError=1
-    };
-
-    enum ErrorPriority
-    {
-        ErrorPriorityNone=0, ErrorPriorityDebug=1, ErrorPriorityInfo=2, ErrorPriorityNotice=3, ErrorPriorityCritical=4, ErrorPriorityAlert=5, ErrorPriorityEmergency=6
-    };
-
-    enum CipFormatErrorEnum
-    {
-        CipFormatErrorNone=0, CipFormatErrorOutOfRange=1, CipFormatErrorInconsistent=2, CipFormatErrorWrongProtocol=3
-    };
-
-    enum CiType
-    {
-        CiTypeRZV=0, CiTypeSimpleMatch=1
-    };
-
-    enum RootCIC_SimpleMatch
-    {
-        RootCIC_RZV=0, RootCIC_LatinText=1
-    };
-
-    enum AppDataType
-    {
-        AppDataTypeRZV=0, AppDataTypeText=1, AppDataTypeUrl=2
-    };
+    // APP DATA ENUMS
+    enum AppDataType { AppDataTypeRZV=0, AppDataTypeText=1, AppDataTypeUrl=2 };
 
 
-
+    /*
+     * CONSTRUCTORS
+     */
 
     CIP() :
         byteArray(),
@@ -193,7 +151,7 @@ public:
         version(1),
         channel(0),
         uuid(QUuid::createUuid()),
-        ipAddress("127.64.32.1"),
+        ipAddress("127.0.0.1"),
         ipPort(TCP),
         time(QDateTime::currentDateTime()),
         headerType(0),
@@ -223,7 +181,7 @@ public:
 
 
     /*
-     * CIP REQUEST
+     * REQUEST
      */
     quint8 getRequest() const;
     void setRequest(const quint8 &value);
@@ -233,7 +191,7 @@ public:
 
 
     /*
-     * CIP PROFILE
+     * PROFILE
      */
     quint8 getProfile() const;
     void setProfile(const quint8 &value);
@@ -243,7 +201,7 @@ public:
 
 
     /*
-     * CIP VERSION
+     * VERSION
      */
     quint8 getVersion() const;
     void setVersion(const quint8 &value);
@@ -262,7 +220,7 @@ public:
 
 
     /*
-     * CIP CHANNEL
+     * CHANNEL
      */
     quint8 getChannel() const;
     void setChannel(const quint8 &value);
@@ -272,7 +230,7 @@ public:
 
 
     /*
-     * CIP UUID
+     * UUID
      */
     QUuid getUuid() const;
     void setUuid(const QUuid &value);
@@ -282,7 +240,7 @@ public:
 
 
     /*
-     * CIP IP ADDRESS
+     * IP ADDRESS
      */
     QHostAddress getIpAddress() const;
     void setIpAddress(const QHostAddress &value);
@@ -291,7 +249,7 @@ public:
 
 
     /*
-     * CIP IP PORT
+     * IP PORT
      */
     quint16 getIpPort() const;
     void setIpPort(const quint16 &value);
@@ -302,7 +260,7 @@ public:
 
 
     /*
-     * CIP TIME
+     * TIME
      */
     QDateTime getTime() const;
     void setTime(const QDateTime &value);
@@ -311,7 +269,7 @@ public:
 
 
     /*
-     * CIP HEADER TYPE
+     * DYNAMIC HEADER TYPE
      */
     quint8 getHeaderType() const;
     void setHeaderType(const quint8 &value);
@@ -320,14 +278,14 @@ public:
 
 
     /*
-     * CIP HEADER SIZE
+     * DYNAMIC HEADER SIZE
      */
     quint8 getHeaderSize() const;
     void setHeaderSize(const quint8 &value);
 
 
     /*
-     * CIP HEADER DATA
+     * DYNAMIC HEADER DATA
      */
     QVector<quint8> getHeaderData() const;
     quint8 getHeaderData(quint8 index) const;
@@ -340,7 +298,7 @@ public:
 
 
     /*
-     * CIP XXX
+     * CI TYPE
      */
     quint8 getCiType() const;
     void setCiType(const quint8 &value);
@@ -373,7 +331,7 @@ public:
 
 
     /*
-     * CIP XXX
+     * APP DATA TYPE
      */
     quint8 getAppDataType() const;
     void setAppDataType(const quint8 &value);
@@ -382,7 +340,7 @@ public:
 
 
     /*
-     * CIP XXX
+     * APP DATA SIZE
      */
     quint8 getAppDataSize() const;
     void setAppDataSize(const quint8 &value);
@@ -398,56 +356,47 @@ public:
     QString interpreteAppData() const;
 
 
+    /*
+     * RAW CIP DATA
+     */
 
-
+    QByteArray getByteArray() const;
+    void setByteArray(const QByteArray &value);
 
     void pack();
     void unpack();
 
     bool validateByteArray();
 
-
     QString bytesToString();
 
-//    QString getHeaderType() const;
-    void setHeaderType(const HeaderType &value);
-
-    QByteArray getByteArray() const;
-    void setByteArray(const QByteArray &value);
-
 private:
-    void initialize();
 
     QByteArray byteArray;
-
     Service service;
-//    HeaderType headerType;
+
+    void initialize();
+
 
     /*
-     * Header Data
-     */
-
+     * CIP HEADER
+     */    
     quint8 request;
     quint8 profile;
     quint8 version;
     quint8 channel;
-
     QUuid uuid;
-
     QHostAddress ipAddress;
     quint16 ipPort;
-
     QDateTime time;
-
     quint8 headerType;
     quint8 headerSize;
     QVector<quint8> headerData;
 
 
     /*
-     * Contextinformation
-     */
-
+     * CIP CI
+     */    
     quint8 ciType;
     CICBrick rootCIC;
     quint8 ciSize;
@@ -455,9 +404,8 @@ private:
 
 
     /*
-     * Application Data
+     * CIP APP DATA
      */
-
     quint8 appDataType;
     quint8 appDataSize;
     QVector<quint8> appData;

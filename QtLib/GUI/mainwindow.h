@@ -1,32 +1,24 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-
 #include "cip_global.h"
 #include "cip.h"
 
 #include <QMainWindow>
-
-#include <QPushButton>
-#include <QComboBox>
-#include <QGroupBox>
-#include <QCheckBox>
+#include <QScrollArea>
 #include <QGridLayout>
+#include <QGroupBox>
+
 #include <QLabel>
 #include <QSpinBox>
-#include <QLineEdit>
-#include <QDateTimeEdit>
+#include <QPushButton>
+#include <QComboBox>
 #include <QTextEdit>
-#include <QScrollArea>
-#include <QNetworkSession>
+
 #include <QUuid>
+
 #include <QFileDialog>
 #include <QFile>
-
-#include <QtNetwork>
-
-#include "uuid/uuid.h"
 
 
 class MainWindow : public QMainWindow
@@ -34,41 +26,52 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-
 public slots:
 
+    // CIP FACTORY SLOTS
     void createCIP();
 
+
+    // CIP FILES SLOTS
     void openCIP();
     void saveCIP();
 
+
+    // HEADER REQUEST SLOTS
     void setRequestFromNumber();
     void setRequestFromEnum();
 
+    // HEADER PROFILE SLOTS
     void setProfileFromNumber();
     void setProfileFromEnum();
 
+    // HEADER VERSION SLOTS
     void setVersionFromNumber();
     void setVersionFromMajor();
     void setVersionFromMinor();
 
+    // HEADER CHANNEL SLOTS
     void setChannelFromNumber();
     void setChannelFromEnum();
 
+    // HEADER IP SLOTS
     void setIpAddress();
-
     void setIpPortFromNumber();
     void setIpPortFromEnum();
 
+    // HEADER TIME SLOTS
     void setCurrentTime();
 
+    // HEADER DATA SLOTS    
     void setHeaderTypeFromNumber();
     void setHeaderTypeFromEnum();
 
-    // HEADER DATA SLOTS
+    void setHeaderData();
+
     void setHeaderDataError0();
     void setHeaderDataError1();
     void setHeaderDataError2();
@@ -76,8 +79,6 @@ public slots:
     void setHeaderDataErrorCategory();
     void setHeaderDataErrorPriority();
     void setHeaderDataError();
-
-    void setHeaderData();
 
 
     // CI TYPE SLOTS
@@ -103,11 +104,10 @@ private:
 
     QWidget *guiWidget;
     QScrollArea *guiScrollArea;
-
-
     QVBoxLayout *mainLayout;
 
-    // Factory
+
+    // CIP FACTORY
     QGroupBox *factoryGBox;
     QGridLayout *factoryLayout;
 
@@ -117,7 +117,7 @@ private:
 
 
 
-    // Files
+    // CIP FILRS
     QGroupBox *filesGBox;
     QGridLayout *filesLayout;
 
@@ -125,12 +125,12 @@ private:
     QPushButton *saveBtn;
 
 
-    // Header
+    // HEADER
     QGroupBox *headerGBox;
     QGridLayout *headerLayout;
 
 
-    // SERVICE
+    // HEADER SERVICE
     QLabel *serviceLbl;
     QLabel *serviceToNumLbl;
     QLabel *serviceToStringLbl;
@@ -139,7 +139,7 @@ private:
     void refreshServiceDisplay();
 
 
-    // REQUEST
+    // HEADER REQUEST
     QLabel *requestLbl;
     QSpinBox *requestSpBox;
     QPushButton *saveRequestFromNumberBtn;
@@ -152,7 +152,7 @@ private:
     void refreshRequestDisplay();
 
 
-    // PROFILE
+    // HEADER PROFILE
     QLabel *profileLbl;
     QSpinBox *profileSpBox;
     QPushButton *saveProfileFromNumberBtn;
@@ -164,7 +164,8 @@ private:
     int getIndexForProfileCmbBx();
     void refreshProfileDisplay();
 
-    // VERSION
+
+    // HEADER VERSION
     QLabel *versionLbl;
     QSpinBox *versionSpBox;
     QPushButton *saveVersionFromNumberBtn;
@@ -178,7 +179,7 @@ private:
     void refreshVersionDisplay();
 
 
-    // CHANNEL
+    // HEADER CHANNEL
     QLabel *channelLbl;
     QSpinBox *channelSpBox;
     QPushButton *saveChannelFromNumberBtn;
@@ -191,7 +192,7 @@ private:
     void refreshChannelDisplay();
 
 
-    // UUID
+    // HEADER UUID
     QLabel *uuidLbl;
     QLabel *uuidCommentLbl;
     QLabel *uuidToStringLbl;
@@ -199,7 +200,7 @@ private:
     void refreshUuidDisplay();
 
 
-    // IP ADDRESS
+    // HEADER IP ADDRESS
     QLabel *ipAddressLbl;
     QSpinBox *ipAddressASpBox;
     QSpinBox *ipAddressBSpBox;
@@ -211,7 +212,7 @@ private:
     void refreshIpAddressDisplay();
 
 
-    // IP PORT
+    // HEADER IP PORT
     QLabel *ipPortLbl;
     QSpinBox *ipPortSpBox;
     QPushButton *saveIpPortFromNumberBtn;
@@ -223,13 +224,15 @@ private:
     int getIndexForIpPortCmbBx();
     void refreshIpPortDisplay();
 
-    // TIME
+
+    // HEADER TIME
     QLabel *timeLbl;
     QPushButton *setCurrentTimeBtn;
     QLabel *timeToNumLbl;
     QLabel *timeToStringLbl;
 
     void refreshTimeDisplay();
+
 
     // HEADER TYPE
     QLabel *headerTypeLbl;
@@ -243,12 +246,14 @@ private:
     int getIndexForHeaderTypeCmbBx();
     void refreshHeaderTypeDisplay();
 
+
     // HEADER SIZE
     QLabel *headerSizeLbl;
     QLabel *headerSizeCommentLbl;
     QLabel *headerSizeToNumLbl;
 
     void refreshHeaderSizeDisplay();
+
 
     // HEADER DATA
     QLabel *headerDataLbl;
@@ -302,14 +307,12 @@ private:
 
     int getIndexForHeaderDataErrorCmbBx();
 
-
     // HEADER DATA TYPE UNDEFINED
     QGroupBox *headerDataTypeUndefinedGBox;
     QGridLayout *headerDataTypeUndefinedLayout;
     QTextEdit *headerDataTypeUndefinedTxtEdt;
 
     QLabel *headerDataToStringLbl;
-
 
     void clearDataTypes();
     void setDataTypeToOk();
@@ -336,6 +339,7 @@ private:
     int getIndexForCiTypeCmbBx();
     void refreshCiTypeDisplay();
 
+
     // CI SIZE
     QLabel *ciSizeLbl;
     QSpinBox *ciSizeSpBox;
@@ -346,11 +350,11 @@ private:
     void refreshCiSizeDisplay();
 
 
-    // DATA
+    // APP DATA
     QGridLayout *appDataLayout;
     QGroupBox *appDataGBox;
 
-    // DATA TYPE
+    // APP DATA TYPE
     QLabel *appDataTypeLbl;
     QSpinBox *appDataTypeSpBox;
     QPushButton *saveAppDataTypeFromNumberBtn;
@@ -362,7 +366,7 @@ private:
     int getIndexForAppDataTypeCmbBx();
     void refreshAppDataTypeDisplay();
 
-    // DATA SIZE
+    // APP DATA SIZE
     QLabel *appDataSizeLbl;
     QSpinBox *appDataSizeSpBox;
     QPushButton *saveAppDataSizeFromNumberBtn;
@@ -372,13 +376,14 @@ private:
     void refreshAppDataSizeDisplay();
 
 
-    // Raw CIP
+    // RAW CIP DATA
     QGridLayout *rawCIPLayout;
     QGroupBox *rawCIPGBox;
+
     QTextEdit *rawCIPTxtEdt;
 
 
-    // GuiInteraction
+    // INTERACTION
     QVBoxLayout *interactionLayout;
     QGroupBox *interactionGBox;
 
