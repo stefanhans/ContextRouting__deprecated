@@ -290,6 +290,7 @@ public:
     QVector<quint8> getHeaderData() const;
     quint8 getHeaderData(quint8 index) const;
     void setHeaderData(const QVector<quint8> &value);
+    void setHeaderData(const QByteArray &value);
     void setHeaderData(const quint8 &value, quint8 index);
     void truncateHeaderData(quint8 size);
     QString interpreteHeaderData(QByteArray *bytes, quint8 size, quint8 type=1, quint8 channel=1) const;
@@ -326,6 +327,10 @@ public:
      */
     QVector<CICBrick> getCICBricks() const;
     void setCICBricks(const QVector<CICBrick> &value);
+    void setCICBricks(const QByteArray &value);
+    void setCICBrick(const CICBrick &value, quint8 index);
+    void setCICBrickContent(const quint8 &value, quint8 index);
+    void setCICBrickMask(const quint8 &value, quint8 index);
     QString interpreteCICBricks(QByteArray *bytes) const;
     QString interpreteCICBricks() const;
 
@@ -352,6 +357,8 @@ public:
      */
     QVector<quint8> getAppData() const;
     void setAppData(const QVector<quint8> &value);
+    void setAppData(const QByteArray &value);
+    void setAppData(const quint8 &value, quint8 index);
     QString interpreteAppData(QByteArray *bytes) const;
     QString interpreteAppData() const;
 

@@ -20,6 +20,59 @@
 #include <QFileDialog>
 #include <QFile>
 
+#include <QtMath>
+
+class CiBrick : public QWidget {
+
+public:
+    quint8 content, mask, index;
+    QBoxLayout *vLayout;
+    QLabel *contentLbl;
+    QSpinBox *contentSpBx;
+    QLabel *maskLbl;
+    QSpinBox *maskSpBx;
+
+    void initialize(quint8 c, quint8 m, quint8 ind) {
+
+        content = c;
+        mask = m;
+        index = ind;
+
+        vLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+        contentLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+        contentLbl = new QLabel(QString("[%1] Content: %2").arg(index).arg(content));
+
+        contentSpBx = new QSpinBox();
+        contentSpBx->setFixedSize(60, 30);
+        contentSpBx->setRange(0, 255);
+        contentSpBx->setValue(content);
+
+        maskLbl = new QLabel(QString("[%1] Mask: %2").arg(index).arg(mask));
+        maskLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+        maskSpBx = new QSpinBox();
+        maskSpBx->setFixedSize(60, 30);
+        maskSpBx->setRange(0, 255);
+        maskSpBx->setValue(mask);
+
+        vLayout->addWidget(contentLbl);
+        vLayout->addWidget(contentSpBx);
+        vLayout->addWidget(maskLbl);
+        vLayout->addWidget(maskSpBx);
+
+        setLayout(vLayout);
+
+    }
+
+    void update() {
+
+        contentLbl->setText(QString("[%1] Content: %2").arg(index).arg(content));
+        contentSpBx->setValue(content);
+
+        maskLbl->setText(QString("[%1] Mask: %2").arg(index).arg(mask));
+        maskSpBx->setValue(mask);
+    }
+};
+
 
 class MainWindow : public QMainWindow
 {
@@ -101,6 +154,8 @@ public slots:
 private:
 
     CIP *currentCIP = NULL;
+
+    QVector<CiBrick> ciBricks;
 
     QWidget *guiWidget;
     QScrollArea *guiScrollArea;
@@ -348,6 +403,99 @@ private:
     QLabel *ciSizeToNumLbl;
 
     void refreshCiSizeDisplay();
+
+
+    // CICBRICKS DATA
+    QLabel *ciDataLbl;
+    QPushButton *saveCiDataBtn;
+
+    // CICBRICK TYPE LATIN TEXT
+    QGroupBox *rootCicTypeLatinTextGBox;
+    QGridLayout *rootCicTypeLatinTextLayout;
+    QTextEdit *rootCicTypeLatinTextTxtEdt;
+
+    // CICBRICK TYPE UNDEFINED
+    QGroupBox *rootCicTypeUndefinedGBox;
+    QGridLayout *rootCicTypeUndefinedLayout;
+
+//    QLabel *rootCicTypeUndefined__0ContentLbl;
+//    QSpinBox *rootCicTypeUndefined__0ContentSpBox;
+//    QLabel *rootCicTypeUndefined__0ContentCommentLbl;
+//    QLabel *rootCicTypeUndefined__0MaskLbl;
+//    QSpinBox *rootCicTypeUndefined__0MaskSpBox;
+//    QLabel *rootCicTypeUndefined__0MaskCommentLbl;
+
+//    QLabel *rootCicTypeUndefined__1ContentLbl;
+//    QSpinBox *rootCicTypeUndefined__1ContentSpBox;
+//    QLabel *rootCicTypeUndefined__1ContentCommentLbl;
+//    QLabel *rootCicTypeUndefined__1MaskLbl;
+//    QSpinBox *rootCicTypeUndefined__1MaskSpBox;
+//    QLabel *rootCicTypeUndefined__1MaskCommentLbl;
+
+
+//    QLabel *rootCicTypeUndefined__2ContentLbl;
+//    QSpinBox *rootCicTypeUndefined__2ContentSpBox;
+//    QLabel *rootCicTypeUndefined__2ContentCommentLbl;
+//    QLabel *rootCicTypeUndefined__2MaskLbl;
+//    QSpinBox *rootCicTypeUndefined__2MaskSpBox;
+//    QLabel *rootCicTypeUndefined__2MaskCommentLbl;
+
+//    QLabel *rootCicTypeUndefined__3ContentLbl;
+//    QSpinBox *rootCicTypeUndefined__3ContentSpBox;
+//    QLabel *rootCicTypeUndefined__3ContentCommentLbl;
+//    QLabel *rootCicTypeUndefined__3MaskLbl;
+//    QSpinBox *rootCicTypeUndefined__3MaskSpBox;
+//    QLabel *rootCicTypeUndefined__3MaskCommentLbl;
+
+
+//    QLabel *rootCicTypeUndefined__4ContentLbl;
+//    QSpinBox *rootCicTypeUndefined__4ContentSpBox;
+//    QLabel *rootCicTypeUndefined__4ContentCommentLbl;
+//    QLabel *rootCicTypeUndefined__4MaskLbl;
+//    QSpinBox *rootCicTypeUndefined__4MaskSpBox;
+//    QLabel *rootCicTypeUndefined__4MaskCommentLbl;
+
+//    QLabel *rootCicTypeUndefined__5ContentLbl;
+//    QSpinBox *rootCicTypeUndefined__5ContentSpBox;
+//    QLabel *rootCicTypeUndefined__5ContentCommentLbl;
+//    QLabel *rootCicTypeUndefined__5MaskLbl;
+//    QSpinBox *rootCicTypeUndefined__5MaskSpBox;
+//    QLabel *rootCicTypeUndefined__5MaskCommentLbl;
+
+
+//    QLabel *rootCicTypeUndefined__6ContentLbl;
+//    QSpinBox *rootCicTypeUndefined__6ContentSpBox;
+//    QLabel *rootCicTypeUndefined__6ContentCommentLbl;
+//    QLabel *rootCicTypeUndefined__6MaskLbl;
+//    QSpinBox *rootCicTypeUndefined__6MaskSpBox;
+//    QLabel *rootCicTypeUndefined__6MaskCommentLbl;
+
+//    QLabel *rootCicTypeUndefined__7ContentLbl;
+//    QSpinBox *rootCicTypeUndefined__7ContentSpBox;
+//    QLabel *rootCicTypeUndefined__7ContentCommentLbl;
+//    QLabel *rootCicTypeUndefined__7MaskLbl;
+//    QSpinBox *rootCicTypeUndefined__7MaskSpBox;
+//    QLabel *rootCicTypeUndefined__7MaskCommentLbl;
+
+    QLabel *ciDataToStringLbl;
+
+    void clearRootCicTypes();
+    void setRootCicTypeToLatinText();
+    void setRootCicTypeToUndefined();
+
+    void refreshCiDataDisplay();
+
+
+//    // CICBricks TYPE RZV
+//    QGroupBox *cICBricksTypeGBox;
+//    QGridLayout *headerDataTypeOkLayout;
+//    QTextEdit *headerDataTypeOkTxtEdt;
+
+
+
+
+
+
 
 
     // APP DATA

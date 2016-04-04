@@ -648,7 +648,7 @@ void CIP::setHeaderSize(const quint8 &value)
 
 /*
  *
- * CIP HEAD DATA
+ * CIP HEADER DATA
  *
  */
 
@@ -665,6 +665,14 @@ quint8 CIP::getHeaderData(quint8 index) const {
 void CIP::setHeaderData(const QVector<quint8> &value)
 {
     headerData = value;
+}
+
+void CIP::setHeaderData(const QByteArray &value)
+{
+    headerData.clear();
+    for(int i=0; i<value.size();i++) {
+        headerData.append(value.at(i));
+    }
 }
 
 
@@ -879,6 +887,33 @@ void CIP::setCICBricks(const QVector<CICBrick> &value)
     CICBricks = value;
 }
 
+void CIP::setCICBricks(const QByteArray &value)
+{
+    CICBricks.clear();
+
+    for(int i=0; i<value.size();i++) {
+        quint8 content = value.at(i++);
+        if(i<value.size()) {
+            CICBricks.append(CICBrick(content, value.at(i)));
+        }
+    }
+}
+
+void CIP::setCICBrick(const CICBrick &value, quint8 index)
+{
+   CICBricks.replace(index, value);
+}
+
+void CIP::setCICBrickContent(const quint8 &value, quint8 index)
+{
+   CICBricks[index].setContent(value);
+}
+
+void CIP::setCICBrickMask(const quint8 &value, quint8 index)
+{
+    CICBricks[index].setMask(value);
+}
+
 QString CIP::interpreteCICBricks(QByteArray *bytes) const {
 
     QString out;
@@ -899,14 +934,12 @@ QString CIP::interpreteCICBricks(QByteArray *bytes) const {
 QString CIP::interpreteCICBricks() const {
 
     QString out;
-    out += '"';
 
     switch (getRootCIC().getContent()) {
     case RootCIC_LatinText:
         for(int i=0; i<getCiSize(); i++) {
             out += QChar(CICBricks.at(i).getContent()).toLatin1();
         }
-        out += '"';
         return out;
     default:
         return "undefined";
@@ -990,6 +1023,19 @@ QVector<quint8> CIP::getAppData() const
 void CIP::setAppData(const QVector<quint8> &value)
 {
     appData = value;
+}
+
+void CIP::setAppData(const QByteArray &value)
+{
+    appData.clear();
+    for(int i=0; i<value.size();i++) {
+        appData.append(value.at(i));
+    }
+}
+
+void CIP::setAppData(const quint8 &value, quint8 index)
+{
+    appData.replace(index, value);
 }
 
 QString CIP::interpreteAppData(QByteArray *bytes) const {
@@ -1199,7 +1245,7 @@ void CIP::unpack() {
     tmpArray.clear();
     tmpArray = byteArray.mid(b, size);
     b += size;
-//    setHeaderData();
+    setHeaderData(tmpArray);
 
     // CI: type (1)
     byte = byteArray.at(b++);
@@ -1220,6 +1266,7 @@ void CIP::unpack() {
     tmpArray.clear();
     tmpArray = byteArray.mid(b, size*2);
     b += size*2;
+    setCICBricks(tmpArray);
 }
 
 

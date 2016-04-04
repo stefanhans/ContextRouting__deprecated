@@ -240,10 +240,10 @@ MainWindow::MainWindow(QWidget *parent)
     uuidCommentLbl = new QLabel(tr("Read Only"));
     uuidCommentLbl->setAlignment(Qt::AlignCenter);
     uuidToStringLbl = new QLabel();
-    uuidToStringLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    uuidToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     headerLayout->addWidget(uuidLbl, 7, 0);
-    headerLayout->addWidget(uuidCommentLbl, 7, 1, 1, 8);
+    headerLayout->addWidget(uuidCommentLbl, 7, 1, 1, 7);
     headerLayout->addWidget(uuidToStringLbl, 7, 8);
 
 
@@ -518,7 +518,7 @@ MainWindow::MainWindow(QWidget *parent)
     headerLayout->addWidget(headerDataToStringLbl, 13, 8);
 
 
-    headerDataLbl = new QLabel(tr("HeaderData (1): "));
+    headerDataLbl = new QLabel(tr("HeaderData (size): "));
     headerDataLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     headerDataLbl->hide();
 
@@ -590,6 +590,252 @@ MainWindow::MainWindow(QWidget *parent)
     ciLayout->addWidget(ciSizeSpBox, 2, 1);
     ciLayout->addWidget(saveCiSizeFromNumberBtn, 2, 2);
     ciLayout->addWidget(ciSizeToNumLbl, 2, 7);
+
+
+    // CICBRICK TYPE LATIN TEXT
+    rootCicTypeLatinTextLayout = new QGridLayout;
+    rootCicTypeLatinTextGBox = new QGroupBox("CICBricks Interpretation of rootCIC Type LatinText");
+    rootCicTypeLatinTextGBox->setLayout(rootCicTypeLatinTextLayout);
+    rootCicTypeLatinTextTxtEdt = new QTextEdit(rootCicTypeLatinTextGBox);
+    rootCicTypeLatinTextTxtEdt->setReadOnly(false);
+    rootCicTypeLatinTextGBox->hide();
+
+    rootCicTypeLatinTextLayout->addWidget(rootCicTypeLatinTextTxtEdt, 0, 0);
+
+
+
+    // CICBRICK TYPE UNDEFINED
+    rootCicTypeUndefinedLayout = new QGridLayout;
+    rootCicTypeUndefinedGBox = new QGroupBox("CICBricks Interpretation of rootCIC Type Undefined");
+    rootCicTypeUndefinedGBox->setLayout(rootCicTypeUndefinedLayout);
+
+
+//    rootCicTypeUndefined__0ContentLbl = new QLabel(tr("[0] C: "));
+//    rootCicTypeUndefined__0ContentLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+////    rootCicTypeUndefined__0ContentLbl->setFixedSize(100, 30);
+//    rootCicTypeUndefined__0ContentCommentLbl = new QLabel();
+//    rootCicTypeUndefined__0ContentCommentLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+//    rootCicTypeUndefined__0ContentSpBox = new QSpinBox(ciGBox);
+//    rootCicTypeUndefined__0ContentSpBox->setFixedSize(60, 30);
+//    rootCicTypeUndefined__0ContentSpBox->setRange(0, 255);
+//    rootCicTypeUndefined__0MaskLbl = new QLabel(tr("[0] M: "));
+//    rootCicTypeUndefined__0MaskLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+////    rootCicTypeUndefined__0MaskLbl->setFixedSize(100, 30);
+//    rootCicTypeUndefined__0MaskCommentLbl = new QLabel();
+//    rootCicTypeUndefined__0MaskCommentLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+//    rootCicTypeUndefined__0MaskSpBox = new QSpinBox(ciGBox);
+//    rootCicTypeUndefined__0MaskSpBox->setFixedSize(60, 30);
+//    rootCicTypeUndefined__0MaskSpBox->setRange(0, 255);
+
+//    rootCicTypeUndefined__1ContentLbl = new QLabel(tr("[1] C: "));
+//    rootCicTypeUndefined__1ContentLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+////    rootCicTypeUndefined__1ContentLbl->setFixedSize(100, 30);
+//    rootCicTypeUndefined__1ContentSpBox = new QSpinBox(ciGBox);
+//    rootCicTypeUndefined__1ContentSpBox->setFixedSize(60, 30);
+//    rootCicTypeUndefined__1ContentSpBox->setRange(0, 255);
+//    rootCicTypeUndefined__1ContentCommentLbl = new QLabel();
+//    rootCicTypeUndefined__1ContentCommentLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+//    rootCicTypeUndefined__1MaskLbl = new QLabel(tr("[1] M: "));
+//    rootCicTypeUndefined__1MaskLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+////    rootCicTypeUndefined__1MaskLbl->setFixedSize(100, 30);
+//    rootCicTypeUndefined__1MaskSpBox = new QSpinBox(ciGBox);
+//    rootCicTypeUndefined__1MaskSpBox->setFixedSize(60, 30);
+//    rootCicTypeUndefined__1MaskSpBox->setRange(0, 255);
+//    rootCicTypeUndefined__1MaskCommentLbl = new QLabel();
+//    rootCicTypeUndefined__1MaskCommentLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+
+
+//    rootCicTypeUndefined__2ContentLbl = new QLabel(tr("[2] C: "));
+//    rootCicTypeUndefined__2ContentLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+//    rootCicTypeUndefined__2ContentLbl->setFixedSize(100, 30);
+//    rootCicTypeUndefined__2ContentSpBox = new QSpinBox(ciGBox);
+//    rootCicTypeUndefined__2ContentSpBox->setFixedSize(60, 30);
+//    rootCicTypeUndefined__2ContentSpBox->setRange(0, 255);
+//    rootCicTypeUndefined__2ContentCommentLbl = new QLabel();
+//    rootCicTypeUndefined__2ContentCommentLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+//    rootCicTypeUndefined__2MaskLbl = new QLabel(tr("[2] M: "));
+//    rootCicTypeUndefined__2MaskLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+//    rootCicTypeUndefined__2MaskLbl->setFixedSize(100, 30);
+//    rootCicTypeUndefined__2MaskSpBox = new QSpinBox(ciGBox);
+//    rootCicTypeUndefined__2MaskSpBox->setFixedSize(60, 30);
+//    rootCicTypeUndefined__2MaskSpBox->setRange(0, 255);
+//    rootCicTypeUndefined__2MaskCommentLbl = new QLabel();
+//    rootCicTypeUndefined__2MaskCommentLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+//    rootCicTypeUndefined__3ContentLbl = new QLabel(tr("[3] C: "));
+//    rootCicTypeUndefined__3ContentLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+//    rootCicTypeUndefined__3ContentLbl->setFixedSize(100, 30);
+//    rootCicTypeUndefined__3ContentSpBox = new QSpinBox(ciGBox);
+//    rootCicTypeUndefined__3ContentSpBox->setFixedSize(60, 30);
+//    rootCicTypeUndefined__3ContentSpBox->setRange(0, 255);
+//    rootCicTypeUndefined__3ContentCommentLbl = new QLabel();
+//    rootCicTypeUndefined__3ContentCommentLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+//    rootCicTypeUndefined__3MaskLbl = new QLabel(tr("[3] M: "));
+//    rootCicTypeUndefined__3MaskLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+//    rootCicTypeUndefined__3MaskLbl->setFixedSize(100, 30);
+//    rootCicTypeUndefined__3MaskSpBox = new QSpinBox(ciGBox);
+//    rootCicTypeUndefined__3MaskSpBox->setFixedSize(60, 30);
+//    rootCicTypeUndefined__3MaskSpBox->setRange(0, 255);
+//    rootCicTypeUndefined__3MaskCommentLbl = new QLabel();
+//    rootCicTypeUndefined__3MaskCommentLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+
+
+//    rootCicTypeUndefined__4ContentLbl = new QLabel(tr("[4] C: "));
+//    rootCicTypeUndefined__4ContentLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+//    rootCicTypeUndefined__4ContentLbl->setFixedSize(100, 30);
+//    rootCicTypeUndefined__4ContentSpBox = new QSpinBox(ciGBox);
+//    rootCicTypeUndefined__4ContentSpBox->setFixedSize(60, 30);
+//    rootCicTypeUndefined__4ContentSpBox->setRange(0, 255);
+//    rootCicTypeUndefined__4ContentCommentLbl = new QLabel();
+//    rootCicTypeUndefined__4ContentCommentLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+//    rootCicTypeUndefined__4MaskLbl = new QLabel(tr("[4] M: "));
+//    rootCicTypeUndefined__4MaskLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+//    rootCicTypeUndefined__4MaskLbl->setFixedSize(100, 30);
+//    rootCicTypeUndefined__4MaskSpBox = new QSpinBox(ciGBox);
+//    rootCicTypeUndefined__4MaskSpBox->setFixedSize(60, 30);
+//    rootCicTypeUndefined__4MaskSpBox->setRange(0, 255);
+//    rootCicTypeUndefined__4MaskCommentLbl = new QLabel();
+//    rootCicTypeUndefined__4MaskCommentLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+//    rootCicTypeUndefined__5ContentLbl = new QLabel(tr("[5] C: "));
+//    rootCicTypeUndefined__5ContentLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+//    rootCicTypeUndefined__5ContentLbl->setFixedSize(100, 30);
+//    rootCicTypeUndefined__5ContentSpBox = new QSpinBox(ciGBox);
+//    rootCicTypeUndefined__5ContentSpBox->setFixedSize(60, 30);
+//    rootCicTypeUndefined__5ContentSpBox->setRange(0, 255);
+//    rootCicTypeUndefined__5ContentCommentLbl = new QLabel();
+//    rootCicTypeUndefined__5ContentCommentLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+//    rootCicTypeUndefined__5MaskLbl = new QLabel(tr("[5] M: "));
+//    rootCicTypeUndefined__5MaskLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+//    rootCicTypeUndefined__5MaskLbl->setFixedSize(100, 30);
+//    rootCicTypeUndefined__5MaskSpBox = new QSpinBox(ciGBox);
+//    rootCicTypeUndefined__5MaskSpBox->setFixedSize(60, 30);
+//    rootCicTypeUndefined__5MaskSpBox->setRange(0, 255);
+//    rootCicTypeUndefined__5MaskCommentLbl = new QLabel();
+//    rootCicTypeUndefined__5MaskCommentLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+
+
+//    rootCicTypeUndefined__6ContentLbl = new QLabel(tr("[6] C: "));
+//    rootCicTypeUndefined__6ContentLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+//    rootCicTypeUndefined__6ContentLbl->setFixedSize(100, 30);
+//    rootCicTypeUndefined__6ContentSpBox = new QSpinBox(ciGBox);
+//    rootCicTypeUndefined__6ContentSpBox->setFixedSize(60, 30);
+//    rootCicTypeUndefined__6ContentSpBox->setRange(0, 255);
+//    rootCicTypeUndefined__6ContentCommentLbl = new QLabel();
+//    rootCicTypeUndefined__6ContentCommentLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+//    rootCicTypeUndefined__6MaskLbl = new QLabel(tr("[6] M: "));
+//    rootCicTypeUndefined__6MaskLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+//    rootCicTypeUndefined__6MaskLbl->setFixedSize(100, 30);
+//    rootCicTypeUndefined__6MaskSpBox = new QSpinBox(ciGBox);
+//    rootCicTypeUndefined__6MaskSpBox->setFixedSize(60, 30);
+//    rootCicTypeUndefined__6MaskSpBox->setRange(0, 255);
+//    rootCicTypeUndefined__6MaskCommentLbl = new QLabel();
+//    rootCicTypeUndefined__6MaskCommentLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+//    rootCicTypeUndefined__7ContentLbl = new QLabel(tr("[7] C: "));
+//    rootCicTypeUndefined__7ContentLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+//    rootCicTypeUndefined__7ContentLbl->setFixedSize(100, 30);
+//    rootCicTypeUndefined__7ContentSpBox = new QSpinBox(ciGBox);
+//    rootCicTypeUndefined__7ContentSpBox->setFixedSize(60, 30);
+//    rootCicTypeUndefined__7ContentSpBox->setRange(0, 255);
+//    rootCicTypeUndefined__7ContentCommentLbl = new QLabel();
+//    rootCicTypeUndefined__7ContentCommentLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+//    rootCicTypeUndefined__7MaskLbl = new QLabel(tr("[7] M: "));
+//    rootCicTypeUndefined__7MaskLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+//    rootCicTypeUndefined__7MaskLbl->setFixedSize(100, 30);
+//    rootCicTypeUndefined__7MaskSpBox = new QSpinBox(ciGBox);
+//    rootCicTypeUndefined__7MaskSpBox->setFixedSize(60, 30);
+//    rootCicTypeUndefined__7MaskSpBox->setRange(0, 255);
+//    rootCicTypeUndefined__7MaskCommentLbl = new QLabel();
+//    rootCicTypeUndefined__7MaskCommentLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+
+
+
+    rootCicTypeUndefinedGBox->hide();
+
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__0ContentLbl, 0, 0);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__0ContentCommentLbl, 0, 1);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__0ContentSpBox, 0, 2);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__0MaskLbl, 0, 3);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__0MaskCommentLbl, 0, 4);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__0MaskSpBox, 0, 5);
+
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__1ContentLbl, 0, 6);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__1ContentCommentLbl, 0, 7);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__1ContentSpBox, 0, 8);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__1MaskLbl, 0, 9);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__1MaskCommentLbl, 0, 10);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__1MaskSpBox, 0, 11);
+
+
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__2ContentLbl, 0, 12);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__2ContentCommentLbl, 0, 13);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__2ContentSpBox, 0, 14);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__2MaskLbl, 0, 15);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__2MaskCommentLbl, 0, 16);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__2MaskSpBox, 0, 17);
+
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__3ContentLbl, 0, 18);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__3ContentCommentLbl, 0, 19);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__3ContentSpBox, 0, 20);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__3MaskLbl, 0, 21);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__3MaskCommentLbl, 0, 22);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__3MaskSpBox, 0, 23);
+
+
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__4ContentLbl, 0, 24);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__4ContentCommentLbl, 0, 25);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__4ContentSpBox, 0, 26);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__4MaskLbl, 0, 27);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__4MaskCommentLbl, 0, 28);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__4MaskSpBox, 0, 29);
+
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__5ContentLbl, 0, 30);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__5ContentCommentLbl, 0, 31);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__5ContentSpBox, 0, 32);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__5MaskLbl, 0, 33);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__5MaskCommentLbl, 0, 34);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__5MaskSpBox, 0, 35);
+
+
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__6ContentLbl, 0, 36);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__6ContentCommentLbl, 0, 37);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__6ContentSpBox, 0, 38);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__6MaskLbl, 0, 39);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__6MaskCommentLbl, 0, 40);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__6MaskSpBox, 0, 41);
+
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__7ContentLbl, 0, 42);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__7ContentCommentLbl, 0, 43);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__7ContentSpBox, 0, 44);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__7MaskLbl, 0, 45);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__7MaskCommentLbl, 0, 46);
+//    rootCicTypeUndefinedLayout->addWidget(rootCicTypeUndefined__7MaskSpBox, 0, 47);
+
+    ciDataToStringLbl = new QLabel();
+    ciDataToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+    ciLayout->addWidget(rootCicTypeLatinTextGBox, 3, 0, 1, 9);
+    ciLayout->addWidget(rootCicTypeUndefinedGBox, 3, 0, 1, 9);
+
+    ciLayout->addWidget(ciDataToStringLbl, 3, 8);
+
+
+    ciDataLbl = new QLabel(tr("CIC-Bricks (size): "));
+    ciDataLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    ciDataLbl->hide();
+
+    saveCiDataBtn = new QPushButton(tr("setCICBricks()"), this);
+    saveCiDataBtn->hide();
+
+    ciLayout->addWidget(ciDataLbl, 4, 0);
+    ciLayout->addWidget(saveCiDataBtn, 4, 1);
+
+
 
 
 
@@ -825,6 +1071,7 @@ void MainWindow::createCIP() {
     // CI DISPLAY
     refreshCiTypeDisplay();
     refreshCiSizeDisplay();
+    refreshCiDataDisplay();
 
     // APPDATE DISPLAY
     refreshAppDataTypeDisplay();
@@ -891,6 +1138,7 @@ void MainWindow::openCIP() {
     // CI DISPLAY
     refreshCiTypeDisplay();
     refreshCiSizeDisplay();
+    refreshCiDataDisplay();
 
     // APPDATE DISPLAY
     refreshAppDataTypeDisplay();
@@ -1461,7 +1709,6 @@ void MainWindow::setHeaderData() {
         return;
     }
 
-    QByteArray inByteArray;
     QString inString;
 
     if(headerDataTypeOkGBox->isVisible()) {
@@ -1474,17 +1721,8 @@ void MainWindow::setHeaderData() {
         inString = headerDataTypeUndefinedTxtEdt->toPlainText();
     }
 
-    inByteArray = inString.toLatin1();
-
-    QVector<quint8> inVector;
-    for (int i = 0; i < inByteArray.size(); ++i) {
-        inVector.append((quint8) inByteArray.at(i));
-    }
-
-
-    currentCIP->setHeaderData(inVector);
-    currentCIP->truncateHeaderData((quint8) inByteArray.size());
-    currentCIP->setHeaderSize((quint8) inByteArray.size());
+    currentCIP->setHeaderData(inString.toLatin1());
+    currentCIP->setHeaderSize((quint8) inString.length());
     refreshHeaderSizeDisplay();
     refreshHeaderDataDisplay();
 
@@ -1822,7 +2060,7 @@ void MainWindow::setCiTypeFromNumber() {
 
     currentCIP->setCiType(ciTypeSpBox->value());
     refreshCiTypeDisplay();
-//    refreshCiDataDisplay();
+    refreshCiDataDisplay();
 
     currentCIP->pack();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setCiTypeFromNumber() to %1\n%2")
@@ -1841,7 +2079,7 @@ void MainWindow::setCiTypeFromEnum() {
 
     currentCIP->setCiType(ciTypeCmbBx->currentData().toInt());
     refreshCiTypeDisplay();
-//    refreshCiDataDisplay();
+    refreshCiDataDisplay();
 
     currentCIP->pack();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setCiTypeFromEnum() to %1\n%2")
@@ -1853,6 +2091,7 @@ void MainWindow::setCiTypeFromEnum() {
 void MainWindow::refreshCiSizeDisplay() {
     qDebug() << "refreshCiSizeDisplay()";
 
+    ciSizeSpBox->setValue(currentCIP->getCiSize());
     ciSizeToNumLbl->setText(QString("%1").arg(currentCIP->getCiSize()));
 }
 
@@ -1866,7 +2105,7 @@ void MainWindow::setCiSizeFromNumber() {
 
     currentCIP->setCiSize(ciSizeSpBox->value());
     refreshCiSizeDisplay();
-//    refreshCiDataDisplay();
+    refreshCiDataDisplay();
 
     currentCIP->pack();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setCiSizeFromNumber() to %1\n%2")
@@ -1874,6 +2113,170 @@ void MainWindow::setCiSizeFromNumber() {
                                .arg(currentCIP->bytesToString()));
 
 }
+
+
+
+
+
+
+// CI DATA FUNCTIONS
+void MainWindow::refreshCiDataDisplay() {
+    qDebug() << "refreshCiDataDisplay()";
+
+    switch (currentCIP->getCiType()) {
+    case 0:
+        setRootCicTypeToUndefined();
+        return;
+    case 1:
+        break;
+    default:
+        setRootCicTypeToUndefined();
+        return;
+    }
+
+    switch (currentCIP->getRootCIC().getContent()) {
+    case 0:
+        setRootCicTypeToUndefined();
+        return;
+    case 1:
+        setRootCicTypeToLatinText();
+        return;
+    default:
+        setRootCicTypeToUndefined();
+    }
+}
+
+
+
+void MainWindow::clearRootCicTypes() {
+    qDebug() << "MainWindow::clearRootCicTypes()";
+
+    rootCicTypeLatinTextGBox->hide();
+    rootCicTypeUndefinedGBox->hide();
+
+    ciDataToStringLbl->clear();
+
+    ciDataLbl->hide();
+    saveCiDataBtn->hide();
+}
+
+void MainWindow::setRootCicTypeToLatinText() {
+    qDebug() << "MainWindow::setRootCicTypeToLatinText()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    clearRootCicTypes();
+
+    rootCicTypeLatinTextTxtEdt->setText(currentCIP->interpreteCICBricks());
+    rootCicTypeLatinTextGBox->show();
+
+    ciDataLbl->show();
+    saveCiDataBtn->show();
+
+    ciDataToStringLbl->setText(QString("interpreteCICBricks():\n%1\n%2%3%4").arg(QString(38, '-')).arg('"').arg(currentCIP->interpreteCICBricks()).arg('"'));
+}
+
+void MainWindow::setRootCicTypeToUndefined() {
+    qDebug() << "MainWindow::setRootCicTypeToUndefined()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    clearRootCicTypes();
+
+//    rootCicTypeUndefined__0ContentSpBox->setValue(currentCIP->getCICBricks().at(0).getContent());
+//    rootCicTypeUndefined__0MaskSpBox->setValue(currentCIP->getCICBricks().at(0).getMask());
+//    rootCicTypeUndefined__0ContentCommentLbl->setText(QString("%1").arg(currentCIP->getCICBricks().at(0).getContent()));
+//    rootCicTypeUndefined__0MaskCommentLbl->setText(QString("%1").arg(currentCIP->getCICBricks().at(0).getMask()));
+
+//    rootCicTypeUndefined__1ContentSpBox->setValue(currentCIP->getCICBricks().at(1).getContent());
+//    rootCicTypeUndefined__1MaskSpBox->setValue(currentCIP->getCICBricks().at(1).getMask());
+//    rootCicTypeUndefined__1ContentCommentLbl->setText(QString("%1").arg(currentCIP->getCICBricks().at(1).getContent()));
+//    rootCicTypeUndefined__1MaskCommentLbl->setText(QString("%1").arg(currentCIP->getCICBricks().at(1).getMask()));
+
+//    rootCicTypeUndefined__2ContentSpBox->setValue(currentCIP->getCICBricks().at(2).getContent());
+//    rootCicTypeUndefined__2MaskSpBox->setValue(currentCIP->getCICBricks().at(2).getMask());
+//    rootCicTypeUndefined__2ContentCommentLbl->setText(QString("%1").arg(currentCIP->getCICBricks().at(2).getContent()));
+//    rootCicTypeUndefined__2MaskCommentLbl->setText(QString("%1").arg(currentCIP->getCICBricks().at(2).getMask()));
+
+//    rootCicTypeUndefined__3ContentSpBox->setValue(currentCIP->getCICBricks().at(3).getContent());
+//    rootCicTypeUndefined__3MaskSpBox->setValue(currentCIP->getCICBricks().at(3).getMask());
+//    rootCicTypeUndefined__3ContentCommentLbl->setText(QString("%1").arg(currentCIP->getCICBricks().at(3).getContent()));
+//    rootCicTypeUndefined__3MaskCommentLbl->setText(QString("%1").arg(currentCIP->getCICBricks().at(3).getMask()));
+
+//    rootCicTypeUndefined__4ContentSpBox->setValue(currentCIP->getCICBricks().at(4).getContent());
+//    rootCicTypeUndefined__4MaskSpBox->setValue(currentCIP->getCICBricks().at(4).getMask());
+//    rootCicTypeUndefined__4ContentCommentLbl->setText(QString("%1").arg(currentCIP->getCICBricks().at(4).getContent()));
+//    rootCicTypeUndefined__4MaskCommentLbl->setText(QString("%1").arg(currentCIP->getCICBricks().at(4).getMask()));
+
+//    rootCicTypeUndefined__5ContentSpBox->setValue(currentCIP->getCICBricks().at(5).getContent());
+//    rootCicTypeUndefined__5MaskSpBox->setValue(currentCIP->getCICBricks().at(5).getMask());
+//    rootCicTypeUndefined__5ContentCommentLbl->setText(QString("%1").arg(currentCIP->getCICBricks().at(5).getContent()));
+//    rootCicTypeUndefined__5MaskCommentLbl->setText(QString("%1").arg(currentCIP->getCICBricks().at(5).getMask()));
+
+
+//    rootCicTypeUndefined__6ContentSpBox->setValue(currentCIP->getCICBricks().at(6).getContent());
+//    rootCicTypeUndefined__6MaskSpBox->setValue(currentCIP->getCICBricks().at(6).getMask());
+//    rootCicTypeUndefined__6ContentCommentLbl->setText(QString("%1").arg(currentCIP->getCICBricks().at(6).getContent()));
+//    rootCicTypeUndefined__6MaskCommentLbl->setText(QString("%1").arg(currentCIP->getCICBricks().at(6).getMask()));
+
+//    rootCicTypeUndefined__7ContentSpBox->setValue(currentCIP->getCICBricks().at(7).getContent());
+//    rootCicTypeUndefined__7MaskSpBox->setValue(currentCIP->getCICBricks().at(7).getMask());
+//    rootCicTypeUndefined__7ContentCommentLbl->setText(QString("%1").arg(currentCIP->getCICBricks().at(7).getContent()));
+//    rootCicTypeUndefined__7MaskCommentLbl->setText(QString("%1").arg(currentCIP->getCICBricks().at(7).getMask()));
+
+
+    for(int i=0; i<=currentCIP->getCiSize();i++) {
+
+        CiBrick *ciBrick = new CiBrick();
+        ciBrick->initialize(1, 2, i);
+
+//        ciBrick->content = currentCIP->getCICBricks().at(i).getContent();
+//        ciBrick->mask = currentCIP->getCICBricks().at(i).getMask();
+
+//        ciBrick->update();
+
+        rootCicTypeUndefinedLayout->addWidget(ciBrick, qFloor(i/3), i%3);
+
+    }
+
+    rootCicTypeUndefinedGBox->show();
+
+}
+
+//int MainWindow::getIndexForHeaderDataErrorCategoryCmbBx() {
+//    qDebug() << "MainWindow::getIndexForHeaderDataErrorCategoryCmbBx()";
+
+//    if(currentCIP == NULL) {
+//        qDebug() << "currentCIP == NULL -> return";
+//        return -1;
+//    }
+
+//    switch ((quint8) currentCIP->getHeaderData().at(0)) {
+
+//    case CIP::ErrorCategoryNone:
+//        return 0;
+
+//    case CIP::CipFormatError:
+//        return 1;
+
+//    default:
+//        return 2;
+//    }
+
+//}
+
+
+
+
+
+
+
 
 
 
@@ -1972,4 +2375,5 @@ void MainWindow::setAppDataSizeFromNumber() {
                                .arg(currentCIP->bytesToString()));
 
 }
+
 
