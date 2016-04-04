@@ -39,16 +39,15 @@ public:
         index = ind;
 
         vLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-        contentLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
         contentLbl = new QLabel(QString("[%1] Content: %2").arg(index).arg(content));
-
+        contentLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
         contentSpBx = new QSpinBox();
         contentSpBx->setFixedSize(60, 30);
         contentSpBx->setRange(0, 255);
         contentSpBx->setValue(content);
 
         maskLbl = new QLabel(QString("[%1] Mask: %2").arg(index).arg(mask));
-        maskLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+        maskLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
         maskSpBx = new QSpinBox();
         maskSpBx->setFixedSize(60, 30);
         maskSpBx->setRange(0, 255);
@@ -60,10 +59,13 @@ public:
         vLayout->addWidget(maskSpBx);
 
         setLayout(vLayout);
-
     }
 
-    void update() {
+    void update(quint8 c, quint8 m, quint8 ind) {
+
+        content = c;
+        mask = m;
+        index = ind;
 
         contentLbl->setText(QString("[%1] Content: %2").arg(index).arg(content));
         contentSpBx->setValue(content);
@@ -82,6 +84,8 @@ public:
 
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+    QVector<CiBrick*> brickElements;
 
 public slots:
 
