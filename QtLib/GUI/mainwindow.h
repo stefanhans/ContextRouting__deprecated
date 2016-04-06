@@ -32,7 +32,7 @@ public:
     QLabel *maskLbl;
     QSpinBox *maskSpBx;
 
-    void initialize(quint8 c, quint8 m, quint8 ind) {
+    CiBrick(quint8 c, quint8 m, quint8 ind) {
 
         content = c;
         mask = m;
@@ -72,6 +72,11 @@ public:
 
         maskLbl->setText(QString("[%1] Mask: %2").arg(index).arg(mask));
         maskSpBx->setValue(mask);
+    }
+
+    void update() {
+        content = contentSpBx->value();
+        mask = maskSpBx->value();
     }
 };
 
@@ -144,6 +149,9 @@ public slots:
 
     // CI SIZE SLOTS
     void setCiSizeFromNumber();
+
+    // CI SIZE SLOTS
+    void setCiBricks();
 
 
     // APPDATA TYPE SLOTS
@@ -406,12 +414,14 @@ private:
     QLabel *ciSizeCommentLbl;
     QLabel *ciSizeToNumLbl;
 
+    quint8 ciOldSize;
+
     void refreshCiSizeDisplay();
 
 
     // CICBRICKS DATA
     QLabel *ciDataLbl;
-    QPushButton *saveCiDataBtn;
+    QPushButton *saveCiBricksBtn;
 
     // CICBRICK TYPE LATIN TEXT
     QGroupBox *rootCicTypeLatinTextGBox;
@@ -422,65 +432,6 @@ private:
     QGroupBox *rootCicTypeUndefinedGBox;
     QGridLayout *rootCicTypeUndefinedLayout;
 
-//    QLabel *rootCicTypeUndefined__0ContentLbl;
-//    QSpinBox *rootCicTypeUndefined__0ContentSpBox;
-//    QLabel *rootCicTypeUndefined__0ContentCommentLbl;
-//    QLabel *rootCicTypeUndefined__0MaskLbl;
-//    QSpinBox *rootCicTypeUndefined__0MaskSpBox;
-//    QLabel *rootCicTypeUndefined__0MaskCommentLbl;
-
-//    QLabel *rootCicTypeUndefined__1ContentLbl;
-//    QSpinBox *rootCicTypeUndefined__1ContentSpBox;
-//    QLabel *rootCicTypeUndefined__1ContentCommentLbl;
-//    QLabel *rootCicTypeUndefined__1MaskLbl;
-//    QSpinBox *rootCicTypeUndefined__1MaskSpBox;
-//    QLabel *rootCicTypeUndefined__1MaskCommentLbl;
-
-
-//    QLabel *rootCicTypeUndefined__2ContentLbl;
-//    QSpinBox *rootCicTypeUndefined__2ContentSpBox;
-//    QLabel *rootCicTypeUndefined__2ContentCommentLbl;
-//    QLabel *rootCicTypeUndefined__2MaskLbl;
-//    QSpinBox *rootCicTypeUndefined__2MaskSpBox;
-//    QLabel *rootCicTypeUndefined__2MaskCommentLbl;
-
-//    QLabel *rootCicTypeUndefined__3ContentLbl;
-//    QSpinBox *rootCicTypeUndefined__3ContentSpBox;
-//    QLabel *rootCicTypeUndefined__3ContentCommentLbl;
-//    QLabel *rootCicTypeUndefined__3MaskLbl;
-//    QSpinBox *rootCicTypeUndefined__3MaskSpBox;
-//    QLabel *rootCicTypeUndefined__3MaskCommentLbl;
-
-
-//    QLabel *rootCicTypeUndefined__4ContentLbl;
-//    QSpinBox *rootCicTypeUndefined__4ContentSpBox;
-//    QLabel *rootCicTypeUndefined__4ContentCommentLbl;
-//    QLabel *rootCicTypeUndefined__4MaskLbl;
-//    QSpinBox *rootCicTypeUndefined__4MaskSpBox;
-//    QLabel *rootCicTypeUndefined__4MaskCommentLbl;
-
-//    QLabel *rootCicTypeUndefined__5ContentLbl;
-//    QSpinBox *rootCicTypeUndefined__5ContentSpBox;
-//    QLabel *rootCicTypeUndefined__5ContentCommentLbl;
-//    QLabel *rootCicTypeUndefined__5MaskLbl;
-//    QSpinBox *rootCicTypeUndefined__5MaskSpBox;
-//    QLabel *rootCicTypeUndefined__5MaskCommentLbl;
-
-
-//    QLabel *rootCicTypeUndefined__6ContentLbl;
-//    QSpinBox *rootCicTypeUndefined__6ContentSpBox;
-//    QLabel *rootCicTypeUndefined__6ContentCommentLbl;
-//    QLabel *rootCicTypeUndefined__6MaskLbl;
-//    QSpinBox *rootCicTypeUndefined__6MaskSpBox;
-//    QLabel *rootCicTypeUndefined__6MaskCommentLbl;
-
-//    QLabel *rootCicTypeUndefined__7ContentLbl;
-//    QSpinBox *rootCicTypeUndefined__7ContentSpBox;
-//    QLabel *rootCicTypeUndefined__7ContentCommentLbl;
-//    QLabel *rootCicTypeUndefined__7MaskLbl;
-//    QSpinBox *rootCicTypeUndefined__7MaskSpBox;
-//    QLabel *rootCicTypeUndefined__7MaskCommentLbl;
-
     QLabel *ciDataToStringLbl;
 
     void clearRootCicTypes();
@@ -488,12 +439,6 @@ private:
     void setRootCicTypeToUndefined();
 
     void refreshCiDataDisplay();
-
-
-//    // CICBricks TYPE RZV
-//    QGroupBox *cICBricksTypeGBox;
-//    QGridLayout *headerDataTypeOkLayout;
-//    QTextEdit *headerDataTypeOkTxtEdt;
 
 
 
@@ -525,7 +470,31 @@ private:
     QLabel *appDataSizeCommentLbl;
     QLabel *appDataSizeToNumLbl;
 
+    quint8 appDataOldSize;
+
     void refreshAppDataSizeDisplay();
+
+
+    // APP DATA
+    QLabel *appDataLbl;
+    QPushButton *saveAppDataBtn;
+
+    // APP DATA TYPE TEXT
+    QGroupBox *appDataTypeTextGBox;
+    QGridLayout *appDataTypeTextLayout;
+    QTextEdit *appDataTypeTextTxtEdt;
+
+    // APP DATA TYPE UNDEFINED
+    QGroupBox *appDataTypeUndefinedGBox;
+    QGridLayout *appDataTypeUndefinedLayout;
+
+    QLabel *appDataToStringLbl;
+
+    void clearAppDataTypes();
+    void setAppDataTypeToText();
+    void setAppDataTypeToUndefined();
+
+    void refreshAppDataDisplay();
 
 
     // RAW CIP DATA

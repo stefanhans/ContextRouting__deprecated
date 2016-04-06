@@ -1058,14 +1058,12 @@ QString CIP::interpreteAppData(QByteArray *bytes) const {
 QString CIP::interpreteAppData() const {
 
     QString out;
-    out += '"';
 
     switch (getAppDataType()) {
     case AppDataTypeText:
         for(int i=0; i<getAppDataSize(); i++) {
             out += QChar(appData.at(i)).toLatin1();
         }
-        out += '"';
         return out;
     default:
         return "undefined";
@@ -1267,6 +1265,21 @@ void CIP::unpack() {
     tmpArray = byteArray.mid(b, size*2);
     b += size*2;
     setCICBricks(tmpArray);
+
+    // Application Data: type (1)
+    byte = byteArray.at(b++);
+    setAppDataType(byte);
+
+    // Application Data: size (1)
+    byte = byteArray.at(b++);
+    setAppDataSize(byte);
+    size = byte;
+
+    // Application Data: additional data (size)
+    tmpArray.clear();
+    tmpArray = byteArray.mid(b, size);
+    b += size;
+    setAppData(tmpArray);
 }
 
 

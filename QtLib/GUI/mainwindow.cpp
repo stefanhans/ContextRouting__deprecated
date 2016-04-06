@@ -5,7 +5,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
 
     for(int i=0; i<256; i++) {
-        brickElements.append(new CiBrick());
+        brickElements.append(new CiBrick(0, 0, i));
     }
 
     //
@@ -612,13 +612,17 @@ MainWindow::MainWindow(QWidget *parent)
     rootCicTypeUndefinedLayout = new QGridLayout;
     rootCicTypeUndefinedGBox = new QGroupBox("CICBricks Interpretation of rootCIC Type Undefined");
     rootCicTypeUndefinedGBox->setLayout(rootCicTypeUndefinedLayout);
+
+    for(int i=0; i<256; i++) {
+        rootCicTypeUndefinedLayout->addWidget(brickElements.at(i), qFloor(i/3), i%3);
+    }
     rootCicTypeUndefinedGBox->hide();
 
     ciDataToStringLbl = new QLabel();
     ciDataToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
-    ciLayout->addWidget(rootCicTypeLatinTextGBox, 3, 0, 1, 9);
-    ciLayout->addWidget(rootCicTypeUndefinedGBox, 3, 0, 1, 9);
+    ciLayout->addWidget(rootCicTypeLatinTextGBox, 3, 0, 1, 7);
+    ciLayout->addWidget(rootCicTypeUndefinedGBox, 3, 0, 1, 7);
 
     ciLayout->addWidget(ciDataToStringLbl, 3, 8);
 
@@ -626,11 +630,11 @@ MainWindow::MainWindow(QWidget *parent)
     ciDataLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     ciDataLbl->hide();
 
-    saveCiDataBtn = new QPushButton(tr("setCICBricks()"), this);
-    saveCiDataBtn->hide();
+    saveCiBricksBtn = new QPushButton(tr("setCICBricks()"), this);
+    saveCiBricksBtn->hide();
 
     ciLayout->addWidget(ciDataLbl, 4, 0);
-    ciLayout->addWidget(saveCiDataBtn, 4, 1);
+    ciLayout->addWidget(saveCiBricksBtn, 4, 1);
 
 
 
@@ -697,6 +701,48 @@ MainWindow::MainWindow(QWidget *parent)
     appDataLayout->addWidget(appDataSizeSpBox, 2, 1);
     appDataLayout->addWidget(saveAppDataSizeFromNumberBtn, 2, 2);
     appDataLayout->addWidget(appDataSizeToNumLbl, 2, 7);
+
+
+    // APP DATA TYPE TEXT
+    appDataTypeTextLayout = new QGridLayout;
+    appDataTypeTextGBox = new QGroupBox("Application Data Interpretation of appData Type Text");
+    appDataTypeTextGBox->setLayout(appDataTypeTextLayout);
+    appDataTypeTextTxtEdt = new QTextEdit(appDataTypeTextGBox);
+    appDataTypeTextTxtEdt->setReadOnly(false);
+    appDataTypeTextGBox->hide();
+
+    appDataTypeTextLayout->addWidget(appDataTypeTextTxtEdt, 0, 0);
+
+
+    // APP DATA TYPE UNDEFINED
+    appDataTypeUndefinedLayout = new QGridLayout;
+    appDataTypeUndefinedGBox = new QGroupBox("Application Data Interpretation of appData Type Undefined");
+    appDataTypeUndefinedGBox->setLayout(appDataTypeUndefinedLayout);
+
+//    for(int i=0; i<256; i++) {
+//        rootCicTypeUndefinedLayout->addWidget(brickElements.at(i), qFloor(i/3), i%3);
+//    }
+    appDataTypeUndefinedGBox->hide();
+
+    appDataToStringLbl = new QLabel();
+    appDataToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+    appDataLayout->addWidget(appDataTypeTextGBox, 3, 0, 1, 7);
+    appDataLayout->addWidget(appDataTypeUndefinedGBox, 3, 0, 1, 7);
+
+    appDataLayout->addWidget(appDataToStringLbl, 3, 8);
+
+    appDataLbl = new QLabel(tr("Application Data (size): "));
+    appDataLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    appDataLbl->hide();
+
+    saveAppDataBtn = new QPushButton(tr("setAppData()"), this);
+    saveAppDataBtn->hide();
+
+    appDataLayout->addWidget(appDataLbl, 4, 0);
+    appDataLayout->addWidget(saveAppDataBtn, 4, 1);
+
+
 
 
     // Raw CIP Layout
@@ -784,6 +830,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(saveCiTypeFromEnumBtn, &QAbstractButton::clicked, this, &MainWindow::setCiTypeFromEnum);
 
     connect(saveCiSizeFromNumberBtn, &QAbstractButton::clicked, this, &MainWindow::setCiSizeFromNumber);
+
+    connect(saveCiBricksBtn, &QAbstractButton::clicked, this, &MainWindow::setCiBricks);
 
 
     // APPDATA CONNECTS
@@ -873,6 +921,7 @@ void MainWindow::createCIP() {
     // APPDATE DISPLAY
     refreshAppDataTypeDisplay();
     refreshAppDataSizeDisplay();
+    refreshAppDataDisplay();
 
     // RAW CIP
     rawCIPTxtEdt->setPlainText(QString("New CIP created with argument %1 (%2)\n%3")
@@ -940,6 +989,7 @@ void MainWindow::openCIP() {
     // APPDATE DISPLAY
     refreshAppDataTypeDisplay();
     refreshAppDataSizeDisplay();
+    refreshAppDataDisplay();
 
 
     qDebug() << "setPlainText()";
@@ -1500,9 +1550,6 @@ void MainWindow::setHeaderData() {
     }
 
     if(headerDataTypeErrorGBox->isVisible()) {
-
-
-
         return;
     }
 
@@ -1900,7 +1947,9 @@ void MainWindow::setCiSizeFromNumber() {
         return;
     }
 
+    ciOldSize = currentCIP->getCiSize();
     currentCIP->setCiSize(ciSizeSpBox->value());
+
     refreshCiSizeDisplay();
     refreshCiDataDisplay();
 
@@ -1918,7 +1967,7 @@ void MainWindow::setCiSizeFromNumber() {
 
 // CI DATA FUNCTIONS
 void MainWindow::refreshCiDataDisplay() {
-    qDebug() << "refreshCiDataDisplay()";
+    qDebug() << "MainWindow::refreshCiDataDisplay()";
 
     switch (currentCIP->getCiType()) {
     case 0:
@@ -1945,20 +1994,80 @@ void MainWindow::refreshCiDataDisplay() {
 
 
 
+void MainWindow::setCiBricks() {
+    qDebug() << "MainWindow::setCiBricks()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    if(rootCicTypeLatinTextGBox->isVisible()) {
+
+        QString inString;
+
+        inString = rootCicTypeLatinTextTxtEdt->toPlainText();
+
+        for(int i=0; i<inString.length(); i++) {
+            currentCIP->setCICBrickContent(inString.toLatin1().at(i), i);
+        }
+
+        currentCIP->setCiSize((quint8) inString.length());
+
+        currentCIP->pack();
+        rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setCiBricks() to \"%1\"\n%2")
+                                   .arg(inString)
+                                   .arg(currentCIP->bytesToString()));
+        refreshCiSizeDisplay();
+        refreshCiDataDisplay();
+
+        return;
+    }
+
+    if(rootCicTypeUndefinedGBox->isVisible()) {
+
+        ciOldSize = currentCIP->getCiSize();
+
+        for(int i=0; i<currentCIP->getCiSize(); i++) {
+
+            if(rootCicTypeUndefinedLayout->itemAt(i) != NULL) {
+                ((CiBrick*) rootCicTypeUndefinedLayout->itemAt(i)->widget())->update();
+
+                currentCIP->setCICBrickContent(brickElements.at(i)->content, i);
+                currentCIP->setCICBrickMask(brickElements.at(i)->mask, i);
+            }
+        }
+
+        currentCIP->pack();
+        rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setCiBricks()\n%2")
+                                   .arg(currentCIP->bytesToString()));
+        refreshCiSizeDisplay();
+        refreshCiDataDisplay();
+
+        return;
+    }
+
+}
+
+
+
 void MainWindow::clearRootCicTypes() {
     qDebug() << "MainWindow::clearRootCicTypes()";
 
     rootCicTypeLatinTextGBox->hide();
 
     for(int i=0; i<256; i++) {
-        rootCicTypeUndefinedLayout->removeWidget(brickElements.at(i));
+        qDebug() << "MainWindow::clearRootCicTypes()" << brickElements.at(i)->index;
+        if(rootCicTypeUndefinedLayout->itemAt(i) != NULL) {
+            rootCicTypeUndefinedLayout->itemAt(i)->widget()->hide();
+        }
     }
     rootCicTypeUndefinedGBox->hide();
 
     ciDataToStringLbl->clear();
 
     ciDataLbl->hide();
-    saveCiDataBtn->hide();
+    saveCiBricksBtn->hide();
 }
 
 void MainWindow::setRootCicTypeToLatinText() {
@@ -1970,13 +2079,12 @@ void MainWindow::setRootCicTypeToLatinText() {
     }
 
     clearRootCicTypes();
-    rootCicTypeUndefinedGBox->repaint();
 
     rootCicTypeLatinTextTxtEdt->setText(currentCIP->interpreteCICBricks());
     rootCicTypeLatinTextGBox->show();
 
     ciDataLbl->show();
-    saveCiDataBtn->show();
+    saveCiBricksBtn->show();
 
     ciDataToStringLbl->setText(QString("interpreteCICBricks():\n%1\n%2%3%4").arg(QString(38, '-')).arg('"').arg(currentCIP->interpreteCICBricks()).arg('"'));
 }
@@ -1993,37 +2101,26 @@ void MainWindow::setRootCicTypeToUndefined() {
 
     for(int i=0; i<currentCIP->getCiSize(); i++) {
 
-        brickElements.at(i)->initialize(currentCIP->getCICBricks().at(i).getContent(), currentCIP->getCICBricks().at(i).getMask(), i);
+        if(i<ciOldSize) {
 
-        rootCicTypeUndefinedLayout->addWidget(brickElements.at(i), qFloor(i/3), i%3);
+            brickElements.at(i)->update(currentCIP->getCICBricks().at(i).getContent(), currentCIP->getCICBricks().at(i).getMask(), i);
+        }
+        else {
+            brickElements.at(i)->update(0, 0, i);
+        }
+
+        if(rootCicTypeUndefinedLayout->itemAt(i) != NULL) {
+            rootCicTypeUndefinedLayout->itemAt(i)->widget()->show();
+        }
     }
 
     rootCicTypeUndefinedGBox->show();
+
+    ciDataLbl->show();
+    saveCiBricksBtn->show();
+
+    ciDataToStringLbl->setText(QString("interpreteCICBricks():\n%1\n%2%3%4").arg(QString(38, '-')).arg('"').arg(currentCIP->interpreteCICBricks()).arg('"'));
 }
-
-//int MainWindow::getIndexForHeaderDataErrorCategoryCmbBx() {
-//    qDebug() << "MainWindow::getIndexForHeaderDataErrorCategoryCmbBx()";
-
-//    if(currentCIP == NULL) {
-//        qDebug() << "currentCIP == NULL -> return";
-//        return -1;
-//    }
-
-//    switch ((quint8) currentCIP->getHeaderData().at(0)) {
-
-//    case CIP::ErrorCategoryNone:
-//        return 0;
-
-//    case CIP::CipFormatError:
-//        return 1;
-
-//    default:
-//        return 2;
-//    }
-
-//}
-
-
 
 
 
@@ -2106,6 +2203,7 @@ void MainWindow::setAppDataTypeFromEnum() {
 void MainWindow::refreshAppDataSizeDisplay() {
     qDebug() << "refreshAppDataSizeDisplay()";
 
+    appDataSizeSpBox->setValue(currentCIP->getAppDataSize());
     appDataSizeToNumLbl->setText(QString("%1").arg(currentCIP->getAppDataSize()));
 }
 
@@ -2126,6 +2224,98 @@ void MainWindow::setAppDataSizeFromNumber() {
                                .arg(appDataSizeSpBox->value())
                                .arg(currentCIP->bytesToString()));
 
+}
+
+
+
+void MainWindow::clearAppDataTypes() {
+    qDebug() << "MainWindow::clearAppDataTypes()";
+
+    appDataTypeTextGBox->hide();
+
+//    for(int i=0; i<256; i++) {
+//        qDebug() << "MainWindow::clearRootCicTypes()" << brickElements.at(i)->index;
+//        if(rootCicTypeUndefinedLayout->itemAt(i) != NULL) {
+//            rootCicTypeUndefinedLayout->itemAt(i)->widget()->hide();
+//        }
+//    }
+    appDataTypeUndefinedGBox->hide();
+
+    appDataToStringLbl->clear();
+
+    appDataLbl->hide();
+    saveAppDataBtn->hide();
+
+}
+
+void MainWindow::setAppDataTypeToText() {
+    qDebug() << "MainWindow::setAppDataTypeToText()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    clearAppDataTypes();
+
+    appDataTypeTextTxtEdt->setText(currentCIP->interpreteAppData());
+    appDataTypeTextGBox->show();
+
+    appDataLbl->show();
+    saveAppDataBtn->show();
+
+    appDataToStringLbl->setText(QString("interpreteAppData():\n%1\n%2%3%4").arg(QString(38, '-')).arg('"').arg(currentCIP->interpreteAppData()).arg('"'));
+
+}
+
+void MainWindow::setAppDataTypeToUndefined() {
+    qDebug() << "MainWindow::setAppDataTypeToUndefined()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    clearAppDataTypes();
+
+//    for(int i=0; i<currentCIP->getCiSize(); i++) {
+
+//        if(i<ciOldSize) {
+
+//            brickElements.at(i)->update(currentCIP->getCICBricks().at(i).getContent(), currentCIP->getCICBricks().at(i).getMask(), i);
+//        }
+//        else {
+//            brickElements.at(i)->update(0, 0, i);
+//        }
+
+//        if(rootCicTypeUndefinedLayout->itemAt(i) != NULL) {
+//            rootCicTypeUndefinedLayout->itemAt(i)->widget()->show();
+//        }
+//    }
+
+    appDataTypeUndefinedGBox->show();
+
+    appDataLbl->show();
+    saveAppDataBtn->show();
+
+    appDataToStringLbl->setText(QString("interpreteAppData():\n%1\n%2%3%4").arg(QString(38, '-')).arg('"').arg(currentCIP->interpreteAppData()).arg('"'));
+
+}
+
+void MainWindow::refreshAppDataDisplay() {
+    qDebug() << "MainWindow::refreshAppDataDisplay()";
+
+    switch (currentCIP->getAppDataType()) {
+    case 0:
+        setAppDataTypeToUndefined();
+        return;
+    case 1:
+        setAppDataTypeToText();
+        return;
+    default:
+        setAppDataTypeToUndefined();
+        return;
+    }
 }
 
 
