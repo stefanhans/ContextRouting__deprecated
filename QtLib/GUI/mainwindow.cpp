@@ -4,8 +4,19 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
 
+    // Initialize headerDataElements
+    for(int i=0; i<256; i++) {
+        headerDataElements.append(new Data(0, i));
+    }
+
+    // Initialize brickElements
     for(int i=0; i<256; i++) {
         brickElements.append(new CiBrick(0, 0, i));
+    }
+
+    // Initialize appDataElements
+    for(int i=0; i<256; i++) {
+        appDataElements.append(new Data(0, i));
     }
 
     //
@@ -337,7 +348,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     headerTypeCmbBx = new QComboBox(headerGBox);
     headerTypeCmbBx->setFixedSize(180*2, 30);
-    headerTypeCmbBx->addItem("HeaderTypeOk (0)", 0);
+    headerTypeCmbBx->addItem("HeaderTypeRZV (0)", 0);
     headerTypeCmbBx->addItem("HeaderTypeError (1)", 1);
     headerTypeCmbBx->addItem("undefined (2-255)", 2);
 
@@ -360,31 +371,37 @@ MainWindow::MainWindow(QWidget *parent)
     // HEADER SIZE
     headerSizeLbl = new QLabel(tr("HeaderSize (1): "));
     headerSizeLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    headerSizeCommentLbl = new QLabel(tr("Read Only"));
-    headerSizeCommentLbl->setAlignment(Qt::AlignCenter);
+
+    headerSizeSpBox = new QSpinBox(headerGBox);
+    headerSizeSpBox->setFixedSize(180, 30);
+    headerSizeSpBox->setRange(0, 255);
+
+    saveHeaderSizeFromNumberBtn = new QPushButton(tr("setHeaderSizeFromNumber()"), this);
+
     headerSizeToNumLbl = new QLabel();
     headerSizeToNumLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
     headerLayout->addWidget(headerSizeLbl, 12, 0);
-    headerLayout->addWidget(headerSizeCommentLbl, 12, 1, 1, 7);
+    headerLayout->addWidget(headerSizeSpBox, 12, 1);
+    headerLayout->addWidget(saveHeaderSizeFromNumberBtn, 12, 2);
     headerLayout->addWidget(headerSizeToNumLbl, 12, 7);
 
 
     // HEADER DATA
 
     // HEADER DATA TYPE OK
-    headerDataTypeOkLayout = new QGridLayout;
-    headerDataTypeOkGBox = new QGroupBox("Header Data Interpretation of Header Type Ok (default interpretation as characters)");
-    headerDataTypeOkGBox->setLayout(headerDataTypeOkLayout);
-    headerDataTypeOkTxtEdt = new QTextEdit(headerDataTypeOkGBox);
-    headerDataTypeOkTxtEdt->setReadOnly(false);
-    headerDataTypeOkGBox->hide();
+    headerDataTypeRZVLayout = new QGridLayout;
+    headerDataTypeRZVGBox = new QGroupBox("Header Data Interpretation of HeaderTypeRZV");
+    headerDataTypeRZVGBox->setLayout(headerDataTypeRZVLayout);
+    headerDataTypeRZVTxtEdt = new QTextEdit(headerDataTypeRZVGBox);
+    headerDataTypeRZVTxtEdt->setReadOnly(false);
+    headerDataTypeRZVGBox->hide();
 
-    headerDataTypeOkLayout->addWidget(headerDataTypeOkTxtEdt, 0, 0);
+    headerDataTypeRZVLayout->addWidget(headerDataTypeRZVTxtEdt, 0, 0);
 
     // HEADER DATA TYPE ERROR
     headerDataTypeErrorLayout = new QGridLayout;
-    headerDataTypeErrorGBox = new QGroupBox("Header Data Interpretation of Header Type Error");
+    headerDataTypeErrorGBox = new QGroupBox("Header Data Interpretation of HeaderTypeError");
     headerDataTypeErrorGBox->setLayout(headerDataTypeErrorLayout);
     headerDataTypeErrorGBox->hide();
 
@@ -502,20 +519,22 @@ MainWindow::MainWindow(QWidget *parent)
 
     // HEADER DATA TYPE UNDEFINED
     headerDataTypeUndefinedLayout = new QGridLayout;
-    headerDataTypeUndefinedGBox = new QGroupBox("Undefined Header Data Interpretation (default interpretation as characters)");
-    headerDataTypeUndefinedTxtEdt = new QTextEdit("No CIP loaded yet", headerGBox);
-    headerDataTypeUndefinedTxtEdt->setReadOnly(false);
+    headerDataTypeUndefinedGBox = new QGroupBox("Header Data Interpretation: No CIP loaded yet");
+
     headerDataTypeUndefinedGBox->setLayout(headerDataTypeUndefinedLayout);
     headerDataTypeUndefinedGBox->show();
 
-    headerDataTypeUndefinedLayout->addWidget(headerDataTypeUndefinedTxtEdt, 0, 0);
+    for(int i=0; i<256; i++) {
+        headerDataTypeUndefinedLayout->addWidget(headerDataElements.at(i), qFloor(i/3), i%3);
+        headerDataTypeUndefinedLayout->itemAt(i)->widget()->hide();
+    }
 
     setDataTypeToUndefined();
 
     headerDataToStringLbl = new QLabel();
     headerDataToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
-    headerLayout->addWidget(headerDataTypeOkGBox, 13, 0, 1, 7);
+    headerLayout->addWidget(headerDataTypeRZVGBox, 13, 0, 1, 7);
     headerLayout->addWidget(headerDataTypeErrorGBox, 13, 0, 1, 7);
     headerLayout->addWidget(headerDataTypeUndefinedGBox, 13, 0, 1, 7);
 
@@ -531,6 +550,39 @@ MainWindow::MainWindow(QWidget *parent)
 
     headerLayout->addWidget(headerDataLbl, 14, 0);
     headerLayout->addWidget(saveHeaderDataBtn, 14, 1);
+
+
+
+
+
+//    // APP DATA TYPE UNDEFINED
+//    appDataTypeUndefinedLayout = new QGridLayout;
+//    appDataTypeUndefinedGBox = new QGroupBox("Application Data Interpretation of appData Type Undefined");
+//    appDataTypeUndefinedGBox->setLayout(appDataTypeUndefinedLayout);
+
+//    for(int i=0; i<256; i++) {
+//        appDataTypeUndefinedLayout->addWidget(appDataElements.at(i), qFloor(i/3), i%3);
+//    }
+//    appDataTypeUndefinedGBox->hide();
+
+//    appDataToStringLbl = new QLabel();
+//    appDataToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+//    appDataLayout->addWidget(appDataTypeTextGBox, 3, 0, 1, 7);
+//    appDataLayout->addWidget(appDataTypeUndefinedGBox, 3, 0, 1, 7);
+
+//    appDataLayout->addWidget(appDataToStringLbl, 3, 8);
+
+//    appDataLbl = new QLabel(tr("Application Data (size): "));
+//    appDataLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+//    appDataLbl->hide();
+
+//    saveAppDataBtn = new QPushButton(tr("setAppData()"), this);
+//    saveAppDataBtn->hide();
+
+//    appDataLayout->addWidget(appDataLbl, 4, 0);
+//    appDataLayout->addWidget(saveAppDataBtn, 4, 1);
+
 
 
 
@@ -610,13 +662,14 @@ MainWindow::MainWindow(QWidget *parent)
 
     // CICBRICK TYPE UNDEFINED
     rootCicTypeUndefinedLayout = new QGridLayout;
-    rootCicTypeUndefinedGBox = new QGroupBox("CICBricks Interpretation of rootCIC Type Undefined");
+    rootCicTypeUndefinedGBox = new QGroupBox("CICBricks Interpretation: No CIP loaded yet");
     rootCicTypeUndefinedGBox->setLayout(rootCicTypeUndefinedLayout);
+    rootCicTypeUndefinedGBox->show();
 
     for(int i=0; i<256; i++) {
         rootCicTypeUndefinedLayout->addWidget(brickElements.at(i), qFloor(i/3), i%3);
+        rootCicTypeUndefinedLayout->itemAt(i)->widget()->hide();
     }
-    rootCicTypeUndefinedGBox->hide();
 
     ciDataToStringLbl = new QLabel();
     ciDataToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
@@ -703,6 +756,18 @@ MainWindow::MainWindow(QWidget *parent)
     appDataLayout->addWidget(appDataSizeToNumLbl, 2, 7);
 
 
+    // APP DATA TYPE UNDEFINED
+    appDataTypeUndefinedLayout = new QGridLayout;
+    appDataTypeUndefinedGBox = new QGroupBox("Application Data Interpretation: No CIP loaded yet");
+    appDataTypeUndefinedGBox->setLayout(appDataTypeUndefinedLayout);
+    appDataTypeUndefinedGBox->show();
+
+    for(int i=0; i<256; i++) {
+        appDataTypeUndefinedLayout->addWidget(appDataElements.at(i), qFloor(i/3), i%3);
+        appDataTypeUndefinedLayout->itemAt(i)->widget()->hide();
+    }
+
+
     // APP DATA TYPE TEXT
     appDataTypeTextLayout = new QGridLayout;
     appDataTypeTextGBox = new QGroupBox("Application Data Interpretation of appData Type Text");
@@ -714,15 +779,7 @@ MainWindow::MainWindow(QWidget *parent)
     appDataTypeTextLayout->addWidget(appDataTypeTextTxtEdt, 0, 0);
 
 
-    // APP DATA TYPE UNDEFINED
-    appDataTypeUndefinedLayout = new QGridLayout;
-    appDataTypeUndefinedGBox = new QGroupBox("Application Data Interpretation of appData Type Undefined");
-    appDataTypeUndefinedGBox->setLayout(appDataTypeUndefinedLayout);
-
-//    for(int i=0; i<256; i++) {
-//        rootCicTypeUndefinedLayout->addWidget(brickElements.at(i), qFloor(i/3), i%3);
-//    }
-    appDataTypeUndefinedGBox->hide();
+    // APP DATA TYPE TEXT
 
     appDataToStringLbl = new QLabel();
     appDataToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
@@ -812,6 +869,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(saveHeaderTypeFromNumberBtn, &QAbstractButton::clicked, this, &MainWindow::setHeaderTypeFromNumber);
     connect(saveHeaderTypeFromEnumBtn, &QAbstractButton::clicked, this, &MainWindow::setHeaderTypeFromEnum);
 
+    connect(saveHeaderSizeFromNumberBtn, &QAbstractButton::clicked, this, &MainWindow::setHeaderSizeFromNumber);
+
 
     connect(saveheaderDataError0Btn, &QAbstractButton::clicked, this, &MainWindow::setHeaderDataError0);
     connect(saveheaderDataErrorCategoryFromEnumBtn, &QAbstractButton::clicked, this, &MainWindow::setHeaderDataErrorCategory);
@@ -839,6 +898,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(saveAppDataTypeFromEnumBtn, &QAbstractButton::clicked, this, &MainWindow::setAppDataTypeFromEnum);
 
     connect(saveAppDataSizeFromNumberBtn, &QAbstractButton::clicked, this, &MainWindow::setAppDataSizeFromNumber);
+
+    connect(saveAppDataBtn, &QAbstractButton::clicked, this, &MainWindow::setAppData);
 
 }
 
@@ -1453,7 +1514,7 @@ int MainWindow::getIndexForHeaderTypeCmbBx() {
 
     switch (currentCIP->getHeaderType()) {
 
-    case CIP::HeaderTypeOk:
+    case CIP::HeaderTypeRZV:
         return 0;
 
     case CIP::HeaderTypeError:
@@ -1519,7 +1580,30 @@ void MainWindow::setHeaderTypeFromEnum() {
 void MainWindow::refreshHeaderSizeDisplay() {
     qDebug() << "refreshHeaderSizeDisplay()";
 
+    headerSizeSpBox->setValue(currentCIP->getHeaderSize());
     headerSizeToNumLbl->setText(QString("%1").arg(currentCIP->getHeaderSize()));
+}
+
+
+void MainWindow::setHeaderSizeFromNumber() {
+    qDebug() << "setHeaderSizeFromNumber()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    headerOldSize = currentCIP->getHeaderSize();
+    currentCIP->setHeaderSize(headerSizeSpBox->value());
+
+    refreshHeaderSizeDisplay();
+    refreshHeaderDataDisplay();
+
+    currentCIP->pack();
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderSizeFromNumber() to %1\n%2")
+                               .arg(headerSizeSpBox->value())
+                               .arg(currentCIP->bytesToString()));
+
 }
 
 
@@ -1531,7 +1615,7 @@ void MainWindow::refreshHeaderDataDisplay() {
 
     switch (currentCIP->getHeaderType()) {
     case 0:
-        setDataTypeToOk();
+        setDataTypeToRZV();
         return;
     case 1:
         setDataTypeToError();
@@ -1555,9 +1639,9 @@ void MainWindow::setHeaderData() {
 
     QString inString;
 
-    if(headerDataTypeOkGBox->isVisible()) {
+    if(headerDataTypeRZVGBox->isVisible()) {
 
-        inString = headerDataTypeOkTxtEdt->toPlainText();
+        inString = headerDataTypeRZVTxtEdt->toPlainText();
     }
 
     if(headerDataTypeUndefinedGBox->isVisible()) {
@@ -1579,7 +1663,7 @@ void MainWindow::setHeaderData() {
 void MainWindow::clearDataTypes() {
     qDebug() << "MainWindow::clearDataTypes()";
 
-    headerDataTypeOkGBox->hide();
+    headerDataTypeRZVGBox->hide();
     headerDataTypeErrorGBox->hide();
     headerDataTypeUndefinedGBox->hide();
 
@@ -1587,8 +1671,8 @@ void MainWindow::clearDataTypes() {
     saveHeaderDataBtn->hide();
 }
 
-void MainWindow::setDataTypeToOk() {
-    qDebug() << "MainWindow::setDataTypeToOk()";
+void MainWindow::setDataTypeToRZV() {
+    qDebug() << "MainWindow::setDataTypeToRZV()";
 
     if(currentCIP == NULL) {
         qDebug() << "currentCIP == NULL -> return";
@@ -1597,8 +1681,8 @@ void MainWindow::setDataTypeToOk() {
 
     clearDataTypes();
 
-    headerDataTypeOkTxtEdt->setText(currentCIP->interpreteHeaderData());
-    headerDataTypeOkGBox->show();
+    headerDataTypeRZVTxtEdt->setText(currentCIP->interpreteHeaderData());
+    headerDataTypeRZVGBox->show();
 
     headerDataLbl->show();
     saveHeaderDataBtn->show();
@@ -1727,7 +1811,7 @@ void MainWindow::setDataTypeToUndefined() {
 
     clearDataTypes();
 
-    headerDataTypeUndefinedTxtEdt->setText(currentCIP->interpreteHeaderData());
+//    headerDataTypeUndefinedTxtEdt->setText(currentCIP->interpreteHeaderData());
     headerDataTypeUndefinedGBox->show();
 
     headerDataLbl->show();
@@ -2172,7 +2256,7 @@ void MainWindow::setAppDataTypeFromNumber() {
 
     currentCIP->setAppDataType(appDataTypeSpBox->value());
     refreshAppDataTypeDisplay();
-//    refreshAppDataDataDisplay();
+    refreshAppDataDisplay();
 
     currentCIP->pack();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setAppDataTypeFromNumber() to %1\n%2")
@@ -2191,7 +2275,7 @@ void MainWindow::setAppDataTypeFromEnum() {
 
     currentCIP->setAppDataType(appDataTypeCmbBx->currentData().toInt());
     refreshAppDataTypeDisplay();
-//    refreshAppDataDataDisplay();
+    refreshAppDataDisplay();
 
     currentCIP->pack();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setAppDataTypeFromEnum() to %1\n%2")
@@ -2215,9 +2299,11 @@ void MainWindow::setAppDataSizeFromNumber() {
         return;
     }
 
+    appDataOldSize = currentCIP->getAppDataSize();
+
     currentCIP->setAppDataSize(appDataSizeSpBox->value());
     refreshAppDataSizeDisplay();
-//    refreshAppDataDataDisplay();
+    refreshAppDataDisplay();
 
     currentCIP->pack();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setAppDataSizeFromNumber() to %1\n%2")
@@ -2233,12 +2319,11 @@ void MainWindow::clearAppDataTypes() {
 
     appDataTypeTextGBox->hide();
 
-//    for(int i=0; i<256; i++) {
-//        qDebug() << "MainWindow::clearRootCicTypes()" << brickElements.at(i)->index;
-//        if(rootCicTypeUndefinedLayout->itemAt(i) != NULL) {
-//            rootCicTypeUndefinedLayout->itemAt(i)->widget()->hide();
-//        }
-//    }
+    for(int i=0; i<256; i++) {
+        if(appDataTypeUndefinedLayout->itemAt(i) != NULL) {
+            appDataTypeUndefinedLayout->itemAt(i)->widget()->hide();
+        }
+    }
     appDataTypeUndefinedGBox->hide();
 
     appDataToStringLbl->clear();
@@ -2278,20 +2363,20 @@ void MainWindow::setAppDataTypeToUndefined() {
 
     clearAppDataTypes();
 
-//    for(int i=0; i<currentCIP->getCiSize(); i++) {
+    for(int i=0; i<currentCIP->getAppDataSize(); i++) {
 
-//        if(i<ciOldSize) {
+        if(i<appDataOldSize) {
 
-//            brickElements.at(i)->update(currentCIP->getCICBricks().at(i).getContent(), currentCIP->getCICBricks().at(i).getMask(), i);
-//        }
-//        else {
-//            brickElements.at(i)->update(0, 0, i);
-//        }
+            appDataElements.at(i)->update(currentCIP->getAppData().at(i), i);
+        }
+        else {
+            appDataElements.at(i)->update(0, i);
+        }
 
-//        if(rootCicTypeUndefinedLayout->itemAt(i) != NULL) {
-//            rootCicTypeUndefinedLayout->itemAt(i)->widget()->show();
-//        }
-//    }
+        if(appDataTypeUndefinedLayout->itemAt(i) != NULL) {
+            appDataTypeUndefinedLayout->itemAt(i)->widget()->show();
+        }
+    }
 
     appDataTypeUndefinedGBox->show();
 
@@ -2317,5 +2402,61 @@ void MainWindow::refreshAppDataDisplay() {
         return;
     }
 }
+
+
+void MainWindow::setAppData() {
+    qDebug() << "MainWindow::setAppData()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    if(appDataTypeTextGBox->isVisible()) {
+
+        QString inString;
+
+        inString = appDataTypeTextTxtEdt->toPlainText();
+
+        for(int i=0; i<inString.length(); i++) {
+            currentCIP->setAppData(inString.toLatin1().at(i), i);
+        }
+
+        currentCIP->setAppDataSize((quint8) inString.length());
+
+        currentCIP->pack();
+        rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setAppData() to \"%1\"\n%2")
+                                   .arg(inString)
+                                   .arg(currentCIP->bytesToString()));
+        refreshAppDataSizeDisplay();
+        refreshAppDataDisplay();
+
+        return;
+    }
+
+    if(appDataTypeUndefinedGBox->isVisible()) {
+
+        appDataOldSize = currentCIP->getAppDataSize();
+
+        for(int i=0; i<currentCIP->getAppDataSize(); i++) {
+
+            if(appDataTypeUndefinedLayout->itemAt(i) != NULL) {
+                ((Data*) appDataTypeUndefinedLayout->itemAt(i)->widget())->update();
+
+                currentCIP->setCICBrickContent(appDataElements.at(i)->data, i);
+            }
+        }
+
+        currentCIP->pack();
+        rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setAppData()\n%2")
+                                   .arg(currentCIP->bytesToString()));
+        refreshAppDataSizeDisplay();
+        refreshAppDataDisplay();
+
+        return;
+    }
+
+}
+
 
 

@@ -101,7 +101,7 @@ public:
     enum Ports { TCP=22365, UDP=22366 };
 
     // DYNAMIC HEADER ENUMS
-    enum HeaderType { HeaderTypeOk=0, HeaderTypeError=1, HeaderTypeUndefined };
+    enum HeaderType { HeaderTypeRZV=0, HeaderTypeError=1, HeaderTypeUndefined };
     enum ErrorCategory { ErrorCategoryNone=0, CipFormatError=1 };
     enum ErrorPriority { ErrorPriorityNone=0, ErrorPriorityDebug=1, ErrorPriorityInfo=2, ErrorPriorityNotice=3, ErrorPriorityCritical=4, ErrorPriorityAlert=5, ErrorPriorityEmergency=6 };
     enum CipFormatErrorEnum { CipFormatErrorNone=0, CipFormatErrorOutOfRange=1, CipFormatErrorInconsistent=2, CipFormatErrorWrongProtocol=3 };

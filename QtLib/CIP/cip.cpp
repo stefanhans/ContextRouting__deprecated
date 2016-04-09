@@ -10,21 +10,21 @@ void CIP::initialize() {
         setChannel(ChannelSimpleMatching);
         setRequest(RequestHeartbeat);
         setIpPort(UDP);
-        setHeaderType(HeaderTypeOk);
+        setHeaderType(HeaderTypeRZV);
         break;
 
     case Offer:
         setChannel(ChannelSimpleMatching);
         setRequest(RequestOffer);
         setIpPort(TCP);
-        setHeaderType(HeaderTypeOk);
+        setHeaderType(HeaderTypeRZV);
         break;
 
     case Request:
         setChannel(ChannelSimpleMatching);
         setRequest(RequestRequest);
         setIpPort(UDP);
-        setHeaderType(HeaderTypeOk);
+        setHeaderType(HeaderTypeRZV);
         break;
 
     case TcpReply:
@@ -54,7 +54,7 @@ void CIP::initialize() {
 
     switch(headerType) {
 
-    case HeaderTypeOk:
+    case HeaderTypeRZV:
 
         setHeaderSize(testMessage.size());
 
@@ -602,7 +602,7 @@ void CIP::setHeaderType(const quint8 &value)
 QString CIP::headerTypeToString(quint8 byte) const {
 
     switch (byte) {
-    case HeaderTypeOk:
+    case HeaderTypeRZV:
         return "HeaderType::HeaderTypeOk";
     case HeaderTypeError:
         return "HeaderType::HeaderTypeError";
@@ -616,7 +616,7 @@ QString CIP::headerTypeToString(quint8 byte) const {
 QString CIP::headerTypeToString() const {
 
     switch (getHeaderType()) {
-    case HeaderTypeOk:
+    case HeaderTypeRZV:
         return "HeaderType::HeaderTypeOk";
     case HeaderTypeError:
         return "HeaderType::HeaderTypeError";

@@ -22,6 +22,50 @@
 
 #include <QtMath>
 
+
+
+class Data : public QWidget {
+
+public:
+    quint8 data, index;
+    QBoxLayout *vLayout;
+    QLabel *dataLbl;
+    QSpinBox *dataSpBx;
+
+    Data(quint8 c, quint8 ind) {
+
+        data = c;
+        index = ind;
+
+        vLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+        dataLbl = new QLabel(QString("[%1] Data: %2").arg(index).arg(data));
+        dataLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+        dataSpBx = new QSpinBox();
+        dataSpBx->setFixedSize(60, 30);
+        dataSpBx->setRange(0, 255);
+        dataSpBx->setValue(data);
+
+        vLayout->addWidget(dataLbl);
+        vLayout->addWidget(dataSpBx);
+
+        setLayout(vLayout);
+    }
+
+    void update(quint8 c, quint8 ind) {
+
+        data = c;
+        index = ind;
+
+        dataLbl->setText(QString("[%1] Data: %2").arg(index).arg(data));
+        dataSpBx->setValue(data);
+    }
+
+    void update() {
+        data = dataSpBx->value();
+    }
+
+};
+
 class CiBrick : public QWidget {
 
 public:
@@ -90,7 +134,10 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    QVector<CiBrick*> brickElements;
+
+    QVector<Data*> headerDataElements;
+    QVector<CiBrick*> brickElements;    
+    QVector<Data*> appDataElements;
 
 public slots:
 
@@ -128,10 +175,14 @@ public slots:
     // HEADER TIME SLOTS
     void setCurrentTime();
 
-    // HEADER DATA SLOTS    
+    // HEADER TYPE SLOTS
     void setHeaderTypeFromNumber();
     void setHeaderTypeFromEnum();
 
+    // HEADER SIZE SLOTS
+    void setHeaderSizeFromNumber();
+
+    // HEADER DATA SLOTS
     void setHeaderData();
 
     void setHeaderDataError0();
@@ -150,7 +201,7 @@ public slots:
     // CI SIZE SLOTS
     void setCiSizeFromNumber();
 
-    // CI SIZE SLOTS
+    // CI BRICKS SLOTS
     void setCiBricks();
 
 
@@ -160,6 +211,9 @@ public slots:
 
     // APPDATA SIZE SLOTS
     void setAppDataSizeFromNumber();
+
+    // APPDATA SLOTS
+    void setAppData();
 
 
 
@@ -316,8 +370,11 @@ private:
 
     // HEADER SIZE
     QLabel *headerSizeLbl;
-    QLabel *headerSizeCommentLbl;
+    QSpinBox *headerSizeSpBox;
+    QPushButton *saveHeaderSizeFromNumberBtn;
     QLabel *headerSizeToNumLbl;
+
+    quint8 headerOldSize;
 
     void refreshHeaderSizeDisplay();
 
@@ -327,9 +384,9 @@ private:
     QPushButton *saveHeaderDataBtn;
 
     // HEADER DATA TYPE OK
-    QGroupBox *headerDataTypeOkGBox;
-    QGridLayout *headerDataTypeOkLayout;
-    QTextEdit *headerDataTypeOkTxtEdt;
+    QGroupBox *headerDataTypeRZVGBox;
+    QGridLayout *headerDataTypeRZVLayout;
+    QTextEdit *headerDataTypeRZVTxtEdt;
 
     // HEADER DATA TYPE ERROR
     QGroupBox *headerDataTypeErrorGBox;
@@ -382,7 +439,7 @@ private:
     QLabel *headerDataToStringLbl;
 
     void clearDataTypes();
-    void setDataTypeToOk();
+    void setDataTypeToRZV();
     void setDataTypeToError();
     void setDataTypeToUndefined();
 
@@ -411,7 +468,6 @@ private:
     QLabel *ciSizeLbl;
     QSpinBox *ciSizeSpBox;
     QPushButton *saveCiSizeFromNumberBtn;
-    QLabel *ciSizeCommentLbl;
     QLabel *ciSizeToNumLbl;
 
     quint8 ciOldSize;
