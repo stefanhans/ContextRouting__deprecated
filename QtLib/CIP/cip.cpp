@@ -74,6 +74,17 @@ void CIP::initialize() {
         setHeaderData(testVector);
         break;
 
+    case HeaderTypeRZV:
+
+        setHeaderSize(testMessage.size());
+
+        for (int i=0; i<testMessage.size();i++) {
+            testVector.append(testMessage.at(i).toLatin1());
+        }
+        setHeaderData(testVector);
+
+        break;
+
     default:
         qDebug() << "Error: Initialize with undefined headerType " << headerType;
         break;
