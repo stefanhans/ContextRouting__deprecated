@@ -383,10 +383,9 @@ private:
     QLabel *headerDataLbl;
     QPushButton *saveHeaderDataBtn;
 
-    // HEADER DATA TYPE OK
+    // HEADER DATA TYPE RZV
     QGroupBox *headerDataTypeRZVGBox;
     QGridLayout *headerDataTypeRZVLayout;
-    QTextEdit *headerDataTypeRZVTxtEdt;
 
     // HEADER DATA TYPE ERROR
     QGroupBox *headerDataTypeErrorGBox;
@@ -434,7 +433,6 @@ private:
     // HEADER DATA TYPE UNDEFINED
     QGroupBox *headerDataTypeUndefinedGBox;
     QGridLayout *headerDataTypeUndefinedLayout;
-    QTextEdit *headerDataTypeUndefinedTxtEdt;
 
     QLabel *headerDataToStringLbl;
 

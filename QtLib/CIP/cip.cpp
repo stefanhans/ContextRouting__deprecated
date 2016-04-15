@@ -74,7 +74,7 @@ void CIP::initialize() {
         setHeaderData(testVector);
         break;
 
-    case HeaderTypeRZV:
+    case HeaderTypeUndefined:
 
         setHeaderSize(testMessage.size());
 
@@ -628,7 +628,7 @@ QString CIP::headerTypeToString() const {
 
     switch (getHeaderType()) {
     case HeaderTypeRZV:
-        return "HeaderType::HeaderTypeOk";
+        return "HeaderType::HeaderTypeRZV";
     case HeaderTypeError:
         return "HeaderType::HeaderTypeError";
     case HeaderTypeUndefined:
@@ -700,7 +700,18 @@ QString CIP::interpreteHeaderData(QByteArray *bytes, quint8 size, quint8 type, q
 
     QString out;
 
-    // HeaderTypeOk: default interpretation as characters (end of function)
+
+
+    if(headerType==HeaderTypeRZV) {
+
+        for ( int i=0; i<size; i++) {
+            out += QString("%1\n").arg(bytes->at(i));
+        }
+
+        qDebug() << out;
+        return out;
+
+    }
 
     switch (channel) {
     case 1:
@@ -724,9 +735,17 @@ QString CIP::interpreteHeaderData(QByteArray *bytes, quint8 size, quint8 type, q
 
 QString CIP::interpreteHeaderData() const {
 
-    QString category, priority, error;
+    QString category, priority, error, out;
 
-    // HeaderTypeOk: default interpretation as characters
+    if(headerType==HeaderTypeRZV) {
+
+        for ( int i=0; i<headerSize; i++) {
+            out += QString("%1\n").arg(headerData.at(i));
+        }
+
+        qDebug() << out;
+        return out;
+    }
 
     if(headerType==HeaderTypeError) {
 

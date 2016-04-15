@@ -388,15 +388,17 @@ MainWindow::MainWindow(QWidget *parent)
 
     // HEADER DATA
 
-    // HEADER DATA TYPE OK
+    // HEADER DATA TYPE RZV
     headerDataTypeRZVLayout = new QGridLayout;
-    headerDataTypeRZVGBox = new QGroupBox("Header Data Interpretation of HeaderTypeRZV");
+    headerDataTypeRZVGBox = new QGroupBox("Header Data Interpretation: No CIP loaded yet");
     headerDataTypeRZVGBox->setLayout(headerDataTypeRZVLayout);
-    headerDataTypeRZVTxtEdt = new QTextEdit(headerDataTypeRZVGBox);
-    headerDataTypeRZVTxtEdt->setReadOnly(false);
     headerDataTypeRZVGBox->hide();
 
-    headerDataTypeRZVLayout->addWidget(headerDataTypeRZVTxtEdt, 0, 0);
+    for(int i=0; i<256; i++) {
+        headerDataTypeRZVLayout->addWidget(headerDataElements.at(i), qFloor(i/3), i%3);
+        headerDataTypeRZVLayout->itemAt(i)->widget()->hide();
+    }
+
 
     // HEADER DATA TYPE ERROR
     headerDataTypeErrorLayout = new QGridLayout;
@@ -522,11 +524,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     headerDataTypeUndefinedGBox->setLayout(headerDataTypeUndefinedLayout);
     headerDataTypeUndefinedGBox->show();
-
-    for(int i=0; i<256; i++) {
-        headerDataTypeUndefinedLayout->addWidget(headerDataElements.at(i), qFloor(i/3), i%3);
-        headerDataTypeUndefinedLayout->itemAt(i)->widget()->hide();
-    }
 
     setDataTypeToUndefined();
 
@@ -1612,10 +1609,12 @@ void MainWindow::setHeaderSizeFromNumber() {
 void MainWindow::refreshHeaderDataDisplay() {
     qDebug() << "MainWindow::refreshHeaderDataDisplay()";
 
-    headerDataToStringLbl->setText(QString("interpreteHeaderData():\n%1\n%2%3%4").arg(QString(38, '-')).arg('"').arg(currentCIP->interpreteHeaderData()).arg('"'));
+    headerDataToStringLbl->setText(QString("interpreteHeaderData():\n%1\n%2").arg(QString(38, '-')).arg(currentCIP->interpreteHeaderData()));
 
+    if(headerOldSize == 0) {
 
-
+        headerOldSize = currentCIP->getHeaderSize();
+    }
 
     switch (currentCIP->getHeaderType()) {
     case 0:
@@ -1645,7 +1644,25 @@ void MainWindow::setHeaderData() {
 
     if(headerDataTypeRZVGBox->isVisible()) {
 
-        inString = headerDataTypeRZVTxtEdt->toPlainText();
+
+        headerOldSize = currentCIP->getHeaderSize();
+
+        for(int i=0; i<currentCIP->getHeaderSize(); i++) {
+
+            if(headerDataTypeRZVLayout->itemAt(i) != NULL) {
+                ((Data*) headerDataTypeRZVLayout->itemAt(i)->widget())->update();
+
+                currentCIP->setHeaderData(((Data*) headerDataElements.at(i))->data, i);
+            }
+        }
+
+        refreshHeaderSizeDisplay();
+        refreshHeaderDataDisplay();
+
+        currentCIP->pack();
+        rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderData()\n%1")
+                                   .arg(currentCIP->bytesToString()));
+
         return;
     }
 
@@ -1702,9 +1719,25 @@ void MainWindow::setDataTypeToRZV() {
 
     clearDataTypes();
 
-    headerDataTypeUndefinedGBox->setTitle("Header Data Interpretation: HeaderTypeRZV");
+    for(int i=0; i<currentCIP->getHeaderSize(); i++) {
 
-    headerDataTypeRZVTxtEdt->setText(currentCIP->interpreteHeaderData());
+        qDebug() << "i: " << i;
+
+        if(i<headerOldSize) {
+
+            headerDataElements.at(i)->update(currentCIP->getHeaderData().at(i), i);
+        }
+        else {
+            headerDataElements.at(i)->update(0, i);
+        }
+
+        if(headerDataTypeRZVLayout->itemAt(i) != NULL) {
+            qDebug() << "i !=NULL: " << i;
+            headerDataTypeRZVLayout->itemAt(i)->widget()->show();
+        }
+    }
+
+    headerDataTypeRZVGBox->setTitle("Header Data Interpretation: HeaderTypeRZV");
     headerDataTypeRZVGBox->show();
 
     headerDataLbl->show();
@@ -1851,12 +1884,8 @@ void MainWindow::setDataTypeToUndefined() {
         }
     }
 
-
     headerDataTypeUndefinedGBox->setTitle("Header Data Interpretation: HeaderTypeUndefined");
     headerDataTypeUndefinedGBox->show();
-
-    headerDataLbl->show();
-    saveHeaderDataBtn->show();
 }
 
 
