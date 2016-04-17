@@ -377,6 +377,7 @@ private:
     quint8 headerOldSize;
 
     void refreshHeaderSizeDisplay();
+    void refreshHeaderSizeDisplay(quint8 size);
 
 
     // HEADER DATA
@@ -438,10 +439,12 @@ private:
 
     void clearDataTypes();
     void setDataTypeToRZV();
+    void setDataTypeToRZV(quint8 size, quint16 oldSize);
     void setDataTypeToError();
     void setDataTypeToUndefined();
 
     void refreshHeaderDataDisplay();
+    void refreshHeaderDataDisplay(quint8 size, quint16 oldSize=256);
 
 
     // CI

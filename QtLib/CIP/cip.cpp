@@ -614,7 +614,7 @@ QString CIP::headerTypeToString(quint8 byte) const {
 
     switch (byte) {
     case HeaderTypeRZV:
-        return "HeaderType::HeaderTypeOk";
+        return "HeaderType::HeaderTypeRZV";
     case HeaderTypeError:
         return "HeaderType::HeaderTypeError";
     case HeaderTypeUndefined:
@@ -705,7 +705,7 @@ QString CIP::interpreteHeaderData(QByteArray *bytes, quint8 size, quint8 type, q
     if(headerType==HeaderTypeRZV) {
 
         for ( int i=0; i<size; i++) {
-            out += QString("%1\n").arg(bytes->at(i));
+            out += QString("%1").arg(bytes->at(i));
         }
 
         qDebug() << out;
@@ -731,6 +731,28 @@ QString CIP::interpreteHeaderData(QByteArray *bytes, quint8 size, quint8 type, q
     default:
         return interpreteHeaderData(bytes, size);
     }
+}
+
+QString CIP::interpreteHeaderDataAsChars() const {
+
+    QString out;
+
+    for ( int i=0; i<headerSize; i++) {
+        out += QString("%1").arg(headerData.at(i));
+    }
+
+    return out;
+}
+
+QString CIP::interpreteHeaderDataAsChars(quint8 size) const {
+
+    QString out;
+
+    for ( int i=0; i<size; i++) {
+        out += QString("%1").arg(headerData.at(i));
+    }
+
+    return out;
 }
 
 QString CIP::interpreteHeaderData() const {
@@ -807,6 +829,82 @@ QString CIP::interpreteHeaderData() const {
         headDataArray.append(headerData.at(i));
     }
     return interpreteHeaderData(&headDataArray, headerData.size());
+}
+
+QString CIP::interpreteHeaderData(quint8 size) const {
+
+    QString category, priority, error, out;
+
+    if(headerType==HeaderTypeRZV) {
+
+        for ( int i=0; i<size; i++) {
+            out += QString("%1: %2\n").arg(i).arg(headerData.at(i));
+        }
+
+        qDebug() << out;
+        return out;
+    }
+
+    if(headerType==HeaderTypeError) {
+
+        switch (headerData.at(1)) {
+        case ErrorPriorityNone:
+            priority = "ErrorPriorityNone";
+            break;
+        case ErrorPriorityDebug:
+            priority = "ErrorPriorityDebug";
+            break;
+        case ErrorPriorityInfo:
+            priority = "ErrorPriorityInfo";
+            break;
+        case ErrorPriorityNotice:
+            priority = "ErrorPriorityNotice";
+            break;
+        case ErrorPriorityCritical:
+            priority = "ErrorPriorityCritical";
+            break;
+        case ErrorPriorityAlert:
+            priority = "ErrorPriorityAlert";
+            break;
+        case ErrorPriorityEmergency:
+            priority = "ErrorPriorityEmergency";
+            break;
+        default:
+            priority = "undefined";
+        }
+
+        switch (headerData.at(0)) {
+        case CipFormatError:
+
+            category = "CipFormatError";
+
+            switch (headerData.at(2)) {
+            case CipFormatErrorOutOfRange:
+                error = "CipFormatErrorOutOfRange";
+                break;
+            case CipFormatErrorInconsistent:
+                error = "CipFormatErrorInconsistent";
+                break;
+            case CipFormatErrorWrongProtocol:
+                error = "CipFormatErrorWrongProtocol";
+                break;
+            default:
+                error = "undefined";
+            }
+
+            break;
+        default:
+            category = "undefined";
+            error = "undefined";
+        }
+        return QString("%1 %2 %3").arg(category).arg(priority).arg(error);
+    }
+
+    QByteArray headDataArray;
+    for (int i = 0; i < headerData.size(); ++i) {
+        headDataArray.append(headerData.at(i));
+    }
+    return interpreteHeaderData(&headDataArray, size);
 }
 
 

@@ -528,7 +528,7 @@ MainWindow::MainWindow(QWidget *parent)
     setDataTypeToUndefined();
 
     headerDataToStringLbl = new QLabel();
-    headerDataToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    headerDataToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
     headerLayout->addWidget(headerDataTypeRZVGBox, 13, 0, 1, 7);
     headerLayout->addWidget(headerDataTypeErrorGBox, 13, 0, 1, 7);
@@ -971,7 +971,7 @@ void MainWindow::createCIP() {
 
     refreshHeaderTypeDisplay();
     refreshHeaderSizeDisplay();
-    refreshHeaderDataDisplay();
+    refreshHeaderDataDisplay(currentCIP->getHeaderSize());
 
     // CI DISPLAY
     refreshCiTypeDisplay();
@@ -1039,7 +1039,7 @@ void MainWindow::openCIP() {
     refreshTimeDisplay();
     refreshHeaderTypeDisplay();
     refreshHeaderSizeDisplay();
-    refreshHeaderDataDisplay();
+    refreshHeaderDataDisplay(currentCIP->getHeaderSize());
 
     // CI DISPLAY
     refreshCiTypeDisplay();
@@ -1549,7 +1549,7 @@ void MainWindow::setHeaderTypeFromNumber() {
     currentCIP->pack();
 
     refreshHeaderTypeDisplay();
-    refreshHeaderDataDisplay();
+    refreshHeaderDataDisplay(currentCIP->getHeaderSize());
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderTypeFromNumber() to %1\n%2")
                                .arg(headerTypeSpBox->value())
                                .arg(currentCIP->bytesToString()));
@@ -1568,7 +1568,7 @@ void MainWindow::setHeaderTypeFromEnum() {
     currentCIP->pack();
 
     refreshHeaderTypeDisplay();
-    refreshHeaderDataDisplay();
+    refreshHeaderDataDisplay(currentCIP->getHeaderSize());
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderTypeFromEnum() to %1\n%2")
                                .arg(headerTypeCmbBx->currentText())
                                .arg(currentCIP->bytesToString()));
@@ -1592,10 +1592,10 @@ void MainWindow::setHeaderSizeFromNumber() {
     }
 
     headerOldSize = currentCIP->getHeaderSize();
-    currentCIP->setHeaderSize(headerSizeSpBox->value());
+//    currentCIP->setHeaderSize(headerSizeSpBox->value());
 
-    refreshHeaderSizeDisplay();
-    refreshHeaderDataDisplay();
+    refreshHeaderSizeDisplay(headerSizeSpBox->value());
+    refreshHeaderDataDisplay(headerSizeSpBox->value(), headerOldSize);
 
     currentCIP->pack();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderSizeFromNumber() to %1\n%2")
@@ -1604,21 +1604,22 @@ void MainWindow::setHeaderSizeFromNumber() {
 
 }
 
+void MainWindow::refreshHeaderSizeDisplay(quint8 size) {
+    qDebug() << "MainWindow::refreshHeaderSizeDisplay(" << size << ")";
+
+    headerSizeSpBox->setValue(size);
+    headerSizeToNumLbl->setText(QString("%1").arg(currentCIP->getHeaderSize()));
+}
 
 // HEADER DATA FUNCTIONS
 void MainWindow::refreshHeaderDataDisplay() {
     qDebug() << "MainWindow::refreshHeaderDataDisplay()";
 
-    headerDataToStringLbl->setText(QString("interpreteHeaderData():\n%1\n%2").arg(QString(38, '-')).arg(currentCIP->interpreteHeaderData()));
-
-    if(headerOldSize == 0) {
-
-        headerOldSize = currentCIP->getHeaderSize();
-    }
+    headerDataToStringLbl->setText(QString("interpreteHeaderData():\n%1\n%2").arg(QString(38, '-')).arg(currentCIP->interpreteHeaderData(currentCIP->getHeaderSize())));
 
     switch (currentCIP->getHeaderType()) {
     case 0:
-        setDataTypeToRZV();
+        setDataTypeToRZV(currentCIP->getHeaderSize(), currentCIP->getHeaderSize());
         return;
     case 1:
         setDataTypeToError();
@@ -1627,6 +1628,24 @@ void MainWindow::refreshHeaderDataDisplay() {
         setDataTypeToUndefined();
     }
 }
+
+void MainWindow::refreshHeaderDataDisplay(quint8 size, quint16 oldSize) {
+    qDebug() << "MainWindow::refreshHeaderDataDisplay(" << size << ", " << oldSize << ")";
+
+    headerDataToStringLbl->setText(QString("interpreteHeaderData():\n%1\n%2").arg(QString(38, '-')).arg(currentCIP->interpreteHeaderData(currentCIP->getHeaderSize())));
+
+    switch (currentCIP->getHeaderType()) {
+    case 0:
+        setDataTypeToRZV(size, oldSize);
+        return;
+    case 1:
+        setDataTypeToError();
+        return;
+    default:
+        setDataTypeToUndefined();
+    }
+}
+
 
 void MainWindow::setHeaderData() {
     qDebug() << "MainWindow::setHeaderData()";
@@ -1640,24 +1659,24 @@ void MainWindow::setHeaderData() {
         return;
     }
 
-    QString inString;
-
     if(headerDataTypeRZVGBox->isVisible()) {
 
 
         headerOldSize = currentCIP->getHeaderSize();
+        currentCIP->setHeaderSize(headerSizeSpBox->value());
 
         for(int i=0; i<currentCIP->getHeaderSize(); i++) {
 
             if(headerDataTypeRZVLayout->itemAt(i) != NULL) {
                 ((Data*) headerDataTypeRZVLayout->itemAt(i)->widget())->update();
 
-                currentCIP->setHeaderData(((Data*) headerDataElements.at(i))->data, i);
+                currentCIP->setHeaderData(((Data*) headerDataElements[i])->data, i);
+                qDebug() << "((Data*) headerDataElements[i])->data: " << &((Data*) headerDataElements[i])->data;
             }
         }
 
         refreshHeaderSizeDisplay();
-        refreshHeaderDataDisplay();
+        refreshHeaderDataDisplay(currentCIP->getHeaderSize());
 
         currentCIP->pack();
         rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderData()\n%1")
@@ -1666,43 +1685,43 @@ void MainWindow::setHeaderData() {
         return;
     }
 
-    if(headerDataTypeUndefinedGBox->isVisible()) {
+//    if(headerDataTypeUndefinedGBox->isVisible()) {
 
 
-        headerOldSize = currentCIP->getHeaderSize();
+//        headerOldSize = currentCIP->getHeaderSize();
 
-        for(int i=0; i<currentCIP->getHeaderSize(); i++) {
+//        for(int i=0; i<currentCIP->getHeaderSize(); i++) {
 
-            if(headerDataTypeUndefinedLayout->itemAt(i) != NULL) {
-                ((Data*) headerDataTypeUndefinedLayout->itemAt(i)->widget())->update();
+//            if(headerDataTypeUndefinedLayout->itemAt(i) != NULL) {
+//                ((Data*) headerDataTypeUndefinedLayout->itemAt(i)->widget())->update();
 
-                currentCIP->setHeaderData(((Data*) headerDataElements.at(i))->data, i);
-            }
-        }
+//                currentCIP->setHeaderData(((Data*) headerDataElements.at(i))->data, i);
+//            }
+//        }
 
-        refreshHeaderSizeDisplay();
-        refreshHeaderDataDisplay();
+//        refreshHeaderSizeDisplay();
+//        refreshHeaderDataDisplay();
 
-        currentCIP->pack();
-        rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderData()\n%2")
-                                   .arg(currentCIP->bytesToString()));
+//        currentCIP->pack();
+//        rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderData()\n%2")
+//                                   .arg(currentCIP->bytesToString()));
 
-        return;
-    }
+//        return;
+//    }
 }
 
 void MainWindow::clearDataTypes() {
     qDebug() << "MainWindow::clearDataTypes()";
 
-    headerDataTypeRZVGBox->hide();
-    headerDataTypeErrorGBox->hide();
-
     for(int i=0; i<256; i++) {
 
-        if(headerDataTypeUndefinedLayout->itemAt(i) != NULL) {
-            headerDataTypeUndefinedLayout->itemAt(i)->widget()->hide();
+        if(headerDataTypeRZVLayout->itemAt(i) != NULL) {
+            headerDataTypeRZVLayout->itemAt(i)->widget()->hide();
         }
     }
+
+    headerDataTypeRZVGBox->hide();
+    headerDataTypeErrorGBox->hide();
     headerDataTypeUndefinedGBox->hide();
 
     headerDataLbl->hide();
@@ -1742,6 +1761,43 @@ void MainWindow::setDataTypeToRZV() {
 
     headerDataLbl->show();
     saveHeaderDataBtn->show();
+}
+
+
+void MainWindow::setDataTypeToRZV(quint8 size, quint16 oldSize) {
+    qDebug() << "MainWindow::setDataTypeToRZV(" << size << ", " << oldSize << ")";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    clearDataTypes();
+
+    for(int i=0; i<size; i++) {
+
+        qDebug() << "i: " << i;
+
+        if(i<oldSize) {
+
+            headerDataElements.at(i)->update(currentCIP->getHeaderData().at(i), i);
+        }
+        else {
+            headerDataElements.at(i)->update(0, i);
+        }
+
+        if(headerDataTypeRZVLayout->itemAt(i) != NULL) {
+            headerDataTypeRZVLayout->itemAt(i)->widget()->show();
+        }
+    }
+
+    headerDataTypeRZVGBox->setTitle("Header Data Interpretation: HeaderTypeRZV");
+    headerDataTypeRZVGBox->show();
+
+//    if(size>0) {
+        headerDataLbl->show();
+        saveHeaderDataBtn->show();
+//    }
 }
 
 int MainWindow::getIndexForHeaderDataErrorCategoryCmbBx() {
