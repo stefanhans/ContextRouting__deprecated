@@ -687,9 +687,13 @@ void CIP::setHeaderData(const QByteArray &value)
 }
 
 
-void CIP::setHeaderData(const quint8 &value, quint8 index)
-{
-    headerData.replace(index, value);
+void CIP::setHeaderData(const quint8 &value, quint8 index) {
+    if(index < headerData.length()) {
+        headerData.replace(index, value);
+    }
+    else {
+        headerData.append(value);
+    }
 }
 
 void CIP::truncateHeaderData(quint8 size) {

@@ -1667,12 +1667,7 @@ void MainWindow::setHeaderData() {
 
         for(int i=0; i<currentCIP->getHeaderSize(); i++) {
 
-            if(headerDataTypeRZVLayout->itemAt(i) != NULL) {
-                ((Data*) headerDataTypeRZVLayout->itemAt(i)->widget())->update();
-
-                currentCIP->setHeaderData(((Data*) headerDataElements[i])->data, i);
-                qDebug() << "((Data*) headerDataElements[i])->data: " << &((Data*) headerDataElements[i])->data;
-            }
+            currentCIP->setHeaderData(((Data*) headerDataElements.at(i))->update(), i);
         }
 
         refreshHeaderSizeDisplay();
@@ -1740,8 +1735,6 @@ void MainWindow::setDataTypeToRZV() {
 
     for(int i=0; i<currentCIP->getHeaderSize(); i++) {
 
-        qDebug() << "i: " << i;
-
         if(i<headerOldSize) {
 
             headerDataElements.at(i)->update(currentCIP->getHeaderData().at(i), i);
@@ -1776,9 +1769,9 @@ void MainWindow::setDataTypeToRZV(quint8 size, quint16 oldSize) {
 
     for(int i=0; i<size; i++) {
 
-        qDebug() << "i: " << i;
-
         if(i<oldSize) {
+
+            qDebug() << "currentCIP->getHeaderData().at(i): " << currentCIP->getHeaderData().at(i);
 
             headerDataElements.at(i)->update(currentCIP->getHeaderData().at(i), i);
         }
@@ -2563,14 +2556,14 @@ void MainWindow::setAppData() {
 
         appDataOldSize = currentCIP->getAppDataSize();
 
-        for(int i=0; i<currentCIP->getAppDataSize(); i++) {
+//        for(int i=0; i<currentCIP->getAppDataSize(); i++) {
 
-            if(appDataTypeUndefinedLayout->itemAt(i) != NULL) {
-                ((Data*) appDataTypeUndefinedLayout->itemAt(i)->widget())->update();
+//            if(appDataTypeUndefinedLayout->itemAt(i) != NULL) {
+//                ((Data*) appDataTypeUndefinedLayout->itemAt(i)->widget())->update();
 
-                currentCIP->setCICBrickContent(appDataElements.at(i)->data, i);
-            }
-        }
+//                currentCIP->setCICBrickContent(appDataElements.at(i)->data, i);
+//            }
+//        }
 
         currentCIP->pack();
         rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setAppData()\n%2")

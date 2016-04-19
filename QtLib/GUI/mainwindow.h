@@ -60,8 +60,10 @@ public:
         dataSpBx->setValue(data);
     }
 
-    void update() {
+    quint8 update() {
         data = dataSpBx->value();
+
+        return data;
     }
 
 };
