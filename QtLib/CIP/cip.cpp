@@ -737,28 +737,6 @@ QString CIP::interpreteHeaderData(QByteArray *bytes, quint8 size, quint8 type, q
     }
 }
 
-QString CIP::interpreteHeaderDataAsChars() const {
-
-    QString out;
-
-    for ( int i=0; i<headerSize; i++) {
-        out += QString("%1").arg(headerData.at(i));
-    }
-
-    return out;
-}
-
-QString CIP::interpreteHeaderDataAsChars(quint8 size) const {
-
-    QString out;
-
-    for ( int i=0; i<size; i++) {
-        out += QString("%1").arg(headerData.at(i));
-    }
-
-    return out;
-}
-
 QString CIP::interpreteHeaderData() const {
 
     QString category, priority, error, out;
@@ -1170,14 +1148,18 @@ void CIP::setAppData(const quint8 &value, quint8 index)
     appData.replace(index, value);
 }
 
-QString CIP::interpreteAppData(QByteArray *bytes) const {
+void CIP::truncateAppData(quint8 size) {
+    appData.resize(size);
+}
+
+QString CIP::interpreteAppData(QByteArray *bytes, quint8 size, quint8 type) const {
 
     QString out;
     out += '"';
 
-    switch (getAppDataType()) {
+    switch (type) {
     case AppDataTypeText:
-        for(int i=0; i<bytes->size();i++) {
+        for(int i=0; i<size;i++) {
             out += QChar(bytes->at(i)).toLatin1();
         }
         out += '"';
@@ -1201,6 +1183,30 @@ QString CIP::interpreteAppData() const {
         return "undefined";
     }
 }
+
+
+QString CIP::interpreteAppData(quint8 size) const {
+
+    QString out;
+
+    if(appDataType==AppDataTypeText) {
+
+        for ( int i=0; i<size; i++) {
+            out += QString("%1: %2\n").arg(i).arg(appData.at(i));
+        }
+
+        qDebug() << out;
+        return out;
+    }
+
+    QByteArray appDataArray;
+    for (int i = 0; i < appData.size(); ++i) {
+        appDataArray.append(appData.at(i));
+    }
+    return interpreteAppData(&appDataArray, size);
+}
+
+
 
 
 /*
@@ -2051,7 +2057,7 @@ QString CIP::bytesToString() {
             out +=  "\t";
             out +=  QString("Section: Application\tParameter: data[%1]").arg((size-1)).rightJustified(3);
             out +=  "\t";
-            out +=  QString("%1").arg(interpreteAppData(&appDataArray));
+            out +=  QString("%1").arg(interpreteAppData(&appDataArray, size));
             out +=  "\n";
         }
     }

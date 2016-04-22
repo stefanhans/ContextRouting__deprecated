@@ -295,7 +295,7 @@ public:
     void truncateHeaderData(quint8 size);
     QString interpreteHeaderData(QByteArray *bytes, quint8 size, quint8 type=1, quint8 channel=1) const;
     QString interpreteHeaderData() const;
-
+    QString interpreteHeaderData(quint8 size) const;
 
 
     /*
@@ -353,14 +353,16 @@ public:
 
 
     /*
-     * CIP XXX
+     * APP DATA
      */
     QVector<quint8> getAppData() const;
     void setAppData(const QVector<quint8> &value);
     void setAppData(const QByteArray &value);
     void setAppData(const quint8 &value, quint8 index);
-    QString interpreteAppData(QByteArray *bytes) const;
+    void truncateAppData(quint8 size);
+    QString interpreteAppData(QByteArray *bytes, quint8 size, quint8 type=1) const;
     QString interpreteAppData() const;
+    QString interpreteAppData(quint8 size) const;
 
 
     /*

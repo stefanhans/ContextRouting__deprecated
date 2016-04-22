@@ -1592,16 +1592,9 @@ void MainWindow::setHeaderSizeFromNumber() {
     }
 
     headerOldSize = currentCIP->getHeaderSize();
-//    currentCIP->setHeaderSize(headerSizeSpBox->value());
 
     refreshHeaderSizeDisplay(headerSizeSpBox->value());
     refreshHeaderDataDisplay(headerSizeSpBox->value(), headerOldSize);
-
-    currentCIP->pack();
-    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderSizeFromNumber() to %1\n%2")
-                               .arg(headerSizeSpBox->value())
-                               .arg(currentCIP->bytesToString()));
-
 }
 
 void MainWindow::refreshHeaderSizeDisplay(quint8 size) {
@@ -1679,30 +1672,6 @@ void MainWindow::setHeaderData() {
 
         return;
     }
-
-//    if(headerDataTypeUndefinedGBox->isVisible()) {
-
-
-//        headerOldSize = currentCIP->getHeaderSize();
-
-//        for(int i=0; i<currentCIP->getHeaderSize(); i++) {
-
-//            if(headerDataTypeUndefinedLayout->itemAt(i) != NULL) {
-//                ((Data*) headerDataTypeUndefinedLayout->itemAt(i)->widget())->update();
-
-//                currentCIP->setHeaderData(((Data*) headerDataElements.at(i))->data, i);
-//            }
-//        }
-
-//        refreshHeaderSizeDisplay();
-//        refreshHeaderDataDisplay();
-
-//        currentCIP->pack();
-//        rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderData()\n%2")
-//                                   .arg(currentCIP->bytesToString()));
-
-//        return;
-//    }
 }
 
 void MainWindow::clearDataTypes() {
