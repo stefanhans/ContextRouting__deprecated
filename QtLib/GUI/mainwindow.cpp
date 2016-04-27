@@ -591,6 +591,40 @@ MainWindow::MainWindow(QWidget *parent)
     ciLayout->addWidget(ciTypeToStringLbl, 1, 8);
 
 
+    // CI ROOT CIC
+    ciRootCicContentLbl = new QLabel(tr("RootCIC.Content (1): "));
+    ciRootCicContentLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+    ciRootCicContentSpBox = new QSpinBox(ciGBox);
+    ciRootCicContentSpBox->setFixedSize(180, 30);
+    ciRootCicContentSpBox->setRange(0, 255);
+
+    saveCiRootCicContentFromNumberBtn = new QPushButton(tr("setCiRootCicContentFromNumber()"), this);
+
+    ciRootCicContentCmbBx = new QComboBox(ciGBox);
+    ciRootCicContentCmbBx->setFixedSize(180*2, 30);
+    ciRootCicContentCmbBx->addItem("RootCIC_RZV (0)", 0);
+    ciRootCicContentCmbBx->addItem("RootCIC_LatinText (1)", 1);
+    ciRootCicContentCmbBx->addItem("undefined (2-255)", 2);
+
+    saveCiRootCicContentFromEnumBtn = new QPushButton(tr("setCiRootCicContentFromEnum()"), this);
+    saveCiRootCicContentFromEnumBtn->setFixedSize(180*2, 30);
+
+    ciRootCicToNumLbl = new QLabel();
+    ciRootCicToNumLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    ciRootCicToStringLbl = new QLabel();
+    ciRootCicToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+    ciLayout->addWidget(ciRootCicContentLbl, 2, 0);
+    ciLayout->addWidget(ciRootCicContentSpBox, 2, 1);
+    ciLayout->addWidget(saveCiRootCicContentFromNumberBtn, 2, 2);
+    ciLayout->addWidget(ciRootCicContentCmbBx, 2, 3, 1, 2);
+    ciLayout->addWidget(saveCiRootCicContentFromEnumBtn, 2, 5, 1, 2);
+    ciLayout->addWidget(ciRootCicToNumLbl, 2, 7);
+    ciLayout->addWidget(ciRootCicToStringLbl, 2, 8);
+
+
+
     // CI SIZE
     ciSizeLbl = new QLabel(tr("CiSize (1): "));
     ciSizeLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
@@ -604,10 +638,10 @@ MainWindow::MainWindow(QWidget *parent)
     ciSizeToNumLbl = new QLabel();
     ciSizeToNumLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
-    ciLayout->addWidget(ciSizeLbl, 2, 0);
-    ciLayout->addWidget(ciSizeSpBox, 2, 1);
-    ciLayout->addWidget(saveCiSizeFromNumberBtn, 2, 2);
-    ciLayout->addWidget(ciSizeToNumLbl, 2, 7);
+    ciLayout->addWidget(ciSizeLbl, 3, 0);
+    ciLayout->addWidget(ciSizeSpBox, 3, 1);
+    ciLayout->addWidget(saveCiSizeFromNumberBtn, 3, 2);
+    ciLayout->addWidget(ciSizeToNumLbl, 3, 7);
 
 
     // CICBRICK TYPE LATIN TEXT
@@ -636,10 +670,10 @@ MainWindow::MainWindow(QWidget *parent)
     ciDataToStringLbl = new QLabel();
     ciDataToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
-    ciLayout->addWidget(rootCicTypeLatinTextGBox, 3, 0, 1, 7);
-    ciLayout->addWidget(rootCicTypeUndefinedGBox, 3, 0, 1, 7);
+    ciLayout->addWidget(rootCicTypeLatinTextGBox, 4, 0, 1, 7);
+    ciLayout->addWidget(rootCicTypeUndefinedGBox, 4, 0, 1, 7);
 
-    ciLayout->addWidget(ciDataToStringLbl, 3, 8);
+    ciLayout->addWidget(ciDataToStringLbl, 4, 8);
 
     ciDataLbl = new QLabel(tr("CIC-Bricks (size): "));
     ciDataLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
@@ -648,8 +682,8 @@ MainWindow::MainWindow(QWidget *parent)
     saveCiBricksBtn = new QPushButton(tr("setCICBricks()"), this);
     saveCiBricksBtn->hide();
 
-    ciLayout->addWidget(ciDataLbl, 4, 0);
-    ciLayout->addWidget(saveCiBricksBtn, 4, 1);
+    ciLayout->addWidget(ciDataLbl, 5, 0);
+    ciLayout->addWidget(saveCiBricksBtn, 5, 1);
 
 
 
@@ -860,6 +894,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(saveCiTypeFromNumberBtn, &QAbstractButton::clicked, this, &MainWindow::setCiTypeFromNumber);
     connect(saveCiTypeFromEnumBtn, &QAbstractButton::clicked, this, &MainWindow::setCiTypeFromEnum);
 
+    connect(saveCiRootCicContentFromNumberBtn, &QAbstractButton::clicked, this, &MainWindow::setCiRootCicContentFromNumber);
+    connect(saveCiRootCicContentFromEnumBtn, &QAbstractButton::clicked, this, &MainWindow::setCiRootCicContentFromEnum);
+
     connect(saveCiSizeFromNumberBtn, &QAbstractButton::clicked, this, &MainWindow::setCiSizeFromNumber);
 
     connect(saveCiBricksBtn, &QAbstractButton::clicked, this, &MainWindow::setCiBricks);
@@ -950,6 +987,7 @@ void MainWindow::createCIP() {
     // CI DISPLAY
     refreshCiTypeDisplay();
     refreshCiSizeDisplay();
+    refreshCiRootCicDisplay();
     refreshCiDataDisplay();
 
     // APPDATE DISPLAY
@@ -1018,6 +1056,7 @@ void MainWindow::openCIP() {
     // CI DISPLAY
     refreshCiTypeDisplay();
     refreshCiSizeDisplay();
+    refreshCiRootCicDisplay();
     refreshCiDataDisplay();
 
     // APPDATE DISPLAY
@@ -2024,6 +2063,9 @@ int MainWindow::getIndexForCiTypeCmbBx() {
     case CIP::CiTypeSimpleMatch:
         return 1;
 
+    case CIP::CiTypeUndefined:
+        return 2;
+
     default:
         return 2;
     }
@@ -2076,6 +2118,73 @@ void MainWindow::setCiTypeFromEnum() {
                                .arg(ciTypeCmbBx->currentText())
                                .arg(currentCIP->bytesToString()));
 }
+
+
+
+int MainWindow::getIndexForCiRootCicCmbBx() {
+    qDebug() << "MainWindow::getIndexForCiRootCicCmbBx()";
+
+    switch (currentCIP->getRootCicContent()) {
+
+    case CIP::RootCIC_RZV:
+        return 0;
+
+    case CIP::RootCIC_LatinText:
+        return 1;
+
+    case CIP::RootCIC_Undefined:
+        return 2;
+
+    default:
+        return 2;
+    }
+}
+
+void MainWindow::refreshCiRootCicDisplay() {
+    qDebug() << "MainWindow::refreshCiRootCicDisplay()";
+
+    ciRootCicContentSpBox->setValue(currentCIP->getRootCicContent());
+    ciRootCicContentCmbBx->setCurrentIndex(getIndexForCiRootCicCmbBx());
+    ciRootCicToNumLbl->setText(QString("%1").arg(currentCIP->getRootCicContent()));
+    ciRootCicToStringLbl->setText(currentCIP->rootCicToString());
+}
+
+void MainWindow::setCiRootCicContentFromNumber() {
+    qDebug() << "MainWindow::setCiRootCicContentFromNumber()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    currentCIP->setRootCicContent(ciRootCicContentSpBox->value());
+    refreshCiRootCicDisplay();
+
+    currentCIP->pack();
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setCiRootCicContentFromNumber() to %1\n%2")
+                               .arg(ciRootCicContentSpBox->value())
+                               .arg(currentCIP->bytesToString()));
+
+}
+
+void MainWindow::setCiRootCicContentFromEnum() {
+    qDebug() << "MainWindow::setCiRootCicContentFromEnum()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+
+    currentCIP->setRootCicContent(ciRootCicContentCmbBx->currentData().toInt());
+    refreshCiRootCicDisplay();
+
+    currentCIP->pack();
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setCiRootCicContentFromEnum() to %1\n%2")
+                               .arg(ciRootCicContentCmbBx->currentText())
+                               .arg(currentCIP->bytesToString()));
+}
+
 
 // CI SIZE FUNCTIONS
 void MainWindow::refreshCiSizeDisplay() {

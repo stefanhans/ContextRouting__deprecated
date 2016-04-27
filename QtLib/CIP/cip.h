@@ -81,6 +81,8 @@ public:
     quint8 getMask() const;
     void setMask(const quint8 &value);
 
+    QString interprete() const;
+
 private:
 
     quint8 content;
@@ -107,8 +109,8 @@ public:
     enum CipFormatErrorEnum { CipFormatErrorNone=0, CipFormatErrorOutOfRange=1, CipFormatErrorInconsistent=2, CipFormatErrorWrongProtocol=3 };
 
     // CI ENUMS
-    enum CiType { CiTypeRZV=0, CiTypeSimpleMatch=1 };
-    enum RootCIC_SimpleMatch { RootCIC_RZV=0, RootCIC_LatinText=1 };
+    enum CiType { CiTypeRZV=0, CiTypeSimpleMatch=1, CiTypeUndefined };
+    enum RootCIC_SimpleMatch { RootCIC_RZV=0, RootCIC_LatinText=1, RootCIC_Undefined };
 
     // APP DATA ENUMS
     enum AppDataType { AppDataTypeRZV=0, AppDataTypeText=1, AppDataTypeUndefined };
@@ -308,31 +310,39 @@ public:
 
 
     /*
-     * CIP XXX
+     * CI ROOT CIC
      */
     CICBrick getRootCIC() const;
     void setRootCIC(const CICBrick &value);
+    void setRootCicContent(const quint8 &value);
+    void setRootCicMask(const quint8 &value);
+    quint8 getRootCicContent() const;
+    quint8 getRootCicMask() const;
     QString rootCicToString(quint8 byte) const;
+    QString rootCicToString() const;
 
 
     /*
-     * CIP XXX
+     * CI SIZE
      */
     quint8 getCiSize() const;
     void setCiSize(const quint8 &value);
 
 
     /*
-     * CIP XXX
+     * CI CIC BRICKS
      */
     QVector<CICBrick> getCICBricks() const;
+    CICBrick getCICBricks(quint8 index) const;
     void setCICBricks(const QVector<CICBrick> &value);
     void setCICBricks(const QByteArray &value);
     void setCICBrick(const CICBrick &value, quint8 index);
     void setCICBrickContent(const quint8 &value, quint8 index);
     void setCICBrickMask(const quint8 &value, quint8 index);
+    void truncateCICBricks(quint8 size);
     QString interpreteCICBricks(QByteArray *bytes) const;
     QString interpreteCICBricks() const;
+    QString interpreteCICBricks(quint8 size) const;
 
 
     /*
@@ -353,7 +363,7 @@ public:
 
 
     /*
-     * DYNAMIC APP DATA
+     * APP DATA DATA
      */
     QVector<quint8> getAppData() const;
     quint8 getAppData(quint8 index) const;

@@ -911,10 +911,10 @@ QString CIP::ciTypeToString(quint8 byte) const {
     switch (byte) {
     case CiTypeRZV:
         return "CiType::CiTypeRZV";
-        break;
     case CiTypeSimpleMatch:
         return "CiType::CiTypeSimpleMatch";
-        break;
+    case CiTypeUndefined:
+        return "CiType::CiTypeUndefined";
     default:
         return "undefined";
     }
@@ -925,10 +925,10 @@ QString CIP::ciTypeToString() const {
     switch (ciType) {
     case CiTypeRZV:
         return "CiType::CiTypeRZV";
-        break;
     case CiTypeSimpleMatch:
         return "CiType::CiTypeSimpleMatch";
-        break;
+    case CiTypeUndefined:
+        return "CiType::CiTypeUndefined";
     default:
         return "undefined";
     }
@@ -943,12 +943,30 @@ QString CIP::ciTypeToString() const {
 
 CICBrick CIP::getRootCIC() const
 {
+    qDebug() << &rootCIC;
     return rootCIC;
 }
 
 void CIP::setRootCIC(const CICBrick &value)
 {
     rootCIC = value;
+}
+
+
+void CIP::setRootCicContent(const quint8 &value) {
+    rootCIC.setContent(value);
+}
+
+void CIP::setRootCicMask(const quint8 &value) {
+    rootCIC.setMask(value);
+}
+
+
+quint8 CIP::getRootCicContent() const {
+    return rootCIC.getContent();
+}
+quint8 CIP::getRootCicMask() const {
+    return rootCIC.getMask();
 }
 
 QString CIP::rootCicToString(quint8 byte) const {
@@ -958,6 +976,23 @@ QString CIP::rootCicToString(quint8 byte) const {
         return "RootCIC_SimpleMatch::RootCIC_RZV";
     case RootCIC_LatinText:
         return "RootCIC_SimpleMatch::RootCIC_LatinText";
+    case RootCIC_Undefined:
+        return "RootCIC_SimpleMatch::RootCIC_Undefined";
+    default:
+        return "undefined";
+    }
+}
+
+
+QString CIP::rootCicToString() const {
+
+    switch (rootCIC.getContent()) {
+    case RootCIC_RZV:
+        return "RootCIC_SimpleMatch::RootCIC_RZV";
+    case RootCIC_LatinText:
+        return "RootCIC_SimpleMatch::RootCIC_LatinText";
+    case RootCIC_Undefined:
+        return "RootCIC_SimpleMatch::RootCIC_Undefined";
     default:
         return "undefined";
     }
@@ -992,6 +1027,11 @@ QVector<CICBrick> CIP::getCICBricks() const
     return CICBricks;
 }
 
+CICBrick CIP::getCICBricks(quint8 index) const
+{
+    return (CICBrick) CICBricks.at(index);
+}
+
 void CIP::setCICBricks(const QVector<CICBrick> &value)
 {
     CICBricks = value;
@@ -1024,6 +1064,10 @@ void CIP::setCICBrickMask(const quint8 &value, quint8 index)
     CICBricks[index].setMask(value);
 }
 
+void CIP::truncateCICBricks(quint8 size) {
+    CICBricks.resize(size);
+}
+
 QString CIP::interpreteCICBricks(QByteArray *bytes) const {
 
     QString out;
@@ -1049,6 +1093,21 @@ QString CIP::interpreteCICBricks() const {
     case RootCIC_LatinText:
         for(int i=0; i<getCiSize(); i++) {
             out += QChar(CICBricks.at(i).getContent()).toLatin1();
+        }
+        return out;
+    default:
+        return "undefined";
+    }
+}
+
+QString CIP::interpreteCICBricks(quint8 size) const {
+
+    QString out;
+
+    switch (getRootCIC().getContent()) {
+    case RootCIC_LatinText:
+        for(int i=0; i<size; i++) {
+            out += CICBricks.at(i).interprete();
         }
         return out;
     default:
@@ -2099,12 +2158,16 @@ QString CIP::bytesToString() {
 
 quint8 CICBrick::getContent() const
 {
-    return content;
+    qDebug() << "CICBrick::getContent(" << (quint8) content << ")";
+    return (quint8) content;
 }
 
 void CICBrick::setContent(const quint8 &value)
 {
-    content = value;
+    qDebug() << "CICBrick::setContent(" << (quint8) value << ")";
+    content = (quint8) value;
+    qDebug() << "CICBrick::setContentAfter(" << (quint8) content << ")";
+    qDebug() << "CICBrick::setContentAfter(" << content << ")";
 }
 
 quint8 CICBrick::getMask() const
@@ -2115,4 +2178,10 @@ quint8 CICBrick::getMask() const
 void CICBrick::setMask(const quint8 &value)
 {
     mask = value;
+}
+
+QString CICBrick::interprete() const
+{
+    QString out = QString("%1").arg(content);
+    return out;
 }

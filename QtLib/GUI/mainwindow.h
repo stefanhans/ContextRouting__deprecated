@@ -200,6 +200,10 @@ public slots:
     void setCiTypeFromNumber();
     void setCiTypeFromEnum();
 
+    // CI ROOT CIC SLOTS
+    void setCiRootCicContentFromNumber();
+    void setCiRootCicContentFromEnum();
+
     // CI SIZE SLOTS
     void setCiSizeFromNumber();
 
@@ -465,6 +469,19 @@ private:
 
     int getIndexForCiTypeCmbBx();
     void refreshCiTypeDisplay();
+
+
+    // CI ROOT CIC
+    QLabel *ciRootCicContentLbl;
+    QSpinBox *ciRootCicContentSpBox;
+    QPushButton *saveCiRootCicContentFromNumberBtn;
+    QComboBox *ciRootCicContentCmbBx;
+    QPushButton *saveCiRootCicContentFromEnumBtn;
+    QLabel *ciRootCicToNumLbl;
+    QLabel *ciRootCicToStringLbl;
+
+    int getIndexForCiRootCicCmbBx();
+    void refreshCiRootCicDisplay();
 
 
     // CI SIZE
