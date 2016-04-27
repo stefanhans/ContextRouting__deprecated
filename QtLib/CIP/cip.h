@@ -111,7 +111,7 @@ public:
     enum RootCIC_SimpleMatch { RootCIC_RZV=0, RootCIC_LatinText=1 };
 
     // APP DATA ENUMS
-    enum AppDataType { AppDataTypeRZV=0, AppDataTypeText=1, AppDataTypeUrl=2 };
+    enum AppDataType { AppDataTypeRZV=0, AppDataTypeText=1, AppDataTypeUndefined };
 
 
     /*
@@ -353,9 +353,10 @@ public:
 
 
     /*
-     * APP DATA
+     * DYNAMIC APP DATA
      */
     QVector<quint8> getAppData() const;
+    quint8 getAppData(quint8 index) const;
     void setAppData(const QVector<quint8> &value);
     void setAppData(const QByteArray &value);
     void setAppData(const quint8 &value, quint8 index);

@@ -439,11 +439,11 @@ private:
 
     QLabel *headerDataToStringLbl;
 
-    void clearDataTypes();
-    void setDataTypeToRZV();
-    void setDataTypeToRZV(quint8 size, quint16 oldSize);
-    void setDataTypeToError();
-    void setDataTypeToUndefined();
+    void clearHeaderDataTypes();
+    void setHeaderDataTypeToRZV();
+    void setHeaderDataTypeToRZV(quint8 size, quint16 oldSize);
+    void setHeaderDataTypeToError();
+    void setHeaderDataTypeToUndefined();
 
     void refreshHeaderDataDisplay();
     void refreshHeaderDataDisplay(quint8 size, quint16 oldSize=256);
@@ -532,11 +532,16 @@ private:
     quint8 appDataOldSize;
 
     void refreshAppDataSizeDisplay();
+    void refreshAppDataSizeDisplay(quint8 size, quint16 oldSize=256);
 
 
     // APP DATA
     QLabel *appDataLbl;
     QPushButton *saveAppDataBtn;
+
+    // APP DATA TYPE RZV
+    QGroupBox *appDataTypeRZVGBox;
+    QGridLayout *appDataTypeRZVLayout;
 
     // APP DATA TYPE TEXT
     QGroupBox *appDataTypeTextGBox;
@@ -550,10 +555,13 @@ private:
     QLabel *appDataToStringLbl;
 
     void clearAppDataTypes();
+    void setAppDataTypeToRZV();
+    void setAppDataTypeToRZV(quint8 size, quint16 oldSize);
     void setAppDataTypeToText();
     void setAppDataTypeToUndefined();
 
     void refreshAppDataDisplay();
+    void refreshAppDataDisplay(quint8 size, quint16 oldSize=256);
 
 
     // RAW CIP DATA

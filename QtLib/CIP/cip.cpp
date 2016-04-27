@@ -1080,8 +1080,8 @@ QString CIP::appDataTypeToString(quint8 byte) const {
         return "AppDataType::AppDataTypeRZV";
     case AppDataTypeText:
         return "AppDataType::AppDataTypeText";
-    case AppDataTypeUrl:
-        return "AppDataType::AppDataTypeUrl";
+    case AppDataTypeUndefined:
+        return "AppDataType::AppDataTypeUndefined";
     default:
         return "undefined";
     }
@@ -1094,8 +1094,8 @@ QString CIP::appDataTypeToString() const {
         return "AppDataType::AppDataTypeRZV";
     case AppDataTypeText:
         return "AppDataType::AppDataTypeText";
-    case AppDataTypeUrl:
-        return "AppDataType::AppDataTypeUrl";
+    case AppDataTypeUndefined:
+        return "AppDataType::AppDataTypeUndefined";
     default:
         return "undefined";
     }
@@ -1128,6 +1128,10 @@ void CIP::setAppDataSize(const quint8 &value)
 QVector<quint8> CIP::getAppData() const
 {
     return appData;
+}
+
+quint8 CIP::getAppData(quint8 index) const {
+    return (quint8) appData.at(index);
 }
 
 void CIP::setAppData(const QVector<quint8> &value)
@@ -1188,6 +1192,17 @@ QString CIP::interpreteAppData() const {
 QString CIP::interpreteAppData(quint8 size) const {
 
     QString out;
+
+
+    if(appDataType==AppDataTypeRZV) {
+
+        for ( int i=0; i<size; i++) {
+            out += QString("%1: %2\n").arg(i).arg(appData.at(i));
+        }
+
+        qDebug() << out;
+        return out;
+    }
 
     if(appDataType==AppDataTypeText) {
 
