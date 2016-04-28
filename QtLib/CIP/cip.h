@@ -81,7 +81,7 @@ public:
     quint8 getMask() const;
     void setMask(const quint8 &value);
 
-    QString interprete() const;
+    QString interprete(int index=-1) const;
 
 private:
 

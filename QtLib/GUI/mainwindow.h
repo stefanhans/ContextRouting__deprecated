@@ -493,11 +493,16 @@ private:
     quint8 ciOldSize;
 
     void refreshCiSizeDisplay();
+    void refreshCiSizeDisplay(quint8 size, quint16 oldSize=256);
 
 
     // CICBRICKS DATA
     QLabel *ciDataLbl;
     QPushButton *saveCiBricksBtn;
+
+    // HEADER DATA TYPE RZV
+    QGroupBox *ciDataTypeRZVGBox;
+    QGridLayout *ciDataTypeRZVLayout;
 
     // CICBRICK TYPE LATIN TEXT
     QGroupBox *rootCicTypeLatinTextGBox;
@@ -511,16 +516,13 @@ private:
     QLabel *ciDataToStringLbl;
 
     void clearRootCicTypes();
+    void setRootCicTypeToRZV();
+    void setRootCicTypeToRZV(quint8 size, quint16 oldSize);
     void setRootCicTypeToLatinText();
     void setRootCicTypeToUndefined();
 
-    void refreshCiDataDisplay();
-
-
-
-
-
-
+    void refreshCicBricksDisplay();
+    void refreshCicBricksDisplay(quint8 size, quint16 oldSize=256);
 
 
     // APP DATA

@@ -644,13 +644,25 @@ MainWindow::MainWindow(QWidget *parent)
     ciLayout->addWidget(ciSizeToNumLbl, 3, 7);
 
 
+
+
+    // CICBRICK TYPE RZV
+    ciDataTypeRZVLayout = new QGridLayout;
+    ciDataTypeRZVGBox = new QGroupBox("CICBricks Interpretation: No CIP loaded yet");
+    ciDataTypeRZVGBox->setLayout(ciDataTypeRZVLayout);
+
+    for(int i=0; i<256; i++) {
+        ciDataTypeRZVLayout->addWidget(brickElements.at(i), qFloor(i/3), i%3);
+        ciDataTypeRZVLayout->itemAt(i)->widget()->hide();
+    }
+
+
     // CICBRICK TYPE LATIN TEXT
     rootCicTypeLatinTextLayout = new QGridLayout;
-    rootCicTypeLatinTextGBox = new QGroupBox("CICBricks Interpretation of rootCIC Type LatinText");
+    rootCicTypeLatinTextGBox = new QGroupBox("CICBricks Interpretation: No CIP loaded yet");
     rootCicTypeLatinTextGBox->setLayout(rootCicTypeLatinTextLayout);
     rootCicTypeLatinTextTxtEdt = new QTextEdit(rootCicTypeLatinTextGBox);
     rootCicTypeLatinTextTxtEdt->setReadOnly(false);
-    rootCicTypeLatinTextGBox->hide();
 
     rootCicTypeLatinTextLayout->addWidget(rootCicTypeLatinTextTxtEdt, 0, 0);
 
@@ -660,16 +672,11 @@ MainWindow::MainWindow(QWidget *parent)
     rootCicTypeUndefinedLayout = new QGridLayout;
     rootCicTypeUndefinedGBox = new QGroupBox("CICBricks Interpretation: No CIP loaded yet");
     rootCicTypeUndefinedGBox->setLayout(rootCicTypeUndefinedLayout);
-    rootCicTypeUndefinedGBox->show();
-
-    for(int i=0; i<256; i++) {
-        rootCicTypeUndefinedLayout->addWidget(brickElements.at(i), qFloor(i/3), i%3);
-        rootCicTypeUndefinedLayout->itemAt(i)->widget()->hide();
-    }
 
     ciDataToStringLbl = new QLabel();
     ciDataToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
+    ciLayout->addWidget(ciDataTypeRZVGBox, 4, 0, 1, 7);
     ciLayout->addWidget(rootCicTypeLatinTextGBox, 4, 0, 1, 7);
     ciLayout->addWidget(rootCicTypeUndefinedGBox, 4, 0, 1, 7);
 
@@ -677,15 +684,14 @@ MainWindow::MainWindow(QWidget *parent)
 
     ciDataLbl = new QLabel(tr("CIC-Bricks (size): "));
     ciDataLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    ciDataLbl->hide();
 
     saveCiBricksBtn = new QPushButton(tr("setCICBricks()"), this);
-    saveCiBricksBtn->hide();
 
     ciLayout->addWidget(ciDataLbl, 5, 0);
     ciLayout->addWidget(saveCiBricksBtn, 5, 1);
 
 
+    setRootCicTypeToUndefined();
 
 
 
@@ -988,7 +994,7 @@ void MainWindow::createCIP() {
     refreshCiTypeDisplay();
     refreshCiSizeDisplay();
     refreshCiRootCicDisplay();
-    refreshCiDataDisplay();
+    refreshCicBricksDisplay();
 
     // APPDATE DISPLAY
     refreshAppDataTypeDisplay();
@@ -1057,7 +1063,7 @@ void MainWindow::openCIP() {
     refreshCiTypeDisplay();
     refreshCiSizeDisplay();
     refreshCiRootCicDisplay();
-    refreshCiDataDisplay();
+    refreshCicBricksDisplay();
 
     // APPDATE DISPLAY
     refreshAppDataTypeDisplay();
@@ -2072,7 +2078,7 @@ int MainWindow::getIndexForCiTypeCmbBx() {
 }
 
 void MainWindow::refreshCiTypeDisplay() {
-    qDebug() << "refreshCiTypeDisplay()";
+    qDebug() << "MainWindow::refreshCiTypeDisplay()";
 
     ciTypeSpBox->setValue(currentCIP->getCiType());
     ciTypeCmbBx->setCurrentIndex(getIndexForCiTypeCmbBx());
@@ -2091,10 +2097,11 @@ void MainWindow::setCiTypeFromNumber() {
     }
 
     currentCIP->setCiType(ciTypeSpBox->value());
-    refreshCiTypeDisplay();
-    refreshCiDataDisplay();
-
     currentCIP->pack();
+
+    refreshCiTypeDisplay();
+    refreshCicBricksDisplay(currentCIP->getCiSize());
+
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setCiTypeFromNumber() to %1\n%2")
                                .arg(ciTypeSpBox->value())
                                .arg(currentCIP->bytesToString()));
@@ -2102,7 +2109,7 @@ void MainWindow::setCiTypeFromNumber() {
 }
 
 void MainWindow::setCiTypeFromEnum() {
-    qDebug() << "setCiTypeFromEnum()";
+    qDebug() << "MainWindow::setCiTypeFromEnum()";
 
     if(currentCIP == NULL) {
         qDebug() << "currentCIP == NULL -> return";
@@ -2111,7 +2118,7 @@ void MainWindow::setCiTypeFromEnum() {
 
     currentCIP->setCiType(ciTypeCmbBx->currentData().toInt());
     refreshCiTypeDisplay();
-    refreshCiDataDisplay();
+    refreshCicBricksDisplay();
 
     currentCIP->pack();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setCiTypeFromEnum() to %1\n%2")
@@ -2159,6 +2166,7 @@ void MainWindow::setCiRootCicContentFromNumber() {
 
     currentCIP->setRootCicContent(ciRootCicContentSpBox->value());
     refreshCiRootCicDisplay();
+    refreshCicBricksDisplay();
 
     currentCIP->pack();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setCiRootCicContentFromNumber() to %1\n%2")
@@ -2178,6 +2186,7 @@ void MainWindow::setCiRootCicContentFromEnum() {
 
     currentCIP->setRootCicContent(ciRootCicContentCmbBx->currentData().toInt());
     refreshCiRootCicDisplay();
+    refreshCicBricksDisplay();
 
     currentCIP->pack();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setCiRootCicContentFromEnum() to %1\n%2")
@@ -2188,14 +2197,31 @@ void MainWindow::setCiRootCicContentFromEnum() {
 
 // CI SIZE FUNCTIONS
 void MainWindow::refreshCiSizeDisplay() {
-    qDebug() << "refreshCiSizeDisplay()";
+    qDebug() << "MainWindow::refreshCiSizeDisplay()";
 
     ciSizeSpBox->setValue(currentCIP->getCiSize());
     ciSizeToNumLbl->setText(QString("%1").arg(currentCIP->getCiSize()));
 }
 
+
+void MainWindow::refreshCiSizeDisplay(quint8 size, quint16 oldSize) {
+    qDebug() << "MainWindow::refreshCiSizeDisplay(" << size << ", " << oldSize << ")";
+
+    switch (currentCIP->getCiType()) {
+    case 0:
+        setRootCicTypeToRZV(size, oldSize);
+        return;
+    case 1:
+        setRootCicTypeToLatinText();
+        return;
+    default:
+        setRootCicTypeToUndefined();
+    }
+}
+
+
 void MainWindow::setCiSizeFromNumber() {
-    qDebug() << "setCiSizeFromNumber()";
+    qDebug() << "MainWindow::setCiSizeFromNumber()";
 
     if(currentCIP == NULL) {
         qDebug() << "currentCIP == NULL -> return";
@@ -2203,45 +2229,92 @@ void MainWindow::setCiSizeFromNumber() {
     }
 
     ciOldSize = currentCIP->getCiSize();
-    currentCIP->setCiSize(ciSizeSpBox->value());
 
-    refreshCiSizeDisplay();
-    refreshCiDataDisplay();
 
-    currentCIP->pack();
-    rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setCiSizeFromNumber() to %1\n%2")
-                               .arg(ciSizeSpBox->value())
-                               .arg(currentCIP->bytesToString()));
-
+//    refreshCiSizeDisplay(ciSizeSpBox->value());
+    refreshCicBricksDisplay(ciSizeSpBox->value());
+    refreshCicBricksDisplay(ciSizeSpBox->value(), ciOldSize);
 }
 
 
 
 
-
-
 // CI DATA FUNCTIONS
-void MainWindow::refreshCiDataDisplay() {
+void MainWindow::refreshCicBricksDisplay() {
     qDebug() << "MainWindow::refreshCiDataDisplay()";
 
+    // CiType
     switch (currentCIP->getCiType()) {
-    case 0:
+    case CIP::CiTypeRZV:
+        setRootCicTypeToRZV();
+        return;
+
+    case CIP::CiTypeSimpleMatch:
+        break; // continue evaluating RootCIC
+
+    case CIP::CiTypeUndefined:
         setRootCicTypeToUndefined();
         return;
-    case 1:
-        break;
+
     default:
         setRootCicTypeToUndefined();
         return;
     }
 
-    switch (currentCIP->getRootCIC().getContent()) {
-    case 0:
-        setRootCicTypeToUndefined();
+    // RootCIC
+    switch (currentCIP->getRootCicContent()) {
+    case CIP::RootCIC_RZV:
+        setRootCicTypeToRZV();
         return;
-    case 1:
+
+    case CIP::RootCIC_LatinText:
         setRootCicTypeToLatinText();
         return;
+
+    case CIP::RootCIC_Undefined:
+        setRootCicTypeToUndefined();
+        return;
+
+    default:
+        setRootCicTypeToUndefined();
+    }
+}
+
+void MainWindow::refreshCicBricksDisplay(quint8 size, quint16 oldSize) {
+    qDebug() << "MainWindow::refreshCiDataDisplay(" << size << ", " << oldSize << ")";
+
+    // CiType
+    switch (currentCIP->getCiType()) {
+    case CIP::CiTypeRZV:
+        setRootCicTypeToRZV(size, oldSize);
+        return;
+
+    case CIP::CiTypeSimpleMatch:
+        break; // continue evaluating RootCIC
+
+    case CIP::CiTypeUndefined:
+        setRootCicTypeToUndefined();
+        return;
+
+    default:
+        setRootCicTypeToUndefined();
+        return;
+    }
+
+    // RootCIC
+    switch (currentCIP->getRootCicContent()) {
+    case CIP::RootCIC_RZV:
+        setRootCicTypeToRZV(size, oldSize);
+        return;
+
+    case CIP::RootCIC_LatinText:
+        setRootCicTypeToLatinText();
+        return;
+
+    case CIP::RootCIC_Undefined:
+        setRootCicTypeToUndefined();
+        return;
+
     default:
         setRootCicTypeToUndefined();
     }
@@ -2256,6 +2329,39 @@ void MainWindow::setCiBricks() {
         qDebug() << "currentCIP == NULL -> return";
         return;
     }
+
+
+    if(rootCicTypeUndefinedGBox->isVisible()) {
+        return;
+    }
+
+
+    if(ciDataTypeRZVGBox->isVisible()) {
+
+        ciOldSize = currentCIP->getCiSize();
+        currentCIP->setCiSize(ciSizeSpBox->value());
+
+        for(int i=0; i<currentCIP->getCiSize(); i++) {
+
+            if(ciDataTypeRZVLayout->itemAt(i) != NULL) {
+                ((CiBrick*) ciDataTypeRZVLayout->itemAt(i)->widget())->update();
+
+                currentCIP->setCICBrickContent(brickElements.at(i)->content, i);
+                currentCIP->setCICBrickMask(brickElements.at(i)->mask, i);
+            }
+        }
+
+        refreshCiSizeDisplay();
+        refreshCicBricksDisplay(currentCIP->getCiSize());
+
+        currentCIP->pack();
+        rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setCiBricks()\n%1")
+                                   .arg(currentCIP->bytesToString()));
+
+
+        return;
+    }
+
 
     if(rootCicTypeLatinTextGBox->isVisible()) {
 
@@ -2273,35 +2379,12 @@ void MainWindow::setCiBricks() {
         rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setCiBricks() to \"%1\"\n%2")
                                    .arg(inString)
                                    .arg(currentCIP->bytesToString()));
+
         refreshCiSizeDisplay();
-        refreshCiDataDisplay();
+        refreshCicBricksDisplay();
 
         return;
     }
-
-    if(rootCicTypeUndefinedGBox->isVisible()) {
-
-        ciOldSize = currentCIP->getCiSize();
-
-        for(int i=0; i<currentCIP->getCiSize(); i++) {
-
-            if(rootCicTypeUndefinedLayout->itemAt(i) != NULL) {
-                ((CiBrick*) rootCicTypeUndefinedLayout->itemAt(i)->widget())->update();
-
-                currentCIP->setCICBrickContent(brickElements.at(i)->content, i);
-                currentCIP->setCICBrickMask(brickElements.at(i)->mask, i);
-            }
-        }
-
-        currentCIP->pack();
-        rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setCiBricks()\n%2")
-                                   .arg(currentCIP->bytesToString()));
-        refreshCiSizeDisplay();
-        refreshCiDataDisplay();
-
-        return;
-    }
-
 }
 
 
@@ -2312,10 +2395,12 @@ void MainWindow::clearRootCicTypes() {
     rootCicTypeLatinTextGBox->hide();
 
     for(int i=0; i<256; i++) {
-        if(rootCicTypeUndefinedLayout->itemAt(i) != NULL) {
-            rootCicTypeUndefinedLayout->itemAt(i)->widget()->hide();
+        if(ciDataTypeRZVLayout->itemAt(i) != NULL) {
+            ciDataTypeRZVLayout->itemAt(i)->widget()->hide();
         }
     }
+    ciDataTypeRZVGBox->hide();
+    rootCicTypeLatinTextGBox->hide();
     rootCicTypeUndefinedGBox->hide();
 
     ciDataToStringLbl->clear();
@@ -2323,6 +2408,81 @@ void MainWindow::clearRootCicTypes() {
     ciDataLbl->hide();
     saveCiBricksBtn->hide();
 }
+
+
+
+
+
+
+
+
+
+void MainWindow::setRootCicTypeToRZV() {
+    qDebug() << "MainWindow::setRootCicTypeToRZV()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    clearRootCicTypes();
+
+    ciDataTypeRZVGBox->setTitle("CICBricks Interpretation: CiType::CiTypeRZV  OR  ( CiType::CiTypeSimpleMatch  AND  RootCIC_SimpleMatch::RootCIC_RZV )");
+    ciDataTypeRZVGBox->show();
+
+    for(int i=0; i<currentCIP->getCiSize(); i++) {
+
+        brickElements.at(i)->update(currentCIP->getCICBricks().at(i).getContent(), currentCIP->getCICBricks().at(i).getMask(), i);
+
+        if(ciDataTypeRZVLayout->itemAt(i) != NULL) {
+            ciDataTypeRZVLayout->itemAt(i)->widget()->show();
+        }
+    }
+
+    ciDataToStringLbl->setText(QString("interpreteCICBricks():\n%1\n%2").arg(QString(38, '-')).arg(currentCIP->interpreteCICBricks(currentCIP->getCiSize())));
+
+    ciDataLbl->show();
+    saveCiBricksBtn->show();
+}
+
+
+void MainWindow::setRootCicTypeToRZV(quint8 size, quint16 oldSize) {
+    qDebug() << "MainWindow::setRootCicTypeToRZV(" << size << ", " << oldSize << ")";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
+
+    clearRootCicTypes();
+
+    ciDataTypeRZVGBox->setTitle("CICBricks Interpretation: CiType::CiTypeRZV  OR  ( CiType::CiTypeSimpleMatch  AND  RootCIC_SimpleMatch::RootCIC_RZV )");
+    ciDataTypeRZVGBox->show();
+
+    for(int i=0; i<size; i++) {
+
+        if(i<oldSize) {
+
+            brickElements.at(i)->update(currentCIP->getCICBricks().at(i).getContent(), currentCIP->getCICBricks().at(i).getMask(), i);
+        }
+        else {
+            brickElements.at(i)->update(0, 0, i);
+        }
+
+        if(ciDataTypeRZVLayout->itemAt(i) != NULL) {
+            ciDataTypeRZVLayout->itemAt(i)->widget()->show();
+        }
+    }
+
+    ciDataToStringLbl->setText(QString("interpreteCICBricks():\n%1\n%2").arg(QString(38, '-')).arg(currentCIP->interpreteCICBricks(currentCIP->getCiSize())));
+
+//    if(size>0) {
+        ciDataLbl->show();
+        saveCiBricksBtn->show();
+//    }
+}
+
+
 
 void MainWindow::setRootCicTypeToLatinText() {
     qDebug() << "MainWindow::setRootCicTypeToLatinText()";
@@ -2334,13 +2494,15 @@ void MainWindow::setRootCicTypeToLatinText() {
 
     clearRootCicTypes();
 
-    rootCicTypeLatinTextTxtEdt->setText(currentCIP->interpreteCICBricks());
+    rootCicTypeLatinTextGBox->setTitle("CICBricks Interpretation: ");
     rootCicTypeLatinTextGBox->show();
+
+    rootCicTypeLatinTextTxtEdt->setText(currentCIP->interpreteCICBricks());
+
+    ciDataToStringLbl->setText(QString("interpreteCICBricks():\n%1\n%2%3%4").arg(QString(38, '-')).arg('"').arg(currentCIP->interpreteCICBricks()).arg('"'));
 
     ciDataLbl->show();
     saveCiBricksBtn->show();
-
-    ciDataToStringLbl->setText(QString("interpreteCICBricks():\n%1\n%2%3%4").arg(QString(38, '-')).arg('"').arg(currentCIP->interpreteCICBricks()).arg('"'));
 }
 
 void MainWindow::setRootCicTypeToUndefined() {
@@ -2353,27 +2515,8 @@ void MainWindow::setRootCicTypeToUndefined() {
 
     clearRootCicTypes();
 
-    for(int i=0; i<currentCIP->getCiSize(); i++) {
-
-        if(i<ciOldSize) {
-
-            brickElements.at(i)->update(currentCIP->getCICBricks().at(i).getContent(), currentCIP->getCICBricks().at(i).getMask(), i);
-        }
-        else {
-            brickElements.at(i)->update(0, 0, i);
-        }
-
-        if(rootCicTypeUndefinedLayout->itemAt(i) != NULL) {
-            rootCicTypeUndefinedLayout->itemAt(i)->widget()->show();
-        }
-    }
-
+    rootCicTypeUndefinedGBox->setTitle("CICBricks Interpretation: undefined");
     rootCicTypeUndefinedGBox->show();
-
-    ciDataLbl->show();
-    saveCiBricksBtn->show();
-
-    ciDataToStringLbl->setText(QString("interpreteCICBricks():\n%1\n%2%3%4").arg(QString(38, '-')).arg('"').arg(currentCIP->interpreteCICBricks()).arg('"'));
 }
 
 
