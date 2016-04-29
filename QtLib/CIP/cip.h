@@ -67,11 +67,7 @@ class CIPSHARED_EXPORT CICBrick {
 
 public:
 
-    CICBrick() :
-    content(0),
-    mask(0) {}
-
-    CICBrick(quint8 content, quint8 mask) :
+    CICBrick(quint8 content=0, quint8 mask=0) :
     content(content),
     mask(mask) {}
 
@@ -91,7 +87,18 @@ private:
 
 class CIPSHARED_EXPORT CIP
 {
-    Q_ENUMS(RequestService)
+    Q_ENUMS(Service)
+    Q_ENUMS(Request)
+    Q_ENUMS(Profile)
+    Q_ENUMS(Channel)
+    Q_ENUMS(Ports)
+    Q_ENUMS(HeaderType)
+    Q_ENUMS(ErrorCategory)
+    Q_ENUMS(ErrorPriority)
+    Q_ENUMS(CipFormatErrorEnum)
+    Q_ENUMS(CiType)
+    Q_ENUMS(RootCIC_SimpleMatch)
+    Q_ENUMS(AppDataType)
 
 public:
 
@@ -104,9 +111,9 @@ public:
 
     // DYNAMIC HEADER ENUMS
     enum HeaderType { HeaderTypeRZV=0, HeaderTypeError=1, HeaderTypeUndefined };
-    enum ErrorCategory { ErrorCategoryNone=0, CipFormatError=1 };
-    enum ErrorPriority { ErrorPriorityNone=0, ErrorPriorityDebug=1, ErrorPriorityInfo=2, ErrorPriorityNotice=3, ErrorPriorityCritical=4, ErrorPriorityAlert=5, ErrorPriorityEmergency=6 };
-    enum CipFormatErrorEnum { CipFormatErrorNone=0, CipFormatErrorOutOfRange=1, CipFormatErrorInconsistent=2, CipFormatErrorWrongProtocol=3 };
+    enum ErrorCategory { ErrorCategoryNone=0, CipFormatError=1, ErrorCategoryUndefined };
+    enum ErrorPriority { ErrorPriorityNone=0, ErrorPriorityDebug=1, ErrorPriorityInfo=2, ErrorPriorityNotice=3, ErrorPriorityCritical=4, ErrorPriorityAlert=5, ErrorPriorityEmergency=6, ErrorPriorityUndefined };
+    enum CipFormatErrorEnum { CipFormatErrorNone=0, CipFormatErrorOutOfRange=1, CipFormatErrorInconsistent=2, CipFormatErrorWrongProtocol=3, CipFormatErrorUndefined };
 
     // CI ENUMS
     enum CiType { CiTypeRZV=0, CiTypeSimpleMatch=1, CiTypeUndefined };

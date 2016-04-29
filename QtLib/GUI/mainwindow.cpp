@@ -650,6 +650,7 @@ MainWindow::MainWindow(QWidget *parent)
     ciDataTypeRZVLayout = new QGridLayout;
     ciDataTypeRZVGBox = new QGroupBox("CICBricks Interpretation: No CIP loaded yet");
     ciDataTypeRZVGBox->setLayout(ciDataTypeRZVLayout);
+    ciDataTypeRZVGBox->hide();
 
     for(int i=0; i<256; i++) {
         ciDataTypeRZVLayout->addWidget(brickElements.at(i), qFloor(i/3), i%3);
@@ -661,6 +662,8 @@ MainWindow::MainWindow(QWidget *parent)
     rootCicTypeLatinTextLayout = new QGridLayout;
     rootCicTypeLatinTextGBox = new QGroupBox("CICBricks Interpretation: No CIP loaded yet");
     rootCicTypeLatinTextGBox->setLayout(rootCicTypeLatinTextLayout);
+    rootCicTypeLatinTextGBox->hide();
+
     rootCicTypeLatinTextTxtEdt = new QTextEdit(rootCicTypeLatinTextGBox);
     rootCicTypeLatinTextTxtEdt->setReadOnly(false);
 
@@ -672,6 +675,9 @@ MainWindow::MainWindow(QWidget *parent)
     rootCicTypeUndefinedLayout = new QGridLayout;
     rootCicTypeUndefinedGBox = new QGroupBox("CICBricks Interpretation: No CIP loaded yet");
     rootCicTypeUndefinedGBox->setLayout(rootCicTypeUndefinedLayout);
+    rootCicTypeUndefinedGBox->show();
+
+    setRootCicTypeToUndefined();
 
     ciDataToStringLbl = new QLabel();
     ciDataToStringLbl->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
@@ -684,14 +690,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     ciDataLbl = new QLabel(tr("CIC-Bricks (size): "));
     ciDataLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    ciDataLbl->hide();
 
     saveCiBricksBtn = new QPushButton(tr("setCICBricks()"), this);
+    saveCiBricksBtn->hide();
 
     ciLayout->addWidget(ciDataLbl, 5, 0);
     ciLayout->addWidget(saveCiBricksBtn, 5, 1);
-
-
-    setRootCicTypeToUndefined();
 
 
 
@@ -1079,6 +1084,11 @@ void MainWindow::openCIP() {
 
 void MainWindow::saveCIP() {
     qDebug() << "saveCIP()";
+
+    if(currentCIP == NULL) {
+        qDebug() << "currentCIP == NULL -> return";
+        return;
+    }
 
     QString outfilePath = QFileDialog::getSaveFileName(this,
         tr("Save CIP"), "/home/stefan/Development/CRN_QtLib/CIPs", tr("CIP Files (*.cip);;All files (*)"));
@@ -1677,10 +1687,11 @@ void MainWindow::setHeaderData() {
         refreshHeaderSizeDisplay();
         refreshHeaderDataDisplay(currentCIP->getHeaderSize());
 
+        saveHeaderDataBtn->setFocus();
+
         currentCIP->pack();
         rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderData()\n%1")
                                    .arg(currentCIP->bytesToString()));
-
         return;
     }
 }
@@ -1941,6 +1952,8 @@ void MainWindow::setHeaderDataError0() {
     refreshHeaderSizeDisplay();
     refreshHeaderDataDisplay();
 
+    saveheaderDataError0Btn->setFocus();
+
     currentCIP->pack();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderDataError0FromNumber() to %1\n%2")
                                .arg(currentCIP->getHeaderData(0))
@@ -1962,6 +1975,8 @@ void MainWindow::setHeaderDataError1() {
     refreshHeaderSizeDisplay();
     refreshHeaderDataDisplay();
 
+    saveheaderDataError1Btn->setFocus();
+
     currentCIP->pack();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderDataError1FromNumber() to %1\n%2")
                                .arg(currentCIP->getHeaderData(1))
@@ -1982,6 +1997,8 @@ void MainWindow::setHeaderDataError2() {
 
     refreshHeaderSizeDisplay();
     refreshHeaderDataDisplay();
+
+    saveheaderDataError2Btn->setFocus();
 
     currentCIP->pack();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderDataError2FromNumber() to %1\n%2")
@@ -2005,6 +2022,8 @@ void MainWindow::setHeaderDataErrorCategory() {
     refreshHeaderSizeDisplay();
     refreshHeaderDataDisplay();
 
+    saveheaderDataErrorCategoryFromEnumBtn->setFocus();
+
     currentCIP->pack();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderDataErrorCategory() to %1\n%2")
                                .arg(currentCIP->getHeaderData(0))
@@ -2027,6 +2046,8 @@ void MainWindow::setHeaderDataErrorPriority() {
     refreshHeaderSizeDisplay();
     refreshHeaderDataDisplay();
 
+    saveheaderDataErrorPriorityFromEnumBtn->setFocus();
+
     currentCIP->pack();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderDataErrorPriority() to %1\n%2")
                                .arg(currentCIP->getHeaderData(1))
@@ -2048,6 +2069,8 @@ void MainWindow::setHeaderDataError() {
 
     refreshHeaderSizeDisplay();
     refreshHeaderDataDisplay();
+
+    saveheaderDataErrorFromEnumBtn->setFocus();
 
     currentCIP->pack();
     rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setHeaderDataError() to %1\n%2")
@@ -2354,6 +2377,8 @@ void MainWindow::setCiBricks() {
         refreshCiSizeDisplay();
         refreshCicBricksDisplay(currentCIP->getCiSize());
 
+        saveCiBricksBtn->setFocus();
+
         currentCIP->pack();
         rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setCiBricks()\n%1")
                                    .arg(currentCIP->bytesToString()));
@@ -2375,14 +2400,15 @@ void MainWindow::setCiBricks() {
 
         currentCIP->setCiSize((quint8) inString.length());
 
+        refreshCiSizeDisplay();
+        refreshCicBricksDisplay();
+
+        saveCiBricksBtn->setFocus();
+
         currentCIP->pack();
         rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setCiBricks() to \"%1\"\n%2")
                                    .arg(inString)
                                    .arg(currentCIP->bytesToString()));
-
-        refreshCiSizeDisplay();
-        refreshCicBricksDisplay();
-
         return;
     }
 }
@@ -2825,10 +2851,8 @@ void MainWindow::setAppDataTypeToRZV(quint8 size, quint16 oldSize) {
     appDataTypeRZVGBox->setTitle("Application Data Interpretation: AppDataTypeRZV");
     appDataTypeRZVGBox->show();
 
-//    if(size>0) {
-        appDataLbl->show();
-        saveAppDataBtn->show();
-//    }
+    appDataLbl->show();
+    saveAppDataBtn->show();
 }
 
 void MainWindow::setAppData() {
@@ -2854,10 +2878,11 @@ void MainWindow::setAppData() {
         refreshAppDataSizeDisplay();
         refreshAppDataDisplay(currentCIP->getAppDataSize());
 
+        saveAppDataBtn->setFocus();
+
         currentCIP->pack();
         rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setAppData()\n%1")
                                    .arg(currentCIP->bytesToString()));
-
         return;
     }
 
@@ -2874,13 +2899,15 @@ void MainWindow::setAppData() {
 
         currentCIP->setAppDataSize((quint8) inString.length());
 
+        refreshAppDataSizeDisplay();
+        refreshAppDataDisplay();
+
+        saveAppDataBtn->setFocus();
+
         currentCIP->pack();
         rawCIPTxtEdt->setPlainText(QString("CIP loaded after changed by setAppData() to \"%1\"\n%2")
                                    .arg(inString)
                                    .arg(currentCIP->bytesToString()));
-        refreshAppDataSizeDisplay();
-        refreshAppDataDisplay();
-
         return;
     }
 }
