@@ -27,9 +27,6 @@ MainWindow::MainWindow(QWidget *parent)
     // Factory - Fix Layout
     factoryLayout = new QGridLayout;
 
-    // Interaction
-    interactionLayout = new QVBoxLayout;
-
 
 
 
@@ -73,6 +70,25 @@ MainWindow::MainWindow(QWidget *parent)
 
     filesLayout->addWidget(openBtn, 0, 0);
     filesLayout->addWidget(saveBtn, 0, 1);
+
+
+
+
+    // NETWORK INTERACTION
+    interactionGBox = new QGroupBox(tr("Interaction"));
+    interactionLayout = new QGridLayout;
+    interactionGBox->setLayout(interactionLayout);
+    mainLayout->addWidget(interactionGBox);
+
+    interactionLayout->setColumnStretch(9, 1);
+
+    interactionSendLbl = new QLabel(tr("Send CIP"));
+    interactionSendLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+    interactionSendBtn = new QPushButton(tr("sendCip()"), this);
+
+    interactionLayout->addWidget(interactionSendLbl, 0, 0);
+    interactionLayout->addWidget(interactionSendBtn, 0, 1);
 
 
 
@@ -701,8 +717,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     // APP DATA
-    appDataLayout = new QGridLayout;
     appDataGBox = new QGroupBox("Application Data");
+    appDataLayout = new QGridLayout;
     appDataGBox->setLayout(appDataLayout);
     mainLayout->addWidget(appDataGBox);
 
@@ -818,25 +834,18 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     // Raw CIP Layout
-    rawCIPLayout = new QGridLayout;
     rawCIPGBox = new QGroupBox("Raw CIP Data");
+    rawCIPLayout = new QGridLayout;
     rawCIPGBox->setLayout(rawCIPLayout);
     mainLayout->addWidget(rawCIPGBox);
 
     rawCIPTxtEdt = new QTextEdit(rawCIPGBox);
     rawCIPTxtEdt->setStyleSheet ("font: 9pt; Monospace;");
-    rawCIPTxtEdt->setReadOnly(true);    
+    rawCIPTxtEdt->setReadOnly(true);
     rawCIPTxtEdt->setFixedHeight(1000);
     rawCIPTxtEdt->setPlainText("No CIP loaded yet");
 
     rawCIPLayout->addWidget(rawCIPTxtEdt, 0, 0);
-
-
-//    mainLayout->addStretch();
-
-    interactionGBox = new QGroupBox(tr("Interaction"));
-    interactionGBox->setLayout(interactionLayout);
-    mainLayout->addWidget(interactionGBox);
 
 
     // GUI - Widget
@@ -920,6 +929,11 @@ MainWindow::MainWindow(QWidget *parent)
     connect(saveAppDataSizeFromNumberBtn, &QAbstractButton::clicked, this, &MainWindow::setAppDataSizeFromNumber);
 
     connect(saveAppDataBtn, &QAbstractButton::clicked, this, &MainWindow::setAppData);
+
+
+    // INTERACTION CONNECTS
+    connect(interactionSendBtn, &QAbstractButton::clicked, this, &MainWindow::sendCip);
+
 
 }
 
@@ -1086,7 +1100,7 @@ void MainWindow::saveCIP() {
     qDebug() << "saveCIP()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -1160,7 +1174,7 @@ void MainWindow::setRequestFromNumber() {
     qDebug() << "setRequestFromNumber()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -1180,7 +1194,7 @@ void MainWindow::setRequestFromEnum() {
     qDebug() << "setRequestFromEnum()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -1231,7 +1245,7 @@ void MainWindow::setProfileFromNumber() {
     qDebug() << "setProfileFromNumber()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -1249,7 +1263,7 @@ void MainWindow::setProfileFromEnum() {
     qDebug() << "setProfileFromEnum()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -1278,7 +1292,7 @@ void MainWindow::setVersionFromNumber() {
     qDebug() << "setVersionFromNumber()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -1296,7 +1310,7 @@ void MainWindow::setVersionFromMajor() {
     qDebug() << "setVersionFromMajor()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -1313,7 +1327,7 @@ void MainWindow::setVersionFromMinor() {
     qDebug() << "setVersionFromMinor()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -1360,7 +1374,7 @@ void MainWindow::setChannelFromNumber() {
     qDebug() << "setChannelFromNumber()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -1378,7 +1392,7 @@ void MainWindow::setChannelFromEnum() {
     qDebug() << "setChannelFromEnum()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -1415,7 +1429,7 @@ void MainWindow::setIpAddress() {
     qDebug() << "setIpAddress()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -1468,7 +1482,7 @@ void MainWindow::setIpPortFromNumber() {
     qDebug() << "setIpPortFromNumber()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -1486,7 +1500,7 @@ void MainWindow::setIpPortFromEnum() {
     qDebug() << "setIpPortFromEnum()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -1505,7 +1519,7 @@ void MainWindow::setCurrentTime() {
     qDebug() << "setCurrentTime()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -1562,7 +1576,7 @@ void MainWindow::setHeaderTypeFromNumber() {
     qDebug() << "MainWindow::setHeaderTypeFromNumber()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -1581,7 +1595,7 @@ void MainWindow::setHeaderTypeFromEnum() {
     qDebug() << "MainWindow::setHeaderTypeFromEnum()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -1608,7 +1622,7 @@ void MainWindow::setHeaderSizeFromNumber() {
     qDebug() << "MainWindow::setHeaderSizeFromNumber()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -1665,7 +1679,7 @@ void MainWindow::setHeaderData() {
     qDebug() << "MainWindow::setHeaderData()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -1720,7 +1734,7 @@ void MainWindow::setHeaderDataTypeToRZV() {
     qDebug() << "MainWindow::setHeaderDataTypeToRZV()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -1757,7 +1771,7 @@ void MainWindow::setHeaderDataTypeToRZV(quint8 size, quint16 oldSize) {
     qDebug() << "MainWindow::setHeaderDataTypeToRZV(" << size << ", " << oldSize << ")";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -1796,7 +1810,7 @@ int MainWindow::getIndexForHeaderDataErrorCategoryCmbBx() {
     qDebug() << "MainWindow::getIndexForHeaderDataErrorCategoryCmbBx()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return -1;
     }
 
@@ -1818,7 +1832,7 @@ int MainWindow::getIndexForHeaderDataErrorPriorityCmbBx() {
     qDebug() << "MainWindow::getIndexForHeaderDataErrorPriorityCmbBx()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return -1;
     }
 
@@ -1855,7 +1869,7 @@ int MainWindow::getIndexForHeaderDataErrorCmbBx() {
     qDebug() << "MainWindow::getIndexForHeaderDataErrorCmbBx()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return -1;
     }
 
@@ -1882,7 +1896,7 @@ void MainWindow::setHeaderDataTypeToError() {
     qDebug() << "setDataTypeToError()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -1911,7 +1925,6 @@ void MainWindow::setHeaderDataTypeToUndefined() {
     qDebug() << "MainWindow::setHeaderDataTypeToUndefined()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
         return;
     }
 
@@ -1941,7 +1954,7 @@ void MainWindow::setHeaderDataError0() {
     qDebug() << "MainWindow::setHeaderDataError0()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -1964,7 +1977,7 @@ void MainWindow::setHeaderDataError1() {
     qDebug() << "MainWindow::setHeaderDataError1()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -1987,7 +2000,7 @@ void MainWindow::setHeaderDataError2() {
     qDebug() << "MainWindow::setHeaderDataError2()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -2011,7 +2024,7 @@ void MainWindow::setHeaderDataErrorCategory() {
 
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -2035,7 +2048,7 @@ void MainWindow::setHeaderDataErrorPriority() {
 
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -2059,7 +2072,7 @@ void MainWindow::setHeaderDataError() {
 
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -2115,7 +2128,7 @@ void MainWindow::setCiTypeFromNumber() {
     qDebug() << "setCiTypeFromNumber()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -2135,7 +2148,7 @@ void MainWindow::setCiTypeFromEnum() {
     qDebug() << "MainWindow::setCiTypeFromEnum()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -2183,7 +2196,7 @@ void MainWindow::setCiRootCicContentFromNumber() {
     qDebug() << "MainWindow::setCiRootCicContentFromNumber()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -2202,7 +2215,7 @@ void MainWindow::setCiRootCicContentFromEnum() {
     qDebug() << "MainWindow::setCiRootCicContentFromEnum()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -2247,7 +2260,7 @@ void MainWindow::setCiSizeFromNumber() {
     qDebug() << "MainWindow::setCiSizeFromNumber()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -2349,7 +2362,7 @@ void MainWindow::setCiBricks() {
     qDebug() << "MainWindow::setCiBricks()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -2390,15 +2403,13 @@ void MainWindow::setCiBricks() {
 
     if(rootCicTypeLatinTextGBox->isVisible()) {
 
-        QString inString;
+        QString inString = rootCicTypeLatinTextTxtEdt->toPlainText();
 
-        inString = rootCicTypeLatinTextTxtEdt->toPlainText();
+        currentCIP->setCiSize((quint8) inString.length());
 
         for(int i=0; i<inString.length(); i++) {
             currentCIP->setCICBrickContent(inString.toLatin1().at(i), i);
         }
-
-        currentCIP->setCiSize((quint8) inString.length());
 
         refreshCiSizeDisplay();
         refreshCicBricksDisplay();
@@ -2447,7 +2458,7 @@ void MainWindow::setRootCicTypeToRZV() {
     qDebug() << "MainWindow::setRootCicTypeToRZV()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -2476,7 +2487,7 @@ void MainWindow::setRootCicTypeToRZV(quint8 size, quint16 oldSize) {
     qDebug() << "MainWindow::setRootCicTypeToRZV(" << size << ", " << oldSize << ")";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -2514,7 +2525,7 @@ void MainWindow::setRootCicTypeToLatinText() {
     qDebug() << "MainWindow::setRootCicTypeToLatinText()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -2535,7 +2546,6 @@ void MainWindow::setRootCicTypeToUndefined() {
     qDebug() << "MainWindow::setRootCicTypeToUndefined()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
         return;
     }
 
@@ -2589,7 +2599,7 @@ void MainWindow::setAppDataTypeFromNumber() {
     qDebug() << "setAppDataTypeFromNumber()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -2610,7 +2620,7 @@ void MainWindow::setAppDataTypeFromEnum() {
     qDebug() << "setAppDataTypeFromEnum()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -2652,7 +2662,7 @@ void MainWindow::setAppDataSizeFromNumber() {
     qDebug() << "setAppDataSizeFromNumber()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -2688,7 +2698,7 @@ void MainWindow::setAppDataTypeToText() {
     qDebug() << "MainWindow::setAppDataTypeToText()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -2708,7 +2718,6 @@ void MainWindow::setAppDataTypeToUndefined() {
     qDebug() << "MainWindow::setAppDataTypeToUndefined()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
         return;
     }
 
@@ -2794,7 +2803,7 @@ void MainWindow::setAppDataTypeToRZV() {
     qDebug() << "MainWindow::setAppDataTypeToRZV()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -2823,7 +2832,7 @@ void MainWindow::setAppDataTypeToRZV(quint8 size, quint16 oldSize) {
     qDebug() << "MainWindow::setAppDataTypeToRZV(" << size << ", " << oldSize << ")";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -2859,7 +2868,7 @@ void MainWindow::setAppData() {
     qDebug() << "MainWindow::setAppData()";
 
     if(currentCIP == NULL) {
-        qDebug() << "currentCIP == NULL -> return";
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
         return;
     }
 
@@ -2911,6 +2920,62 @@ void MainWindow::setAppData() {
         return;
     }
 }
+
+
+void MainWindow::sendCip() {
+    qDebug() << "MainWindow::sendCip()";
+
+    if(currentCIP == NULL) {
+        QMessageBox::information(this, tr("CIP Test GUI"), tr("No CIP loaded yet."));
+        return;
+    }
+
+    if( ! currentCIP->sendCIP()) {
+        QMessageBox::critical(this, tr("CIP Test GUI"), currentCIP->errorString());
+        return;
+    }
+
+//    QMessageBox::information(this, tr("CIP Test GUI"), currentCIP->bytesToString());
+    QMessageBox msgBox;
+    msgBox.setText(currentCIP->bytesToString());
+    msgBox.adjustSize();
+    msgBox.exec();
+
+    currentCIP->updateService();
+
+    refreshServiceDisplay();
+    refreshRequestDisplay();
+    refreshProfileDisplay();
+    refreshVersionDisplay();
+    refreshChannelDisplay();
+    refreshUuidDisplay();
+    refreshIpAddressDisplay();
+    refreshIpPortDisplay();
+    refreshTimeDisplay();
+    refreshHeaderTypeDisplay();
+    refreshHeaderSizeDisplay();
+    refreshHeaderDataDisplay(currentCIP->getHeaderSize());
+
+    // CI DISPLAY
+    refreshCiTypeDisplay();
+    refreshCiSizeDisplay();
+    refreshCiRootCicDisplay();
+    refreshCicBricksDisplay();
+
+    // APPDATE DISPLAY
+    refreshAppDataTypeDisplay();
+    refreshAppDataSizeDisplay();
+    refreshAppDataDisplay();
+
+
+    qDebug() << "setPlainText()";
+    rawCIPTxtEdt->setPlainText(QString("CIP loaded from network:\n%1")
+                               .arg(currentCIP->bytesToString()));
+
+
+
+}
+
 
 
 

@@ -14,6 +14,7 @@
 #include <QPushButton>
 #include <QComboBox>
 #include <QTextEdit>
+#include <QMessageBox>
 
 #include <QUuid>
 
@@ -220,6 +221,10 @@ public slots:
 
     // APPDATA SLOTS
     void setAppData();
+
+
+    // INTERACTION SLOTS
+    void sendCip();
 
 
 
@@ -591,8 +596,12 @@ private:
 
 
     // INTERACTION
-    QVBoxLayout *interactionLayout;
+    QGridLayout *interactionLayout;
     QGroupBox *interactionGBox;
+
+    QLabel *interactionSendLbl;
+    QPushButton *interactionSendBtn;
+
 
 };
 

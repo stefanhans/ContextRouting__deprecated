@@ -10,6 +10,11 @@
 #include <QDateTime>
 #include <QVector>
 
+#include <QTcpSocket>
+#include <QUdpSocket>
+
+#define MAXMSG 1064
+
 /*
 
    0                   1                   2                   3
@@ -144,7 +149,7 @@ public:
         ciType(0),
         rootCIC(),
         ciSize(0),
-        CICBricks(),
+        CICBricks(QVector<CICBrick>(1)),
         appDataType(0),
         appDataSize(0),
         appData()
@@ -169,7 +174,7 @@ public:
         ciType(1),
         rootCIC(1, 0),
         ciSize(0),
-        CICBricks(),
+        CICBricks(QVector<CICBrick>(1)),
         appDataType(1),
         appDataSize(0),
         appData()
@@ -397,12 +402,24 @@ public:
 
     QString bytesToString();
 
+    /*
+     * NETWORK
+     */
+    bool sendCIP();
+
+    /*
+     * ERROR HANDLING
+     */
+    QString errorString() const;
+
 private:
 
     QByteArray byteArray;
     Service service;
 
     void initialize();
+
+    QString cipError;
 
 
     /*
@@ -437,6 +454,28 @@ private:
     quint8 appDataSize;
     QVector<quint8> appData;
 
+
+    /*
+     * CIP SOCKET
+     */
+    QTcpSocket *tcpSocket;
+    QUdpSocket *udpSocket;
+
+
+    /*
+     * CIP SENDER
+     */
+    QHostAddress ip;
+    quint16 port;
+
+
+    /*
+     * CIP RECEIVER
+     */
+    int numRead;
+    int numReadTotal;
+    char buffer[MAXMSG];
+    QByteArray receipt;
 };
 
 #endif // CIP_H

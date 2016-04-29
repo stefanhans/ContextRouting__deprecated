@@ -2,7 +2,7 @@
 
 void CIP::initialize() {
 
-    qDebug() << "initialize() service: " << service;
+    qDebug() << "CIP::initialize() service: " << service;
 
     switch (service) {
 
@@ -45,79 +45,6 @@ void CIP::initialize() {
         qDebug() << "Error: Initialize with undefined service " << service;
         break;
     }
-
-    qDebug() << "initialize() headerType: " << headerType;
-    qDebug() << getHeaderType();
-
-    QString testMessage = "Hello World";
-    QVector<quint8> testVector;
-
-    switch(headerType) {
-
-    case HeaderTypeRZV:
-
-        setHeaderSize(testMessage.size());
-
-        for (int i=0; i<testMessage.size();i++) {
-            testVector.append(testMessage.at(i).toLatin1());
-        }
-        setHeaderData(testVector);
-        break;
-
-    case HeaderTypeError:
-
-        setHeaderSize(3);
-
-        testVector.append(1);
-        testVector.append(1);
-        testVector.append(1);
-        setHeaderData(testVector);
-        break;
-
-    case HeaderTypeUndefined:
-
-        setHeaderSize(testMessage.size());
-
-        for (int i=0; i<testMessage.size();i++) {
-            testVector.append(testMessage.at(i).toLatin1());
-        }
-        setHeaderData(testVector);
-
-        break;
-
-    default:
-        qDebug() << "Error: Initialize with undefined headerType " << headerType;
-        break;
-    }
-
-    qDebug() << "ciType" << ciType;
-    qDebug() << "rootCIC content" << rootCIC.getContent();
-    qDebug() << "rootCIC mask" << rootCIC.getMask();
-
-    QString ciMessage = "Chill with friends";
-    QVector<CICBrick> ciVector;
-
-
-    setCiSize(ciMessage.size());
-
-    for (int i=0; i<ciMessage.size();i++) {
-        ciVector.append(CICBrick(ciMessage.at(i).toLatin1(), 0));
-    }
-    setCICBricks(ciVector);
-
-
-    // TEST APPLICATION DATA
-    setAppDataType(AppDataTypeText);
-    QString appMessage = "Have a look and drop in";
-    QVector<quint8> apppVector;
-
-    setAppDataSize(appMessage.size());
-
-    for (int i=0; i<appMessage.size();i++) {
-        apppVector.append(appMessage.at(i).toLatin1());
-    }
-    setAppData(apppVector);
-
 }
 
 QByteArray CIP::getByteArray() const
@@ -1254,7 +1181,12 @@ void CIP::setAppData(const QByteArray &value)
 
 void CIP::setAppData(const quint8 &value, quint8 index)
 {
-    appData.replace(index, value);
+    if(index < appData.length()) {
+        appData.replace(index, value);
+    }
+    else {
+        appData.append(value);
+    }
 }
 
 void CIP::truncateAppData(quint8 size) {
@@ -1566,38 +1498,38 @@ bool CIP::validateByteArray() {
     size = 35;
     additionalBytes = QString("%1").arg((quint8) byteArray.at(size)).toInt(&ok);
     if(!ok) {
-        qDebug() << "Header: size: Cannot convert "<< (quint8) byteArray.at(size) << " to integer!" << endl;
+        qDebug() << "Header: size: Cannot convert "<< (quint8) byteArray.at(size) << " to integer!";
         return false;
     }
-    qDebug() << "Header: size: " << additionalBytes << endl;
+    qDebug() << "Header: size: " << additionalBytes;
     size += additionalBytes;
 
     // CI: size
     size += 4;
     additionalBytes = QString("%1").arg((quint8) byteArray.at(size)).toInt(&ok);
     if(!ok) {
-        qDebug() << "CI: size: Cannot convert "<< (quint8) byteArray.at(size) << " to integer!" << endl;
+        qDebug() << "CI: size: Cannot convert "<< (quint8) byteArray.at(size) << " to integer!";
         return false;
     }
-    qDebug() << "CI: size: " << additionalBytes << endl;
+    qDebug() << "CI: size: " << additionalBytes;
     size += additionalBytes*2;
 
     // Application: size
     size += 2;
     additionalBytes = QString("%1").arg((quint8) byteArray.at(size)).toInt(&ok);
     if(!ok) {
-        qDebug() << "Application: size: Cannot convert "<< (quint8) byteArray.at(size) << " to integer!" << endl;
+        qDebug() << "Application: size: Cannot convert "<< (quint8) byteArray.at(size) << " to integer!";
         return false;
     }
-    qDebug() << "Application: size: " << additionalBytes << endl;
+    qDebug() << "Application: size: " << additionalBytes;
     size += additionalBytes;
 
 
-    qDebug() << "byteArray.size(): " << byteArray.size() << endl;
-    qDebug() << "size: " << size+1 << endl;
+    qDebug() << "byteArray.size(): " << byteArray.size();
+    qDebug() << "size: " << size+1;
     if (byteArray.size() != size+1) {
 
-        qDebug() << "INVALID: CIP size is not consistent!" << endl;
+        qDebug() << "INVALID: CIP size is not consistent!";
         return false;
     }
 
@@ -1613,7 +1545,7 @@ bool CIP::validateByteArray() {
  */
 
 QString CIP::bytesToString() {
-    qDebug() << "CIP::bytesToString()" << endl;
+    qDebug() << "CIP::bytesToString()";
 
     QString out;
 
@@ -2194,6 +2126,148 @@ QString CIP::bytesToString() {
 
     return out;
 }
+
+
+
+
+
+
+
+/*
+ *
+ * NETWORK
+ *
+ */
+bool CIP::sendCIP() {
+    qDebug() << "CIP::sendCIP()";
+
+    if( ! validateByteArray() ) {
+        qDebug() << "No vaild CIP!";
+        return false;
+    }
+
+
+    /**
+     * Prepare send
+     */
+    QHostAddress ip("127.0.0.1");
+
+    port = ipPortToNumber();
+    qDebug() << "port: " << port;
+
+    numRead = 0;
+    numReadTotal = 0;
+
+
+
+    if(ipPortToNumber() == TCP) {
+        qDebug() << "Ports::TCP";
+
+        tcpSocket= new QTcpSocket();
+        tcpSocket->abort();
+        tcpSocket->connectToHost(ip, port);
+
+        if (tcpSocket->waitForConnected(5000)) { // waitForConnected(int msecs = 30000)
+
+            qDebug() << "Connected!";
+        }
+        else {
+            qDebug() << "Error: Not connected!";
+            qDebug()  << tcpSocket->errorString();
+            return false;
+        }
+
+        int bytesWritten = tcpSocket->write(byteArray, byteArray.length());
+        qDebug() << "BytesWritten: " << bytesWritten;
+
+
+        qDebug() << "receive via tcp";
+        forever {
+            numRead  = tcpSocket->read(buffer, MAXMSG);
+
+            numReadTotal += numRead;
+            if (numRead == 0 && !tcpSocket->waitForReadyRead(30000)) { // waitForReadyRead(int msecs = 30000)
+                break;
+            }
+        }
+        qDebug() << numReadTotal << " bytes red";
+
+        if(numReadTotal==-1) {
+            qDebug() << "Error: Problem while reading!";
+            qDebug()  << tcpSocket->errorString();
+            return false;
+        }
+
+        tcpSocket->disconnectFromHost();
+        tcpSocket->close();
+
+    }
+
+    if(ipPortToNumber() == UDP) {
+        qDebug() << "Ports::UDP";
+
+
+        udpSocket= new QUdpSocket();
+        udpSocket->abort();
+        udpSocket->connectToHost(ip, port);
+
+        if (udpSocket->waitForConnected(5000)) { // waitForConnected(int msecs = 30000)
+            qDebug() << "Connected!";
+        }
+        else {
+            qDebug() << "Error: Not connected!";
+            qDebug()  << tcpSocket->errorString();
+            return false;
+        }
+
+        int bytesWritten = udpSocket->write(byteArray, byteArray.length());
+        qDebug() << "BytesWritten: " << bytesWritten;
+
+
+        qDebug() << "receive via udp";
+        forever {
+            numRead  = udpSocket->read(buffer, MAXMSG);
+
+            numReadTotal += numRead;
+            if (numReadTotal >= 42) { // waitForReadyRead(int msecs = 30000)
+                break;
+            }
+        }
+        qDebug() << numReadTotal << " bytes red";
+
+        if(numReadTotal==-1) {
+            qDebug() << "Error: Problem while reading!";
+            qDebug()  << tcpSocket->errorString();
+            return false;
+        }
+
+        udpSocket->disconnectFromHost();
+        udpSocket->close();
+
+
+
+    }
+
+    receipt.append(buffer, numReadTotal);
+
+    setByteArray(receipt);
+
+    if ( ! validateByteArray()) {
+        qDebug() << "Not a valid CIP!";
+        return false;
+    }
+
+    unpack();
+
+    return true;
+
+}
+
+
+QString CIP::errorString() const {
+    return cipError;
+}
+
 
 
 /*
