@@ -151,8 +151,8 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
              becomes part of CI by describing it.  Another aspect of CI
              is the accuracy with regard to possible matches with other
              CI.  All of these has to be converted into a general
-             format, in which the initial meaning is not relevant to
-             find matching CI.
+             format, in which the actual meaning is not relevant to find
+             matching CI.
 
 
 
@@ -203,7 +203,7 @@ Internet-Draft     Contextinformation Routing Networks      January 2016
 
              *  Application Data
 
-             All information which has to be transfered inside CRNs has
+             All information which has to be transferred inside CRNs has
              to be encapsulated within CIPs.
 
 
