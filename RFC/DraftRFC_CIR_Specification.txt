@@ -3,9 +3,9 @@
 
 
 Network Working Group                                        Stefan Hans
-Internet-Draft                                             December 2015
+Internet-Draft                                              January 2017
 Intended status: Experimental
-Expires: June 3, 2016
+Expires: July 5, 2017
 
 
  Contextinformation Routing (CIR) Specification for Contextinformation
@@ -34,11 +34,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 3, 2016.
+   This Internet-Draft will expire on July 5, 2017.
 
 Copyright Notice
 
-   Copyright (c) 2015 IETF Trust and the persons identified as the
+   Copyright (c) 2017 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Stefan Hans               Expires June 3, 2016                  [Page 1]
+Stefan Hans               Expires July 5, 2017                  [Page 1]
 
-Internet-Draft         CIR Specification for CRNs          December 2015
+Internet-Draft         CIR Specification for CRNs           January 2017
 
 
 Table of Contents
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Stefan Hans               Expires June 3, 2016                  [Page 2]
+Stefan Hans               Expires July 5, 2017                  [Page 2]
 
-Internet-Draft         CIR Specification for CRNs          December 2015
+Internet-Draft         CIR Specification for CRNs           January 2017
 
 
            / ENRP \        / ENRP \           .      |       |      .
@@ -165,9 +165,9 @@ Internet-Draft         CIR Specification for CRNs          December 2015
 
 
 
-Stefan Hans               Expires June 3, 2016                  [Page 3]
+Stefan Hans               Expires July 5, 2017                  [Page 3]
 
-Internet-Draft         CIR Specification for CRNs          December 2015
+Internet-Draft         CIR Specification for CRNs           January 2017
 
 
                             Device
@@ -221,9 +221,9 @@ Internet-Draft         CIR Specification for CRNs          December 2015
 
 
 
-Stefan Hans               Expires June 3, 2016                  [Page 4]
+Stefan Hans               Expires July 5, 2017                  [Page 4]
 
-Internet-Draft         CIR Specification for CRNs          December 2015
+Internet-Draft         CIR Specification for CRNs           January 2017
 
 
              the CI-Index of the new participant.  If not explicitly
@@ -277,9 +277,9 @@ Internet-Draft         CIR Specification for CRNs          December 2015
 
 
 
-Stefan Hans               Expires June 3, 2016                  [Page 5]
+Stefan Hans               Expires July 5, 2017                  [Page 5]
 
-Internet-Draft         CIR Specification for CRNs          December 2015
+Internet-Draft         CIR Specification for CRNs           January 2017
 
 
 Appendix A.  CRN's Glossary
@@ -333,4 +333,4 @@ Author's Address
 
 
 
-Stefan Hans               Expires June 3, 2016                  [Page 6]
+Stefan Hans               Expires July 5, 2017                  [Page 6]
