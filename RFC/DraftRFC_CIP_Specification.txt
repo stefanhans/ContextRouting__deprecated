@@ -3,9 +3,9 @@
 
 
 Network Working Group                                        Stefan Hans
-Internet-Draft                                              January 2016
+Internet-Draft                                              January 2017
 Intended status: Experimental
-Expires: July 4, 2016
+Expires: July 5, 2017
 
 
   Contextinformation Paket (CIP) Specification for Contextinformation
@@ -37,11 +37,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on July 4, 2016.
+   This Internet-Draft will expire on July 5, 2017.
 
 Copyright Notice
 
-   Copyright (c) 2016 IETF Trust and the persons identified as the
+   Copyright (c) 2017 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Stefan Hans               Expires July 4, 2016                  [Page 1]
+Stefan Hans               Expires July 5, 2017                  [Page 1]
 
-Internet-Draft         CIP Specification for CRNs           January 2016
+Internet-Draft         CIP Specification for CRNs           January 2017
 
 
    include Simplified BSD License text as described in Section 4.e of
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Stefan Hans               Expires July 4, 2016                  [Page 2]
+Stefan Hans               Expires July 5, 2017                  [Page 2]
 
-Internet-Draft         CIP Specification for CRNs           January 2016
+Internet-Draft         CIP Specification for CRNs           January 2017
 
 
              The static part defines also the dynamic part's type and
@@ -165,9 +165,9 @@ Internet-Draft         CIP Specification for CRNs           January 2016
 
 
 
-Stefan Hans               Expires July 4, 2016                  [Page 3]
+Stefan Hans               Expires July 5, 2017                  [Page 3]
 
-Internet-Draft         CIP Specification for CRNs           January 2016
+Internet-Draft         CIP Specification for CRNs           January 2017
 
 
    Reserved Zero Value (RZV)
@@ -221,9 +221,9 @@ Internet-Draft         CIP Specification for CRNs           January 2016
 
 
 
-Stefan Hans               Expires July 4, 2016                  [Page 4]
+Stefan Hans               Expires July 5, 2017                  [Page 4]
 
-Internet-Draft         CIP Specification for CRNs           January 2016
+Internet-Draft         CIP Specification for CRNs           January 2017
 
 
             Figure 3 shows the structure of CIP's header data.
@@ -277,9 +277,9 @@ Internet-Draft         CIP Specification for CRNs           January 2016
 
 
 
-Stefan Hans               Expires July 4, 2016                  [Page 5]
+Stefan Hans               Expires July 5, 2017                  [Page 5]
 
-Internet-Draft         CIP Specification for CRNs           January 2016
+Internet-Draft         CIP Specification for CRNs           January 2017
 
 
    IP port
@@ -333,9 +333,9 @@ Internet-Draft         CIP Specification for CRNs           January 2016
 
 
 
-Stefan Hans               Expires July 4, 2016                  [Page 6]
+Stefan Hans               Expires July 5, 2017                  [Page 6]
 
-Internet-Draft         CIP Specification for CRNs           January 2016
+Internet-Draft         CIP Specification for CRNs           January 2017
 
 
      Figure 4 shows the service groups and its defined first two bits.
@@ -389,9 +389,9 @@ Internet-Draft         CIP Specification for CRNs           January 2016
 
 
 
-Stefan Hans               Expires July 4, 2016                  [Page 7]
+Stefan Hans               Expires July 5, 2017                  [Page 7]
 
-Internet-Draft         CIP Specification for CRNs           January 2016
+Internet-Draft         CIP Specification for CRNs           January 2017
 
 
                   The number of Context Bricks as additional data (up to
@@ -445,9 +445,9 @@ Internet-Draft         CIP Specification for CRNs           January 2016
 
 
 
-Stefan Hans               Expires July 4, 2016                  [Page 8]
+Stefan Hans               Expires July 5, 2017                  [Page 8]
 
-Internet-Draft         CIP Specification for CRNs           January 2016
+Internet-Draft         CIP Specification for CRNs           January 2017
 
 
    The following figure shows the data section of the context CIP.  This
@@ -501,9 +501,9 @@ Internet-Draft         CIP Specification for CRNs           January 2016
 
 
 
-Stefan Hans               Expires July 4, 2016                  [Page 9]
+Stefan Hans               Expires July 5, 2017                  [Page 9]
 
-Internet-Draft         CIP Specification for CRNs           January 2016
+Internet-Draft         CIP Specification for CRNs           January 2017
 
 
 6.3.1.  For External Applications
@@ -557,9 +557,9 @@ Internet-Draft         CIP Specification for CRNs           January 2016
 
 
 
-Stefan Hans               Expires July 4, 2016                 [Page 10]
+Stefan Hans               Expires July 5, 2017                 [Page 10]
 
-Internet-Draft         CIP Specification for CRNs           January 2016
+Internet-Draft         CIP Specification for CRNs           January 2017
 
 
                            UDP Services are ...:
@@ -613,9 +613,9 @@ Internet-Draft         CIP Specification for CRNs           January 2016
 
 
 
-Stefan Hans               Expires July 4, 2016                 [Page 11]
+Stefan Hans               Expires July 5, 2017                 [Page 11]
 
-Internet-Draft         CIP Specification for CRNs           January 2016
+Internet-Draft         CIP Specification for CRNs           January 2017
 
 
                            TCP Services are ...:
@@ -669,9 +669,9 @@ Internet-Draft         CIP Specification for CRNs           January 2016
 
 
 
-Stefan Hans               Expires July 4, 2016                 [Page 12]
+Stefan Hans               Expires July 5, 2017                 [Page 12]
 
-Internet-Draft         CIP Specification for CRNs           January 2016
+Internet-Draft         CIP Specification for CRNs           January 2017
 
 
                   The additional data contains the number of Context
@@ -725,9 +725,9 @@ Internet-Draft         CIP Specification for CRNs           January 2016
 
 
 
-Stefan Hans               Expires July 4, 2016                 [Page 13]
+Stefan Hans               Expires July 5, 2017                 [Page 13]
 
-Internet-Draft         CIP Specification for CRNs           January 2016
+Internet-Draft         CIP Specification for CRNs           January 2017
 
 
 Appendix A.  CRN's Glossary
@@ -781,9 +781,9 @@ Appendix A.  CRN's Glossary
 
 
 
-Stefan Hans               Expires July 4, 2016                 [Page 14]
+Stefan Hans               Expires July 5, 2017                 [Page 14]
 
-Internet-Draft         CIP Specification for CRNs           January 2016
+Internet-Draft         CIP Specification for CRNs           January 2017
 
 
    CIR (Contextinformation Routing)
@@ -837,4 +837,4 @@ Author's Address
 
 
 
-Stefan Hans               Expires July 4, 2016                 [Page 15]
+Stefan Hans               Expires July 5, 2017                 [Page 15]
